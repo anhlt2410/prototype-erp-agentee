@@ -1230,6 +1230,83 @@
   .profile-name { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
   .profile-role { color: var(--text-muted); font-size: 14px; margin-top: 2px; }
 
+  /* ============ RIGHT PANEL (DRAWER) ============ */
+  /* Overlay — always in DOM, pointer-events gate visibility so CSS can transition both ways */
+  .panel-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.32);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 280ms ease;
+    z-index: 50;
+  }
+  .panel-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  /* Panel — slides in from right, always in DOM so the reverse transition plays */
+  .right-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 520px;
+    max-width: 100vw;
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    box-shadow: -16px 0 48px rgba(15, 23, 42, 0.12);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 320ms cubic-bezier(0.32, 0.72, 0, 1);
+    z-index: 60;
+  }
+  .right-panel.open { transform: translateX(0); }
+
+  .panel-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: var(--s5) var(--s5) var(--s4);
+    border-bottom: 2px solid var(--primary-100);
+    gap: var(--s4);
+    background: linear-gradient(135deg, #EFF6FF 0%, #F8FAFF 100%);
+    flex-shrink: 0;
+  }
+  .panel-title { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+  .panel-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+  .panel-close {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--r-sm);
+    display: grid;
+    place-items: center;
+    color: var(--text-muted);
+    transition: all var(--t-fast) var(--ease);
+    flex-shrink: 0;
+    margin-top: -2px;
+  }
+  .panel-close:hover { background: var(--divider); color: var(--text); }
+  .panel-close svg { width: 16px; height: 16px; stroke-width: 2; }
+  .panel-body {
+    padding: var(--s5);
+    overflow-y: auto;
+    flex: 1;
+  }
+  .panel-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--s2);
+    padding: var(--s4) var(--s5);
+    border-top: 1px solid var(--border);
+    background: var(--primary-50);
+    flex-shrink: 0;
+  }
+
   /* Scrollbar */
   ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-track { background: transparent; }
@@ -1381,7 +1458,7 @@
         <button class="btn btn-secondary">
           <svg><use href="#i-upload"/></svg> Import
         </button>
-        <button class="btn btn-primary" onclick="openModal('modal-add')">
+        <button class="btn btn-primary" onclick="openPanel('panel-add')">
           <svg><use href="#i-plus"/></svg> Add Employee
         </button>
       </div>
@@ -1647,10 +1724,10 @@
 
         <!-- Modal triggers -->
         <div class="gallery-card">
-          <div class="gallery-card-title">Modals & Dialogs</div>
+          <div class="gallery-card-title">Panels & Dialogs</div>
           <div class="gallery-row">
-            <button class="btn btn-secondary btn-sm" onclick="openModal('modal-add')">Add employee form</button>
-            <button class="btn btn-secondary btn-sm" onclick="openModal('modal-view')">View employee</button>
+            <button class="btn btn-secondary btn-sm" onclick="openPanel('panel-add')">Add employee form</button>
+            <button class="btn btn-secondary btn-sm" onclick="openPanel('panel-view')">View employee</button>
             <button class="btn btn-secondary btn-sm" onclick="openModal('modal-delete')">Confirm delete</button>
           </div>
         </div>
@@ -1686,17 +1763,17 @@
   </main>
 </div>
 
-<!-- ============ ADD EMPLOYEE MODAL ============ -->
-<div class="modal-backdrop" id="modal-add" onclick="if(event.target===this)closeModal('modal-add')">
-  <div class="modal modal-lg" role="dialog" aria-labelledby="add-title">
-    <div class="modal-header">
+<!-- ============ ADD EMPLOYEE PANEL ============ -->
+<div class="panel-overlay" id="panel-add-overlay" onclick="closePanel('panel-add')"></div>
+<div class="right-panel" id="panel-add" role="dialog" aria-labelledby="add-panel-title">
+    <div class="panel-header">
       <div>
-        <div class="modal-title" id="add-title">Add Employee</div>
-        <div class="modal-subtitle">Create a new team member profile.</div>
+        <div class="panel-title" id="add-panel-title">Add Employee</div>
+        <div class="panel-subtitle">Create a new team member profile.</div>
       </div>
-      <button class="modal-close" onclick="closeModal('modal-add')" aria-label="Close"><svg><use href="#i-x"/></svg></button>
+      <button class="panel-close" onclick="closePanel('panel-add')" aria-label="Close"><svg><use href="#i-x"/></svg></button>
     </div>
-    <div class="modal-body">
+    <div class="panel-body">
       <div class="form-grid">
         <div class="field">
           <label class="label">First name <span class="required">*</span></label>
@@ -1777,25 +1854,24 @@
         </div>
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('modal-add')">Cancel</button>
-      <button class="btn btn-secondary" onclick="closeModal('modal-add'); showToast('success','Draft saved','Employee draft saved to your workspace.')">Save as draft</button>
-      <button class="btn btn-primary" onclick="closeModal('modal-add'); showToast('success','Employee added','Sarah Chen was added to Engineering.')">Add Employee</button>
+    <div class="panel-footer">
+      <button class="btn btn-ghost" onclick="closePanel('panel-add')">Cancel</button>
+      <button class="btn btn-secondary" onclick="closePanel('panel-add'); showToast('success','Draft saved','Employee draft saved to your workspace.')">Save as draft</button>
+      <button class="btn btn-primary" onclick="closePanel('panel-add'); showToast('success','Employee added','Sarah Chen was added to Engineering.')">Add Employee</button>
     </div>
   </div>
-</div>
 
-<!-- ============ VIEW EMPLOYEE MODAL ============ -->
-<div class="modal-backdrop" id="modal-view" onclick="if(event.target===this)closeModal('modal-view')">
-  <div class="modal modal-lg" role="dialog">
-    <div class="modal-header">
+<!-- ============ VIEW EMPLOYEE PANEL ============ -->
+<div class="panel-overlay" id="panel-view-overlay" onclick="closePanel('panel-view')"></div>
+<div class="right-panel" id="panel-view" role="dialog" aria-labelledby="view-panel-title">
+    <div class="panel-header">
       <div>
-        <div class="modal-title">Employee Profile</div>
-        <div class="modal-subtitle">EMP-0142 · Last updated 2 days ago</div>
+        <div class="panel-title" id="view-panel-title">Employee Profile</div>
+        <div class="panel-subtitle">EMP-0142 · Last updated 2 days ago</div>
       </div>
-      <button class="modal-close" onclick="closeModal('modal-view')" aria-label="Close"><svg><use href="#i-x"/></svg></button>
+      <button class="panel-close" onclick="closePanel('panel-view')" aria-label="Close"><svg><use href="#i-x"/></svg></button>
     </div>
-    <div class="modal-body">
+    <div class="panel-body">
       <div class="profile-header">
         <div class="profile-avatar">SC</div>
         <div style="flex:1">
@@ -1807,7 +1883,7 @@
             <span class="tag">Remote</span>
           </div>
         </div>
-        <button class="btn btn-secondary btn-sm"><svg><use href="#i-edit"/></svg> Edit</button>
+        <button class="btn btn-secondary btn-sm" onclick="closePanel('panel-view'); openPanel('panel-add')"><svg><use href="#i-edit"/></svg> Edit</button>
       </div>
 
       <div class="detail-grid">
@@ -1845,12 +1921,11 @@
         <div class="progress"><div class="progress-bar" style="width:72%"></div></div>
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('modal-view')">Close</button>
+    <div class="panel-footer">
+      <button class="btn btn-ghost" onclick="closePanel('panel-view')">Close</button>
       <button class="btn btn-primary">View full profile</button>
     </div>
   </div>
-</div>
 
 <!-- ============ DELETE CONFIRM MODAL ============ -->
 <div class="modal-backdrop" id="modal-delete" onclick="if(event.target===this)closeModal('modal-delete')">
@@ -1919,8 +1994,8 @@
         <td class="cell-muted">${e.joined}</td>
         <td>
           <div class="row-actions">
-            <button class="icon-btn" title="View" onclick="openModal('modal-view')"><svg><use href="#i-eye"/></svg></button>
-            <button class="icon-btn" title="Edit" onclick="openModal('modal-add')"><svg><use href="#i-edit"/></svg></button>
+            <button class="icon-btn" title="View" onclick="openPanel('panel-view')"><svg><use href="#i-eye"/></svg></button>
+            <button class="icon-btn" title="Edit" onclick="openPanel('panel-add')"><svg><use href="#i-edit"/></svg></button>
             <button class="icon-btn" title="Delete" onclick="openModal('modal-delete')"><svg><use href="#i-trash"/></svg></button>
           </div>
         </td>
@@ -1937,7 +2012,19 @@
     });
   });
 
-  // ============ MODALS ============
+  // ============ RIGHT PANEL ============
+  function openPanel(id) {
+    document.getElementById(id).classList.add('open');
+    document.getElementById(id + '-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closePanel(id) {
+    document.getElementById(id).classList.remove('open');
+    document.getElementById(id + '-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ============ MODALS (confirm dialogs only) ============
   function openModal(id) {
     document.getElementById(id).classList.add('show');
     document.body.style.overflow = 'hidden';
@@ -1948,6 +2035,7 @@
   }
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
+      document.querySelectorAll('.right-panel.open').forEach(p => closePanel(p.id));
       document.querySelectorAll('.modal-backdrop.show').forEach(m => m.classList.remove('show'));
       document.body.style.overflow = '';
     }
