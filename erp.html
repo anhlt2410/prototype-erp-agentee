@@ -108,162 +108,223 @@
   /* ============ APP SHELL ============ */
   .app {
     display: grid;
-    grid-template-columns: var(--sidebar-w) 1fr;
+    grid-template-columns: 64px 1fr;
     grid-template-rows: var(--topbar-h) 1fr;
     grid-template-areas:
       "sidebar topbar"
       "sidebar main";
     height: 100vh;
-    transition: grid-template-columns 220ms cubic-bezier(0.4,0,0.2,1);
-  }
-  .app.collapsed {
-    grid-template-columns: var(--sidebar-collapsed-w) 1fr;
   }
 
-  /* ============ SIDEBAR ============ */
+  /* ============ SLIM RAIL SIDEBAR ============ */
   .sidebar {
     grid-area: sidebar;
     background: var(--grad-sidebar);
-    border-right: none;
     display: flex;
     flex-direction: column;
-    padding: var(--s4) 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    transition: width 220ms cubic-bezier(0.4,0,0.2,1);
-    width: var(--sidebar-w);
-    box-shadow: 2px 0 16px rgba(30,64,175,0.18);
+    width: 64px;
+    position: relative;
+    z-index: 200;
+    box-shadow: 2px 0 20px rgba(30,64,175,0.22);
+    overflow: visible;
   }
-  .app.collapsed .sidebar { width: var(--sidebar-collapsed-w); }
-  .brand {
+
+  .rail-brand {
+    height: var(--topbar-h);
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 var(--s3) var(--s4);
+    justify-content: center;
     border-bottom: 1px solid var(--sidebar-border);
-    margin-bottom: var(--s4);
-    min-height: 48px;
-    gap: var(--s2);
+    flex-shrink: 0;
+    width: 100%;
   }
+
   .brand-mark {
-    width: 28px;
-    height: 28px;
+    width: 34px;
+    height: 34px;
     border-radius: var(--r-md);
     background: rgba(255,255,255,0.2);
     color: white;
     display: grid;
     place-items: center;
-    font-weight: 700;
-    font-size: 13px;
-    flex-shrink: 0;
-    border: 1px solid rgba(255,255,255,0.25);
-  }
-  .brand-name {
-    flex: 1;
-    font-weight: 700;
+    font-weight: 800;
     font-size: 15px;
-    letter-spacing: -0.01em;
-    white-space: nowrap;
-    overflow: hidden;
-    opacity: 1;
-    color: white;
-    transition: opacity 150ms var(--ease), width 220ms var(--ease);
-  }
-  .app.collapsed .brand-name { opacity: 0; width: 0; flex: 0; overflow: hidden; }
-  .brand-toggle {
-    width: 28px;
-    height: 28px;
-    border-radius: var(--r-sm);
-    display: grid;
-    place-items: center;
-    color: rgba(255,255,255,0.6);
-    transition: background var(--t-fast) var(--ease), transform 220ms var(--ease);
     flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.28);
     cursor: pointer;
+    transition: background var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+    user-select: none;
+    letter-spacing: -0.02em;
   }
-  .brand-toggle:hover { background: rgba(255,255,255,0.12); color: white; }
-  .brand-toggle svg { width: 16px; height: 16px; }
-  .app.collapsed .brand-toggle { transform: rotate(180deg); }
+  .brand-mark:hover {
+    background: rgba(255,255,255,0.3);
+    transform: scale(1.05);
+  }
 
-  .nav-section {
-    padding: 0 var(--s3);
-    margin-bottom: var(--s5);
+  .rail-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--s2) 0;
+    flex: 1;
+    width: 100%;
+    gap: 2px;
+    overflow-y: auto;
+    overflow-x: visible;
   }
-  .nav-label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+  .rail-nav::-webkit-scrollbar { width: 0; height: 0; }
+
+  .rail-item {
+    width: 100%;
+    min-height: 52px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
     color: var(--sidebar-text-muted);
-    padding: 0 var(--s3) var(--s2);
-    white-space: nowrap;
-    overflow: hidden;
-    transition: opacity 150ms var(--ease), height 220ms var(--ease), padding 220ms var(--ease);
+    cursor: pointer;
+    transition: background var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+    position: relative;
+    user-select: none;
+    padding: var(--s2) 0;
+    flex-shrink: 0;
   }
-  .app.collapsed .nav-label { opacity: 0; height: 0; padding: 0; }
-  .nav-item {
+
+  .rail-item:hover {
+    background: var(--sidebar-hover-bg);
+    color: rgba(255,255,255,0.92);
+  }
+
+  .rail-item.active {
+    background: var(--sidebar-active-bg);
+    color: white;
+  }
+
+  /* Active left accent bar */
+  .rail-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 30px;
+    background: white;
+    border-radius: 0 3px 3px 0;
+    box-shadow: 0 0 8px rgba(255,255,255,0.5);
+  }
+
+  .rail-item svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    color: inherit;
+  }
+
+  .rail-label { display: none; }
+
+  .rail-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: var(--s2) 0;
+    border-top: 1px solid var(--sidebar-border);
+    gap: 2px;
+    flex-shrink: 0;
+  }
+
+  /* ============ FLYOUT PANEL ============ */
+  .rail-flyout {
+    position: fixed;
+    left: 64px;
+    z-index: 400;
+    min-width: 224px;
+    background: var(--surface);
+    border-radius: 0 var(--r-lg) var(--r-lg) 0;
+    box-shadow: 8px 4px 40px rgba(15,23,42,0.14), 2px 0 12px rgba(15,23,42,0.07);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--primary);
+    opacity: 0;
+    transform: translateX(-10px);
+    pointer-events: none;
+    transition: opacity 180ms var(--ease), transform 180ms var(--ease);
+    overflow: hidden;
+    top: 60px; /* overridden by JS */
+  }
+
+  .rail-flyout.visible {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+
+  .flyout-header {
+    padding: 13px 16px 9px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--primary-active);
+    background: linear-gradient(135deg, var(--primary-50), #F3F8FF);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .flyout-items { padding: var(--s1) 0; }
+
+  .flyout-item {
     display: flex;
     align-items: center;
-    gap: var(--s3);
-    padding: var(--s2) var(--s3);
-    border-radius: var(--r-md);
-    color: var(--sidebar-text);
+    justify-content: space-between;
+    padding: 10px 16px;
+    font-size: 13.5px;
     font-weight: 500;
+    color: var(--text-secondary);
     cursor: pointer;
-    transition: background var(--t-fast) var(--ease), color var(--t-fast) var(--ease), padding 220ms var(--ease);
-    margin-bottom: 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    position: relative;
-  }
-  .nav-item:hover { background: var(--sidebar-hover-bg) !important; color: white !important; }
-  .nav-item.active { background: var(--sidebar-active-bg) !important; color: white !important; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15); }
-  .nav-item svg { color: rgba(255,255,255,0.6) !important; }
-  .nav-item.active svg { color: white !important; }
-  .nav-item-text {
-    flex: 1;
-    overflow: hidden;
-    opacity: 1;
-    transition: opacity 150ms var(--ease), width 220ms var(--ease);
+    transition: background var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+    gap: var(--s3);
     white-space: nowrap;
   }
-  .app.collapsed .nav-item-text { opacity: 0; width: 0; flex: 0; }
-  .app.collapsed .nav-item { padding: var(--s2); justify-content: center; gap: 0; }
-  .app.collapsed .nav-badge { display: none; }
-  .nav-item[title]:hover::after {
-    content: attr(title);
-    position: fixed;
-    left: calc(var(--sidebar-collapsed-w) + 8px);
-    background: var(--text);
-    color: white;
-    font-size: 12px;
-    font-weight: 500;
-    padding: 4px 10px;
-    border-radius: var(--r-sm);
-    pointer-events: none;
-    white-space: nowrap;
-    z-index: 200;
-    box-shadow: var(--shadow-lg);
-    opacity: 0;
-  }
-  .app.collapsed .nav-item[title]:hover::after { opacity: 1; }
-  /* nav-item hover handled above with sidebar overrides */
-  .nav-item.active {
+  .flyout-item:hover {
     background: var(--primary-50);
     color: var(--primary-active);
   }
-  /* nav-item active svg handled above */
-  .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; color: var(--text-muted); }
-  .nav-badge {
-    margin-left: auto;
-    font-size: 11px;
+  .flyout-item.active {
+    background: linear-gradient(90deg, #EFF6FF 0%, #F8FAFF 100%);
+    color: var(--primary-active);
     font-weight: 600;
-    padding: 1px 6px;
-    border-radius: var(--r-full);
-    background: rgba(255,255,255,0.15);
-    color: rgba(255,255,255,0.8);
   }
-  .nav-item.active .nav-badge { background: rgba(255,255,255,0.25); color: white; }
+
+  .flyout-item-inner {
+    display: flex;
+    align-items: center;
+    gap: var(--s2);
+  }
+
+  .flyout-item svg {
+    width: 15px;
+    height: 15px;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    transition: color var(--t-fast) var(--ease);
+  }
+  .flyout-item:hover svg,
+  .flyout-item.active svg { color: var(--primary); }
+
+  .flyout-badge {
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: var(--r-full);
+    background: var(--primary-100);
+    color: var(--primary-active);
+    line-height: 1.4;
+  }
+  .flyout-item.active .flyout-badge {
+    background: var(--grad);
+    color: white;
+  }
 
   /* ============ TOPBAR ============ */
   .topbar {
@@ -1372,45 +1433,43 @@
 
 <div class="app">
 
-  <!-- ============ SIDEBAR ============ -->
+  <!-- ============ SLIM RAIL SIDEBAR ============ -->
   <aside class="sidebar">
-    <div class="brand">
-      <div class="brand-mark">T</div>
-      <span class="brand-name">Twendee</span>
-      <button class="brand-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-      </button>
+    <!-- Brand -->
+    <div class="rail-brand">
+      <div class="brand-mark" title="Twendee ERP">T</div>
     </div>
 
-    <div class="nav-section">
-      <div class="nav-label">Overview</div>
-      <div class="nav-item" title="Dashboard"><svg><use href="#i-dashboard"/></svg><span class="nav-item-text"> Dashboard</span></div>
-      <div class="nav-item" title="Reports"><svg><use href="#i-file"/></svg><span class="nav-item-text"> Reports</span></div>
-    </div>
-
-    <div class="nav-section">
-      <div class="nav-label">Workforce</div>
-      <div class="nav-item active" title="Employees">
-        <svg><use href="#i-users"/></svg><span class="nav-item-text"> Employees
-        <span class="nav-badge">248</span></span>
+    <!-- Main navigation rail -->
+    <nav class="rail-nav">
+      <div class="rail-item" data-flyout="flyout-overview">
+        <svg><use href="#i-dashboard"/></svg>
+        <span class="rail-label">Overview</span>
       </div>
-      <div class="nav-item" title="Departments"><svg><use href="#i-briefcase"/></svg><span class="nav-item-text"> Departments</span></div>
-      <div class="nav-item" title="Time Off">
-        <svg><use href="#i-calendar"/></svg><span class="nav-item-text"> Time Off
-        <span class="nav-badge">7</span></span>
+      <div class="rail-item active" data-flyout="flyout-workforce">
+        <svg><use href="#i-users"/></svg>
+        <span class="rail-label">Workforce</span>
       </div>
-      <div class="nav-item" title="Payroll"><svg><use href="#i-dollar"/></svg><span class="nav-item-text"> Payroll</span></div>
-    </div>
+      <div class="rail-item" data-flyout="flyout-operations">
+        <svg><use href="#i-package"/></svg>
+        <span class="rail-label">Operations</span>
+      </div>
+      <div class="rail-item" data-flyout="flyout-finance">
+        <svg><use href="#i-dollar"/></svg>
+        <span class="rail-label">Finance</span>
+      </div>
+    </nav>
 
-    <div class="nav-section">
-      <div class="nav-label">Operations</div>
-      <div class="nav-item" title="Inventory"><svg><use href="#i-package"/></svg><span class="nav-item-text"> Inventory</span></div>
-      <div class="nav-item" title="Invoices"><svg><use href="#i-file"/></svg><span class="nav-item-text"> Invoices</span></div>
-    </div>
-
-    <div class="nav-section" style="margin-top: auto;">
-      <div class="nav-item" title="Settings"><svg><use href="#i-settings"/></svg><span class="nav-item-text"> Settings</span></div>
-      <div class="nav-item"><svg><use href="#i-help"/></svg> Help & Support</div>
+    <!-- Bottom rail items -->
+    <div class="rail-bottom">
+      <div class="rail-item" data-flyout="flyout-settings">
+        <svg><use href="#i-settings"/></svg>
+        <span class="rail-label">Settings</span>
+      </div>
+      <div class="rail-item" data-flyout="flyout-help">
+        <svg><use href="#i-help"/></svg>
+        <span class="rail-label">Help</span>
+      </div>
     </div>
   </aside>
 
@@ -1763,6 +1822,162 @@
   </main>
 </div>
 
+<!-- ============ SLIM RAIL FLYOUTS ============ -->
+
+<!-- Overview flyout -->
+<div class="rail-flyout" id="flyout-overview">
+  <div class="flyout-header">Overview</div>
+  <div class="flyout-items">
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'overview')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-dashboard"/></svg> Dashboard
+      </div>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'overview')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-file"/></svg> Reports
+      </div>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'overview')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-pin"/></svg> Analytics
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Workforce flyout -->
+<div class="rail-flyout" id="flyout-workforce">
+  <div class="flyout-header">Workforce</div>
+  <div class="flyout-items">
+    <div class="flyout-item active" onclick="selectFlyoutItem(this,'workforce')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-users"/></svg> Employees
+      </div>
+      <span class="flyout-badge">248</span>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'workforce')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-briefcase"/></svg> Departments
+      </div>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'workforce')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-calendar"/></svg> Time Off
+      </div>
+      <span class="flyout-badge">7</span>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'workforce')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-dollar"/></svg> Payroll
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Operations flyout -->
+<div class="rail-flyout" id="flyout-operations">
+  <div class="flyout-header">Operations</div>
+  <div class="flyout-items">
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'operations')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-package"/></svg> Inventory
+      </div>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'operations')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-file"/></svg> Invoices
+      </div>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'operations')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-pin"/></svg> Suppliers
+      </div>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'operations')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-download"/></svg> Purchase Orders
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Finance flyout -->
+<div class="rail-flyout" id="flyout-finance">
+  <div class="flyout-header">Finance</div>
+  <div class="flyout-items">
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'finance')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-dollar"/></svg> Accounts
+      </div>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'finance')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-file"/></svg> Expenses
+      </div>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'finance')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-arrow-up"/></svg> Budget
+      </div>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'finance')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-briefcase"/></svg> Tax & Compliance
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Settings flyout -->
+<div class="rail-flyout" id="flyout-settings">
+  <div class="flyout-header">Settings</div>
+  <div class="flyout-items">
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'settings')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-settings"/></svg> General
+      </div>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'settings')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-users"/></svg> Users & Roles
+      </div>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'settings')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-package"/></svg> Integrations
+      </div>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'settings')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-bell"/></svg> Notifications
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Help flyout -->
+<div class="rail-flyout" id="flyout-help">
+  <div class="flyout-header">Help & Support</div>
+  <div class="flyout-items">
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'help')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-file"/></svg> Documentation
+      </div>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'help')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-mail"/></svg> Contact Support
+      </div>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'help')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-info"/></svg> What's New
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ============ ADD EMPLOYEE PANEL ============ -->
 <div class="panel-overlay" id="panel-add-overlay" onclick="closePanel('panel-add')"></div>
 <div class="right-panel" id="panel-add" role="dialog" aria-labelledby="add-panel-title">
@@ -2069,17 +2284,73 @@
     setTimeout(remove, 4500);
   }
 
-  // Sidebar nav interactivity
-  document.querySelectorAll('.nav-item').forEach(item => {
-    item.addEventListener('click', () => {
-      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-      item.classList.add('active');
-    });
-  });
+  // ============ SLIM RAIL FLYOUTS ============
+  (function() {
+    let hideTimer = null;
+    let visibleFlyout = null;
 
-  // ============ SIDEBAR COLLAPSE ============
-  function toggleSidebar() {
-    document.querySelector('.app').classList.toggle('collapsed');
+    function showFlyout(flyout, railItem) {
+      clearTimeout(hideTimer);
+
+      // Vertically align flyout to the hovered rail item
+      const rect = railItem.getBoundingClientRect();
+      const flyoutH = flyout.scrollHeight;
+      const viewH  = window.innerHeight;
+      let top = rect.top;
+      if (top + flyoutH > viewH - 12) top = Math.max(12, viewH - flyoutH - 12);
+      flyout.style.top = top + 'px';
+
+      // Hide any other open flyout instantly
+      if (visibleFlyout && visibleFlyout !== flyout) {
+        visibleFlyout.classList.remove('visible');
+      }
+
+      flyout.classList.add('visible');
+      visibleFlyout = flyout;
+    }
+
+    function scheduledHide() {
+      hideTimer = setTimeout(() => {
+        if (visibleFlyout) {
+          visibleFlyout.classList.remove('visible');
+          visibleFlyout = null;
+        }
+      }, 130);
+    }
+
+    document.querySelectorAll('.rail-item[data-flyout]').forEach(item => {
+      const flyout = document.getElementById(item.dataset.flyout);
+      if (!flyout) return;
+
+      item.addEventListener('mouseenter', () => showFlyout(flyout, item));
+      item.addEventListener('mouseleave', scheduledHide);
+      flyout.addEventListener('mouseenter', () => clearTimeout(hideTimer));
+      flyout.addEventListener('mouseleave', scheduledHide);
+    });
+
+    // Dismiss on outside click
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.rail-item') && !e.target.closest('.rail-flyout')) {
+        document.querySelectorAll('.rail-flyout').forEach(f => f.classList.remove('visible'));
+        visibleFlyout = null;
+      }
+    });
+  })();
+
+  // Called when a flyout sub-item is clicked
+  function selectFlyoutItem(el, module) {
+    // Mark sub-item active within its flyout
+    const flyout = el.closest('.rail-flyout');
+    flyout.querySelectorAll('.flyout-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+
+    // Mark rail item active
+    document.querySelectorAll('.rail-item').forEach(i => i.classList.remove('active'));
+    const rail = document.querySelector(`.rail-item[data-flyout="flyout-${module}"]`);
+    if (rail) rail.classList.add('active');
+
+    // Dismiss flyout smoothly
+    setTimeout(() => flyout.classList.remove('visible'), 160);
   }
 
   // ============ PAGE JUMP ============
@@ -2098,7 +2369,7 @@
   .back-home-btn {
     position: fixed;
     bottom: 28px;
-    left: 28px;
+    left: 76px;
     z-index: 9999;
     display: inline-flex;
     align-items: center;
