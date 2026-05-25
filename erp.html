@@ -517,9 +517,8 @@
   .kpi-card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-left: 3px solid transparent;
-    border-image: var(--grad) 1;
     border-radius: var(--r-md);
+    box-shadow: inset 3px 0 0 var(--primary);
     padding: var(--s3) var(--s4);
     display: flex;
     align-items: center;
@@ -1568,7 +1567,7 @@
 
       <div class="search-input">
         <svg><use href="#i-search"/></svg>
-        <input type="text" placeholder="Search employees…">
+        <input id="table-search" type="text" placeholder="Search employees…" oninput="filterEmployees(this.value)">
       </div>
 
       <button class="filter-chip">
@@ -1625,7 +1624,7 @@
     <!-- ===================== COMPONENT GALLERY ===================== -->
     <section class="gallery">
       <h2 class="gallery-title">Component Library</h2>
-      <p class="gallery-sub">All the building blocks used across Acme ERP — interactive previews.</p>
+      <p class="gallery-sub">All the building blocks used across Twendee Work — interactive previews.</p>
 
       <div class="gallery-grid">
 
@@ -2016,8 +2015,9 @@
           <label class="label">Start date <span class="required">*</span></label>
           <div class="input-group">
             <svg class="input-icon"><use href="#i-calendar"/></svg>
-            <input class="input" type="date">
+            <input class="input" type="date" min="2000-01-01">
           </div>
+          <span class="field-help">Cannot be set before year 2000</span>
         </div>
         <div class="field">
           <label class="label">Department <span class="required">*</span></label>
@@ -2055,8 +2055,8 @@
           </div>
         </div>
         <div class="field full">
-          <label class="label">Notes <span class="label-hint">— optional</span></label>
-          <textarea class="textarea" placeholder="Add any context, onboarding instructions, or context about this hire…"></textarea>
+          <label class="label" style="justify-content:space-between">Notes <span class="label-hint">— optional</span><span id="notes-count" style="font-size:11px;color:var(--text-muted);font-weight:400">0 / 500</span></label>
+          <textarea id="notes-textarea" class="textarea" maxlength="500" placeholder="Add any context, onboarding instructions, or context about this hire…" oninput="document.getElementById('notes-count').textContent=this.value.length+' / 500'"></textarea>
         </div>
         <div class="field full">
           <div class="toggle-row" style="border-top: 1px solid var(--divider); padding-top: var(--s4);">
@@ -2188,9 +2188,35 @@
   };
 
   // ============ RENDER TABLE ============
+  let currentFilter = '';
+
+  function filterEmployees(q) {
+    currentFilter = q.toLowerCase();
+    renderEmployees();
+  }
+
   function renderEmployees() {
     const tbody = document.getElementById('employee-tbody');
-    tbody.innerHTML = employees.map((e, i) => `
+    const filtered = employees.filter(e =>
+      !currentFilter ||
+      e.name.toLowerCase().includes(currentFilter) ||
+      e.email.toLowerCase().includes(currentFilter) ||
+      e.dept.toLowerCase().includes(currentFilter) ||
+      e.role.toLowerCase().includes(currentFilter) ||
+      e.loc.toLowerCase().includes(currentFilter) ||
+      e.id.toLowerCase().includes(currentFilter)
+    );
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:var(--s7) var(--s4);color:var(--text-muted);">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto var(--s3);display:block;opacity:0.4"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <div style="font-weight:600;color:var(--text-secondary);margin-bottom:4px">No employees found</div>
+        <div style="font-size:13px">No results for "<strong>${currentFilter}</strong>" — <button onclick="document.getElementById('table-search').value='';filterEmployees('');" style="color:var(--primary);font-size:13px;cursor:pointer;text-decoration:underline;background:none;border:none;padding:0">clear search</button></div>
+      </td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = filtered.map((e, i) => `
       <tr>
         <td>
           <div class="cell-user">
@@ -2216,7 +2242,6 @@
         </td>
       </tr>
     `).join('');
-
   }
 
   // ============ TABS ============
@@ -2237,6 +2262,15 @@
     document.getElementById(id).classList.remove('open');
     document.getElementById(id + '-overlay').classList.remove('open');
     document.body.style.overflow = '';
+    // Reset form fields if this is the add panel
+    if (id === 'panel-add') {
+      const panel = document.getElementById(id);
+      panel.querySelectorAll('input:not([type=radio]):not([type=checkbox]), select, textarea').forEach(el => el.value = '');
+      panel.querySelectorAll('input[type=radio]').forEach((el, i) => el.checked = i === 0);
+      panel.querySelectorAll('input[type=checkbox]').forEach(el => el.checked = true);
+      const counter = document.getElementById('notes-count');
+      if (counter) counter.textContent = '0 / 500';
+    }
   }
 
   // ============ MODALS (confirm dialogs only) ============
@@ -2315,7 +2349,7 @@
           visibleFlyout.classList.remove('visible');
           visibleFlyout = null;
         }
-      }, 130);
+      }, 220);
     }
 
     document.querySelectorAll('.rail-item[data-flyout]').forEach(item => {
@@ -2348,6 +2382,15 @@
     document.querySelectorAll('.rail-item').forEach(i => i.classList.remove('active'));
     const rail = document.querySelector(`.rail-item[data-flyout="flyout-${module}"]`);
     if (rail) rail.classList.add('active');
+
+    // Update document title and breadcrumb
+    const itemLabel = el.querySelector('.flyout-item-inner') ? el.querySelector('.flyout-item-inner').textContent.trim() : '';
+    const sectionLabel = flyout.querySelector('.flyout-header') ? flyout.querySelector('.flyout-header').textContent.trim() : '';
+    if (itemLabel) {
+      document.title = itemLabel + ' — Twendee Work';
+      const bc = document.querySelector('.breadcrumb');
+      if (bc) bc.innerHTML = `<span>${sectionLabel}</span><svg width="14" height="14"><use href="#i-chevron-right"/></svg><span class="current">${itemLabel}</span>`;
+    }
 
     // Dismiss flyout smoothly
     setTimeout(() => flyout.classList.remove('visible'), 160);
