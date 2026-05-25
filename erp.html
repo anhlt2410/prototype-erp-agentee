@@ -1,0 +1,2009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acme ERP — Employees</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============ DESIGN TOKENS ============ */
+  :root {
+    /* Colors — Gradient Blue Theme */
+    --primary: #3B82F6;
+    --primary-hover: #2563EB;
+    --primary-active: #1D4ED8;
+    --primary-50: #EFF6FF;
+    --primary-100: #DBEAFE;
+    --grad-start: #1E40AF;
+    --grad-end: #3B82F6;
+    --grad: linear-gradient(135deg, #1E40AF 0%, #2563EB 50%, #3B82F6 100%);
+    --grad-hover: linear-gradient(135deg, #1E3A8A 0%, #1D4ED8 50%, #2563EB 100%);
+    --grad-sidebar: linear-gradient(180deg, #1E3A8A 0%, #1E40AF 40%, #1D4ED8 100%);
+
+    --secondary: #60A5FA;
+    --secondary-50: #EFF6FF;
+
+    --success: #16A34A;
+    --success-50: #F0FDF4;
+    --warning: #D97706;
+    --warning-50: #FFFBEB;
+    --danger: #DC2626;
+    --danger-50: #FEF2F2;
+
+    --surface: #FFFFFF;
+    --bg: #F0F4FF;
+    --text: #0F172A;
+    --text-secondary: #334155;
+    --text-muted: #64748B;
+    --text-disabled: #94A3B8;
+
+    --border: #DBEAFE;
+    --border-strong: #BFDBFE;
+    --divider: #EFF6FF;
+
+    /* Sidebar text on dark bg */
+    --sidebar-text: rgba(255,255,255,0.85);
+    --sidebar-text-muted: rgba(255,255,255,0.5);
+    --sidebar-active-bg: rgba(255,255,255,0.15);
+    --sidebar-hover-bg: rgba(255,255,255,0.08);
+    --sidebar-border: rgba(255,255,255,0.12);
+
+    /* Typography */
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+    /* Spacing */
+    --s1: 4px;
+    --s2: 8px;
+    --s3: 12px;
+    --s4: 16px;
+    --s5: 24px;
+    --s6: 32px;
+    --s7: 48px;
+    --s8: 64px;
+
+    /* Radius */
+    --r-sm: 6px;
+    --r-md: 8px;
+    --r-lg: 12px;
+    --r-xl: 16px;
+    --r-full: 9999px;
+
+    /* Shadow */
+    --shadow-sm: 0 1px 2px rgba(17, 24, 39, 0.04);
+    --shadow-md: 0 1px 3px rgba(17, 24, 39, 0.06), 0 1px 2px rgba(17, 24, 39, 0.04);
+    --shadow-lg: 0 4px 12px rgba(17, 24, 39, 0.08), 0 2px 4px rgba(17, 24, 39, 0.04);
+    --shadow-xl: 0 20px 40px rgba(17, 24, 39, 0.12), 0 8px 16px rgba(17, 24, 39, 0.06);
+
+    /* Motion */
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --t-fast: 150ms;
+    --t-base: 200ms;
+
+    /* Layout */
+    --sidebar-w: 240px;
+    --sidebar-collapsed-w: 56px;
+    --topbar-h: 60px;
+  }
+
+  /* ============ RESET ============ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  input, select, textarea { font: inherit; color: inherit; }
+  a { color: inherit; text-decoration: none; }
+  svg { display: block; }
+
+  /* ============ APP SHELL ============ */
+  .app {
+    display: grid;
+    grid-template-columns: var(--sidebar-w) 1fr;
+    grid-template-rows: var(--topbar-h) 1fr;
+    grid-template-areas:
+      "sidebar topbar"
+      "sidebar main";
+    height: 100vh;
+    transition: grid-template-columns 220ms cubic-bezier(0.4,0,0.2,1);
+  }
+  .app.collapsed {
+    grid-template-columns: var(--sidebar-collapsed-w) 1fr;
+  }
+
+  /* ============ SIDEBAR ============ */
+  .sidebar {
+    grid-area: sidebar;
+    background: var(--grad-sidebar);
+    border-right: none;
+    display: flex;
+    flex-direction: column;
+    padding: var(--s4) 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: width 220ms cubic-bezier(0.4,0,0.2,1);
+    width: var(--sidebar-w);
+    box-shadow: 2px 0 16px rgba(30,64,175,0.18);
+  }
+  .app.collapsed .sidebar { width: var(--sidebar-collapsed-w); }
+  .brand {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--s3) var(--s4);
+    border-bottom: 1px solid var(--sidebar-border);
+    margin-bottom: var(--s4);
+    min-height: 48px;
+    gap: var(--s2);
+  }
+  .brand-mark {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--r-md);
+    background: rgba(255,255,255,0.2);
+    color: white;
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.25);
+  }
+  .brand-name {
+    flex: 1;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    opacity: 1;
+    color: white;
+    transition: opacity 150ms var(--ease), width 220ms var(--ease);
+  }
+  .app.collapsed .brand-name { opacity: 0; width: 0; flex: 0; overflow: hidden; }
+  .brand-toggle {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--r-sm);
+    display: grid;
+    place-items: center;
+    color: rgba(255,255,255,0.6);
+    transition: background var(--t-fast) var(--ease), transform 220ms var(--ease);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .brand-toggle:hover { background: rgba(255,255,255,0.12); color: white; }
+  .brand-toggle svg { width: 16px; height: 16px; }
+  .app.collapsed .brand-toggle { transform: rotate(180deg); }
+
+  .nav-section {
+    padding: 0 var(--s3);
+    margin-bottom: var(--s5);
+  }
+  .nav-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--sidebar-text-muted);
+    padding: 0 var(--s3) var(--s2);
+    white-space: nowrap;
+    overflow: hidden;
+    transition: opacity 150ms var(--ease), height 220ms var(--ease), padding 220ms var(--ease);
+  }
+  .app.collapsed .nav-label { opacity: 0; height: 0; padding: 0; }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: var(--s3);
+    padding: var(--s2) var(--s3);
+    border-radius: var(--r-md);
+    color: var(--sidebar-text);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background var(--t-fast) var(--ease), color var(--t-fast) var(--ease), padding 220ms var(--ease);
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+  }
+  .nav-item:hover { background: var(--sidebar-hover-bg) !important; color: white !important; }
+  .nav-item.active { background: var(--sidebar-active-bg) !important; color: white !important; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15); }
+  .nav-item svg { color: rgba(255,255,255,0.6) !important; }
+  .nav-item.active svg { color: white !important; }
+  .nav-item-text {
+    flex: 1;
+    overflow: hidden;
+    opacity: 1;
+    transition: opacity 150ms var(--ease), width 220ms var(--ease);
+    white-space: nowrap;
+  }
+  .app.collapsed .nav-item-text { opacity: 0; width: 0; flex: 0; }
+  .app.collapsed .nav-item { padding: var(--s2); justify-content: center; gap: 0; }
+  .app.collapsed .nav-badge { display: none; }
+  .nav-item[title]:hover::after {
+    content: attr(title);
+    position: fixed;
+    left: calc(var(--sidebar-collapsed-w) + 8px);
+    background: var(--text);
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: var(--r-sm);
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 200;
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+  }
+  .app.collapsed .nav-item[title]:hover::after { opacity: 1; }
+  /* nav-item hover handled above with sidebar overrides */
+  .nav-item.active {
+    background: var(--primary-50);
+    color: var(--primary-active);
+  }
+  /* nav-item active svg handled above */
+  .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; color: var(--text-muted); }
+  .nav-badge {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: var(--r-full);
+    background: rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.8);
+  }
+  .nav-item.active .nav-badge { background: rgba(255,255,255,0.25); color: white; }
+
+  /* ============ TOPBAR ============ */
+  .topbar {
+    grid-area: topbar;
+    background: var(--surface);
+    border-bottom: 2px solid var(--primary-100);
+    box-shadow: 0 1px 8px rgba(59,130,246,0.08);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--s5);
+    gap: var(--s4);
+  }
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--s2);
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .breadcrumb .current { color: var(--text); font-weight: 600; }
+  .breadcrumb svg { width: 14px; height: 14px; }
+
+  .topbar-search {
+    flex: 1;
+    max-width: 420px;
+    margin-left: var(--s5);
+    position: relative;
+  }
+  .topbar-search input {
+    width: 100%;
+    height: 36px;
+    padding: 0 var(--s3) 0 36px;
+    background: var(--primary-50);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    transition: all var(--t-fast) var(--ease);
+  }
+  .topbar-search input:focus {
+    outline: none;
+    background: var(--surface);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+  }
+  .topbar-search svg {
+    position: absolute;
+    left: var(--s3);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: var(--text-muted);
+  }
+  .topbar-search kbd {
+    position: absolute;
+    right: var(--s2);
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 2px 6px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    color: var(--text-muted);
+    background: var(--surface);
+  }
+
+  .topbar-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: var(--s2);
+  }
+  .icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--r-md);
+    display: grid;
+    place-items: center;
+    color: var(--text-secondary);
+    transition: background var(--t-fast) var(--ease);
+    position: relative;
+  }
+  .icon-btn:hover { background: var(--divider); }
+  .icon-btn svg { width: 18px; height: 18px; }
+  .icon-btn .dot {
+    position: absolute;
+    top: 8px;
+    right: 9px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--danger);
+    border: 2px solid var(--surface);
+  }
+  .user-chip {
+    display: flex;
+    align-items: center;
+    gap: var(--s2);
+    padding: 4px 10px 4px 4px;
+    border-radius: var(--r-full);
+    transition: background var(--t-fast) var(--ease);
+  }
+  .user-chip:hover { background: var(--divider); }
+  .avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--grad);
+    color: white;
+    display: grid;
+    place-items: center;
+    font-weight: 600;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+  .user-chip .name { font-weight: 500; font-size: 13px; }
+
+  /* ============ MAIN ============ */
+  .main {
+    grid-area: main;
+    overflow-y: auto;
+    padding: var(--s6);
+  }
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s4);
+    margin-bottom: var(--s4);
+  }
+  .page-title {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+  .page-subtitle { color: var(--text-muted); font-size: 13px; }
+  .page-actions { display: flex; gap: var(--s2); flex-shrink: 0; }
+
+  /* ============ BUTTONS ============ */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s2);
+    height: 36px;
+    padding: 0 var(--s4);
+    border-radius: var(--r-md);
+    font-weight: 500;
+    font-size: 14px;
+    transition: all var(--t-fast) var(--ease);
+    white-space: nowrap;
+    border: 1px solid transparent;
+  }
+  .btn svg { width: 16px; height: 16px; }
+  .btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--primary-100);
+  }
+
+  .btn-primary { background: var(--grad); color: white; box-shadow: 0 2px 8px rgba(37,99,235,0.25); }
+  .btn-primary:hover { background: var(--grad-hover); box-shadow: 0 4px 12px rgba(37,99,235,0.35); }
+  .btn-primary:active { background: var(--primary-active); box-shadow: none; }
+
+  .btn-secondary {
+    background: var(--surface);
+    color: var(--text);
+    border-color: var(--border-strong);
+  }
+  .btn-secondary:hover { background: var(--bg); border-color: var(--text-muted); }
+
+  .btn-ghost { color: var(--text-secondary); }
+  .btn-ghost:hover { background: var(--divider); }
+
+  .btn-danger { background: var(--danger); color: white; }
+  .btn-danger:hover { background: #B91C1C; }
+
+  .btn-sm { height: 30px; padding: 0 var(--s3); font-size: 13px; }
+  .btn-lg { height: 42px; padding: 0 var(--s5); font-size: 15px; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ============ KPI CARDS ============ */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--s3);
+    margin-bottom: var(--s4);
+  }
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid transparent;
+    border-image: var(--grad) 1;
+    border-radius: var(--r-md);
+    padding: var(--s3) var(--s4);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s3);
+    transition: box-shadow var(--t-base) var(--ease), transform var(--t-base) var(--ease);
+  }
+  .kpi-card:hover { box-shadow: 0 2px 12px rgba(59,130,246,0.12); transform: translateY(-1px); }
+  .kpi-card-text { min-width: 0; }
+  .kpi-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .kpi-label svg { width: 12px; height: 12px; }
+  .kpi-value {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .kpi-delta {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: var(--r-full);
+    flex-shrink: 0;
+  }
+  .kpi-delta.up { color: var(--success); background: var(--success-50); }
+  .kpi-delta.down { color: var(--danger); background: var(--danger-50); }
+  .kpi-delta svg { width: 12px; height: 12px; }
+
+  /* ============ TOOLBAR / FILTERS ============ */
+  .toolbar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
+    border-bottom: none;
+    padding: var(--s2) var(--s4);
+    display: flex;
+    align-items: center;
+    gap: var(--s3);
+    flex-wrap: wrap;
+    min-height: 44px;
+  }
+  .tabs {
+    display: flex;
+    gap: 2px;
+    background: var(--primary-50);
+    padding: 2px;
+    border-radius: var(--r-full);
+    border: 1px solid var(--border);
+  }
+  .tab {
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    border-radius: var(--r-full);
+    transition: all var(--t-fast) var(--ease);
+    line-height: 1.5;
+  }
+  .tab:hover { color: var(--primary-active); background: rgba(59,130,246,0.07); }
+  .tab.active {
+    background: var(--grad);
+    color: white;
+    box-shadow: 0 1px 4px rgba(37,99,235,0.3);
+  }
+  .tab-count {
+    display: inline-block;
+    margin-left: 5px;
+    padding: 0 5px;
+    background: rgba(0,0,0,0.1);
+    border-radius: var(--r-full);
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .tab.active .tab-count { background: rgba(255,255,255,0.25); color: white; }
+
+  .toolbar-spacer { flex: 1; }
+
+  .search-input {
+    position: relative;
+    width: 260px;
+  }
+  .search-input input {
+    width: 100%;
+    height: 34px;
+    padding: 0 var(--s3) 0 32px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-md);
+    background: var(--surface);
+    transition: all var(--t-fast) var(--ease);
+  }
+  .search-input input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-100);
+  }
+  .search-input svg {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    color: var(--text-muted);
+  }
+
+  .filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s2);
+    height: 34px;
+    padding: 0 12px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-md);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all var(--t-fast) var(--ease);
+  }
+  .filter-chip:hover { border-color: var(--text-muted); color: var(--text); }
+  .filter-chip svg { width: 14px; height: 14px; }
+  .filter-chip .chip-value { color: var(--text); font-weight: 600; }
+
+  /* ============ TABLE ============ */
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0 0 var(--r-lg) var(--r-lg);
+    overflow: hidden;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  thead {
+    background: linear-gradient(90deg, #EFF6FF 0%, #F8FAFF 100%);
+    border-bottom: 1px solid var(--border);
+  }
+  th {
+    text-align: left;
+    padding: var(--s3) var(--s4);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  th.sortable { cursor: pointer; user-select: none; }
+  th.sortable:hover { color: var(--text); }
+  th .th-inner { display: inline-flex; align-items: center; gap: 4px; }
+  th svg { width: 12px; height: 12px; opacity: 0.6; }
+  td {
+    padding: var(--s3) var(--s4);
+    border-bottom: 1px solid var(--divider);
+    font-size: 14px;
+    color: var(--text);
+    vertical-align: middle;
+  }
+  tbody tr { transition: background var(--t-fast) var(--ease); }
+  tbody tr:hover { background: #F0F6FF; }
+  tbody tr:last-child td { border-bottom: none; }
+
+  .checkbox {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 4px;
+    background: var(--surface);
+    cursor: pointer;
+    position: relative;
+    transition: all var(--t-fast) var(--ease);
+    vertical-align: middle;
+  }
+  .checkbox:hover { border-color: var(--primary); }
+  .checkbox:checked {
+    background: var(--grad);
+    border-color: var(--primary);
+  }
+  .checkbox:checked::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 5px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  .checkbox:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--primary-100);
+  }
+
+  .cell-user {
+    display: flex;
+    align-items: center;
+    gap: var(--s3);
+  }
+  .cell-user .avatar { width: 32px; height: 32px; font-size: 12px; }
+  .cell-user .info-name {
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .cell-user .info-email {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.3;
+  }
+  .cell-muted { color: var(--text-muted); font-size: 13px; }
+  .cell-mono { font-family: var(--font-mono); font-size: 13px; color: var(--text-secondary); }
+
+  /* Badges */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: var(--r-full);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1;
+  }
+  .badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .badge-success { background: var(--success-50); color: var(--success); }
+  .badge-warning { background: var(--warning-50); color: var(--warning); }
+  .badge-danger { background: var(--danger-50); color: var(--danger); }
+  .badge-neutral { background: var(--divider); color: var(--text-secondary); }
+  .badge-primary { background: var(--grad); color: white; }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--divider);
+    color: var(--text-secondary);
+    border-radius: var(--r-sm);
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .row-actions {
+    display: flex;
+    gap: 4px;
+    justify-content: flex-end;
+  }
+  .row-actions .icon-btn { width: 30px; height: 30px; }
+  .row-actions .icon-btn svg { width: 16px; height: 16px; }
+
+  /* ============ PAGINATION ============ */
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--s3) var(--s4);
+    border-top: 1px solid var(--divider);
+    background: var(--bg);
+    gap: var(--s4);
+    flex-wrap: wrap;
+  }
+  .page-info { font-size: 13px; color: var(--text-muted); }
+  .page-info strong { color: var(--text); font-weight: 600; }
+  .page-controls { display: flex; gap: 4px; align-items: center; }
+  .page-jump {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-left: var(--s3);
+    padding-left: var(--s3);
+    border-left: 1px solid var(--border);
+  }
+  .page-jump input {
+    width: 48px;
+    height: 28px;
+    text-align: center;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-sm);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 500;
+    -moz-appearance: textfield;
+  }
+  .page-jump input::-webkit-outer-spin-button,
+  .page-jump input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .page-jump input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+  }
+  .page-btn {
+    min-width: 30px;
+    height: 30px;
+    padding: 0 8px;
+    display: grid;
+    place-items: center;
+    border-radius: var(--r-sm);
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    transition: all var(--t-fast) var(--ease);
+  }
+  .page-btn:hover:not(:disabled) { background: var(--divider); color: var(--text); }
+  .page-btn:disabled { color: var(--text-disabled); cursor: not-allowed; }
+  .page-btn.active {
+    background: var(--grad);
+    color: white;
+    box-shadow: 0 1px 4px rgba(37,99,235,0.3);
+  }
+  .page-btn svg { width: 14px; height: 14px; }
+
+
+
+
+  /* ============ MODAL ============ */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(17, 24, 39, 0.5);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    opacity: 0;
+    transition: opacity var(--t-base) var(--ease);
+    padding: var(--s5);
+  }
+  .modal-backdrop.show { display: flex; opacity: 1; }
+  .modal {
+    background: var(--surface);
+    border-radius: var(--r-xl);
+    width: 100%;
+    max-width: 560px;
+    max-height: calc(100vh - 48px);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-xl);
+    transform: translateY(8px) scale(0.98);
+    transition: transform var(--t-base) var(--ease);
+  }
+  .modal-backdrop.show .modal { transform: translateY(0) scale(1); }
+  .modal-lg { max-width: 720px; }
+
+  .modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: var(--s5) var(--s5) var(--s4);
+    gap: var(--s4);
+  }
+  .modal-title { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+  .modal-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+  .modal-close {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--r-sm);
+    display: grid;
+    place-items: center;
+    color: var(--text-muted);
+    transition: all var(--t-fast) var(--ease);
+    flex-shrink: 0;
+    margin-top: -2px;
+  }
+  .modal-close:hover { background: var(--divider); color: var(--text); }
+  .modal-close svg { width: 16px; height: 16px; stroke-width: 2; }
+  .modal-body {
+    padding: 0 var(--s5) var(--s5);
+    overflow-y: auto;
+    flex: 1;
+  }
+  .modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--s2);
+    padding: var(--s4) var(--s5);
+    border-top: 1px solid var(--border);
+    background: var(--primary-50);
+  }
+
+  /* Confirm dialog variant */
+  .modal-confirm { max-width: 420px; }
+  .modal-confirm .modal-body { display: flex; gap: var(--s4); }
+  .modal-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--r-full);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .modal-icon.danger { background: var(--danger-50); color: var(--danger); }
+  .modal-icon.warning { background: var(--warning-50); color: var(--warning); }
+  .modal-icon svg { width: 20px; height: 20px; }
+  .modal-confirm .modal-header { padding-bottom: var(--s2); }
+  .modal-confirm .modal-body p { color: var(--text-secondary); }
+
+  /* ============ FORMS ============ */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s4);
+  }
+  .form-grid .full { grid-column: 1 / -1; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .label .required { color: var(--danger); }
+  .label-hint { font-weight: 400; color: var(--text-muted); font-size: 12px; }
+
+  .input, .select, .textarea {
+    width: 100%;
+    height: 38px;
+    padding: 0 var(--s3);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-md);
+    background: var(--surface);
+    color: var(--text);
+    transition: all var(--t-fast) var(--ease);
+  }
+  .input:hover, .select:hover, .textarea:hover { border-color: var(--text-muted); }
+  .input:focus, .select:focus, .textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+  }
+  .input::placeholder, .textarea::placeholder { color: var(--text-disabled); }
+
+  .textarea {
+    min-height: 88px;
+    padding: var(--s2) var(--s3);
+    resize: vertical;
+    font-family: inherit;
+    line-height: 1.5;
+  }
+  .select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 14px;
+    padding-right: 30px;
+  }
+
+  .input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .input-group .input-icon {
+    position: absolute;
+    left: 10px;
+    width: 16px;
+    height: 16px;
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+  .input-group .input { padding-left: 32px; }
+
+  .field-help { font-size: 12px; color: var(--text-muted); }
+  .field-error {
+    font-size: 12px;
+    color: var(--danger);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .field-error svg { width: 12px; height: 12px; }
+  .field.has-error .input,
+  .field.has-error .select,
+  .field.has-error .textarea {
+    border-color: var(--danger);
+  }
+  .field.has-error .input:focus,
+  .field.has-error .select:focus {
+    box-shadow: 0 0 0 3px var(--danger-50);
+  }
+
+  /* Toggle */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--s3) 0;
+    gap: var(--s4);
+  }
+  .toggle-row .toggle-label { font-weight: 500; }
+  .toggle-row .toggle-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .toggle {
+    appearance: none;
+    width: 36px;
+    height: 20px;
+    background: var(--border-strong);
+    border-radius: var(--r-full);
+    position: relative;
+    cursor: pointer;
+    transition: background var(--t-fast) var(--ease);
+    flex-shrink: 0;
+  }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--t-fast) var(--ease);
+  }
+  .toggle:checked { background: var(--grad); }
+  .toggle:checked::after { transform: translateX(16px); }
+
+  /* Radio cards */
+  .radio-group { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--s3); }
+  .radio-card {
+    position: relative;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-md);
+    padding: var(--s3);
+    cursor: pointer;
+    transition: all var(--t-fast) var(--ease);
+  }
+  .radio-card input { position: absolute; opacity: 0; }
+  .radio-card:hover { border-color: var(--text-muted); }
+  .radio-card:has(input:checked) {
+    border-color: var(--primary);
+    background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
+    box-shadow: 0 0 0 1px var(--primary);
+  }
+  .radio-card .rc-title { font-weight: 600; font-size: 13px; margin-bottom: 2px; }
+  .radio-card .rc-desc { font-size: 12px; color: var(--text-muted); }
+
+  /* ============ NOTIFICATIONS / TOAST ============ */
+  .toast-container {
+    position: fixed;
+    top: var(--s5);
+    right: var(--s5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s3);
+    z-index: 100;
+    pointer-events: none;
+  }
+  .toast {
+    pointer-events: auto;
+    min-width: 320px;
+    max-width: 420px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: var(--s3) var(--s4);
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--s3);
+    animation: slideIn 280ms var(--ease);
+  }
+  @keyframes slideIn {
+    from { transform: translateX(110%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  .toast.removing {
+    animation: slideOut 220ms var(--ease) forwards;
+  }
+  @keyframes slideOut {
+    to { transform: translateX(110%); opacity: 0; }
+  }
+  .toast-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .toast-icon svg { width: 14px; height: 14px; color: white; }
+  .toast.success .toast-icon { background: var(--success); }
+  .toast.warning .toast-icon { background: var(--warning); }
+  .toast.danger .toast-icon { background: var(--danger); }
+  .toast.info .toast-icon { background: var(--primary); }
+  .toast-content { flex: 1; }
+  .toast-title { font-weight: 600; font-size: 14px; line-height: 1.3; }
+  .toast-message { font-size: 13px; color: var(--text-secondary); margin-top: 2px; line-height: 1.4; }
+  .toast-close {
+    width: 24px;
+    height: 24px;
+    border-radius: var(--r-sm);
+    display: grid;
+    place-items: center;
+    color: var(--text-muted);
+    transition: all var(--t-fast) var(--ease);
+    flex-shrink: 0;
+    margin: -2px -4px 0 0;
+  }
+  .toast-close:hover { background: var(--divider); color: var(--text); }
+  .toast-close svg { width: 14px; height: 14px; }
+
+  /* ============ COMPONENT GALLERY ============ */
+  .gallery {
+    margin-top: var(--s8);
+    padding-top: var(--s7);
+    border-top: 1px dashed var(--border-strong);
+  }
+  .gallery-title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: var(--s2);
+  }
+  .gallery-sub { color: var(--text-muted); margin-bottom: var(--s5); }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--s4);
+  }
+  .gallery-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: var(--s5);
+  }
+  .gallery-card-title {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: var(--s4);
+  }
+  .gallery-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s2);
+    align-items: center;
+    margin-bottom: var(--s3);
+  }
+  .gallery-row:last-child { margin-bottom: 0; }
+
+  /* Alert/inline notif */
+  .alert {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--s3);
+    padding: var(--s3) var(--s4);
+    border-radius: var(--r-md);
+    border: 1px solid;
+    font-size: 13px;
+    margin-bottom: var(--s3);
+  }
+  .alert:last-child { margin-bottom: 0; }
+  .alert-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .alert-content { flex: 1; }
+  .alert-title { font-weight: 600; margin-bottom: 2px; }
+  .alert-info { background: var(--primary-50); border-color: var(--primary-100); color: var(--primary-active); }
+  .alert-success { background: var(--success-50); border-color: #BBF7D0; color: var(--success); }
+  .alert-warning { background: var(--warning-50); border-color: #FEF3C7; color: var(--warning); }
+  .alert-danger { background: var(--danger-50); border-color: #FECACA; color: var(--danger); }
+  .alert .alert-text { color: var(--text); margin-top: 2px; }
+
+  /* Progress */
+  .progress {
+    height: 8px;
+    background: var(--divider);
+    border-radius: var(--r-full);
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background: var(--primary);
+    border-radius: var(--r-full);
+    transition: width 300ms var(--ease);
+  }
+  .progress-bar.success { background: var(--success); }
+  .progress-bar.warning { background: var(--warning); }
+
+  /* Empty state preview removed; we have real data */
+
+  /* Drawer for view-employee details (using modal-lg) */
+
+  /* Loading skeleton placeholder */
+  .skeleton {
+    background: linear-gradient(90deg, var(--divider) 0%, var(--bg) 50%, var(--divider) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    border-radius: var(--r-sm);
+  }
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* Detail view */
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s4) var(--s5);
+  }
+  .detail-item .detail-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .detail-item .detail-value { font-size: 14px; color: var(--text); font-weight: 500; }
+
+  .profile-header {
+    display: flex;
+    align-items: center;
+    gap: var(--s4);
+    padding-bottom: var(--s5);
+    border-bottom: 1px solid var(--divider);
+    margin-bottom: var(--s5);
+  }
+  .profile-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--grad);
+    color: white;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .profile-name { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+  .profile-role { color: var(--text-muted); font-size: 14px; margin-top: 2px; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: var(--r-full); border: 2px solid var(--bg); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+  /* Responsive */
+  @media (max-width: 1100px) {
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .gallery-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 800px) {
+    .app {
+      grid-template-columns: 1fr;
+      grid-template-areas: "topbar" "main";
+    }
+    .sidebar { display: none; }
+    .main { padding: var(--s4); }
+    .form-grid { grid-template-columns: 1fr; }
+    .detail-grid { grid-template-columns: 1fr; }
+    .topbar-search { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Icons sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></symbol>
+    <symbol id="i-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></symbol>
+    <symbol id="i-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></symbol>
+    <symbol id="i-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></symbol>
+    <symbol id="i-arrow-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></symbol>
+    <symbol id="i-arrow-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="i-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></symbol>
+    <symbol id="i-briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></symbol>
+    <symbol id="i-dollar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></symbol>
+    <symbol id="i-package" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+  </defs>
+</svg>
+
+<div class="app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">T</div>
+      <span class="brand-name">Twendee</span>
+      <button class="brand-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Overview</div>
+      <div class="nav-item" title="Dashboard"><svg><use href="#i-dashboard"/></svg><span class="nav-item-text"> Dashboard</span></div>
+      <div class="nav-item" title="Reports"><svg><use href="#i-file"/></svg><span class="nav-item-text"> Reports</span></div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Workforce</div>
+      <div class="nav-item active" title="Employees">
+        <svg><use href="#i-users"/></svg><span class="nav-item-text"> Employees
+        <span class="nav-badge">248</span></span>
+      </div>
+      <div class="nav-item" title="Departments"><svg><use href="#i-briefcase"/></svg><span class="nav-item-text"> Departments</span></div>
+      <div class="nav-item" title="Time Off">
+        <svg><use href="#i-calendar"/></svg><span class="nav-item-text"> Time Off
+        <span class="nav-badge">7</span></span>
+      </div>
+      <div class="nav-item" title="Payroll"><svg><use href="#i-dollar"/></svg><span class="nav-item-text"> Payroll</span></div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Operations</div>
+      <div class="nav-item" title="Inventory"><svg><use href="#i-package"/></svg><span class="nav-item-text"> Inventory</span></div>
+      <div class="nav-item" title="Invoices"><svg><use href="#i-file"/></svg><span class="nav-item-text"> Invoices</span></div>
+    </div>
+
+    <div class="nav-section" style="margin-top: auto;">
+      <div class="nav-item" title="Settings"><svg><use href="#i-settings"/></svg><span class="nav-item-text"> Settings</span></div>
+      <div class="nav-item"><svg><use href="#i-help"/></svg> Help & Support</div>
+    </div>
+  </aside>
+
+  <!-- ============ TOPBAR ============ -->
+  <header class="topbar">
+    <nav class="breadcrumb">
+      <span>Workforce</span>
+      <svg><use href="#i-chevron-right"/></svg>
+      <span class="current">Employees</span>
+    </nav>
+
+    <div class="topbar-search">
+      <svg><use href="#i-search"/></svg>
+      <input type="text" placeholder="Search anything…">
+      <kbd>⌘K</kbd>
+    </div>
+
+    <div class="topbar-actions">
+      <button class="icon-btn" aria-label="Help"><svg><use href="#i-help"/></svg></button>
+      <button class="icon-btn" aria-label="Notifications" onclick="showToast('info','New notification','You have 3 unread messages.')">
+        <svg><use href="#i-bell"/></svg>
+        <span class="dot"></span>
+      </button>
+      <button class="user-chip">
+        <div class="avatar">AT</div>
+        <span class="name">Aaron T.</span>
+        <svg width="14" height="14" style="color:var(--text-muted)"><use href="#i-chevron-down"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+
+    <!-- Page header -->
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Employees</h1>
+        <p class="page-subtitle">Manage your team, roles, and employment details.</p>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-secondary" onclick="showToast('info','Export started','Your CSV will be ready in a moment.')">
+          <svg><use href="#i-download"/></svg> Export
+        </button>
+        <button class="btn btn-secondary">
+          <svg><use href="#i-upload"/></svg> Import
+        </button>
+        <button class="btn btn-primary" onclick="openModal('modal-add')">
+          <svg><use href="#i-plus"/></svg> Add Employee
+        </button>
+      </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <section class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-card-text">
+          <div class="kpi-label"><svg><use href="#i-users"/></svg> Total Employees</div>
+          <div class="kpi-value">248</div>
+        </div>
+        <span class="kpi-delta up"><svg><use href="#i-arrow-up"/></svg> 4.2%</span>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-text">
+          <div class="kpi-label"><svg><use href="#i-check"/></svg> Active</div>
+          <div class="kpi-value">231</div>
+        </div>
+        <span class="kpi-delta up"><svg><use href="#i-arrow-up"/></svg> 2.1%</span>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-text">
+          <div class="kpi-label"><svg><use href="#i-calendar"/></svg> On Leave</div>
+          <div class="kpi-value">14</div>
+        </div>
+        <span class="kpi-delta down"><svg><use href="#i-arrow-down"/></svg> 1.4%</span>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-text">
+          <div class="kpi-label"><svg><use href="#i-briefcase"/></svg> Open Roles</div>
+          <div class="kpi-value">12</div>
+        </div>
+        <span class="kpi-delta up"><svg><use href="#i-arrow-up"/></svg> 8 new</span>
+      </div>
+    </section>
+
+    <!-- Toolbar / tabs / filters -->
+    <div class="toolbar">
+      <div class="tabs" role="tablist">
+        <button class="tab active" role="tab">All <span class="tab-count">248</span></button>
+        <button class="tab" role="tab">Active <span class="tab-count">231</span></button>
+        <button class="tab" role="tab">On Leave <span class="tab-count">14</span></button>
+        <button class="tab" role="tab">Inactive <span class="tab-count">3</span></button>
+      </div>
+
+      <div class="toolbar-spacer"></div>
+
+      <div class="search-input">
+        <svg><use href="#i-search"/></svg>
+        <input type="text" placeholder="Search employees…">
+      </div>
+
+      <button class="filter-chip">
+        Department: <span class="chip-value">All</span>
+        <svg><use href="#i-chevron-down"/></svg>
+      </button>
+      <button class="filter-chip">
+        <svg><use href="#i-filter"/></svg> Filters
+      </button>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+
+            <th class="sortable"><span class="th-inner">Employee <svg><use href="#i-arrow-down"/></svg></span></th>
+            <th>ID</th>
+            <th>Department</th>
+            <th>Role</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th class="sortable"><span class="th-inner">Joined <svg><use href="#i-chevron-down"/></svg></span></th>
+            <th style="text-align:right">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="employee-tbody">
+          <!-- Rows injected via JS -->
+        </tbody>
+      </table>
+
+      <div class="pagination">
+        <div class="page-info">Showing <strong>1–8</strong> of <strong>248</strong> employees</div>
+        <div style="display:flex; align-items:center;">
+          <div class="page-controls">
+            <button class="page-btn" disabled aria-label="Previous"><svg><use href="#i-chevron-left"/></svg></button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <span style="padding: 0 4px; color: var(--text-muted)">…</span>
+            <button class="page-btn">31</button>
+            <button class="page-btn" aria-label="Next"><svg><use href="#i-chevron-right"/></svg></button>
+          </div>
+          <div class="page-jump">
+            <label for="page-input">Go to</label>
+            <input id="page-input" type="number" min="1" max="31" value="1" onkeydown="if(event.key==='Enter')jumpToPage(this.value)">
+            <span>of 31</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== COMPONENT GALLERY ===================== -->
+    <section class="gallery">
+      <h2 class="gallery-title">Component Library</h2>
+      <p class="gallery-sub">All the building blocks used across Acme ERP — interactive previews.</p>
+
+      <div class="gallery-grid">
+
+        <!-- Buttons -->
+        <div class="gallery-card">
+          <div class="gallery-card-title">Buttons</div>
+          <div class="gallery-row">
+            <button class="btn btn-primary">Primary</button>
+            <button class="btn btn-secondary">Secondary</button>
+            <button class="btn btn-ghost">Ghost</button>
+            <button class="btn btn-danger">Delete</button>
+          </div>
+          <div class="gallery-row">
+            <button class="btn btn-primary btn-sm">Small</button>
+            <button class="btn btn-primary">Default</button>
+            <button class="btn btn-primary btn-lg">Large</button>
+            <button class="btn btn-primary" disabled>Disabled</button>
+          </div>
+          <div class="gallery-row">
+            <button class="btn btn-primary"><svg><use href="#i-plus"/></svg> With icon</button>
+            <button class="icon-btn" style="border:1px solid var(--border-strong)"><svg><use href="#i-edit"/></svg></button>
+            <button class="icon-btn" style="border:1px solid var(--border-strong)"><svg><use href="#i-trash"/></svg></button>
+          </div>
+        </div>
+
+        <!-- Badges & tags -->
+        <div class="gallery-card">
+          <div class="gallery-card-title">Badges & Tags</div>
+          <div class="gallery-row">
+            <span class="badge badge-success">Active</span>
+            <span class="badge badge-warning">On Leave</span>
+            <span class="badge badge-danger">Inactive</span>
+            <span class="badge badge-neutral">Draft</span>
+            <span class="badge badge-primary">New</span>
+          </div>
+          <div class="gallery-row">
+            <span class="tag">Engineering</span>
+            <span class="tag">Design</span>
+            <span class="tag">Remote</span>
+            <span class="tag">Full-time</span>
+          </div>
+        </div>
+
+        <!-- Inline alerts -->
+        <div class="gallery-card">
+          <div class="gallery-card-title">Inline Alerts</div>
+          <div class="alert alert-info">
+            <svg class="alert-icon"><use href="#i-info"/></svg>
+            <div class="alert-content">
+              <div class="alert-title">Heads up</div>
+              <div class="alert-text">Payroll closes this Friday at 5 PM.</div>
+            </div>
+          </div>
+          <div class="alert alert-success">
+            <svg class="alert-icon"><use href="#i-check"/></svg>
+            <div class="alert-content">
+              <div class="alert-title">All caught up</div>
+              <div class="alert-text">No pending approvals in your queue.</div>
+            </div>
+          </div>
+          <div class="alert alert-warning">
+            <svg class="alert-icon"><use href="#i-alert"/></svg>
+            <div class="alert-content">
+              <div class="alert-title">Action required</div>
+              <div class="alert-text">3 employees are missing tax documents.</div>
+            </div>
+          </div>
+          <div class="alert alert-danger">
+            <svg class="alert-icon"><use href="#i-alert"/></svg>
+            <div class="alert-content">
+              <div class="alert-title">Sync failed</div>
+              <div class="alert-text">Could not reach payroll service. Retry?</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Toast notifications -->
+        <div class="gallery-card">
+          <div class="gallery-card-title">Toast Notifications</div>
+          <p style="color:var(--text-muted); margin-bottom: var(--s4); font-size: 13px;">Trigger ephemeral feedback from the top-right corner.</p>
+          <div class="gallery-row">
+            <button class="btn btn-secondary btn-sm" onclick="showToast('success','Employee saved','Sarah Chen was added to Engineering.')">Success</button>
+            <button class="btn btn-secondary btn-sm" onclick="showToast('info','Sync in progress','Updating directory…')">Info</button>
+            <button class="btn btn-secondary btn-sm" onclick="showToast('warning','Approval pending','Manager review required.')">Warning</button>
+            <button class="btn btn-secondary btn-sm" onclick="showToast('danger','Update failed','Check your connection and try again.')">Error</button>
+          </div>
+        </div>
+
+        <!-- Form fields -->
+        <div class="gallery-card">
+          <div class="gallery-card-title">Form Fields</div>
+          <div class="field" style="margin-bottom: var(--s3)">
+            <label class="label">Full name <span class="required">*</span></label>
+            <input class="input" type="text" placeholder="e.g. Sarah Chen">
+          </div>
+          <div class="field" style="margin-bottom: var(--s3)">
+            <label class="label">Email <span class="label-hint">— work address</span></label>
+            <div class="input-group">
+              <svg class="input-icon"><use href="#i-mail"/></svg>
+              <input class="input" type="email" placeholder="name@acme.com">
+            </div>
+          </div>
+          <div class="field has-error" style="margin-bottom: var(--s3)">
+            <label class="label">Employee ID</label>
+            <input class="input" type="text" value="EMP-001">
+            <div class="field-error"><svg><use href="#i-alert"/></svg> This ID is already in use.</div>
+          </div>
+          <div class="field" style="margin-bottom: var(--s3)">
+            <label class="label">Department</label>
+            <select class="select">
+              <option>Engineering</option>
+              <option>Design</option>
+              <option>Marketing</option>
+            </select>
+          </div>
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label">Send onboarding email</div>
+              <div class="toggle-desc">Welcome packet delivered on day one.</div>
+            </div>
+            <input type="checkbox" class="toggle" checked>
+          </div>
+        </div>
+
+        <!-- Progress + Skeletons -->
+        <div class="gallery-card">
+          <div class="gallery-card-title">Progress & Loading</div>
+          <div style="margin-bottom: var(--s4)">
+            <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-muted); margin-bottom: 6px;">
+              <span>Onboarding</span><span>72%</span>
+            </div>
+            <div class="progress"><div class="progress-bar" style="width:72%"></div></div>
+          </div>
+          <div style="margin-bottom: var(--s4)">
+            <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-muted); margin-bottom: 6px;">
+              <span>Documents collected</span><span>100%</span>
+            </div>
+            <div class="progress"><div class="progress-bar success" style="width:100%"></div></div>
+          </div>
+          <div style="margin-bottom: var(--s5)">
+            <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-muted); margin-bottom: 6px;">
+              <span>Compliance review</span><span>34%</span>
+            </div>
+            <div class="progress"><div class="progress-bar warning" style="width:34%"></div></div>
+          </div>
+          <div class="gallery-card-title">Skeleton</div>
+          <div style="display:flex; gap: var(--s3); align-items:center;">
+            <div class="skeleton" style="width:32px;height:32px;border-radius:50%"></div>
+            <div style="flex:1">
+              <div class="skeleton" style="height:12px; width:60%; margin-bottom:6px"></div>
+              <div class="skeleton" style="height:10px; width:40%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal triggers -->
+        <div class="gallery-card">
+          <div class="gallery-card-title">Modals & Dialogs</div>
+          <div class="gallery-row">
+            <button class="btn btn-secondary btn-sm" onclick="openModal('modal-add')">Add employee form</button>
+            <button class="btn btn-secondary btn-sm" onclick="openModal('modal-view')">View employee</button>
+            <button class="btn btn-secondary btn-sm" onclick="openModal('modal-delete')">Confirm delete</button>
+          </div>
+        </div>
+
+        <!-- Radio cards -->
+        <div class="gallery-card">
+          <div class="gallery-card-title">Selection</div>
+          <div class="field" style="margin-bottom: var(--s3)">
+            <label class="label">Employment type</label>
+            <div class="radio-group">
+              <label class="radio-card">
+                <input type="radio" name="emp-type" checked>
+                <div class="rc-title">Full-time</div>
+                <div class="rc-desc">40 hrs/week</div>
+              </label>
+              <label class="radio-card">
+                <input type="radio" name="emp-type">
+                <div class="rc-title">Part-time</div>
+                <div class="rc-desc">20 hrs/week</div>
+              </label>
+              <label class="radio-card">
+                <input type="radio" name="emp-type">
+                <div class="rc-title">Contract</div>
+                <div class="rc-desc">Project-based</div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ============ ADD EMPLOYEE MODAL ============ -->
+<div class="modal-backdrop" id="modal-add" onclick="if(event.target===this)closeModal('modal-add')">
+  <div class="modal modal-lg" role="dialog" aria-labelledby="add-title">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="add-title">Add Employee</div>
+        <div class="modal-subtitle">Create a new team member profile.</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-add')" aria-label="Close"><svg><use href="#i-x"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field">
+          <label class="label">First name <span class="required">*</span></label>
+          <input class="input" type="text" placeholder="Sarah">
+        </div>
+        <div class="field">
+          <label class="label">Last name <span class="required">*</span></label>
+          <input class="input" type="text" placeholder="Chen">
+        </div>
+        <div class="field full">
+          <label class="label">Work email <span class="required">*</span></label>
+          <div class="input-group">
+            <svg class="input-icon"><use href="#i-mail"/></svg>
+            <input class="input" type="email" placeholder="sarah.chen@acme.com">
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Phone</label>
+          <div class="input-group">
+            <svg class="input-icon"><use href="#i-phone"/></svg>
+            <input class="input" type="tel" placeholder="+1 (555) 000-0000">
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Start date <span class="required">*</span></label>
+          <div class="input-group">
+            <svg class="input-icon"><use href="#i-calendar"/></svg>
+            <input class="input" type="date">
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Department <span class="required">*</span></label>
+          <select class="select">
+            <option>Engineering</option>
+            <option>Design</option>
+            <option>Marketing</option>
+            <option>Sales</option>
+            <option>Operations</option>
+            <option>Finance</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="label">Job title <span class="required">*</span></label>
+          <input class="input" type="text" placeholder="Senior Engineer">
+        </div>
+        <div class="field full">
+          <label class="label">Employment type</label>
+          <div class="radio-group">
+            <label class="radio-card">
+              <input type="radio" name="add-type" checked>
+              <div class="rc-title">Full-time</div>
+              <div class="rc-desc">40 hrs/week</div>
+            </label>
+            <label class="radio-card">
+              <input type="radio" name="add-type">
+              <div class="rc-title">Part-time</div>
+              <div class="rc-desc">20 hrs/week</div>
+            </label>
+            <label class="radio-card">
+              <input type="radio" name="add-type">
+              <div class="rc-title">Contract</div>
+              <div class="rc-desc">Project-based</div>
+            </label>
+          </div>
+        </div>
+        <div class="field full">
+          <label class="label">Notes <span class="label-hint">— optional</span></label>
+          <textarea class="textarea" placeholder="Add any context, onboarding instructions, or context about this hire…"></textarea>
+        </div>
+        <div class="field full">
+          <div class="toggle-row" style="border-top: 1px solid var(--divider); padding-top: var(--s4);">
+            <div>
+              <div class="toggle-label">Send onboarding email</div>
+              <div class="toggle-desc">Includes welcome packet, day-one checklist, and IT account setup.</div>
+            </div>
+            <input type="checkbox" class="toggle" checked>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-add')">Cancel</button>
+      <button class="btn btn-secondary" onclick="closeModal('modal-add'); showToast('success','Draft saved','Employee draft saved to your workspace.')">Save as draft</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-add'); showToast('success','Employee added','Sarah Chen was added to Engineering.')">Add Employee</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ VIEW EMPLOYEE MODAL ============ -->
+<div class="modal-backdrop" id="modal-view" onclick="if(event.target===this)closeModal('modal-view')">
+  <div class="modal modal-lg" role="dialog">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Employee Profile</div>
+        <div class="modal-subtitle">EMP-0142 · Last updated 2 days ago</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-view')" aria-label="Close"><svg><use href="#i-x"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="profile-header">
+        <div class="profile-avatar">SC</div>
+        <div style="flex:1">
+          <div class="profile-name">Sarah Chen</div>
+          <div class="profile-role">Senior Software Engineer · Engineering</div>
+          <div style="margin-top: var(--s2); display: flex; gap: var(--s2);">
+            <span class="badge badge-success">Active</span>
+            <span class="tag">Full-time</span>
+            <span class="tag">Remote</span>
+          </div>
+        </div>
+        <button class="btn btn-secondary btn-sm"><svg><use href="#i-edit"/></svg> Edit</button>
+      </div>
+
+      <div class="detail-grid">
+        <div class="detail-item">
+          <div class="detail-label">Email</div>
+          <div class="detail-value">sarah.chen@acme.com</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Phone</div>
+          <div class="detail-value">+1 (415) 555-0142</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Manager</div>
+          <div class="detail-value">David Park</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Location</div>
+          <div class="detail-value">San Francisco, CA</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Start date</div>
+          <div class="detail-value">March 14, 2022</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Tenure</div>
+          <div class="detail-value">4 years, 2 months</div>
+        </div>
+      </div>
+
+      <div style="margin-top: var(--s5); padding-top: var(--s5); border-top: 1px solid var(--divider);">
+        <div class="gallery-card-title" style="margin-bottom: var(--s3)">Onboarding</div>
+        <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-muted); margin-bottom: 6px;">
+          <span>5 of 7 steps complete</span><span>72%</span>
+        </div>
+        <div class="progress"><div class="progress-bar" style="width:72%"></div></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-view')">Close</button>
+      <button class="btn btn-primary">View full profile</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ DELETE CONFIRM MODAL ============ -->
+<div class="modal-backdrop" id="modal-delete" onclick="if(event.target===this)closeModal('modal-delete')">
+  <div class="modal modal-confirm" role="alertdialog">
+    <div class="modal-header">
+      <div style="display:flex; gap: var(--s3); align-items: flex-start;">
+        <div class="modal-icon danger"><svg><use href="#i-trash"/></svg></div>
+        <div>
+          <div class="modal-title">Delete employee?</div>
+          <div class="modal-subtitle">This action cannot be undone.</div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-delete')" aria-label="Close"><svg><use href="#i-x"/></svg></button>
+    </div>
+    <div class="modal-body" style="padding-top: var(--s2)">
+      <p style="color: var(--text-secondary);">You're about to permanently delete <strong style="color:var(--text)">Sarah Chen</strong> and all associated payroll, time-off, and document records. Their access will be revoked immediately.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-delete')">Cancel</button>
+      <button class="btn btn-danger" onclick="closeModal('modal-delete'); showToast('danger','Employee deleted','Sarah Chen has been removed.')">Delete employee</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TOASTS ============ -->
+<div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+<script>
+  // ============ EMPLOYEE DATA ============
+  const employees = [
+    { id: 'EMP-0142', name: 'Sarah Chen',     email: 'sarah.chen@acme.com',     dept: 'Engineering', role: 'Senior Engineer',  loc: 'San Francisco', status: 'active',  joined: 'Mar 14, 2022', color: '#8B5CF6', initials: 'SC' },
+    { id: 'EMP-0138', name: 'Marcus Johnson', email: 'm.johnson@acme.com',      dept: 'Design',      role: 'Lead Designer',    loc: 'New York',     status: 'active',  joined: 'Jan 09, 2022', color: '#3B82F6', initials: 'MJ' },
+    { id: 'EMP-0156', name: 'Priya Patel',    email: 'priya.p@acme.com',        dept: 'Marketing',   role: 'Marketing Manager',loc: 'London',       status: 'leave',   joined: 'Jul 22, 2022', color: '#16A34A', initials: 'PP' },
+    { id: 'EMP-0089', name: 'David Park',     email: 'd.park@acme.com',         dept: 'Engineering', role: 'Engineering Lead', loc: 'Seoul',        status: 'active',  joined: 'Feb 03, 2021', color: '#D97706', initials: 'DP' },
+    { id: 'EMP-0201', name: 'Emma Williams',  email: 'emma.w@acme.com',         dept: 'Sales',       role: 'Account Executive',loc: 'Austin',       status: 'active',  joined: 'Sep 18, 2023', color: '#DC2626', initials: 'EW' },
+    { id: 'EMP-0177', name: 'Liam O\'Brien',  email: 'liam.o@acme.com',         dept: 'Operations',  role: 'Ops Coordinator',  loc: 'Dublin',       status: 'active',  joined: 'May 02, 2023', color: '#0EA5E9', initials: 'LO' },
+    { id: 'EMP-0034', name: 'Yuki Tanaka',    email: 'y.tanaka@acme.com',       dept: 'Finance',     role: 'Senior Accountant',loc: 'Tokyo',        status: 'inactive',joined: 'Aug 11, 2020', color: '#7C3AED', initials: 'YT' },
+    { id: 'EMP-0162', name: 'Ana García',     email: 'ana.g@acme.com',          dept: 'Engineering', role: 'Backend Engineer', loc: 'Madrid',       status: 'active',  joined: 'Apr 27, 2022', color: '#059669', initials: 'AG' }
+  ];
+
+  const statusMap = {
+    active: { label: 'Active', cls: 'badge-success' },
+    leave: { label: 'On Leave', cls: 'badge-warning' },
+    inactive: { label: 'Inactive', cls: 'badge-neutral' }
+  };
+
+  // ============ RENDER TABLE ============
+  function renderEmployees() {
+    const tbody = document.getElementById('employee-tbody');
+    tbody.innerHTML = employees.map((e, i) => `
+      <tr>
+        <td>
+          <div class="cell-user">
+            <div class="avatar" style="background:${e.color}">${e.initials}</div>
+            <div>
+              <div class="info-name">${e.name}</div>
+              <div class="info-email">${e.email}</div>
+            </div>
+          </div>
+        </td>
+        <td class="cell-mono">${e.id}</td>
+        <td>${e.dept}</td>
+        <td class="cell-muted">${e.role}</td>
+        <td class="cell-muted">${e.loc}</td>
+        <td><span class="badge ${statusMap[e.status].cls}">${statusMap[e.status].label}</span></td>
+        <td class="cell-muted">${e.joined}</td>
+        <td>
+          <div class="row-actions">
+            <button class="icon-btn" title="View" onclick="openModal('modal-view')"><svg><use href="#i-eye"/></svg></button>
+            <button class="icon-btn" title="Edit" onclick="openModal('modal-add')"><svg><use href="#i-edit"/></svg></button>
+            <button class="icon-btn" title="Delete" onclick="openModal('modal-delete')"><svg><use href="#i-trash"/></svg></button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+
+  }
+
+  // ============ TABS ============
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+
+  // ============ MODALS ============
+  function openModal(id) {
+    document.getElementById(id).classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-backdrop.show').forEach(m => m.classList.remove('show'));
+      document.body.style.overflow = '';
+    }
+  });
+
+  // ============ TOAST NOTIFICATIONS ============
+  const iconMap = {
+    success: '#i-check',
+    info: '#i-info',
+    warning: '#i-alert',
+    danger: '#i-x'
+  };
+  function showToast(type, title, message) {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `
+      <div class="toast-icon"><svg><use href="${iconMap[type]}"/></svg></div>
+      <div class="toast-content">
+        <div class="toast-title">${title}</div>
+        <div class="toast-message">${message}</div>
+      </div>
+      <button class="toast-close" aria-label="Dismiss"><svg><use href="#i-x"/></svg></button>
+    `;
+    container.appendChild(toast);
+    const remove = () => {
+      toast.classList.add('removing');
+      setTimeout(() => toast.remove(), 220);
+    };
+    toast.querySelector('.toast-close').addEventListener('click', remove);
+    setTimeout(remove, 4500);
+  }
+
+  // Sidebar nav interactivity
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+
+  // ============ SIDEBAR COLLAPSE ============
+  function toggleSidebar() {
+    document.querySelector('.app').classList.toggle('collapsed');
+  }
+
+  // ============ PAGE JUMP ============
+  function jumpToPage(value) {
+    const page = Math.max(1, Math.min(31, parseInt(value) || 1));
+    document.getElementById('page-input').value = page;
+    showToast('info', `Jumped to page ${page}`, `Showing employees ${(page-1)*8+1}–${page*8} of 248.`);
+  }
+
+  // Init
+  renderEmployees();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Prototypes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #2563EB;
+    --primary-hover: #1D4ED8;
+    --accent: #06B6D4;
+    --gradient-primary: linear-gradient(135deg, #2563EB 0%, #06B6D4 100%);
+    --gradient-soft: linear-gradient(135deg, #EFF6FF 0%, #ECFEFF 100%);
+    --text: #0F172A;
+    --text-muted: #64748B;
+    --surface: #FFFFFF;
+    --border: #E2E8F0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--text);
+    background: var(--gradient-soft);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .container { max-width: 960px; width: 100%; }
+  .header { text-align: center; margin-bottom: 48px; }
+  .badge {
+    display: inline-block;
+    padding: 6px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--primary);
+    letter-spacing: 0.5px;
+    margin-bottom: 20px;
+  }
+  h1 {
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .subtitle { color: var(--text-muted); font-size: 17px; max-width: 540px; margin: 0 auto; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    display: block;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(37, 99, 235, 0.12);
+    border-color: var(--primary);
+  }
+  .card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--gradient-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    color: white;
+    font-weight: 700;
+    font-size: 20px;
+  }
+  .card h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  .card p { color: var(--text-muted); font-size: 15px; line-height: 1.5; margin-bottom: 20px; }
+  .card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--primary);
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .footer {
+    text-align: center;
+    margin-top: 48px;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <span class="badge">PROTOTYPES</span>
+      <h1>Customer Preview</h1>
+      <p class="subtitle">Two prototype concepts for review. Click a card below to explore the live preview.</p>
+    </div>
+
+    <div class="grid">
+      <a href="/agentic.html" class="card">
+        <div class="card-icon">A</div>
+        <h2>Agentic Workspace</h2>
+        <p>AI agent workspace concept with gradient blue theme.</p>
+        <span class="card-link">View prototype →</span>
+      </a>
+
+      <a href="/erp.html" class="card">
+        <div class="card-icon">E</div>
+        <h2>Acme ERP — Employees</h2>
+        <p>Simple ERP employee management interface with gradient blue theme.</p>
+        <span class="card-link">View prototype →</span>
+      </a>
+    </div>
+
+    <div class="footer">Built as static prototypes · Deployed on Vercel</div>
+  </div>
+</body>
+</html>
