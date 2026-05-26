@@ -245,8 +245,6 @@
   .chat-item:hover { background: var(--secondary); }
   .chat-item.active {
     background: var(--gradient-soft);
-    border-left: 2px solid var(--primary);
-    padding-left: 8px;
   }
 
   .chat-item-title {
@@ -1288,6 +1286,217 @@
 
   .mini-chart svg { width: 100%; height: 100%; display: block; }
 
+  /* ============ INLINE DATA TABLE (inside message) ============ */
+  .msg-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-top: 10px;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--surface);
+  }
+
+  .msg-data-table th {
+    background: var(--secondary);
+    text-align: left;
+    padding: 8px 11px;
+    font-weight: 600;
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  .msg-data-table td {
+    padding: 8px 11px;
+    border-bottom: 1px solid var(--border-soft);
+    color: var(--text);
+  }
+
+  .msg-data-table tr:last-child td { border-bottom: none; }
+  .msg-data-table tr:hover td { background: var(--gradient-soft); }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .status-badge.active {
+    background: rgba(16, 185, 129, 0.12);
+    color: var(--success);
+  }
+
+  .status-badge.inactive {
+    background: rgba(148, 163, 184, 0.15);
+    color: var(--text-subtle);
+  }
+
+  /* ============ DATA CARD (new-user review) ============ */
+  .data-card {
+    margin-top: 10px;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--surface);
+  }
+
+  .data-card-header {
+    padding: 9px 14px;
+    background: var(--gradient-soft);
+    border-bottom: 1px solid var(--border-soft);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .data-card-header .pending-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--warning);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18);
+    flex-shrink: 0;
+  }
+
+  .data-fields { padding: 2px 0; }
+
+  .data-field {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  .data-field:last-child { border-bottom: none; }
+
+  .data-field-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+    min-width: 100px;
+    flex-shrink: 0;
+  }
+
+  .data-field-value {
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .data-card-actions {
+    display: flex;
+    gap: 8px;
+    padding: 12px 14px;
+    background: var(--secondary);
+    border-top: 1px solid var(--border-soft);
+  }
+
+  /* Approve — identical to .btn-primary (blue gradient) */
+  .btn-approve {
+    flex: 1;
+    padding: 10px 14px;
+    background: var(--gradient-primary);
+    color: var(--surface);
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 180ms ease;
+    box-shadow: var(--shadow-glow);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-approve::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.18), transparent);
+    opacity: 0;
+    transition: opacity 180ms ease;
+  }
+
+  .btn-approve:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.35);
+  }
+
+  .btn-approve:hover::before { opacity: 1; }
+  .btn-approve:active { transform: translateY(0); }
+
+  /* Reject — identical to .btn-secondary */
+  .btn-reject {
+    flex: 1;
+    padding: 10px 14px;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 150ms ease;
+  }
+
+  .btn-reject:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-soft);
+    transform: translateY(-1px);
+  }
+
+  .btn-reject:active { transform: translateY(0); }
+
+  .btn-approve svg, .btn-reject svg { width: 14px; height: 14px; }
+
+  /* ============ LANGUAGE TOGGLE ============ */
+  .lang-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: all 150ms ease;
+    color: var(--text);
+    flex-shrink: 0;
+  }
+  .lang-toggle:hover {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+    color: var(--primary);
+  }
+  .lang-toggle:active { background: var(--primary-soft-2); }
+  .lang-toggle .lang-flag { font-size: 14px; line-height: 1; }
+  .lang-toggle .lang-code { font-size: 11px; font-weight: 700; font-family: var(--font-mono); letter-spacing: 0.05em; }
+
   /* ============ MOBILE HAMBURGER BUTTON ============ */
   .menu-btn {
     display: none;
@@ -1439,6 +1648,32 @@
 
     /* ---- Floating back-home: hide it (now inside sidebar drawer) ---- */
     .back-home-btn { display: none !important; }
+
+    /* ---- Inline data table ---- */
+    .msg-data-table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-top: 10px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-soft);
+    }
+    /* Strip table's own border/margin since the wrapper handles it */
+    .msg-data-table-wrap .msg-data-table {
+      margin-top: 0;
+      border: none;
+      border-radius: 0;
+      min-width: 420px;   /* forces scroll before cols collapse */
+      font-size: 11.5px;
+    }
+    .msg-data-table th, .msg-data-table td { padding: 7px 10px; }
+
+    /* ---- Data card ---- */
+    .data-card-header { padding: 8px 12px; }
+    .data-field { padding: 7px 12px; }
+    .data-field-label { min-width: 88px; font-size: 11px; }
+    .data-field-value { font-size: 12px; }
+    .data-card-actions { padding: 10px 12px; gap: 6px; }
+    .btn-approve, .btn-reject { padding: 9px 12px; font-size: 12px; }
   }
 </style>
 </head>
@@ -1459,44 +1694,44 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14">
           <path d="M12 5v14M5 12h14" stroke-linecap="round"/>
         </svg>
-        New conversation
+        <span data-i18n="btn.newchat">New conversation</span>
       </button>
     </div>
 
     <div class="sidebar-section">
-      <div class="section-label">Workspace</div>
+      <div class="section-label" data-i18n="nav.workspace">Workspace</div>
       <div class="nav-list">
         <a class="nav-item active">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          Conversations
+          <span data-i18n="nav.conversations">Conversations</span>
           <span class="badge">12</span>
         </a>
         <a class="nav-item">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-          Agents
+          <span data-i18n="nav.agents">Agents</span>
         </a>
         <a class="nav-item">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-          Tasks
+          <span data-i18n="nav.tasks">Tasks</span>
         </a>
         <a class="nav-item">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          Knowledge
+          <span data-i18n="nav.knowledge">Knowledge</span>
         </a>
         <a class="nav-item">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          Settings
+          <span data-i18n="nav.settings">Settings</span>
         </a>
       </div>
     </div>
 
     <div class="sidebar-section" style="padding-bottom: 0;">
-      <div class="section-label">Recent</div>
+      <div class="section-label" data-i18n="nav.recent">Recent</div>
     </div>
 
     <div class="chat-list">
       <div class="chat-item active">
-        <div class="chat-item-title">Q3 Revenue Analysis &amp; Forecast</div>
+        <div class="chat-item-title">Q3 Phân tích doanh thu &amp; Dự báo</div>
         <div class="chat-item-meta">Atlas · 2 min ago</div>
       </div>
       <div class="chat-item">
@@ -1528,14 +1763,14 @@
     <!-- Back to Home — only visible in mobile sidebar drawer -->
     <a href="./index.html" class="nav-item mobile-back-link" style="padding: 10px 10px; border-top: 1px solid var(--border-soft); margin: 0 12px 8px; border-radius: var(--radius-sm); color: var(--primary); font-weight: 600;">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="15 18 9 12 15 6"/></svg>
-      Back to Home
+      <span data-i18n="back.home">Back to Home</span>
     </a>
 
     <div class="user-card">
       <div class="avatar">AN</div>
       <div class="user-info">
         <div class="user-name">Aaron Nguyen</div>
-        <div class="user-plan">Pro plan</div>
+        <div class="user-plan" data-i18n="user.plan">Pro plan</div>
       </div>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="color: var(--text-subtle)"><polyline points="9 18 15 12 9 6"/></svg>
     </div>
@@ -1555,15 +1790,19 @@
       </button>
       <div class="chat-title-group">
         <div class="chat-title">
-          Q3 Revenue Analysis &amp; Forecast
+          Q3 Phân tích doanh thu &amp; Dự báo
           <svg class="chat-title-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         </div>
         <div class="chat-subtitle">
           <span class="status-dot"></span>
-          Atlas — Financial analyst agent · Connected to 4 data sources
+          <span data-i18n="chat.subtitle">Atlas — Financial analyst agent · Connected to 4 data sources</span>
         </div>
       </div>
       <div class="chat-actions">
+        <button class="lang-toggle" id="lang-toggle" onclick="toggleLang()" aria-label="Switch language" title="Switch to Tiếng Việt">
+          <span class="lang-flag">🇻🇳</span>
+          <span class="lang-code">VI</span>
+        </button>
         <button class="icon-btn" title="Share">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
         </button>
@@ -1582,17 +1821,17 @@
     <div class="chat-body" id="chatBody">
       <div class="messages">
 
-        <div class="day-divider">Today · May 25</div>
+        <div class="day-divider" data-i18n="day.divider">Today · May 25</div>
 
         <!-- USER MESSAGE -->
         <div class="message user">
           <div class="message-avatar">AN</div>
           <div class="message-content">
             <div class="message-meta">
-              <span class="message-author">You</span>
+              <span class="message-author" data-i18n="msg.you">You</span>
               <span class="message-time">10:42 AM</span>
             </div>
-            <div class="message-bubble">
+            <div class="message-bubble" data-i18n-html="msg.user1">
               Pull our Q3 revenue numbers from the database, compare against the forecast in <code>finance/q3-plan.xlsx</code>, and draft a one-page summary I can send to the board on Friday.
             </div>
           </div>
@@ -1606,13 +1845,13 @@
               <span class="message-author">Atlas</span>
               <span class="message-time">10:42 AM</span>
             </div>
-            <div class="message-bubble">
+            <div class="message-bubble" data-i18n="msg.agent1">
               On it. I'll break this into four steps and walk you through each one. Starting with the database query now.
             </div>
 
             <div class="task-progress">
               <div class="task-progress-header">
-                <div class="task-progress-title">Q3 Revenue Report</div>
+                <div class="task-progress-title" data-i18n="task.title">Q3 Revenue Report</div>
                 <div class="task-progress-pct">75%</div>
               </div>
               <div class="task-steps">
@@ -1620,21 +1859,21 @@
                   <div class="task-step-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                   </div>
-                  Query revenue table — 12,847 rows
+                  <span data-i18n="task.step1">Query revenue table — 12,847 rows</span>
                 </div>
                 <div class="task-step done">
                   <div class="task-step-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
                   </div>
-                  Load forecast spreadsheet
+                  <span data-i18n="task.step2">Load forecast spreadsheet</span>
                 </div>
                 <div class="task-step active">
                   <div class="task-step-icon">⋯</div>
-                  Compute variance by segment
+                  <span data-i18n="task.step3">Compute variance by segment</span>
                 </div>
                 <div class="task-step pending">
                   <div class="task-step-icon">○</div>
-                  Draft board summary
+                  <span data-i18n="task.step4">Draft board summary</span>
                 </div>
               </div>
             </div>
@@ -1645,16 +1884,16 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
               </div>
               <div class="tool-preview-info">
-                <div class="tool-preview-title">Queried sales_q3 table</div>
-                <div class="tool-preview-desc">12,847 rows · 240ms</div>
+                <div class="tool-preview-title" data-i18n="tool.preview.title">Queried sales_q3 table</div>
+                <div class="tool-preview-desc" data-i18n="tool.preview.desc">12,847 rows · 240ms</div>
               </div>
               <div class="tool-preview-status">
-                <span class="dot"></span> Success
+                <span class="dot"></span> <span data-i18n="tool.preview.status">Success</span>
               </div>
             </div>
 
             <button class="show-detail-btn" data-detail="query">
-              Show detail
+              <span data-i18n="btn.showdetail">Show detail</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
           </div>
@@ -1665,10 +1904,10 @@
           <div class="message-avatar">AN</div>
           <div class="message-content">
             <div class="message-meta">
-              <span class="message-author">You</span>
+              <span class="message-author" data-i18n="msg.you">You</span>
               <span class="message-time">10:44 AM</span>
             </div>
-            <div class="message-bubble">
+            <div class="message-bubble" data-i18n="msg.user2">
               Can you also include a side-by-side comparison with Q2 so we can see momentum?
             </div>
           </div>
@@ -1682,13 +1921,13 @@
               <span class="message-author">Atlas</span>
               <span class="message-time">10:45 AM</span>
             </div>
-            <div class="message-bubble">
+            <div class="message-bubble" data-i18n-html="msg.agent2">
               <p>Good call. I've added Q2 alongside Q3 in the variance table. Here's what stands out so far:</p>
               <p><strong>EMEA</strong> beat plan by <code>+8.4%</code>, driven mainly by enterprise renewals. <strong>APAC</strong> came in flat against a stretch target. <strong>North America</strong> missed by <code>-2.1%</code> — primarily a timing issue on three large deals that slipped to October.</p>
             </div>
 
             <button class="show-detail-btn" data-detail="variance">
-              Show variance breakdown
+              <span data-i18n="btn.showvariance">Show variance breakdown</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
 
@@ -1696,23 +1935,23 @@
               <div class="citation" data-detail="source">
                 <div class="citation-num">01</div>
                 <div class="citation-content">
-                  <div class="citation-title">Q3 closed sales — production DB</div>
-                  <div class="citation-source">snapshot · today 10:42 AM</div>
+                  <div class="citation-title" data-i18n="cite.1.title">Q3 closed sales — production DB</div>
+                  <div class="citation-source" data-i18n="cite.1.meta">snapshot · today 10:42 AM</div>
                 </div>
               </div>
               <div class="citation" data-detail="source">
                 <div class="citation-num">02</div>
                 <div class="citation-content">
-                  <div class="citation-title">finance/q3-plan.xlsx</div>
-                  <div class="citation-source">last modified Jun 30 · sheet "Forecast v3"</div>
+                  <div class="citation-title" data-i18n="cite.2.title">finance/q3-plan.xlsx</div>
+                  <div class="citation-source" data-i18n="cite.2.meta">last modified Jun 30 · sheet "Forecast v3"</div>
                 </div>
               </div>
             </div>
 
             <div class="suggestions">
-              <button class="suggestion-chip">Show me the slipped deals</button>
-              <button class="suggestion-chip">Plot EMEA growth chart</button>
-              <button class="suggestion-chip">Draft the summary now</button>
+              <button class="suggestion-chip" data-i18n="suggest.1">Show me the slipped deals</button>
+              <button class="suggestion-chip" data-i18n="suggest.2">Plot EMEA growth chart</button>
+              <button class="suggestion-chip" data-i18n="suggest.3">Draft the summary now</button>
             </div>
 
             <div class="message-actions">
@@ -1735,13 +1974,175 @@
           </div>
         </div>
 
+        <!-- USER: list users -->
+        <div class="message user">
+          <div class="message-avatar">AN</div>
+          <div class="message-content">
+            <div class="message-meta">
+              <span class="message-author">You</span>
+              <span class="message-time">10:46 AM</span>
+            </div>
+            <div class="message-bubble">
+              Show me the full list of registered users.
+            </div>
+          </div>
+        </div>
+
+        <!-- AGENT: user list table -->
+        <div class="message agent">
+          <div class="message-avatar">A</div>
+          <div class="message-content">
+            <div class="message-meta">
+              <span class="message-author">Atlas</span>
+              <span class="message-time">10:46 AM</span>
+            </div>
+            <div class="message-bubble">
+              Found <strong>5 registered users</strong> in the system.
+            </div>
+
+            <div class="msg-data-table-wrap">
+              <table class="msg-data-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Department</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Alice Chen</strong></td>
+                    <td>alice@acme.com</td>
+                    <td>Admin</td>
+                    <td>Engineering</td>
+                    <td><span class="status-badge active">● Active</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Bob Martin</strong></td>
+                    <td>bob@acme.com</td>
+                    <td>Member</td>
+                    <td>Marketing</td>
+                    <td><span class="status-badge active">● Active</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Clara Kim</strong></td>
+                    <td>clara@acme.com</td>
+                    <td>Manager</td>
+                    <td>Finance</td>
+                    <td><span class="status-badge active">● Active</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>David Lopes</strong></td>
+                    <td>david@acme.com</td>
+                    <td>Member</td>
+                    <td>Sales</td>
+                    <td><span class="status-badge inactive">○ Inactive</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Elena Torres</strong></td>
+                    <td>elena@acme.com</td>
+                    <td>Member</td>
+                    <td>Product</td>
+                    <td><span class="status-badge active">● Active</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="message-actions">
+              <button class="msg-action-btn" title="Copy">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+              <button class="msg-action-btn" title="Export">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              </button>
+              <button class="msg-action-btn" title="Good response">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- USER: request new user -->
+        <div class="message user">
+          <div class="message-avatar">AN</div>
+          <div class="message-content">
+            <div class="message-meta">
+              <span class="message-author">You</span>
+              <span class="message-time">10:47 AM</span>
+            </div>
+            <div class="message-bubble">
+              Add a new user: <strong>Michael Tran</strong>, Engineering department, email <code>michael.tran@acme.com</code>.
+            </div>
+          </div>
+        </div>
+
+        <!-- AGENT: new user review card with Approve / Reject -->
+        <div class="message agent">
+          <div class="message-avatar">A</div>
+          <div class="message-content">
+            <div class="message-meta">
+              <span class="message-author">Atlas</span>
+              <span class="message-time">10:47 AM</span>
+            </div>
+            <div class="message-bubble">
+              I've prepared the new user record. Please review the details below and <strong>Approve</strong> to create the account, or <strong>Reject</strong> to cancel.
+            </div>
+
+            <div class="data-card">
+              <div class="data-card-header">
+                <span class="pending-dot"></span>
+                New User — Pending Approval
+              </div>
+              <div class="data-fields">
+                <div class="data-field">
+                  <span class="data-field-label">Full Name</span>
+                  <span class="data-field-value">Michael Tran</span>
+                </div>
+                <div class="data-field">
+                  <span class="data-field-label">Email</span>
+                  <span class="data-field-value">michael.tran@acme.com</span>
+                </div>
+                <div class="data-field">
+                  <span class="data-field-label">Role</span>
+                  <span class="data-field-value">Member</span>
+                </div>
+                <div class="data-field">
+                  <span class="data-field-label">Department</span>
+                  <span class="data-field-value">Engineering</span>
+                </div>
+                <div class="data-field">
+                  <span class="data-field-label">Start Date</span>
+                  <span class="data-field-value">Jun 1, 2025</span>
+                </div>
+                <div class="data-field">
+                  <span class="data-field-label">Access Level</span>
+                  <span class="data-field-value">Standard</span>
+                </div>
+              </div>
+              <div class="data-card-actions">
+                <button class="btn-approve">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  Approve
+                </button>
+                <button class="btn-reject">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  Reject
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- TYPING INDICATOR -->
         <div class="message agent">
           <div class="message-avatar">A</div>
           <div class="message-content">
             <div class="message-meta">
               <span class="message-author">Atlas</span>
-              <span class="message-time">typing…</span>
+              <span class="message-time" data-i18n="msg.typing">typing…</span>
             </div>
             <div class="typing">
               <span class="typing-dot"></span>
@@ -1760,6 +2161,7 @@
         <textarea
           class="composer-input"
           placeholder="Ask Atlas anything, or delegate a task…"
+          data-i18n-placeholder="composer.placeholder"
           rows="1"
           id="composerInput"
         ></textarea>
@@ -1778,7 +2180,7 @@
           </button>
           <div class="model-select">
             <span class="indicator"></span>
-            <span class="model-label">Atlas · GPT-class</span>
+            <span class="model-label" data-i18n="model.label">Atlas · GPT-class</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
           <button class="send-btn" title="Send" onclick="document.getElementById('composerInput').value=''">
@@ -1787,7 +2189,7 @@
         </div>
       </div>
       <div class="composer-hint">
-        <span class="kbd">⏎</span> send · <span class="kbd">⇧</span><span class="kbd">⏎</span> new line · <span class="kbd">/</span> commands
+        <span class="kbd">⏎</span> <span data-i18n="hint.send">send</span> · <span class="kbd">⇧</span><span class="kbd">⏎</span> <span data-i18n="hint.newline">new line</span> · <span class="kbd">/</span> <span data-i18n="hint.commands">commands</span>
       </div>
     </div>
   </main>
@@ -1817,11 +2219,11 @@
   <div class="detail-footer">
     <button class="btn-secondary">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Export
+      <span data-i18n="detail.export">Export</span>
     </button>
     <button class="btn-primary">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-      Use in chat
+      <span data-i18n="detail.usechat">Use in chat</span>
     </button>
   </div>
 </aside>
@@ -1848,186 +2250,459 @@
     });
   });
 
-  // ===== Detail panel content templates =====
-  const detailContent = {
-    query: {
-      badge: 'Tool call · query_database',
-      title: 'sales_q3 — revenue snapshot',
-      html: `
-        <div class="detail-stats">
-          <div class="detail-stat">
-            <div class="detail-stat-label">Rows</div>
-            <div class="detail-stat-value">12,847</div>
-            <div class="detail-stat-trend trend-up">+ 412 vs Q2</div>
-          </div>
-          <div class="detail-stat">
-            <div class="detail-stat-label">Latency</div>
-            <div class="detail-stat-value">240<span style="font-size:13px;color:var(--text-muted)">ms</span></div>
-            <div class="detail-stat-trend" style="color:var(--text-muted)">cached: false</div>
-          </div>
-          <div class="detail-stat">
-            <div class="detail-stat-label">Status</div>
-            <div class="detail-stat-value" style="color:var(--success); font-size:18px; padding-top:4px;">✓ Success</div>
-            <div class="detail-stat-trend" style="color:var(--text-muted)">code 200</div>
-          </div>
-        </div>
-
-        <div class="detail-section">
-          <div class="detail-section-title">SQL executed</div>
-          <div class="code-block">
-            <div class="code-block-header">
-              <span class="code-block-lang">postgresql</span>
-              <button class="code-block-copy">Copy</button>
-            </div>
-            <div><span class="cmt">-- Closed-won revenue, by region, for Q3</span></div>
-            <div><span class="kw">SELECT</span> region,</div>
-            <div>       <span class="kw">SUM</span>(revenue) <span class="kw">AS</span> total,</div>
-            <div>       <span class="kw">COUNT</span>(*)     <span class="kw">AS</span> deals</div>
-            <div><span class="kw">FROM</span> sales_q3</div>
-            <div><span class="kw">WHERE</span> closed_at <span class="kw">BETWEEN</span> <span class="str">'2025-07-01'</span></div>
-            <div>                <span class="kw">AND</span>     <span class="str">'2025-09-30'</span></div>
-            <div>  <span class="kw">AND</span> stage = <span class="str">'closed-won'</span></div>
-            <div><span class="kw">GROUP BY</span> region</div>
-            <div><span class="kw">ORDER BY</span> total <span class="kw">DESC</span>;</div>
-          </div>
-        </div>
-
-        <div class="detail-section">
-          <div class="detail-section-title">Result preview</div>
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Region</th>
-                <th style="text-align:right">Revenue</th>
-                <th style="text-align:right">Deals</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>EMEA</td><td class="num">$8.42M</td><td class="num">3,210</td></tr>
-              <tr><td>North America</td><td class="num">$7.18M</td><td class="num">4,802</td></tr>
-              <tr><td>APAC</td><td class="num">$3.04M</td><td class="num">2,118</td></tr>
-              <tr><td>LATAM</td><td class="num">$1.27M</td><td class="num">1,544</td></tr>
-              <tr><td>Other</td><td class="num">$0.41M</td><td class="num">1,173</td></tr>
-            </tbody>
-          </table>
-        </div>
-      `
+  // ===== i18n translations =====
+  const translations = {
+    en: {
+      // Sidebar
+      'btn.newchat': 'New conversation',
+      'nav.workspace': 'Workspace',
+      'nav.conversations': 'Conversations',
+      'nav.agents': 'Agents',
+      'nav.tasks': 'Tasks',
+      'nav.knowledge': 'Knowledge',
+      'nav.settings': 'Settings',
+      'nav.recent': 'Recent',
+      'back.home': 'Back to Home',
+      'user.plan': 'Pro plan',
+      // Chat header
+      'chat.subtitle': 'Atlas — Financial analyst agent · Connected to 4 data sources',
+      // Messages
+      'day.divider': 'Today · May 25',
+      'msg.you': 'You',
+      'msg.typing': 'typing…',
+      'msg.user1': 'Pull our Q3 revenue numbers from the database, compare against the forecast in <code>finance/q3-plan.xlsx</code>, and draft a one-page summary I can send to the board on Friday.',
+      'msg.agent1': "On it. I'll break this into four steps and walk you through each one. Starting with the database query now.",
+      'msg.user2': 'Can you also include a side-by-side comparison with Q2 so we can see momentum?',
+      'msg.agent2': "<p>Good call. I've added Q2 alongside Q3 in the variance table. Here's what stands out so far:</p><p><strong>EMEA</strong> beat plan by <code>+8.4%</code>, driven mainly by enterprise renewals. <strong>APAC</strong> came in flat against a stretch target. <strong>North America</strong> missed by <code>-2.1%</code> — primarily a timing issue on three large deals that slipped to October.</p>",
+      // Task progress
+      'task.title': 'Q3 Revenue Report',
+      'task.step1': 'Query revenue table — 12,847 rows',
+      'task.step2': 'Load forecast spreadsheet',
+      'task.step3': 'Compute variance by segment',
+      'task.step4': 'Draft board summary',
+      // Tool preview
+      'tool.preview.title': 'Queried sales_q3 table',
+      'tool.preview.desc': '12,847 rows · 240ms',
+      'tool.preview.status': 'Success',
+      // Buttons
+      'btn.showdetail': 'Show detail',
+      'btn.showvariance': 'Show variance breakdown',
+      // Citations
+      'cite.1.title': 'Q3 closed sales — production DB',
+      'cite.1.meta': 'snapshot · today 10:42 AM',
+      'cite.2.title': 'finance/q3-plan.xlsx',
+      'cite.2.meta': 'last modified Jun 30 · sheet "Forecast v3"',
+      // Suggestions
+      'suggest.1': 'Show me the slipped deals',
+      'suggest.2': 'Plot EMEA growth chart',
+      'suggest.3': 'Draft the summary now',
+      // Composer
+      'composer.placeholder': 'Ask Atlas anything, or delegate a task…',
+      'model.label': 'Atlas · GPT-class',
+      'hint.send': 'send',
+      'hint.newline': 'new line',
+      'hint.commands': 'commands',
+      // Detail panel
+      'detail.export': 'Export',
+      'detail.usechat': 'Use in chat',
+      // Detail: query
+      'detail.query.badge': 'Tool call · query_database',
+      'detail.query.title': 'sales_q3 — revenue snapshot',
+      'detail.query.stat1.label': 'Rows',
+      'detail.query.stat1.trend': '+ 412 vs Q2',
+      'detail.query.stat2.label': 'Latency',
+      'detail.query.stat2.trend': 'cached: false',
+      'detail.query.stat3.label': 'Status',
+      'detail.query.stat3.value': '✓ Success',
+      'detail.query.stat3.trend': 'code 200',
+      'detail.query.sql.title': 'SQL executed',
+      'detail.query.result.title': 'Result preview',
+      'detail.query.th.region': 'Region',
+      'detail.query.th.revenue': 'Revenue',
+      'detail.query.th.deals': 'Deals',
+      // Detail: variance
+      'detail.variance.badge': 'Analysis · Variance',
+      'detail.variance.title': 'Q3 vs Forecast — by region',
+      'detail.variance.stat1.label': 'Total Q3',
+      'detail.variance.stat1.trend': '+ 4.1% vs plan',
+      'detail.variance.stat2.label': 'vs Q2',
+      'detail.variance.stat2.trend': 'accelerating',
+      'detail.variance.stat3.label': 'At risk',
+      'detail.variance.stat3.trend': 'deals slipped',
+      'detail.variance.momentum.title': 'Momentum (Q1 → Q3)',
+      'detail.variance.byregion.title': 'By region',
+      'detail.variance.th.region': 'Region',
+      'detail.variance.th.actual': 'Actual',
+      'detail.variance.th.plan': 'Plan',
+      'detail.variance.notes.title': 'Notes from agent',
+      'detail.variance.notes.text': "North America's miss is concentrated in 3 enterprise deals where contracts moved to October. Excluding those, the region would land at <strong style=\"color:var(--text)\">+1.8%</strong> vs plan. Recommend flagging this in the board summary as a timing variance, not a demand issue.",
+      // Detail: source
+      'detail.source.badge': 'Source · Reference',
+      'detail.source.title': 'finance/q3-plan.xlsx',
+      'detail.source.meta.title': 'File metadata',
+      'detail.source.meta.owner': 'Owner',
+      'detail.source.meta.modified': 'Last modified',
+      'detail.source.meta.modified.val': 'Jun 30, 2025 · 4:17 PM',
+      'detail.source.meta.sheet': 'Sheet referenced',
+      'detail.source.meta.cells': 'Cells used',
+      'detail.source.meta.cells.val': 'B4:G32 · 174 cells',
+      'detail.source.meta.access': 'Access',
+      'detail.source.meta.access.val': '✓ Read-only',
+      'detail.source.timeline.title': 'Access timeline',
+      'detail.source.tl1.title': 'Authenticated with Google Drive',
+      'detail.source.tl1.meta': '10:42:14 AM',
+      'detail.source.tl2.title': 'Opened workbook',
+      'detail.source.tl2.meta': '10:42:16 AM · 1.2s',
+      'detail.source.tl2.desc': 'finance/q3-plan.xlsx — 348 KB, 6 sheets',
+      'detail.source.tl3.title': 'Read sheet "Forecast v3"',
+      'detail.source.tl3.meta': '10:42:18 AM · 280ms',
+      'detail.source.tl3.desc': '174 cells parsed, schema validated',
+      'detail.source.tl4.title': 'Computed variance',
+      'detail.source.tl4.meta': 'in progress…',
     },
-
-    variance: {
-      badge: 'Analysis · Variance',
-      title: 'Q3 vs Forecast — by region',
-      html: `
-        <div class="detail-stats">
-          <div class="detail-stat">
-            <div class="detail-stat-label">Total Q3</div>
-            <div class="detail-stat-value">$20.3M</div>
-            <div class="detail-stat-trend trend-up">+ 4.1% vs plan</div>
-          </div>
-          <div class="detail-stat">
-            <div class="detail-stat-label">vs Q2</div>
-            <div class="detail-stat-value">+12%</div>
-            <div class="detail-stat-trend trend-up">accelerating</div>
-          </div>
-          <div class="detail-stat">
-            <div class="detail-stat-label">At risk</div>
-            <div class="detail-stat-value" style="color:var(--warning)">3</div>
-            <div class="detail-stat-trend" style="color:var(--warning)">deals slipped</div>
-          </div>
-        </div>
-
-        <div class="detail-section">
-          <div class="detail-section-title">Momentum (Q1 → Q3)</div>
-          <div class="mini-chart">
-            <svg viewBox="0 0 400 100" preserveAspectRatio="none">
-              <defs>
-                <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#2563EB" stop-opacity="0.3"/>
-                  <stop offset="100%" stop-color="#06B6D4" stop-opacity="0"/>
-                </linearGradient>
-              </defs>
-              <path d="M 0,70 L 80,60 L 160,55 L 240,40 L 320,28 L 400,18 L 400,100 L 0,100 Z" fill="url(#lineGrad)"/>
-              <path d="M 0,70 L 80,60 L 160,55 L 240,40 L 320,28 L 400,18" stroke="#2563EB" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="80" cy="60" r="3" fill="#2563EB"/>
-              <circle cx="160" cy="55" r="3" fill="#2563EB"/>
-              <circle cx="240" cy="40" r="3" fill="#2563EB"/>
-              <circle cx="320" cy="28" r="3" fill="#2563EB"/>
-              <circle cx="400" cy="18" r="4" fill="#06B6D4" stroke="white" stroke-width="2"/>
-            </svg>
-          </div>
-        </div>
-
-        <div class="detail-section">
-          <div class="detail-section-title">By region</div>
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Region</th>
-                <th style="text-align:right">Actual</th>
-                <th style="text-align:right">Plan</th>
-                <th style="text-align:right">Δ</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>EMEA</td><td class="num">$8.42M</td><td class="num">$7.77M</td><td class="num delta-up">+ 8.4%</td></tr>
-              <tr><td>N. America</td><td class="num">$7.18M</td><td class="num">$7.34M</td><td class="num delta-down">− 2.1%</td></tr>
-              <tr><td>APAC</td><td class="num">$3.04M</td><td class="num">$3.05M</td><td class="num" style="color:var(--text-muted)">0.0%</td></tr>
-              <tr><td>LATAM</td><td class="num">$1.27M</td><td class="num">$1.10M</td><td class="num delta-up">+ 15.4%</td></tr>
-              <tr><td>Other</td><td class="num">$0.41M</td><td class="num">$0.30M</td><td class="num delta-up">+ 36.7%</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="detail-section">
-          <div class="detail-section-title">Notes from agent</div>
-          <p style="font-size:13px; line-height:1.6; color:var(--text-muted)">North America's miss is concentrated in 3 enterprise deals where contracts moved to October. Excluding those, the region would land at <strong style="color:var(--text)">+1.8%</strong> vs plan. Recommend flagging this in the board summary as a timing variance, not a demand issue.</p>
-        </div>
-      `
-    },
-
-    source: {
-      badge: 'Source · Reference',
-      title: 'finance/q3-plan.xlsx',
-      html: `
-        <div class="detail-section">
-          <div class="detail-section-title">File metadata</div>
-          <table class="data-table">
-            <tbody>
-              <tr><td style="color:var(--text-muted); width:40%">Owner</td><td>finance-ops@company.com</td></tr>
-              <tr><td style="color:var(--text-muted)">Last modified</td><td>Jun 30, 2025 · 4:17 PM</td></tr>
-              <tr><td style="color:var(--text-muted)">Sheet referenced</td><td><code style="font-family:var(--font-mono); font-size:11px; background:var(--primary-soft); color:var(--primary-deep); padding:2px 6px; border-radius:4px">Forecast v3</code></td></tr>
-              <tr><td style="color:var(--text-muted)">Cells used</td><td>B4:G32 · 174 cells</td></tr>
-              <tr><td style="color:var(--text-muted)">Access</td><td><span style="color:var(--success); font-weight:600">✓ Read-only</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="detail-section">
-          <div class="detail-section-title">Access timeline</div>
-          <div class="timeline">
-            <div class="timeline-item success">
-              <div class="timeline-title">Authenticated with Google Drive</div>
-              <div class="timeline-meta">10:42:14 AM</div>
-            </div>
-            <div class="timeline-item success">
-              <div class="timeline-title">Opened workbook</div>
-              <div class="timeline-meta">10:42:16 AM · 1.2s</div>
-              <div class="timeline-desc">finance/q3-plan.xlsx — 348 KB, 6 sheets</div>
-            </div>
-            <div class="timeline-item success">
-              <div class="timeline-title">Read sheet "Forecast v3"</div>
-              <div class="timeline-meta">10:42:18 AM · 280ms</div>
-              <div class="timeline-desc">174 cells parsed, schema validated</div>
-            </div>
-            <div class="timeline-item">
-              <div class="timeline-title">Computed variance</div>
-              <div class="timeline-meta">in progress…</div>
-            </div>
-          </div>
-        </div>
-      `
+    vi: {
+      // Sidebar
+      'btn.newchat': 'Cuộc trò chuyện mới',
+      'nav.workspace': 'Không gian làm việc',
+      'nav.conversations': 'Trò chuyện',
+      'nav.agents': 'Trợ lý AI',
+      'nav.tasks': 'Nhiệm vụ',
+      'nav.knowledge': 'Cơ sở tri thức',
+      'nav.settings': 'Cài đặt',
+      'nav.recent': 'Gần đây',
+      'back.home': 'Về trang chủ',
+      'user.plan': 'Gói Pro',
+      // Chat header
+      'chat.subtitle': 'Atlas — Trợ lý phân tích tài chính · Kết nối 4 nguồn dữ liệu',
+      // Messages
+      'day.divider': 'Hôm nay · 25 Tháng 5',
+      'msg.you': 'Bạn',
+      'msg.typing': 'đang nhập…',
+      'msg.user1': 'Lấy số liệu doanh thu Q3 từ cơ sở dữ liệu, so sánh với dự báo trong <code>finance/q3-plan.xlsx</code>, và soạn thảo bản tóm tắt một trang tôi có thể gửi cho hội đồng vào thứ Sáu.',
+      'msg.agent1': 'Để tôi xử lý ngay. Tôi sẽ chia việc này thành bốn bước và hướng dẫn bạn từng bước. Bắt đầu với truy vấn cơ sở dữ liệu.',
+      'msg.user2': 'Bạn có thể thêm so sánh song song với Q2 để chúng ta có thể thấy đà tăng trưởng không?',
+      'msg.agent2': '<p>Ý kiến hay. Tôi đã thêm Q2 cạnh Q3 vào bảng phương sai. Đây là những điểm nổi bật:</p><p><strong>EMEA</strong> vượt kế hoạch <code>+8,4%</code>, chủ yếu nhờ gia hạn hợp đồng doanh nghiệp. <strong>APAC</strong> đạt xấp xỉ mục tiêu đề ra. <strong>Bắc Mỹ</strong> thấp hơn kế hoạch <code>-2,1%</code> — chủ yếu do vấn đề thời điểm khi ba hợp đồng lớn chuyển sang tháng 10.</p>',
+      // Task progress
+      'task.title': 'Báo cáo Doanh thu Q3',
+      'task.step1': 'Truy vấn bảng doanh thu — 12.847 hàng',
+      'task.step2': 'Tải bảng tính dự báo',
+      'task.step3': 'Tính toán phương sai theo phân khúc',
+      'task.step4': 'Soạn thảo tóm tắt hội đồng',
+      // Tool preview
+      'tool.preview.title': 'Đã truy vấn bảng sales_q3',
+      'tool.preview.desc': '12.847 hàng · 240ms',
+      'tool.preview.status': 'Thành công',
+      // Buttons
+      'btn.showdetail': 'Xem chi tiết',
+      'btn.showvariance': 'Xem phân tích phương sai',
+      // Citations
+      'cite.1.title': 'Doanh số đóng Q3 — DB sản xuất',
+      'cite.1.meta': 'ảnh chụp · hôm nay 10:42 SA',
+      'cite.2.title': 'finance/q3-plan.xlsx',
+      'cite.2.meta': 'chỉnh sửa lần cuối 30/6 · sheet "Forecast v3"',
+      // Suggestions
+      'suggest.1': 'Xem các hợp đồng bị hoãn',
+      'suggest.2': 'Vẽ biểu đồ tăng trưởng EMEA',
+      'suggest.3': 'Soạn thảo tóm tắt ngay',
+      // Composer
+      'composer.placeholder': 'Hỏi Atlas bất cứ điều gì, hoặc giao một nhiệm vụ…',
+      'model.label': 'Atlas · GPT-class',
+      'hint.send': 'gửi',
+      'hint.newline': 'xuống dòng',
+      'hint.commands': 'lệnh',
+      // Detail panel
+      'detail.export': 'Xuất',
+      'detail.usechat': 'Dùng trong chat',
+      // Detail: query
+      'detail.query.badge': 'Công cụ · query_database',
+      'detail.query.title': 'sales_q3 — ảnh chụp doanh thu',
+      'detail.query.stat1.label': 'Hàng dữ liệu',
+      'detail.query.stat1.trend': '+ 412 so với Q2',
+      'detail.query.stat2.label': 'Độ trễ',
+      'detail.query.stat2.trend': 'cache: không',
+      'detail.query.stat3.label': 'Trạng thái',
+      'detail.query.stat3.value': '✓ Thành công',
+      'detail.query.stat3.trend': 'mã 200',
+      'detail.query.sql.title': 'SQL đã thực thi',
+      'detail.query.result.title': 'Xem trước kết quả',
+      'detail.query.th.region': 'Khu vực',
+      'detail.query.th.revenue': 'Doanh thu',
+      'detail.query.th.deals': 'Hợp đồng',
+      // Detail: variance
+      'detail.variance.badge': 'Phân tích · Phương sai',
+      'detail.variance.title': 'Q3 so với Dự báo — theo khu vực',
+      'detail.variance.stat1.label': 'Tổng Q3',
+      'detail.variance.stat1.trend': '+ 4,1% so với kế hoạch',
+      'detail.variance.stat2.label': 'so với Q2',
+      'detail.variance.stat2.trend': 'đang tăng tốc',
+      'detail.variance.stat3.label': 'Rủi ro',
+      'detail.variance.stat3.trend': 'hợp đồng bị hoãn',
+      'detail.variance.momentum.title': 'Đà tăng trưởng (Q1 → Q3)',
+      'detail.variance.byregion.title': 'Theo khu vực',
+      'detail.variance.th.region': 'Khu vực',
+      'detail.variance.th.actual': 'Thực tế',
+      'detail.variance.th.plan': 'Kế hoạch',
+      'detail.variance.notes.title': 'Ghi chú từ trợ lý',
+      'detail.variance.notes.text': 'Sự hụt hơn ở Bắc Mỹ tập trung vào 3 hợp đồng doanh nghiệp chuyển sang tháng 10. Nếu loại trừ các hợp đồng đó, khu vực sẽ đạt <strong style="color:var(--text)">+1,8%</strong> so với kế hoạch. Nên ghi chú trong tóm tắt hội đồng đây là sai lệch thời điểm, không phải vấn đề về cầu.',
+      // Detail: source
+      'detail.source.badge': 'Nguồn · Tham chiếu',
+      'detail.source.title': 'finance/q3-plan.xlsx',
+      'detail.source.meta.title': 'Thông tin tệp',
+      'detail.source.meta.owner': 'Chủ sở hữu',
+      'detail.source.meta.modified': 'Chỉnh sửa lần cuối',
+      'detail.source.meta.modified.val': '30 Tháng 6, 2025 · 4:17 CH',
+      'detail.source.meta.sheet': 'Sheet được dùng',
+      'detail.source.meta.cells': 'Ô được dùng',
+      'detail.source.meta.cells.val': 'B4:G32 · 174 ô',
+      'detail.source.meta.access': 'Quyền truy cập',
+      'detail.source.meta.access.val': '✓ Chỉ đọc',
+      'detail.source.timeline.title': 'Lịch sử truy cập',
+      'detail.source.tl1.title': 'Xác thực với Google Drive',
+      'detail.source.tl1.meta': '10:42:14 SA',
+      'detail.source.tl2.title': 'Đã mở tệp',
+      'detail.source.tl2.meta': '10:42:16 SA · 1,2 giây',
+      'detail.source.tl2.desc': 'finance/q3-plan.xlsx — 348 KB, 6 trang',
+      'detail.source.tl3.title': 'Đã đọc sheet "Forecast v3"',
+      'detail.source.tl3.meta': '10:42:18 SA · 280ms',
+      'detail.source.tl3.desc': '174 ô đã phân tích, xác thực cấu trúc',
+      'detail.source.tl4.title': 'Đang tính toán phương sai',
+      'detail.source.tl4.meta': 'đang xử lý…',
     }
   };
+
+  let currentLang = 'en';
+
+  function t(key) {
+    return translations[currentLang][key] ?? translations['en'][key] ?? key;
+  }
+
+  function applyLanguage(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang === 'vi' ? 'vi' : 'en';
+
+    // Text content
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const val = translations[lang][el.dataset.i18n];
+      if (val !== undefined) el.textContent = val;
+    });
+
+    // Placeholder attribute
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const val = translations[lang][el.dataset.i18nPlaceholder];
+      if (val !== undefined) el.placeholder = val;
+    });
+
+    // Inner HTML (for content with <strong>, <code> etc.)
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+      const val = translations[lang][el.dataset.i18nHtml];
+      if (val !== undefined) el.innerHTML = val;
+    });
+
+    // Update suggestion chips (they use data-i18n on the button directly)
+    document.querySelectorAll('.suggestion-chip[data-i18n]').forEach(chip => {
+      const val = translations[lang][chip.dataset.i18n];
+      if (val !== undefined) chip.textContent = val;
+    });
+
+    // Update toggle button
+    const btn = document.getElementById('lang-toggle');
+    if (btn) {
+      const isVI = lang === 'vi';
+      btn.querySelector('.lang-flag').textContent = isVI ? '🇺🇸' : '🇻🇳';
+      btn.querySelector('.lang-code').textContent = isVI ? 'EN' : 'VI';
+      btn.title = isVI ? 'Switch to English' : 'Chuyển sang Tiếng Việt';
+    }
+
+    // Persist
+    try { localStorage.setItem('agenticLang', lang); } catch(e) {}
+  }
+
+  function toggleLang() {
+    applyLanguage(currentLang === 'en' ? 'vi' : 'en');
+  }
+
+  // ===== Detail panel content templates (i18n-aware) =====
+  function getDetailContent() {
+    return {
+      query: {
+        badge: t('detail.query.badge'),
+        title: t('detail.query.title'),
+        html: `
+          <div class="detail-stats">
+            <div class="detail-stat">
+              <div class="detail-stat-label">${t('detail.query.stat1.label')}</div>
+              <div class="detail-stat-value">12,847</div>
+              <div class="detail-stat-trend trend-up">${t('detail.query.stat1.trend')}</div>
+            </div>
+            <div class="detail-stat">
+              <div class="detail-stat-label">${t('detail.query.stat2.label')}</div>
+              <div class="detail-stat-value">240<span style="font-size:13px;color:var(--text-muted)">ms</span></div>
+              <div class="detail-stat-trend" style="color:var(--text-muted)">${t('detail.query.stat2.trend')}</div>
+            </div>
+            <div class="detail-stat">
+              <div class="detail-stat-label">${t('detail.query.stat3.label')}</div>
+              <div class="detail-stat-value" style="color:var(--success); font-size:18px; padding-top:4px;">${t('detail.query.stat3.value')}</div>
+              <div class="detail-stat-trend" style="color:var(--text-muted)">${t('detail.query.stat3.trend')}</div>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <div class="detail-section-title">${t('detail.query.sql.title')}</div>
+            <div class="code-block">
+              <div class="code-block-header">
+                <span class="code-block-lang">postgresql</span>
+                <button class="code-block-copy">Copy</button>
+              </div>
+              <div><span class="cmt">-- Closed-won revenue, by region, for Q3</span></div>
+              <div><span class="kw">SELECT</span> region,</div>
+              <div>       <span class="kw">SUM</span>(revenue) <span class="kw">AS</span> total,</div>
+              <div>       <span class="kw">COUNT</span>(*)     <span class="kw">AS</span> deals</div>
+              <div><span class="kw">FROM</span> sales_q3</div>
+              <div><span class="kw">WHERE</span> closed_at <span class="kw">BETWEEN</span> <span class="str">'2025-07-01'</span></div>
+              <div>                <span class="kw">AND</span>     <span class="str">'2025-09-30'</span></div>
+              <div>  <span class="kw">AND</span> stage = <span class="str">'closed-won'</span></div>
+              <div><span class="kw">GROUP BY</span> region</div>
+              <div><span class="kw">ORDER BY</span> total <span class="kw">DESC</span>;</div>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <div class="detail-section-title">${t('detail.query.result.title')}</div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>${t('detail.query.th.region')}</th>
+                  <th style="text-align:right">${t('detail.query.th.revenue')}</th>
+                  <th style="text-align:right">${t('detail.query.th.deals')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>EMEA</td><td class="num">$8.42M</td><td class="num">3,210</td></tr>
+                <tr><td>North America</td><td class="num">$7.18M</td><td class="num">4,802</td></tr>
+                <tr><td>APAC</td><td class="num">$3.04M</td><td class="num">2,118</td></tr>
+                <tr><td>LATAM</td><td class="num">$1.27M</td><td class="num">1,544</td></tr>
+                <tr><td>Other</td><td class="num">$0.41M</td><td class="num">1,173</td></tr>
+              </tbody>
+            </table>
+          </div>
+        `
+      },
+
+      variance: {
+        badge: t('detail.variance.badge'),
+        title: t('detail.variance.title'),
+        html: `
+          <div class="detail-stats">
+            <div class="detail-stat">
+              <div class="detail-stat-label">${t('detail.variance.stat1.label')}</div>
+              <div class="detail-stat-value">$20.3M</div>
+              <div class="detail-stat-trend trend-up">${t('detail.variance.stat1.trend')}</div>
+            </div>
+            <div class="detail-stat">
+              <div class="detail-stat-label">${t('detail.variance.stat2.label')}</div>
+              <div class="detail-stat-value">+12%</div>
+              <div class="detail-stat-trend trend-up">${t('detail.variance.stat2.trend')}</div>
+            </div>
+            <div class="detail-stat">
+              <div class="detail-stat-label">${t('detail.variance.stat3.label')}</div>
+              <div class="detail-stat-value" style="color:var(--warning)">3</div>
+              <div class="detail-stat-trend" style="color:var(--warning)">${t('detail.variance.stat3.trend')}</div>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <div class="detail-section-title">${t('detail.variance.momentum.title')}</div>
+            <div class="mini-chart">
+              <svg viewBox="0 0 400 100" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#2563EB" stop-opacity="0.3"/>
+                    <stop offset="100%" stop-color="#06B6D4" stop-opacity="0"/>
+                  </linearGradient>
+                </defs>
+                <path d="M 0,70 L 80,60 L 160,55 L 240,40 L 320,28 L 400,18 L 400,100 L 0,100 Z" fill="url(#lineGrad)"/>
+                <path d="M 0,70 L 80,60 L 160,55 L 240,40 L 320,28 L 400,18" stroke="#2563EB" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="80" cy="60" r="3" fill="#2563EB"/>
+                <circle cx="160" cy="55" r="3" fill="#2563EB"/>
+                <circle cx="240" cy="40" r="3" fill="#2563EB"/>
+                <circle cx="320" cy="28" r="3" fill="#2563EB"/>
+                <circle cx="400" cy="18" r="4" fill="#06B6D4" stroke="white" stroke-width="2"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <div class="detail-section-title">${t('detail.variance.byregion.title')}</div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>${t('detail.variance.th.region')}</th>
+                  <th style="text-align:right">${t('detail.variance.th.actual')}</th>
+                  <th style="text-align:right">${t('detail.variance.th.plan')}</th>
+                  <th style="text-align:right">${t('detail.variance.th.delta')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>EMEA</td><td class="num">$8.42M</td><td class="num">$7.77M</td><td class="num delta-up">+ 8.4%</td></tr>
+                <tr><td>N. America</td><td class="num">$7.18M</td><td class="num">$7.34M</td><td class="num delta-down">− 2.1%</td></tr>
+                <tr><td>APAC</td><td class="num">$3.04M</td><td class="num">$3.05M</td><td class="num" style="color:var(--text-muted)">0.0%</td></tr>
+                <tr><td>LATAM</td><td class="num">$1.27M</td><td class="num">$1.10M</td><td class="num delta-up">+ 15.4%</td></tr>
+                <tr><td>Other</td><td class="num">$0.41M</td><td class="num">$0.30M</td><td class="num delta-up">+ 36.7%</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="detail-section">
+            <div class="detail-section-title">${t('detail.variance.notes.title')}</div>
+            <p style="font-size:13px; line-height:1.6; color:var(--text-muted)">${t('detail.variance.notes.text')}</p>
+          </div>
+        `
+      },
+
+      source: {
+        badge: t('detail.source.badge'),
+        title: t('detail.source.title'),
+        html: `
+          <div class="detail-section">
+            <div class="detail-section-title">${t('detail.source.meta.title')}</div>
+            <table class="data-table">
+              <tbody>
+                <tr><td style="color:var(--text-muted); width:40%">${t('detail.source.meta.owner')}</td><td>finance-ops@company.com</td></tr>
+                <tr><td style="color:var(--text-muted)">${t('detail.source.meta.modified')}</td><td>${t('detail.source.meta.modified.val')}</td></tr>
+                <tr><td style="color:var(--text-muted)">${t('detail.source.meta.sheet')}</td><td><code style="font-family:var(--font-mono); font-size:11px; background:var(--primary-soft); color:var(--primary-deep); padding:2px 6px; border-radius:4px">Forecast v3</code></td></tr>
+                <tr><td style="color:var(--text-muted)">${t('detail.source.meta.cells')}</td><td>${t('detail.source.meta.cells.val')}</td></tr>
+                <tr><td style="color:var(--text-muted)">${t('detail.source.meta.access')}</td><td><span style="color:var(--success); font-weight:600">${t('detail.source.meta.access.val')}</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="detail-section">
+            <div class="detail-section-title">${t('detail.source.timeline.title')}</div>
+            <div class="timeline">
+              <div class="timeline-item success">
+                <div class="timeline-title">${t('detail.source.tl1.title')}</div>
+                <div class="timeline-meta">${t('detail.source.tl1.meta')}</div>
+              </div>
+              <div class="timeline-item success">
+                <div class="timeline-title">${t('detail.source.tl2.title')}</div>
+                <div class="timeline-meta">${t('detail.source.tl2.meta')}</div>
+                <div class="timeline-desc">${t('detail.source.tl2.desc')}</div>
+              </div>
+              <div class="timeline-item success">
+                <div class="timeline-title">${t('detail.source.tl3.title')}</div>
+                <div class="timeline-meta">${t('detail.source.tl3.meta')}</div>
+                <div class="timeline-desc">${t('detail.source.tl3.desc')}</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-title">${t('detail.source.tl4.title')}</div>
+                <div class="timeline-meta">${t('detail.source.tl4.meta')}</div>
+              </div>
+            </div>
+          </div>
+        `
+      }
+    };
+  }
 
   // ===== Open / close detail panel =====
   const overlay = document.getElementById('detailOverlay');
@@ -2037,7 +2712,7 @@
   const panelBadge = document.getElementById('detailBadgeText');
 
   function openDetail(key) {
-    const data = detailContent[key];
+    const data = getDetailContent()[key];
     if (!data) return;
     panelBadge.textContent = data.badge;
     panelTitle.textContent = data.title;
@@ -2096,6 +2771,12 @@
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeSidebar();
   });
+
+  // ===== Load saved language preference =====
+  try {
+    const savedLang = localStorage.getItem('agenticLang');
+    if (savedLang === 'vi') applyLanguage('vi');
+  } catch(e) {}
 </script>
 
 <!-- Floating back-to-home button -->
@@ -2131,7 +2812,7 @@
   <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M10 12L6 8L10 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   </svg>
-  Back to Home
+  <span data-i18n="back.home">Back to Home</span>
 </a>
 
 </body>

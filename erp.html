@@ -20,10 +20,10 @@
     --accent-50: #e8f4f8;
     --accent-100: #a0d8ef;
     --grad-start: #007BA7;
-    --grad-end: #00AADD;
-    --grad: linear-gradient(135deg, #007BA7 0%, #00AADD 100%);
-    --grad-hover: linear-gradient(135deg, #006490 0%, #007BA7 100%);
-    --grad-sidebar: linear-gradient(180deg, #004f72 0%, #007BA7 55%, #00AADD 100%);
+    --grad-end: #007BA7;
+    --grad: #007BA7;
+    --grad-hover: #006490;
+    --grad-sidebar: #007BA7;
 
     --secondary: #00AADD;
     --secondary-50: #e8f4f8;
@@ -278,7 +278,7 @@
     text-transform: uppercase;
     letter-spacing: 0.09em;
     color: var(--primary-active);
-    background: linear-gradient(135deg, var(--primary-50), var(--accent-50));
+    background: var(--primary-50);
     border-bottom: 1px solid var(--border);
   }
 
@@ -302,7 +302,7 @@
     color: var(--primary-active);
   }
   .flyout-item.active {
-    background: linear-gradient(90deg, var(--primary-50) 0%, var(--accent-50) 100%);
+    background: var(--primary-50);
     color: var(--primary-active);
     font-weight: 600;
   }
@@ -543,7 +543,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.18), transparent);
+    background: rgba(255,255,255,0.18);
     opacity: 0;
     transition: opacity 180ms var(--ease);
   }
@@ -751,7 +751,7 @@
     border-collapse: collapse;
   }
   thead {
-    background: linear-gradient(90deg, var(--primary-50) 0%, var(--accent-50) 100%);
+    background: var(--primary-50);
     border-bottom: 1px solid var(--border);
   }
   th {
@@ -1165,7 +1165,7 @@
   .radio-card:hover { border-color: var(--text-muted); }
   .radio-card:has(input:checked) {
     border-color: var(--cta);
-    background: linear-gradient(135deg, var(--primary-50), var(--accent-50));
+    background: var(--primary-50);
     box-shadow: 0 0 0 1px var(--cta);
   }
   .radio-card .rc-title { font-weight: 600; font-size: 13px; margin-bottom: 2px; }
@@ -1419,7 +1419,7 @@
     padding: var(--s5) var(--s5) var(--s4);
     border-bottom: 2px solid var(--primary-100);
     gap: var(--s4);
-    background: linear-gradient(135deg, var(--primary-50) 0%, var(--accent-50) 100%);
+    background: var(--primary-50);
     flex-shrink: 0;
   }
   .panel-title { font-family: var(--font-display); font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
