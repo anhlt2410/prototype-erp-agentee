@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Twendee Work</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -10,23 +10,23 @@
 <style>
   /* ============ DESIGN TOKENS ============ */
   :root {
-    /* Colors — Blue + Cyan Gradient Theme (Agentee consistent) */
-    --primary: #2563EB;
-    --primary-hover: #1D4ED8;
-    --primary-active: #1E40AF;
-    --primary-50: #EFF6FF;
-    --primary-100: #DBEAFE;
-    --accent: #06B6D4;
-    --accent-50: #ECFEFF;
-    --accent-100: #CFFAFE;
-    --grad-start: #2563EB;
-    --grad-end: #06B6D4;
-    --grad: linear-gradient(135deg, #2563EB 0%, #06B6D4 100%);
-    --grad-hover: linear-gradient(135deg, #1D4ED8 0%, #0891B2 100%);
-    --grad-sidebar: linear-gradient(180deg, #1E40AF 0%, #2563EB 55%, #0EA5E9 100%);
+    /* Colors — Cerulean Theme #007BA7 */
+    --primary: #007BA7;
+    --primary-hover: #006490;
+    --primary-active: #004f72;
+    --primary-50: #e8f4f8;
+    --primary-100: #c5e4ef;
+    --accent: #00AADD;
+    --accent-50: #e8f4f8;
+    --accent-100: #a0d8ef;
+    --grad-start: #007BA7;
+    --grad-end: #00AADD;
+    --grad: linear-gradient(135deg, #007BA7 0%, #00AADD 100%);
+    --grad-hover: linear-gradient(135deg, #006490 0%, #007BA7 100%);
+    --grad-sidebar: linear-gradient(180deg, #004f72 0%, #007BA7 55%, #00AADD 100%);
 
-    --secondary: #06B6D4;
-    --secondary-50: #ECFEFF;
+    --secondary: #00AADD;
+    --secondary-50: #e8f4f8;
 
     --success: #10B981;
     --success-50: #ECFDF5;
@@ -35,15 +35,15 @@
     --danger: #EF4444;
     --danger-50: #FEF2F2;
 
-    /* CTA — Agentee blue gradient */
-    --cta: #2563EB;
-    --cta-hover: #1D4ED8;
-    --cta-active: #1E40AF;
-    --cta-50: rgba(37, 99, 235, 0.08);
-    --cta-shadow: rgba(37, 99, 235, 0.25);
+    /* CTA — Cerulean gradient */
+    --cta: #007BA7;
+    --cta-hover: #006490;
+    --cta-active: #004f72;
+    --cta-50: rgba(0, 123, 167, 0.08);
+    --cta-shadow: rgba(0, 123, 167, 0.28);
 
     --surface: #FFFFFF;
-    --bg: #F8FAFC;
+    --bg: #e8f4f8;
     --text: #111827;
     --text-secondary: #374151;
     --text-muted: #6B7280;
@@ -136,7 +136,7 @@
     width: 64px;
     position: relative;
     z-index: 200;
-    box-shadow: 2px 0 20px rgba(14,165,233,0.22);
+    box-shadow: 2px 0 20px rgba(0,123,167,0.28);
     overflow: visible;
   }
 
@@ -302,7 +302,7 @@
     color: var(--primary-active);
   }
   .flyout-item.active {
-    background: linear-gradient(90deg, #EFF6FF 0%, #ECFEFF 100%);
+    background: linear-gradient(90deg, var(--primary-50) 0%, var(--accent-50) 100%);
     color: var(--primary-active);
     font-weight: 600;
   }
@@ -342,7 +342,7 @@
     grid-area: topbar;
     background: var(--surface);
     border-bottom: 2px solid var(--primary-100);
-    box-shadow: 0 1px 8px rgba(37,99,235,0.08);
+    box-shadow: 0 1px 8px rgba(0,123,167,0.08);
     display: flex;
     align-items: center;
     padding: 0 var(--s5);
@@ -458,7 +458,32 @@
     font-size: 11px;
     flex-shrink: 0;
   }
-  .user-chip .name { font-weight: 500; font-size: 13px; }
+  .user-chip .name { font-weight: 500; font-size: 13px; color: var(--text); }
+
+  /* ============ LANGUAGE TOGGLE ============ */
+  .lang-toggle {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    height: 34px;
+    padding: 0 10px;
+    border-radius: var(--r-md);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: background var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+    user-select: none;
+    flex-shrink: 0;
+  }
+  .lang-toggle:hover {
+    background: var(--primary-50);
+    border-color: var(--primary);
+    color: var(--primary-active);
+  }
+  .lang-toggle:active { background: var(--primary-100); }
+  .lang-toggle .lang-flag { font-size: 14px; line-height: 1; }
+  .lang-toggle .lang-code { font-size: 11px; font-weight: 700; font-family: var(--font-mono); letter-spacing: 0.05em; }
 
   /* ============ MAIN ============ */
   .main {
@@ -726,7 +751,7 @@
     border-collapse: collapse;
   }
   thead {
-    background: linear-gradient(90deg, #EFF6FF 0%, #ECFEFF 100%);
+    background: linear-gradient(90deg, var(--primary-50) 0%, var(--accent-50) 100%);
     border-bottom: 1px solid var(--border);
   }
   th {
@@ -1140,7 +1165,7 @@
   .radio-card:hover { border-color: var(--text-muted); }
   .radio-card:has(input:checked) {
     border-color: var(--cta);
-    background: linear-gradient(135deg, #EFF6FF, #CFFAFE);
+    background: linear-gradient(135deg, var(--primary-50), var(--accent-50));
     box-shadow: 0 0 0 1px var(--cta);
   }
   .radio-card .rc-title { font-weight: 600; font-size: 13px; margin-bottom: 2px; }
@@ -1394,7 +1419,7 @@
     padding: var(--s5) var(--s5) var(--s4);
     border-bottom: 2px solid var(--primary-100);
     gap: var(--s4);
-    background: linear-gradient(135deg, #EFF6FF 0%, #ECFEFF 100%);
+    background: linear-gradient(135deg, var(--primary-50) 0%, var(--accent-50) 100%);
     flex-shrink: 0;
   }
   .panel-title { font-family: var(--font-display); font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
@@ -1434,21 +1459,401 @@
   ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: var(--r-full); border: 2px solid var(--bg); }
   ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
-  /* Responsive */
+  /* ============ MOBILE HAMBURGER BUTTON ============ */
+  .mobile-menu-btn {
+    display: none;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--r-md);
+    place-items: center;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    transition: background 180ms var(--ease), color 180ms var(--ease);
+  }
+  .mobile-menu-btn:hover { background: var(--primary-50); color: var(--primary); }
+  .mobile-menu-btn svg { width: 20px; height: 20px; }
+
+  /* Mobile sidebar overlay */
+  .mobile-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.5);
+    z-index: 190;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 280ms ease;
+  }
+  .mobile-overlay.open { opacity: 1; pointer-events: auto; }
+
+  /* Brand name text — hidden on desktop slim rail, shown in mobile drawer */
+  .brand-name {
+    display: none;
+    color: white;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+
+  /* ============ RESPONSIVE — TABLET ============ */
   @media (max-width: 1100px) {
     .kpi-grid { grid-template-columns: repeat(2, 1fr); }
     .gallery-grid { grid-template-columns: 1fr; }
   }
-  @media (max-width: 800px) {
+
+  /* ============ RESPONSIVE — MOBILE ============ */
+  @media (max-width: 768px) {
+    /* App shell: sidebar removed from grid, becomes fixed drawer */
     .app {
       grid-template-columns: 1fr;
-      grid-template-areas: "topbar" "main";
+      grid-template-rows: var(--topbar-h) 1fr;
+      grid-template-areas:
+        "topbar"
+        "main";
     }
-    .sidebar { display: none; }
-    .main { padding: var(--s4); }
+
+    /* Sidebar: off-canvas fixed drawer */
+    .sidebar {
+      display: flex !important;
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100vh;
+      width: 260px;
+      z-index: 200;
+      transform: translateX(-100%);
+      transition: transform 300ms cubic-bezier(0.32, 0.72, 0, 1);
+      box-shadow: none;
+    }
+    .sidebar.mobile-open {
+      transform: translateX(0);
+      box-shadow: 8px 0 40px rgba(15, 23, 42, 0.3);
+    }
+
+    /* Drawer: expanded rail items with labels */
+    .sidebar .rail-brand {
+      justify-content: flex-start;
+      padding: 0 var(--s4);
+      gap: var(--s3);
+    }
+    .sidebar .brand-name { display: block; }
+    .sidebar .rail-item {
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 10px var(--s5);
+      gap: var(--s3);
+      min-height: 48px;
+    }
+    .sidebar .rail-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .sidebar .rail-item.active::before {
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      transform: none;
+      border-radius: 0 3px 3px 0;
+    }
+    .sidebar .rail-bottom {
+      padding-bottom: calc(var(--s3) + env(safe-area-inset-bottom, 0px));
+    }
+
+    /* Hide flyouts on mobile (touch devices don't hover) */
+    .rail-flyout { display: none !important; }
+
+    /* Topbar: show hamburger, shrink */
+    .mobile-menu-btn { display: grid; }
+    .topbar-search { display: none; }
+    .topbar { padding: 0 var(--s3); gap: var(--s2); }
+    .user-chip .name { display: none; }
+    .breadcrumb { font-size: 12px; }
+    .breadcrumb svg { display: none; }
+    .breadcrumb span:not(.current) { display: none; }
+
+    /* Main content padding */
+    .main { padding: var(--s3); }
+
+    /* Page header stacks vertically */
+    .page-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--s2);
+      margin-bottom: var(--s2);
+    }
+    .page-title { font-size: 18px; }
+    .page-actions { width: 100%; flex-wrap: wrap; gap: var(--s2); }
+    .page-actions .btn { flex: 1; min-width: 90px; justify-content: center; }
+
+    /* KPI cards: 2-column on mobile */
+    .kpi-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--s2);
+    }
+    .kpi-value { font-size: 16px; }
+    .kpi-card { padding: var(--s2) var(--s3); }
+
+    /* Toolbar: horizontally scrollable */
+    .toolbar {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: var(--s2);
+      gap: var(--s2);
+      scrollbar-width: none;
+      border-radius: var(--r-lg) var(--r-lg) 0 0;
+    }
+    .toolbar::-webkit-scrollbar { display: none; }
+    .tabs { flex-shrink: 0; }
+    .search-input { width: 180px; min-width: 150px; flex-shrink: 0; }
+    .filter-chip { flex-shrink: 0; }
+    .toolbar-spacer { display: none; }
+
+    /* Table: horizontal scroll */
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { min-width: 680px; }
+
+    /* Pagination: stack on mobile */
+    .pagination {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--s2);
+      padding: var(--s2) var(--s3);
+    }
+    .page-jump { display: none; }
+
+    /* Right panel: full width on mobile */
+    .right-panel { width: 100vw; }
+    .panel-footer { flex-wrap: wrap; gap: var(--s2); }
+    .panel-footer .btn { flex: 1; min-width: 80px; justify-content: center; }
+
+    /* Modal: comfortable padding */
+    .modal-backdrop { padding: var(--s3); align-items: flex-end; }
+    .modal {
+      border-radius: var(--r-xl) var(--r-xl) 0 0;
+      max-height: 90vh;
+    }
+    .modal-confirm { max-width: 100%; }
+
+    /* Form grids: single column */
     .form-grid { grid-template-columns: 1fr; }
     .detail-grid { grid-template-columns: 1fr; }
-    .topbar-search { display: none; }
+    .radio-group { grid-template-columns: 1fr 1fr; }
+
+    /* Gallery: single column */
+    .gallery-grid { grid-template-columns: 1fr; }
+    .gallery { margin-top: var(--s5); }
+
+    /* Toasts: full width */
+    .toast-container { left: var(--s3); right: var(--s3); top: var(--s3); }
+    .toast { min-width: auto; max-width: 100%; }
+
+    /* Back-to-home button: clear of sidebar */
+    .back-home-btn { left: var(--s4); bottom: calc(var(--s4) + env(safe-area-inset-bottom, 0px)); }
+  }
+
+  /* Very small phones */
+  @media (max-width: 400px) {
+    .kpi-grid { grid-template-columns: 1fr 1fr; }
+    .kpi-label { font-size: 11px; }
+    .page-actions .btn-text { display: none; }
+    .tab { padding: 3px 8px; font-size: 11px; }
+    .tab-count { display: none; }
+    .radio-group { grid-template-columns: 1fr; }
+  }
+
+  /* ============ SIDEBAR EXPAND / COLLAPSE ============ */
+
+  /* Smooth width transition on the sidebar itself */
+  .sidebar {
+    transition: width 260ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* App grid responds to expanded sidebar */
+  .app {
+    transition: grid-template-columns 260ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .app.sidebar-expanded {
+    grid-template-columns: 240px 1fr;
+  }
+
+  /* Expanded sidebar dimensions & overflow */
+  .sidebar.expanded {
+    width: 240px;
+    /* overflow stays visible so flyouts still work during collapse animation */
+  }
+
+  /* ── Toggle button (chevron at bottom of sidebar) ── */
+  .sidebar-toggle-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: var(--s2) 0 var(--s2);
+    border-top: 1px solid var(--sidebar-border);
+    flex-shrink: 0;
+  }
+  .sidebar-toggle {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--r-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--sidebar-text-muted);
+    opacity: 0;
+    transition: opacity var(--t-fast) var(--ease),
+                background var(--t-fast) var(--ease),
+                color var(--t-fast) var(--ease);
+  }
+  .sidebar-toggle svg {
+    width: 14px;
+    height: 14px;
+    transition: transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  /* Show toggle on sidebar hover OR when expanded */
+  .sidebar:hover .sidebar-toggle,
+  .sidebar.expanded .sidebar-toggle {
+    opacity: 1;
+  }
+  .sidebar-toggle:hover {
+    background: var(--sidebar-hover-bg);
+    color: white;
+  }
+  /* Flip chevron when expanded */
+  .sidebar.expanded .sidebar-toggle svg {
+    transform: rotate(180deg);
+  }
+  /* Expanded: align toggle wrap like rail items */
+  .sidebar.expanded .sidebar-toggle-wrap {
+    justify-content: flex-start;
+    padding-left: 12px;
+    gap: var(--s2);
+  }
+  .sidebar.expanded .sidebar-toggle {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* ── Brand area in expanded mode ── */
+  .sidebar.expanded .rail-brand {
+    justify-content: flex-start;
+    padding: 0 var(--s3);
+    gap: var(--s2);
+  }
+  .sidebar.expanded .brand-name {
+    display: block;
+    flex: 1;
+  }
+
+  /* ── Rail items in expanded mode ── */
+  .sidebar.expanded .rail-item {
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 7px 12px;
+    gap: var(--s3);
+    min-height: 40px;
+  }
+  .sidebar.expanded .rail-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--sidebar-text);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .sidebar.expanded .rail-item.active::before {
+    height: 100%;
+    top: 0;
+    transform: none;
+  }
+
+  /* ── Sub-menu container ── */
+  .rail-submenu {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    padding: 0 0 6px 0;
+  }
+  .sidebar.expanded .rail-submenu {
+    display: flex;
+  }
+  /* Visual separator between sections */
+  .sidebar.expanded .rail-submenu {
+    border-bottom: 1px solid var(--sidebar-border);
+    margin-bottom: 2px;
+    padding-bottom: 4px;
+  }
+  /* No separator on the last submenu in rail-bottom */
+  .rail-bottom .rail-submenu:last-child {
+    border-bottom: none;
+  }
+
+  /* ── Sub-menu items ── */
+  .rail-subitem {
+    display: flex;
+    align-items: center;
+    gap: var(--s2);
+    padding: 6px 12px 6px 40px;
+    font-size: 12.5px;
+    font-weight: 400;
+    color: var(--sidebar-text-muted);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background var(--t-fast) var(--ease),
+                color var(--t-fast) var(--ease);
+  }
+  .rail-subitem:hover {
+    background: var(--sidebar-hover-bg);
+    color: rgba(255, 255, 255, 0.92);
+  }
+  .rail-subitem.active {
+    background: var(--sidebar-active-bg);
+    color: white;
+    font-weight: 500;
+  }
+  .rail-subitem svg {
+    width: 13px;
+    height: 13px;
+    color: inherit;
+    flex-shrink: 0;
+    opacity: 0.75;
+  }
+  .rail-subitem:hover svg,
+  .rail-subitem.active svg { opacity: 1; }
+
+  .rail-subitem-badge {
+    margin-left: auto;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 6px;
+    background: rgba(255, 255, 255, 0.14);
+    border-radius: var(--r-full);
+    color: rgba(255, 255, 255, 0.72);
+    line-height: 1.4;
+    flex-shrink: 0;
+  }
+  .rail-subitem.active .rail-subitem-badge {
+    background: rgba(255, 255, 255, 0.25);
+    color: white;
+  }
+
+  /* ── Back-home button shifts right when expanded ── */
+  body.sidebar-expanded .back-home-btn {
+    left: 256px;
+  }
+
+  /* ── Hide toggle on mobile (sidebar is a drawer there) ── */
+  @media (max-width: 768px) {
+    .sidebar-toggle { display: none; }
+    .sidebar.expanded { width: 260px; } /* mobile width stays at drawer width */
+    .app.sidebar-expanded { grid-template-columns: 1fr; } /* no effect on mobile grid */
   }
 </style>
 </head>
@@ -1488,6 +1893,7 @@
     <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
     <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></symbol>
     <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></symbol>
   </defs>
 </svg>
 
@@ -1498,25 +1904,84 @@
     <!-- Brand -->
     <div class="rail-brand">
       <div class="brand-mark" title="Twendee ERP">T</div>
+      <span class="brand-name">Twendee Work</span>
     </div>
 
     <!-- Main navigation rail -->
     <nav class="rail-nav">
       <div class="rail-item" data-flyout="flyout-overview">
         <svg><use href="#i-dashboard"/></svg>
-        <span class="rail-label">Overview</span>
+        <span class="rail-label" data-i18n="nav.overview">Overview</span>
       </div>
+      <div class="rail-submenu">
+        <div class="rail-subitem" onclick="selectSubItem(this,'overview','Dashboard')">
+          <svg><use href="#i-dashboard"/></svg><span data-i18n="nav.dashboard"> Dashboard</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'overview','Reports')">
+          <svg><use href="#i-file"/></svg><span data-i18n="nav.reports"> Reports</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'overview','Analytics')">
+          <svg><use href="#i-pin"/></svg><span data-i18n="nav.analytics"> Analytics</span>
+        </div>
+      </div>
+
       <div class="rail-item active" data-flyout="flyout-workforce">
         <svg><use href="#i-users"/></svg>
-        <span class="rail-label">Workforce</span>
+        <span class="rail-label" data-i18n="nav.workforce">Workforce</span>
       </div>
+      <div class="rail-submenu">
+        <div class="rail-subitem active" onclick="selectSubItem(this,'workforce','Employees')">
+          <svg><use href="#i-users"/></svg><span data-i18n="nav.employees"> Employees</span>
+          <span class="rail-subitem-badge">248</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'workforce','Departments')">
+          <svg><use href="#i-briefcase"/></svg><span data-i18n="nav.departments"> Departments</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'workforce','Time Off')">
+          <svg><use href="#i-calendar"/></svg><span data-i18n="nav.timeoff"> Time Off</span>
+          <span class="rail-subitem-badge">7</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'workforce','Payroll')">
+          <svg><use href="#i-dollar"/></svg><span data-i18n="nav.payroll"> Payroll</span>
+        </div>
+      </div>
+
       <div class="rail-item" data-flyout="flyout-operations">
         <svg><use href="#i-package"/></svg>
-        <span class="rail-label">Operations</span>
+        <span class="rail-label" data-i18n="nav.operations">Operations</span>
       </div>
+      <div class="rail-submenu">
+        <div class="rail-subitem" onclick="selectSubItem(this,'operations','Inventory')">
+          <svg><use href="#i-package"/></svg><span data-i18n="nav.inventory"> Inventory</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'operations','Invoices')">
+          <svg><use href="#i-file"/></svg><span data-i18n="nav.invoices"> Invoices</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'operations','Suppliers')">
+          <svg><use href="#i-pin"/></svg><span data-i18n="nav.suppliers"> Suppliers</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'operations','Purchase Orders')">
+          <svg><use href="#i-download"/></svg><span data-i18n="nav.purchaseorders"> Purchase Orders</span>
+        </div>
+      </div>
+
       <div class="rail-item" data-flyout="flyout-finance">
         <svg><use href="#i-dollar"/></svg>
-        <span class="rail-label">Finance</span>
+        <span class="rail-label" data-i18n="nav.finance">Finance</span>
+      </div>
+      <div class="rail-submenu">
+        <div class="rail-subitem" onclick="selectSubItem(this,'finance','Accounts')">
+          <svg><use href="#i-dollar"/></svg><span data-i18n="nav.accounts"> Accounts</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'finance','Expenses')">
+          <svg><use href="#i-file"/></svg><span data-i18n="nav.expenses"> Expenses</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'finance','Budget')">
+          <svg><use href="#i-arrow-up"/></svg><span data-i18n="nav.budget"> Budget</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'finance','Tax & Compliance')">
+          <svg><use href="#i-briefcase"/></svg><span data-i18n="nav.taxcompliance"> Tax & Compliance</span>
+        </div>
       </div>
     </nav>
 
@@ -1524,32 +1989,72 @@
     <div class="rail-bottom">
       <div class="rail-item" data-flyout="flyout-settings">
         <svg><use href="#i-settings"/></svg>
-        <span class="rail-label">Settings</span>
+        <span class="rail-label" data-i18n="nav.settings">Settings</span>
       </div>
+      <div class="rail-submenu">
+        <div class="rail-subitem" onclick="selectSubItem(this,'settings','General')">
+          <svg><use href="#i-settings"/></svg><span data-i18n="nav.general"> General</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'settings','Users & Roles')">
+          <svg><use href="#i-users"/></svg><span data-i18n="nav.usersroles"> Users & Roles</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'settings','Integrations')">
+          <svg><use href="#i-package"/></svg><span data-i18n="nav.integrations"> Integrations</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'settings','Notifications')">
+          <svg><use href="#i-bell"/></svg><span data-i18n="nav.notifications"> Notifications</span>
+        </div>
+      </div>
+
       <div class="rail-item" data-flyout="flyout-help">
         <svg><use href="#i-help"/></svg>
-        <span class="rail-label">Help</span>
+        <span class="rail-label" data-i18n="nav.help">Help</span>
       </div>
+      <div class="rail-submenu">
+        <div class="rail-subitem" onclick="selectSubItem(this,'help','Documentation')">
+          <svg><use href="#i-file"/></svg><span data-i18n="nav.documentation"> Documentation</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'help','Contact Support')">
+          <svg><use href="#i-mail"/></svg><span data-i18n="nav.contactsupport"> Contact Support</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'help','What\'s New')">
+          <svg><use href="#i-info"/></svg><span data-i18n="nav.whatsnew"> What's New</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Collapse / expand toggle at bottom -->
+    <div class="sidebar-toggle-wrap">
+      <button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
     </div>
   </aside>
 
   <!-- ============ TOPBAR ============ -->
   <header class="topbar">
+    <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open navigation" onclick="toggleMobileSidebar()">
+      <svg><use href="#i-menu"/></svg>
+    </button>
     <nav class="breadcrumb">
-      <span>Workforce</span>
+      <span data-i18n="nav.workforce">Workforce</span>
       <svg><use href="#i-chevron-right"/></svg>
-      <span class="current">Employees</span>
+      <span class="current" data-i18n="nav.employees">Employees</span>
     </nav>
 
     <div class="topbar-search">
       <svg><use href="#i-search"/></svg>
-      <input type="text" placeholder="Search anything…">
+      <input type="text" placeholder="Search anything…" data-i18n-placeholder="search.placeholder">
       <kbd>⌘K</kbd>
     </div>
 
     <div class="topbar-actions">
+      <button class="lang-toggle" id="lang-toggle" onclick="toggleLang()" aria-label="Switch language" title="Switch to Tiếng Việt">
+        <span class="lang-flag">🇻🇳</span>
+        <span class="lang-code">VI</span>
+      </button>
       <button class="icon-btn" aria-label="Help"><svg><use href="#i-help"/></svg></button>
-      <button class="icon-btn" aria-label="Notifications" onclick="showToast('info','New notification','You have 3 unread messages.')">
+      <button class="icon-btn" id="notif-btn" aria-label="Notifications" onclick="showToast('info', t('toast.notif.title'), t('toast.notif.msg'))">
         <svg><use href="#i-bell"/></svg>
         <span class="dot"></span>
       </button>
@@ -1567,18 +2072,18 @@
     <!-- Page header -->
     <div class="page-header">
       <div>
-        <h1 class="page-title">Employees</h1>
-        <p class="page-subtitle">Manage your team, roles, and employment details.</p>
+        <h1 class="page-title" data-i18n="page.title">Employees</h1>
+        <p class="page-subtitle" data-i18n="page.subtitle">Manage your team, roles, and employment details.</p>
       </div>
       <div class="page-actions">
-        <button class="btn btn-secondary" onclick="showToast('info','Export started','Your CSV will be ready in a moment.')">
-          <svg><use href="#i-download"/></svg> Export
+        <button class="btn btn-secondary" onclick="showToast('info', t('toast.export.title'), t('toast.export.msg'))">
+          <svg><use href="#i-download"/></svg><span data-i18n="btn.export"> Export</span>
         </button>
         <button class="btn btn-secondary">
-          <svg><use href="#i-upload"/></svg> Import
+          <svg><use href="#i-upload"/></svg><span data-i18n="btn.import"> Import</span>
         </button>
         <button class="btn btn-primary" onclick="openPanel('panel-add')">
-          <svg><use href="#i-plus"/></svg> Add Employee
+          <svg><use href="#i-plus"/></svg><span data-i18n="btn.addEmployee"> Add Employee</span>
         </button>
       </div>
     </div>
@@ -1587,56 +2092,56 @@
     <section class="kpi-grid">
       <div class="kpi-card">
         <div class="kpi-card-text">
-          <div class="kpi-label"><svg><use href="#i-users"/></svg> Total Employees</div>
+          <div class="kpi-label"><svg><use href="#i-users"/></svg><span data-i18n="kpi.totalEmployees"> Total Employees</span></div>
           <div class="kpi-value">248</div>
         </div>
         <span class="kpi-delta up"><svg><use href="#i-arrow-up"/></svg> 4.2%</span>
       </div>
       <div class="kpi-card">
         <div class="kpi-card-text">
-          <div class="kpi-label"><svg><use href="#i-check"/></svg> Active</div>
+          <div class="kpi-label"><svg><use href="#i-check"/></svg><span data-i18n="kpi.active"> Active</span></div>
           <div class="kpi-value">231</div>
         </div>
         <span class="kpi-delta up"><svg><use href="#i-arrow-up"/></svg> 2.1%</span>
       </div>
       <div class="kpi-card">
         <div class="kpi-card-text">
-          <div class="kpi-label"><svg><use href="#i-calendar"/></svg> On Leave</div>
+          <div class="kpi-label"><svg><use href="#i-calendar"/></svg><span data-i18n="kpi.onLeave"> On Leave</span></div>
           <div class="kpi-value">14</div>
         </div>
         <span class="kpi-delta down"><svg><use href="#i-arrow-down"/></svg> 1.4%</span>
       </div>
       <div class="kpi-card">
         <div class="kpi-card-text">
-          <div class="kpi-label"><svg><use href="#i-briefcase"/></svg> Open Roles</div>
+          <div class="kpi-label"><svg><use href="#i-briefcase"/></svg><span data-i18n="kpi.openRoles"> Open Roles</span></div>
           <div class="kpi-value">12</div>
         </div>
-        <span class="kpi-delta up"><svg><use href="#i-arrow-up"/></svg> 8 new</span>
+        <span class="kpi-delta up"><svg><use href="#i-arrow-up"/></svg><span data-i18n="kpi.newRoles"> 8 new</span></span>
       </div>
     </section>
 
     <!-- Toolbar / tabs / filters -->
     <div class="toolbar">
       <div class="tabs" role="tablist">
-        <button class="tab active" role="tab">All <span class="tab-count">248</span></button>
-        <button class="tab" role="tab">Active <span class="tab-count">231</span></button>
-        <button class="tab" role="tab">On Leave <span class="tab-count">14</span></button>
-        <button class="tab" role="tab">Inactive <span class="tab-count">3</span></button>
+        <button class="tab active" role="tab"><span data-i18n="tab.all">All</span> <span class="tab-count">248</span></button>
+        <button class="tab" role="tab"><span data-i18n="tab.active">Active</span> <span class="tab-count">231</span></button>
+        <button class="tab" role="tab"><span data-i18n="tab.onLeave">On Leave</span> <span class="tab-count">14</span></button>
+        <button class="tab" role="tab"><span data-i18n="tab.inactive">Inactive</span> <span class="tab-count">3</span></button>
       </div>
 
       <div class="toolbar-spacer"></div>
 
       <div class="search-input">
         <svg><use href="#i-search"/></svg>
-        <input id="table-search" type="text" placeholder="Search employees…" oninput="filterEmployees(this.value)">
+        <input id="table-search" type="text" placeholder="Search employees…" data-i18n-placeholder="filter.search" oninput="filterEmployees(this.value)">
       </div>
 
       <button class="filter-chip">
-        Department: <span class="chip-value">All</span>
+        <span data-i18n="filter.department">Department:</span> <span class="chip-value" data-i18n="filter.all">All</span>
         <svg><use href="#i-chevron-down"/></svg>
       </button>
       <button class="filter-chip">
-        <svg><use href="#i-filter"/></svg> Filters
+        <svg><use href="#i-filter"/></svg><span data-i18n="filter.filters"> Filters</span>
       </button>
     </div>
 
@@ -1646,14 +2151,14 @@
         <thead>
           <tr>
 
-            <th class="sortable"><span class="th-inner">Employee <svg><use href="#i-arrow-down"/></svg></span></th>
-            <th>ID</th>
-            <th>Department</th>
-            <th>Role</th>
-            <th>Location</th>
-            <th>Status</th>
-            <th class="sortable"><span class="th-inner">Joined <svg><use href="#i-chevron-down"/></svg></span></th>
-            <th style="text-align:right">Actions</th>
+            <th class="sortable"><span class="th-inner"><span data-i18n="th.employee">Employee</span> <svg><use href="#i-arrow-down"/></svg></span></th>
+            <th data-i18n="th.id">ID</th>
+            <th data-i18n="th.department">Department</th>
+            <th data-i18n="th.role">Role</th>
+            <th data-i18n="th.location">Location</th>
+            <th data-i18n="th.status">Status</th>
+            <th class="sortable"><span class="th-inner"><span data-i18n="th.joined">Joined</span> <svg><use href="#i-chevron-down"/></svg></span></th>
+            <th style="text-align:right" data-i18n="th.actions">Actions</th>
           </tr>
         </thead>
         <tbody id="employee-tbody">
@@ -1662,7 +2167,7 @@
       </table>
 
       <div class="pagination">
-        <div class="page-info">Showing <strong>1–8</strong> of <strong>248</strong> employees</div>
+        <div class="page-info"><span data-i18n="pagination.showing">Showing</span> <strong>1–8</strong> <span data-i18n="pagination.of">of</span> <strong>248</strong> <span data-i18n="pagination.employees">employees</span></div>
         <div style="display:flex; align-items:center;">
           <div class="page-controls">
             <button class="page-btn" disabled aria-label="Previous"><svg><use href="#i-chevron-left"/></svg></button>
@@ -1674,9 +2179,9 @@
             <button class="page-btn" aria-label="Next"><svg><use href="#i-chevron-right"/></svg></button>
           </div>
           <div class="page-jump">
-            <label for="page-input">Go to</label>
+            <label for="page-input" data-i18n="pagination.goto">Go to</label>
             <input id="page-input" type="number" min="1" max="31" value="1" onkeydown="if(event.key==='Enter')jumpToPage(this.value)">
-            <span>of 31</span>
+            <span data-i18n="pagination.of31">of 31</span>
           </div>
         </div>
       </div>
@@ -1882,25 +2387,28 @@
   </main>
 </div>
 
+<!-- Mobile sidebar overlay -->
+<div class="mobile-overlay" id="mobile-overlay" onclick="closeMobileSidebar()"></div>
+
 <!-- ============ SLIM RAIL FLYOUTS ============ -->
 
 <!-- Overview flyout -->
 <div class="rail-flyout" id="flyout-overview">
-  <div class="flyout-header">Overview</div>
+  <div class="flyout-header" data-i18n="nav.overview">Overview</div>
   <div class="flyout-items">
     <div class="flyout-item" onclick="selectFlyoutItem(this,'overview')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-dashboard"/></svg> Dashboard
+        <svg><use href="#i-dashboard"/></svg><span data-i18n="nav.dashboard"> Dashboard</span>
       </div>
     </div>
     <div class="flyout-item" onclick="selectFlyoutItem(this,'overview')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-file"/></svg> Reports
+        <svg><use href="#i-file"/></svg><span data-i18n="nav.reports"> Reports</span>
       </div>
     </div>
     <div class="flyout-item" onclick="selectFlyoutItem(this,'overview')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-pin"/></svg> Analytics
+        <svg><use href="#i-pin"/></svg><span data-i18n="nav.analytics"> Analytics</span>
       </div>
     </div>
   </div>
@@ -1908,28 +2416,28 @@
 
 <!-- Workforce flyout -->
 <div class="rail-flyout" id="flyout-workforce">
-  <div class="flyout-header">Workforce</div>
+  <div class="flyout-header" data-i18n="nav.workforce">Workforce</div>
   <div class="flyout-items">
     <div class="flyout-item active" onclick="selectFlyoutItem(this,'workforce')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-users"/></svg> Employees
+        <svg><use href="#i-users"/></svg><span data-i18n="nav.employees"> Employees</span>
       </div>
       <span class="flyout-badge">248</span>
     </div>
     <div class="flyout-item" onclick="selectFlyoutItem(this,'workforce')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-briefcase"/></svg> Departments
+        <svg><use href="#i-briefcase"/></svg><span data-i18n="nav.departments"> Departments</span>
       </div>
     </div>
     <div class="flyout-item" onclick="selectFlyoutItem(this,'workforce')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-calendar"/></svg> Time Off
+        <svg><use href="#i-calendar"/></svg><span data-i18n="nav.timeoff"> Time Off</span>
       </div>
       <span class="flyout-badge">7</span>
     </div>
     <div class="flyout-item" onclick="selectFlyoutItem(this,'workforce')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-dollar"/></svg> Payroll
+        <svg><use href="#i-dollar"/></svg><span data-i18n="nav.payroll"> Payroll</span>
       </div>
     </div>
   </div>
@@ -1937,26 +2445,26 @@
 
 <!-- Operations flyout -->
 <div class="rail-flyout" id="flyout-operations">
-  <div class="flyout-header">Operations</div>
+  <div class="flyout-header" data-i18n="nav.operations">Operations</div>
   <div class="flyout-items">
     <div class="flyout-item" onclick="selectFlyoutItem(this,'operations')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-package"/></svg> Inventory
+        <svg><use href="#i-package"/></svg><span data-i18n="nav.inventory"> Inventory</span>
       </div>
     </div>
     <div class="flyout-item" onclick="selectFlyoutItem(this,'operations')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-file"/></svg> Invoices
+        <svg><use href="#i-file"/></svg><span data-i18n="nav.invoices"> Invoices</span>
       </div>
     </div>
     <div class="flyout-item" onclick="selectFlyoutItem(this,'operations')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-pin"/></svg> Suppliers
+        <svg><use href="#i-pin"/></svg><span data-i18n="nav.suppliers"> Suppliers</span>
       </div>
     </div>
     <div class="flyout-item" onclick="selectFlyoutItem(this,'operations')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-download"/></svg> Purchase Orders
+        <svg><use href="#i-download"/></svg><span data-i18n="nav.purchaseorders"> Purchase Orders</span>
       </div>
     </div>
   </div>
@@ -1964,26 +2472,26 @@
 
 <!-- Finance flyout -->
 <div class="rail-flyout" id="flyout-finance">
-  <div class="flyout-header">Finance</div>
+  <div class="flyout-header" data-i18n="nav.finance">Finance</div>
   <div class="flyout-items">
     <div class="flyout-item" onclick="selectFlyoutItem(this,'finance')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-dollar"/></svg> Accounts
+        <svg><use href="#i-dollar"/></svg><span data-i18n="nav.accounts"> Accounts</span>
       </div>
     </div>
     <div class="flyout-item" onclick="selectFlyoutItem(this,'finance')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-file"/></svg> Expenses
+        <svg><use href="#i-file"/></svg><span data-i18n="nav.expenses"> Expenses</span>
       </div>
     </div>
     <div class="flyout-item" onclick="selectFlyoutItem(this,'finance')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-arrow-up"/></svg> Budget
+        <svg><use href="#i-arrow-up"/></svg><span data-i18n="nav.budget"> Budget</span>
       </div>
     </div>
     <div class="flyout-item" onclick="selectFlyoutItem(this,'finance')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-briefcase"/></svg> Tax & Compliance
+        <svg><use href="#i-briefcase"/></svg><span data-i18n="nav.taxcompliance"> Tax & Compliance</span>
       </div>
     </div>
   </div>
@@ -1991,26 +2499,26 @@
 
 <!-- Settings flyout -->
 <div class="rail-flyout" id="flyout-settings">
-  <div class="flyout-header">Settings</div>
+  <div class="flyout-header" data-i18n="nav.settings">Settings</div>
   <div class="flyout-items">
     <div class="flyout-item" onclick="selectFlyoutItem(this,'settings')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-settings"/></svg> General
+        <svg><use href="#i-settings"/></svg><span data-i18n="nav.general"> General</span>
       </div>
     </div>
     <div class="flyout-item" onclick="selectFlyoutItem(this,'settings')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-users"/></svg> Users & Roles
+        <svg><use href="#i-users"/></svg><span data-i18n="nav.usersroles"> Users & Roles</span>
       </div>
     </div>
     <div class="flyout-item" onclick="selectFlyoutItem(this,'settings')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-package"/></svg> Integrations
+        <svg><use href="#i-package"/></svg><span data-i18n="nav.integrations"> Integrations</span>
       </div>
     </div>
     <div class="flyout-item" onclick="selectFlyoutItem(this,'settings')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-bell"/></svg> Notifications
+        <svg><use href="#i-bell"/></svg><span data-i18n="nav.notifications"> Notifications</span>
       </div>
     </div>
   </div>
@@ -2018,21 +2526,21 @@
 
 <!-- Help flyout -->
 <div class="rail-flyout" id="flyout-help">
-  <div class="flyout-header">Help & Support</div>
+  <div class="flyout-header" data-i18n="nav.helpsupport">Help & Support</div>
   <div class="flyout-items">
     <div class="flyout-item" onclick="selectFlyoutItem(this,'help')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-file"/></svg> Documentation
+        <svg><use href="#i-file"/></svg><span data-i18n="nav.documentation"> Documentation</span>
       </div>
     </div>
     <div class="flyout-item" onclick="selectFlyoutItem(this,'help')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-mail"/></svg> Contact Support
+        <svg><use href="#i-mail"/></svg><span data-i18n="nav.contactsupport"> Contact Support</span>
       </div>
     </div>
     <div class="flyout-item" onclick="selectFlyoutItem(this,'help')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-info"/></svg> What's New
+        <svg><use href="#i-info"/></svg><span data-i18n="nav.whatsnew"> What's New</span>
       </div>
     </div>
   </div>
@@ -2043,45 +2551,45 @@
 <div class="right-panel" id="panel-add" role="dialog" aria-labelledby="add-panel-title">
     <div class="panel-header">
       <div>
-        <div class="panel-title" id="add-panel-title">Add Employee</div>
-        <div class="panel-subtitle">Create a new team member profile.</div>
+        <div class="panel-title" id="add-panel-title" data-i18n="panel.add.title">Add Employee</div>
+        <div class="panel-subtitle" data-i18n="panel.add.subtitle">Create a new team member profile.</div>
       </div>
       <button class="panel-close" onclick="closePanel('panel-add')" aria-label="Close"><svg><use href="#i-x"/></svg></button>
     </div>
     <div class="panel-body">
       <div class="form-grid">
         <div class="field">
-          <label class="label">First name <span class="required">*</span></label>
-          <input class="input" type="text" placeholder="Sarah">
+          <label class="label"><span data-i18n="field.firstname">First name</span> <span class="required">*</span></label>
+          <input class="input" type="text" placeholder="Sarah" data-i18n-placeholder="field.firstname.ph">
         </div>
         <div class="field">
-          <label class="label">Last name <span class="required">*</span></label>
-          <input class="input" type="text" placeholder="Chen">
+          <label class="label"><span data-i18n="field.lastname">Last name</span> <span class="required">*</span></label>
+          <input class="input" type="text" placeholder="Chen" data-i18n-placeholder="field.lastname.ph">
         </div>
         <div class="field full">
-          <label class="label">Work email <span class="required">*</span></label>
+          <label class="label"><span data-i18n="field.workemail">Work email</span> <span class="required">*</span></label>
           <div class="input-group">
             <svg class="input-icon"><use href="#i-mail"/></svg>
             <input class="input" type="email" placeholder="sarah.chen@acme.com">
           </div>
         </div>
         <div class="field">
-          <label class="label">Phone</label>
+          <label class="label" data-i18n="field.phone">Phone</label>
           <div class="input-group">
             <svg class="input-icon"><use href="#i-phone"/></svg>
             <input class="input" type="tel" placeholder="+1 (555) 000-0000">
           </div>
         </div>
         <div class="field">
-          <label class="label">Start date <span class="required">*</span></label>
+          <label class="label"><span data-i18n="field.startdate">Start date</span> <span class="required">*</span></label>
           <div class="input-group">
             <svg class="input-icon"><use href="#i-calendar"/></svg>
             <input class="input" type="date" min="2000-01-01">
           </div>
-          <span class="field-help">Cannot be set before year 2000</span>
+          <span class="field-help" data-i18n="field.startdate.help">Cannot be set before year 2000</span>
         </div>
         <div class="field">
-          <label class="label">Department <span class="required">*</span></label>
+          <label class="label"><span data-i18n="field.department">Department</span> <span class="required">*</span></label>
           <select class="select">
             <option>Engineering</option>
             <option>Design</option>
@@ -2092,38 +2600,38 @@
           </select>
         </div>
         <div class="field">
-          <label class="label">Job title <span class="required">*</span></label>
-          <input class="input" type="text" placeholder="Senior Engineer">
+          <label class="label"><span data-i18n="field.jobtitle">Job title</span> <span class="required">*</span></label>
+          <input class="input" type="text" placeholder="Senior Engineer" data-i18n-placeholder="field.jobtitle.ph">
         </div>
         <div class="field full">
-          <label class="label">Employment type</label>
+          <label class="label" data-i18n="field.emptype">Employment type</label>
           <div class="radio-group">
             <label class="radio-card">
               <input type="radio" name="add-type" checked>
-              <div class="rc-title">Full-time</div>
-              <div class="rc-desc">40 hrs/week</div>
+              <div class="rc-title" data-i18n="rc.fulltime.title">Full-time</div>
+              <div class="rc-desc" data-i18n="rc.fulltime.desc">40 hrs/week</div>
             </label>
             <label class="radio-card">
               <input type="radio" name="add-type">
-              <div class="rc-title">Part-time</div>
-              <div class="rc-desc">20 hrs/week</div>
+              <div class="rc-title" data-i18n="rc.parttime.title">Part-time</div>
+              <div class="rc-desc" data-i18n="rc.parttime.desc">20 hrs/week</div>
             </label>
             <label class="radio-card">
               <input type="radio" name="add-type">
-              <div class="rc-title">Contract</div>
-              <div class="rc-desc">Project-based</div>
+              <div class="rc-title" data-i18n="rc.contract.title">Contract</div>
+              <div class="rc-desc" data-i18n="rc.contract.desc">Project-based</div>
             </label>
           </div>
         </div>
         <div class="field full">
-          <label class="label" style="justify-content:space-between">Notes <span class="label-hint">— optional</span><span id="notes-count" style="font-size:11px;color:var(--text-muted);font-weight:400">0 / 500</span></label>
-          <textarea id="notes-textarea" class="textarea" maxlength="500" placeholder="Add any context, onboarding instructions, or context about this hire…" oninput="document.getElementById('notes-count').textContent=this.value.length+' / 500'"></textarea>
+          <label class="label" style="justify-content:space-between"><span data-i18n="field.notes">Notes</span> <span class="label-hint" data-i18n="field.notes.hint">— optional</span><span id="notes-count" style="font-size:11px;color:var(--text-muted);font-weight:400">0 / 500</span></label>
+          <textarea id="notes-textarea" class="textarea" maxlength="500" placeholder="Add any context, onboarding instructions, or context about this hire…" data-i18n-placeholder="field.notes.ph" oninput="document.getElementById('notes-count').textContent=this.value.length+' / 500'"></textarea>
         </div>
         <div class="field full">
           <div class="toggle-row" style="border-top: 1px solid var(--divider); padding-top: var(--s4);">
             <div>
-              <div class="toggle-label">Send onboarding email</div>
-              <div class="toggle-desc">Includes welcome packet, day-one checklist, and IT account setup.</div>
+              <div class="toggle-label" data-i18n="toggle.onboarding.label">Send onboarding email</div>
+              <div class="toggle-desc" data-i18n="toggle.onboarding.desc">Includes welcome packet, day-one checklist, and IT account setup.</div>
             </div>
             <input type="checkbox" class="toggle" checked>
           </div>
@@ -2131,9 +2639,9 @@
       </div>
     </div>
     <div class="panel-footer">
-      <button class="btn btn-ghost" onclick="closePanel('panel-add')">Cancel</button>
-      <button class="btn btn-secondary" onclick="closePanel('panel-add'); showToast('success','Draft saved','Employee draft saved to your workspace.')">Save as draft</button>
-      <button class="btn btn-primary" onclick="closePanel('panel-add'); showToast('success','Employee added','Sarah Chen was added to Engineering.')">Add Employee</button>
+      <button class="btn btn-ghost" onclick="closePanel('panel-add')" data-i18n="btn.cancel">Cancel</button>
+      <button class="btn btn-secondary" onclick="closePanel('panel-add'); showToast('success', t('toast.draft.title'), t('toast.draft.msg'))" data-i18n="btn.savedraft">Save as draft</button>
+      <button class="btn btn-primary" onclick="closePanel('panel-add'); showToast('success', t('toast.added.title'), t('toast.added.msg'))" data-i18n="btn.addemployee">Add Employee</button>
     </div>
   </div>
 
@@ -2142,8 +2650,8 @@
 <div class="right-panel" id="panel-view" role="dialog" aria-labelledby="view-panel-title">
     <div class="panel-header">
       <div>
-        <div class="panel-title" id="view-panel-title">Employee Profile</div>
-        <div class="panel-subtitle">EMP-0142 · Last updated 2 days ago</div>
+        <div class="panel-title" id="view-panel-title" data-i18n="panel.view.title">Employee Profile</div>
+        <div class="panel-subtitle" data-i18n="panel.view.subtitle">EMP-0142 · Last updated 2 days ago</div>
       </div>
       <button class="panel-close" onclick="closePanel('panel-view')" aria-label="Close"><svg><use href="#i-x"/></svg></button>
     </div>
@@ -2152,54 +2660,54 @@
         <div class="profile-avatar">SC</div>
         <div style="flex:1">
           <div class="profile-name">Sarah Chen</div>
-          <div class="profile-role">Senior Software Engineer · Engineering</div>
+          <div class="profile-role" data-i18n="profile.role">Senior Software Engineer · Engineering</div>
           <div style="margin-top: var(--s2); display: flex; gap: var(--s2);">
-            <span class="badge badge-success">Active</span>
-            <span class="tag">Full-time</span>
-            <span class="tag">Remote</span>
+            <span class="badge badge-success" data-i18n="status.active">Active</span>
+            <span class="tag" data-i18n="rc.fulltime.title">Full-time</span>
+            <span class="tag" data-i18n="tag.remote">Remote</span>
           </div>
         </div>
-        <button class="btn btn-secondary btn-sm" onclick="closePanel('panel-view'); openPanel('panel-add')"><svg><use href="#i-edit"/></svg> Edit</button>
+        <button class="btn btn-secondary btn-sm" onclick="closePanel('panel-view'); openPanel('panel-add')"><svg><use href="#i-edit"/></svg><span data-i18n="btn.edit"> Edit</span></button>
       </div>
 
       <div class="detail-grid">
         <div class="detail-item">
-          <div class="detail-label">Email</div>
+          <div class="detail-label" data-i18n="detail.email">Email</div>
           <div class="detail-value">sarah.chen@acme.com</div>
         </div>
         <div class="detail-item">
-          <div class="detail-label">Phone</div>
+          <div class="detail-label" data-i18n="detail.phone">Phone</div>
           <div class="detail-value">+1 (415) 555-0142</div>
         </div>
         <div class="detail-item">
-          <div class="detail-label">Manager</div>
+          <div class="detail-label" data-i18n="detail.manager">Manager</div>
           <div class="detail-value">David Park</div>
         </div>
         <div class="detail-item">
-          <div class="detail-label">Location</div>
+          <div class="detail-label" data-i18n="detail.location">Location</div>
           <div class="detail-value">San Francisco, CA</div>
         </div>
         <div class="detail-item">
-          <div class="detail-label">Start date</div>
-          <div class="detail-value">March 14, 2022</div>
+          <div class="detail-label" data-i18n="detail.startdate">Start date</div>
+          <div class="detail-value" data-i18n="detail.startdate.val">March 14, 2022</div>
         </div>
         <div class="detail-item">
-          <div class="detail-label">Tenure</div>
-          <div class="detail-value">4 years, 2 months</div>
+          <div class="detail-label" data-i18n="detail.tenure">Tenure</div>
+          <div class="detail-value" data-i18n="detail.tenure.val">4 years, 2 months</div>
         </div>
       </div>
 
       <div style="margin-top: var(--s5); padding-top: var(--s5); border-top: 1px solid var(--divider);">
-        <div class="gallery-card-title" style="margin-bottom: var(--s3)">Onboarding</div>
+        <div class="gallery-card-title" style="margin-bottom: var(--s3)" data-i18n="section.onboarding">Onboarding</div>
         <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-muted); margin-bottom: 6px;">
-          <span>5 of 7 steps complete</span><span>72%</span>
+          <span data-i18n="progress.steps">5 of 7 steps complete</span><span>72%</span>
         </div>
         <div class="progress"><div class="progress-bar" style="width:72%"></div></div>
       </div>
     </div>
     <div class="panel-footer">
-      <button class="btn btn-ghost" onclick="closePanel('panel-view')">Close</button>
-      <button class="btn btn-primary">View full profile</button>
+      <button class="btn btn-ghost" onclick="closePanel('panel-view')" data-i18n="btn.close">Close</button>
+      <button class="btn btn-primary" data-i18n="btn.viewfull">View full profile</button>
     </div>
   </div>
 
@@ -2210,18 +2718,18 @@
       <div style="display:flex; gap: var(--s3); align-items: flex-start;">
         <div class="modal-icon danger"><svg><use href="#i-trash"/></svg></div>
         <div>
-          <div class="modal-title">Delete employee?</div>
-          <div class="modal-subtitle">This action cannot be undone.</div>
+          <div class="modal-title" data-i18n="modal.delete.title">Delete employee?</div>
+          <div class="modal-subtitle" data-i18n="modal.delete.subtitle">This action cannot be undone.</div>
         </div>
       </div>
       <button class="modal-close" onclick="closeModal('modal-delete')" aria-label="Close"><svg><use href="#i-x"/></svg></button>
     </div>
     <div class="modal-body" style="padding-top: var(--s2)">
-      <p style="color: var(--text-secondary);">You're about to permanently delete <strong style="color:var(--text)">Sarah Chen</strong> and all associated payroll, time-off, and document records. Their access will be revoked immediately.</p>
+      <p style="color: var(--text-secondary);" data-i18n-html="modal.delete.body">You're about to permanently delete <strong style="color:var(--text)">Sarah Chen</strong> and all associated payroll, time-off, and document records. Their access will be revoked immediately.</p>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal('modal-delete')">Cancel</button>
-      <button class="btn btn-danger" onclick="closeModal('modal-delete'); showToast('danger','Employee deleted','Sarah Chen has been removed.')">Delete employee</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-delete')" data-i18n="btn.cancel">Cancel</button>
+      <button class="btn btn-danger" onclick="closeModal('modal-delete'); showToast('danger', t('toast.deleted.title'), t('toast.deleted.msg'))" data-i18n="btn.delete">Delete employee</button>
     </div>
   </div>
 </div>
@@ -2230,6 +2738,177 @@
 <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
 
 <script>
+  // ============ LANGUAGE / i18n ============
+  const translations = {
+    en: {
+      // Nav
+      'nav.overview': 'Overview', 'nav.dashboard': 'Dashboard', 'nav.reports': 'Reports', 'nav.analytics': 'Analytics',
+      'nav.workforce': 'Workforce', 'nav.employees': 'Employees', 'nav.departments': 'Departments', 'nav.timeoff': 'Time Off', 'nav.payroll': 'Payroll',
+      'nav.operations': 'Operations', 'nav.inventory': 'Inventory', 'nav.invoices': 'Invoices', 'nav.suppliers': 'Suppliers', 'nav.purchaseorders': 'Purchase Orders',
+      'nav.finance': 'Finance', 'nav.accounts': 'Accounts', 'nav.expenses': 'Expenses', 'nav.budget': 'Budget', 'nav.taxcompliance': 'Tax & Compliance',
+      'nav.settings': 'Settings', 'nav.general': 'General', 'nav.usersroles': 'Users & Roles', 'nav.integrations': 'Integrations', 'nav.notifications': 'Notifications',
+      'nav.help': 'Help', 'nav.helpsupport': 'Help & Support', 'nav.documentation': 'Documentation', 'nav.contactsupport': 'Contact Support', 'nav.whatsnew': "What's New",
+      // Search & topbar
+      'search.placeholder': 'Search anything…',
+      // Page header
+      'page.title': 'Employees', 'page.subtitle': 'Manage your team, roles, and employment details.',
+      'btn.export': ' Export', 'btn.import': ' Import', 'btn.addEmployee': ' Add Employee',
+      // KPI
+      'kpi.totalEmployees': ' Total Employees', 'kpi.active': ' Active', 'kpi.onLeave': ' On Leave', 'kpi.openRoles': ' Open Roles', 'kpi.newRoles': ' 8 new',
+      // Tabs
+      'tab.all': 'All', 'tab.active': 'Active', 'tab.onLeave': 'On Leave', 'tab.inactive': 'Inactive',
+      // Toolbar
+      'filter.search': 'Search employees…', 'filter.department': 'Department:', 'filter.all': 'All', 'filter.filters': ' Filters',
+      // Table headers
+      'th.employee': 'Employee', 'th.id': 'ID', 'th.department': 'Department', 'th.role': 'Role', 'th.location': 'Location', 'th.status': 'Status', 'th.joined': 'Joined', 'th.actions': 'Actions',
+      // Pagination
+      'pagination.showing': 'Showing', 'pagination.of': 'of', 'pagination.employees': 'employees', 'pagination.goto': 'Go to', 'pagination.of31': 'of 31',
+      // Status
+      'status.active': 'Active', 'status.leave': 'On Leave', 'status.inactive': 'Inactive',
+      // Add panel
+      'panel.add.title': 'Add Employee', 'panel.add.subtitle': 'Create a new team member profile.',
+      'field.firstname': 'First name', 'field.firstname.ph': 'Sarah', 'field.lastname': 'Last name', 'field.lastname.ph': 'Chen',
+      'field.workemail': 'Work email', 'field.phone': 'Phone', 'field.startdate': 'Start date', 'field.startdate.help': 'Cannot be set before year 2000',
+      'field.department': 'Department', 'field.jobtitle': 'Job title', 'field.jobtitle.ph': 'Senior Engineer',
+      'field.emptype': 'Employment type', 'field.notes': 'Notes', 'field.notes.hint': '— optional', 'field.notes.ph': 'Add any context, onboarding instructions, or context about this hire…',
+      'rc.fulltime.title': 'Full-time', 'rc.fulltime.desc': '40 hrs/week', 'rc.parttime.title': 'Part-time', 'rc.parttime.desc': '20 hrs/week', 'rc.contract.title': 'Contract', 'rc.contract.desc': 'Project-based',
+      'toggle.onboarding.label': 'Send onboarding email', 'toggle.onboarding.desc': 'Includes welcome packet, day-one checklist, and IT account setup.',
+      'btn.cancel': 'Cancel', 'btn.savedraft': 'Save as draft', 'btn.addemployee': 'Add Employee',
+      // View panel
+      'panel.view.title': 'Employee Profile', 'panel.view.subtitle': 'EMP-0142 · Last updated 2 days ago',
+      'profile.role': 'Senior Software Engineer · Engineering',
+      'tag.remote': 'Remote', 'btn.edit': ' Edit',
+      'detail.email': 'Email', 'detail.phone': 'Phone', 'detail.manager': 'Manager', 'detail.location': 'Location',
+      'detail.startdate': 'Start date', 'detail.startdate.val': 'March 14, 2022', 'detail.tenure': 'Tenure', 'detail.tenure.val': '4 years, 2 months',
+      'section.onboarding': 'Onboarding', 'progress.steps': '5 of 7 steps complete',
+      'btn.close': 'Close', 'btn.viewfull': 'View full profile',
+      // Delete modal
+      'modal.delete.title': 'Delete employee?', 'modal.delete.subtitle': 'This action cannot be undone.',
+      'modal.delete.body': "You're about to permanently delete <strong style=\"color:var(--text)\">Sarah Chen</strong> and all associated payroll, time-off, and document records. Their access will be revoked immediately.",
+      'btn.delete': 'Delete employee',
+      // Back to home
+      'back.home': 'Back to Home',
+      // Toasts
+      'toast.notif.title': 'New notification', 'toast.notif.msg': 'You have 3 unread messages.',
+      'toast.export.title': 'Export started', 'toast.export.msg': 'Your CSV will be ready in a moment.',
+      'toast.draft.title': 'Draft saved', 'toast.draft.msg': 'Employee draft saved to your workspace.',
+      'toast.added.title': 'Employee added', 'toast.added.msg': 'Sarah Chen was added to Engineering.',
+      'toast.deleted.title': 'Employee deleted', 'toast.deleted.msg': 'Sarah Chen has been removed.',
+      'toast.jump.of': 'of',
+      // Empty state
+      'empty.nofound': 'No employees found', 'empty.noresults': 'No results for', 'empty.clear': 'clear search',
+    },
+    vi: {
+      // Nav
+      'nav.overview': 'Tổng quan', 'nav.dashboard': 'Bảng điều khiển', 'nav.reports': 'Báo cáo', 'nav.analytics': 'Phân tích',
+      'nav.workforce': 'Nhân sự', 'nav.employees': 'Nhân viên', 'nav.departments': 'Phòng ban', 'nav.timeoff': 'Nghỉ phép', 'nav.payroll': 'Bảng lương',
+      'nav.operations': 'Vận hành', 'nav.inventory': 'Kho hàng', 'nav.invoices': 'Hóa đơn', 'nav.suppliers': 'Nhà cung cấp', 'nav.purchaseorders': 'Đơn đặt hàng',
+      'nav.finance': 'Tài chính', 'nav.accounts': 'Tài khoản', 'nav.expenses': 'Chi phí', 'nav.budget': 'Ngân sách', 'nav.taxcompliance': 'Thuế & Tuân thủ',
+      'nav.settings': 'Cài đặt', 'nav.general': 'Chung', 'nav.usersroles': 'Người dùng & Vai trò', 'nav.integrations': 'Tích hợp', 'nav.notifications': 'Thông báo',
+      'nav.help': 'Trợ giúp', 'nav.helpsupport': 'Trợ giúp & Hỗ trợ', 'nav.documentation': 'Tài liệu', 'nav.contactsupport': 'Liên hệ hỗ trợ', 'nav.whatsnew': 'Tính năng mới',
+      // Search & topbar
+      'search.placeholder': 'Tìm kiếm bất cứ điều gì…',
+      // Page header
+      'page.title': 'Nhân viên', 'page.subtitle': 'Quản lý nhóm, vai trò và thông tin nhân sự của bạn.',
+      'btn.export': ' Xuất', 'btn.import': ' Nhập', 'btn.addEmployee': ' Thêm nhân viên',
+      // KPI
+      'kpi.totalEmployees': ' Tổng số nhân viên', 'kpi.active': ' Đang làm việc', 'kpi.onLeave': ' Đang nghỉ phép', 'kpi.openRoles': ' Vị trí tuyển dụng', 'kpi.newRoles': ' 8 mới',
+      // Tabs
+      'tab.all': 'Tất cả', 'tab.active': 'Đang làm', 'tab.onLeave': 'Nghỉ phép', 'tab.inactive': 'Nghỉ việc',
+      // Toolbar
+      'filter.search': 'Tìm kiếm nhân viên…', 'filter.department': 'Phòng ban:', 'filter.all': 'Tất cả', 'filter.filters': ' Bộ lọc',
+      // Table headers
+      'th.employee': 'Nhân viên', 'th.id': 'Mã NV', 'th.department': 'Phòng ban', 'th.role': 'Chức vụ', 'th.location': 'Địa điểm', 'th.status': 'Trạng thái', 'th.joined': 'Ngày vào', 'th.actions': 'Thao tác',
+      // Pagination
+      'pagination.showing': 'Hiển thị', 'pagination.of': 'trong', 'pagination.employees': 'nhân viên', 'pagination.goto': 'Đến trang', 'pagination.of31': '/ 31',
+      // Status
+      'status.active': 'Đang làm', 'status.leave': 'Nghỉ phép', 'status.inactive': 'Nghỉ việc',
+      // Add panel
+      'panel.add.title': 'Thêm nhân viên', 'panel.add.subtitle': 'Tạo hồ sơ thành viên mới cho nhóm.',
+      'field.firstname': 'Họ', 'field.firstname.ph': 'Nguyễn', 'field.lastname': 'Tên', 'field.lastname.ph': 'Văn An',
+      'field.workemail': 'Email công ty', 'field.phone': 'Điện thoại', 'field.startdate': 'Ngày bắt đầu', 'field.startdate.help': 'Không thể đặt trước năm 2000',
+      'field.department': 'Phòng ban', 'field.jobtitle': 'Chức vụ', 'field.jobtitle.ph': 'Kỹ sư cao cấp',
+      'field.emptype': 'Loại hợp đồng', 'field.notes': 'Ghi chú', 'field.notes.hint': '— tùy chọn', 'field.notes.ph': 'Thêm ghi chú, hướng dẫn nhận việc hoặc thông tin về nhân viên mới…',
+      'rc.fulltime.title': 'Toàn thời gian', 'rc.fulltime.desc': '40 giờ/tuần', 'rc.parttime.title': 'Bán thời gian', 'rc.parttime.desc': '20 giờ/tuần', 'rc.contract.title': 'Hợp đồng', 'rc.contract.desc': 'Theo dự án',
+      'toggle.onboarding.label': 'Gửi email hướng dẫn', 'toggle.onboarding.desc': 'Bao gồm bộ tài liệu chào mừng, danh sách ngày đầu tiên và thiết lập tài khoản IT.',
+      'btn.cancel': 'Hủy', 'btn.savedraft': 'Lưu nháp', 'btn.addemployee': 'Thêm nhân viên',
+      // View panel
+      'panel.view.title': 'Hồ sơ nhân viên', 'panel.view.subtitle': 'EMP-0142 · Cập nhật lần cuối 2 ngày trước',
+      'profile.role': 'Kỹ sư phần mềm cao cấp · Kỹ thuật',
+      'tag.remote': 'Từ xa', 'btn.edit': ' Chỉnh sửa',
+      'detail.email': 'Email', 'detail.phone': 'Điện thoại', 'detail.manager': 'Quản lý', 'detail.location': 'Địa điểm',
+      'detail.startdate': 'Ngày bắt đầu', 'detail.startdate.val': '14 tháng 3, 2022', 'detail.tenure': 'Thâm niên', 'detail.tenure.val': '4 năm, 2 tháng',
+      'section.onboarding': 'Hướng dẫn nhân viên mới', 'progress.steps': 'Hoàn thành 5 / 7 bước',
+      'btn.close': 'Đóng', 'btn.viewfull': 'Xem đầy đủ hồ sơ',
+      // Delete modal
+      'modal.delete.title': 'Xóa nhân viên?', 'modal.delete.subtitle': 'Hành động này không thể hoàn tác.',
+      'modal.delete.body': 'Bạn sắp xóa vĩnh viễn <strong style="color:var(--text)">Sarah Chen</strong> cùng toàn bộ dữ liệu bảng lương, nghỉ phép và tài liệu liên quan. Quyền truy cập sẽ bị thu hồi ngay lập tức.',
+      'btn.delete': 'Xóa nhân viên',
+      // Back to home
+      'back.home': 'Về trang chủ',
+      // Toasts
+      'toast.notif.title': 'Thông báo mới', 'toast.notif.msg': 'Bạn có 3 tin nhắn chưa đọc.',
+      'toast.export.title': 'Bắt đầu xuất', 'toast.export.msg': 'File CSV của bạn sẽ sẵn sàng trong giây lát.',
+      'toast.draft.title': 'Đã lưu nháp', 'toast.draft.msg': 'Hồ sơ nhân viên đã được lưu nháp.',
+      'toast.added.title': 'Đã thêm nhân viên', 'toast.added.msg': 'Sarah Chen đã được thêm vào Kỹ thuật.',
+      'toast.deleted.title': 'Đã xóa nhân viên', 'toast.deleted.msg': 'Sarah Chen đã bị xóa khỏi hệ thống.',
+      'toast.jump.of': 'trong',
+      // Empty state
+      'empty.nofound': 'Không tìm thấy nhân viên', 'empty.noresults': 'Không có kết quả cho', 'empty.clear': 'xóa tìm kiếm',
+    }
+  };
+
+  let currentLang = 'en';
+
+  function t(key) {
+    return translations[currentLang][key] ?? translations['en'][key] ?? key;
+  }
+
+  function applyLanguage(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang === 'vi' ? 'vi' : 'en';
+
+    // Text content
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const val = translations[lang][el.dataset.i18n];
+      if (val !== undefined) el.textContent = val;
+    });
+
+    // Placeholder attribute
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const val = translations[lang][el.dataset.i18nPlaceholder];
+      if (val !== undefined) el.placeholder = val;
+    });
+
+    // Inner HTML (for content with <strong> etc.)
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+      const val = translations[lang][el.dataset.i18nHtml];
+      if (val !== undefined) el.innerHTML = val;
+    });
+
+    // Update status map & re-render table
+    statusMap.active.label = t('status.active');
+    statusMap.leave.label  = t('status.leave');
+    statusMap.inactive.label = t('status.inactive');
+    renderEmployees();
+
+    // Update toggle button
+    const btn = document.getElementById('lang-toggle');
+    if (btn) {
+      const isVI = lang === 'vi';
+      btn.querySelector('.lang-flag').textContent = isVI ? '🇺🇸' : '🇻🇳';
+      btn.querySelector('.lang-code').textContent = isVI ? 'EN' : 'VI';
+      btn.title = isVI ? 'Switch to English' : 'Switch to Tiếng Việt';
+    }
+
+    // Persist
+    try { localStorage.setItem('erpLang', lang); } catch(e) {}
+  }
+
+  function toggleLang() {
+    applyLanguage(currentLang === 'en' ? 'vi' : 'en');
+  }
+
   // ============ EMPLOYEE DATA ============
   const employees = [
     { id: 'EMP-0142', name: 'Sarah Chen',     email: 'sarah.chen@acme.com',     dept: 'Engineering', role: 'Senior Engineer',  loc: 'San Francisco', status: 'active',  joined: 'Mar 14, 2022', color: '#8B5CF6', initials: 'SC' },
@@ -2237,9 +2916,9 @@
     { id: 'EMP-0156', name: 'Priya Patel',    email: 'priya.p@acme.com',        dept: 'Marketing',   role: 'Marketing Manager',loc: 'London',       status: 'leave',   joined: 'Jul 22, 2022', color: '#16A34A', initials: 'PP' },
     { id: 'EMP-0089', name: 'David Park',     email: 'd.park@acme.com',         dept: 'Engineering', role: 'Engineering Lead', loc: 'Seoul',        status: 'active',  joined: 'Feb 03, 2021', color: '#D97706', initials: 'DP' },
     { id: 'EMP-0201', name: 'Emma Williams',  email: 'emma.w@acme.com',         dept: 'Sales',       role: 'Account Executive',loc: 'Austin',       status: 'active',  joined: 'Sep 18, 2023', color: '#DC2626', initials: 'EW' },
-    { id: 'EMP-0177', name: 'Liam O\'Brien',  email: 'liam.o@acme.com',         dept: 'Operations',  role: 'Ops Coordinator',  loc: 'Dublin',       status: 'active',  joined: 'May 02, 2023', color: '#0EA5E9', initials: 'LO' },
+    { id: 'EMP-0177', name: 'Liam O\'Brien',  email: 'liam.o@acme.com',         dept: 'Operations',  role: 'Ops Coordinator',  loc: 'Dublin',       status: 'active',  joined: 'May 02, 2023', color: '#00AADD', initials: 'LO' },
     { id: 'EMP-0034', name: 'Yuki Tanaka',    email: 'y.tanaka@acme.com',       dept: 'Finance',     role: 'Senior Accountant',loc: 'Tokyo',        status: 'inactive',joined: 'Aug 11, 2020', color: '#7C3AED', initials: 'YT' },
-    { id: 'EMP-0162', name: 'Ana García',     email: 'ana.g@acme.com',          dept: 'Engineering', role: 'Backend Engineer', loc: 'Madrid',       status: 'active',  joined: 'Apr 27, 2022', color: '#059669', initials: 'AG' }
+    { id: 'EMP-0162', name: 'Ana García',     email: 'ana.g@acme.com',          dept: 'Engineering', role: 'Backend Engineer', loc: 'Madrid',       status: 'active',  joined: 'Apr 27, 2022', color: '#007BA7', initials: 'AG' }
   ];
 
   const statusMap = {
@@ -2271,8 +2950,8 @@
     if (filtered.length === 0) {
       tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:var(--s7) var(--s4);color:var(--text-muted);">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto var(--s3);display:block;opacity:0.4"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <div style="font-weight:600;color:var(--text-secondary);margin-bottom:4px">No employees found</div>
-        <div style="font-size:13px">No results for "<strong>${currentFilter}</strong>" — <button onclick="document.getElementById('table-search').value='';filterEmployees('');" style="color:var(--cta);font-size:13px;cursor:pointer;text-decoration:underline;background:none;border:none;padding:0">clear search</button></div>
+        <div style="font-weight:600;color:var(--text-secondary);margin-bottom:4px">${t('empty.nofound')}</div>
+        <div style="font-size:13px">${t('empty.noresults')} "<strong>${currentFilter}</strong>" — <button onclick="document.getElementById('table-search').value='';filterEmployees('');" style="color:var(--cta);font-size:13px;cursor:pointer;text-decoration:underline;background:none;border:none;padding:0">${t('empty.clear')}</button></div>
       </td></tr>`;
       return;
     }
@@ -2343,13 +3022,7 @@
     document.getElementById(id).classList.remove('show');
     document.body.style.overflow = '';
   }
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      document.querySelectorAll('.right-panel.open').forEach(p => closePanel(p.id));
-      document.querySelectorAll('.modal-backdrop.show').forEach(m => m.classList.remove('show'));
-      document.body.style.overflow = '';
-    }
-  });
+  // (ESC key handler merged into mobile sidebar section below)
 
   // ============ TOAST NOTIFICATIONS ============
   const iconMap = {
@@ -2379,12 +3052,74 @@
     setTimeout(remove, 4500);
   }
 
+  // ============ SIDEBAR EXPAND / COLLAPSE ============
+  let sidebarIsExpanded = false;
+
+  function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const app = document.querySelector('.app');
+    sidebarIsExpanded = sidebar.classList.toggle('expanded');
+    app.classList.toggle('sidebar-expanded', sidebarIsExpanded);
+    document.body.classList.toggle('sidebar-expanded', sidebarIsExpanded);
+    try { localStorage.setItem('erpSidebarExpanded', sidebarIsExpanded); } catch(e) {}
+  }
+
+  // Restore saved sidebar state
+  try {
+    if (localStorage.getItem('erpSidebarExpanded') === 'true') {
+      document.querySelector('.sidebar').classList.add('expanded');
+      document.querySelector('.app').classList.add('sidebar-expanded');
+      document.body.classList.add('sidebar-expanded');
+      sidebarIsExpanded = true;
+    }
+  } catch(e) {}
+
+  // Collapse on resize to mobile
+  window.addEventListener('resize', () => {
+    if (window.innerWidth <= 768 && sidebarIsExpanded) {
+      document.querySelector('.sidebar').classList.remove('expanded');
+      document.querySelector('.app').classList.remove('sidebar-expanded');
+      document.body.classList.remove('sidebar-expanded');
+      sidebarIsExpanded = false;
+    }
+  });
+
+  // ============ SIDEBAR SUB-ITEM SELECTION (expanded mode) ============
+  function selectSubItem(el, module, label) {
+    // Deactivate all sub-items
+    document.querySelectorAll('.rail-subitem').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+
+    // Activate the parent rail section
+    document.querySelectorAll('.rail-item').forEach(i => i.classList.remove('active'));
+    const rail = document.querySelector(`.rail-item[data-flyout="flyout-${module}"]`);
+    if (rail) rail.classList.add('active');
+
+    // Also sync the corresponding flyout item
+    const flyout = document.getElementById(`flyout-${module}`);
+    if (flyout) {
+      flyout.querySelectorAll('.flyout-item').forEach(fi => {
+        const text = fi.querySelector('.flyout-item-inner')?.textContent.trim() || '';
+        fi.classList.toggle('active', text === label);
+      });
+    }
+
+    // Update breadcrumb & title
+    const sectionLabel = rail?.querySelector('.rail-label')?.textContent.trim() || module;
+    document.title = label + ' — Twendee Work';
+    const bc = document.querySelector('.breadcrumb');
+    if (bc) bc.innerHTML = `<span>${sectionLabel}</span><svg width="14" height="14"><use href="#i-chevron-right"/></svg><span class="current">${label}</span>`;
+  }
+
   // ============ SLIM RAIL FLYOUTS ============
   (function() {
     let hideTimer = null;
     let visibleFlyout = null;
 
     function showFlyout(flyout, railItem) {
+      // Don't show flyouts when sidebar is in expanded mode
+      if (sidebarIsExpanded) return;
+
       clearTimeout(hideTimer);
 
       // Vertically align flyout to the hovered rail item
@@ -2453,6 +3188,12 @@
       if (bc) bc.innerHTML = `<span>${sectionLabel}</span><svg width="14" height="14"><use href="#i-chevron-right"/></svg><span class="current">${itemLabel}</span>`;
     }
 
+    // Sync the matching sidebar sub-item (so state is consistent when expanding)
+    document.querySelectorAll('.rail-subitem').forEach(si => {
+      const text = si.textContent.replace(/\d+/g, '').trim();
+      si.classList.toggle('active', text === itemLabel);
+    });
+
     // Dismiss flyout smoothly
     setTimeout(() => flyout.classList.remove('visible'), 160);
   }
@@ -2461,10 +3202,50 @@
   function jumpToPage(value) {
     const page = Math.max(1, Math.min(31, parseInt(value) || 1));
     document.getElementById('page-input').value = page;
-    showToast('info', `Jumped to page ${page}`, `Showing employees ${(page-1)*8+1}–${page*8} of 248.`);
+    showToast('info', `${currentLang === 'vi' ? 'Đến trang' : 'Jumped to page'} ${page}`, `${currentLang === 'vi' ? 'Hiển thị nhân viên' : 'Showing employees'} ${(page-1)*8+1}–${page*8} ${t('toast.jump.of')} 248.`);
   }
 
-  // Init
+  // ============ MOBILE SIDEBAR DRAWER ============
+  function toggleMobileSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    if (sidebar.classList.contains('mobile-open')) {
+      closeMobileSidebar();
+    } else {
+      sidebar.classList.add('mobile-open');
+      document.getElementById('mobile-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeMobileSidebar() {
+    document.querySelector('.sidebar').classList.remove('mobile-open');
+    document.getElementById('mobile-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // Close drawer when a nav item is tapped on mobile
+  document.querySelectorAll('.rail-item').forEach(item => {
+    item.addEventListener('click', () => {
+      if (window.innerWidth <= 768) closeMobileSidebar();
+    });
+  });
+
+  // ESC key also closes mobile sidebar
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeMobileSidebar();
+      document.querySelectorAll('.right-panel.open').forEach(p => closePanel(p.id));
+      document.querySelectorAll('.modal-backdrop.show').forEach(m => m.classList.remove('show'));
+      document.body.style.overflow = '';
+    }
+  }, true); // capture phase so this fires before the other keydown handler
+
+  // ============ INIT ============
+  // Restore saved language preference
+  try {
+    const savedLang = localStorage.getItem('erpLang');
+    if (savedLang === 'vi') applyLanguage('vi');
+  } catch(e) {}
   renderEmployees();
 </script>
 
@@ -2479,7 +3260,7 @@
     align-items: center;
     gap: 8px;
     padding: 10px 18px;
-    background: linear-gradient(135deg, #2563EB 0%, #06B6D4 100%);
+    background: var(--grad);
     color: #fff;
     font-family: 'Inter', system-ui, sans-serif;
     font-size: 13px;
@@ -2501,7 +3282,7 @@
   <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M10 12L6 8L10 4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   </svg>
-  Back to Home
+  <span data-i18n="back.home">Back to Home</span>
 </a>
 
 </body>
