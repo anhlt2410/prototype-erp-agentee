@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Agentee Chat</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -50,6 +50,7 @@
 
   html, body {
     height: 100%;
+    min-height: -webkit-fill-available; /* older iOS Safari */
     font-family: var(--font-body);
     color: var(--text);
     background: var(--secondary);
@@ -63,7 +64,8 @@
   .app {
     display: grid;
     grid-template-columns: 260px 1fr;
-    height: 100vh;
+    height: 100vh;        /* fallback */
+    height: 100dvh;       /* dynamic viewport — adapts as browser chrome shows/hides */
     overflow: hidden;
     position: relative;
   }
@@ -264,6 +266,7 @@
   /* USER CARD */
   .user-card {
     padding: 12px;
+    padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
     border-top: 1px solid var(--border-soft);
     display: flex;
     align-items: center;
@@ -1408,7 +1411,11 @@
     .citation { padding: 7px 9px; }
 
     /* ---- Composer ---- */
-    .composer-wrap { padding: 10px 12px 12px; }
+    .composer-wrap {
+      padding: 10px 12px 12px;
+      /* Clear Android gesture nav bar + iOS home indicator */
+      padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
+    }
     .composer { padding: 10px 12px; border-radius: var(--radius-md); }
     /* 16px prevents iOS auto-zoom on focus */
     .composer-input { font-size: 16px; }
