@@ -603,7 +603,7 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--r-md);
-    box-shadow: inset 3px 0 0 var(--cta);
+    box-shadow: 0 2px 14px rgba(0, 123, 167, 0.12);
     padding: var(--s3) var(--s4);
     display: flex;
     align-items: center;
@@ -611,7 +611,7 @@
     gap: var(--s3);
     transition: box-shadow var(--t-base) var(--ease), transform var(--t-base) var(--ease);
   }
-  .kpi-card:hover { box-shadow: 0 2px 12px rgba(37,99,235,0.12); transform: translateY(-1px); }
+  .kpi-card:hover { box-shadow: 0 6px 24px var(--cta-shadow); transform: translateY(-2px); }
   .kpi-card-text { min-width: 0; }
   .kpi-label {
     font-size: 12px;
