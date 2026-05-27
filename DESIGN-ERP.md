@@ -22,10 +22,10 @@ An enterprise-grade admin shell. The dark cerulean sidebar grounds every page; l
 - **Accent:** `#00AADD` — Lighter cerulean, gradient endpoint
 - **Accent-50 / Accent-100:** `#e8f4f8` / `#a0d8ef`
 
-### Gradients
-- **Gradient (CTA):** `linear-gradient(135deg, #007BA7 0%, #00AADD 100%)` — Buttons, badges, pagination active, checkboxes, toggles
-- **Gradient hover:** `linear-gradient(135deg, #006490 0%, #007BA7 100%)` — Button hover state
-- **Gradient sidebar:** `linear-gradient(180deg, #004f72 0%, #007BA7 55%, #00AADD 100%)` — Rail sidebar background (vertical, top-to-bottom)
+### Gradients / CTA
+- **CTA (`--grad`):** `#007BA7` — Flat cerulean used for buttons, badges, pagination active, checkboxes, toggles
+- **CTA hover (`--grad-hover`):** `#006490` — Button hover state
+- **Sidebar (`--grad-sidebar`):** `#007BA7` — Rail sidebar background (flat cerulean)
 
 ### Semantic
 - **Success:** `#10B981` · **Success-50:** `#ECFDF5`
@@ -49,7 +49,7 @@ An enterprise-grade admin shell. The dark cerulean sidebar grounds every page; l
 - **Sidebar hover bg:** `rgba(255,255,255,0.08)`
 - **Sidebar border:** `rgba(255,255,255,0.12)`
 
-- Use `--grad` (cerulean gradient) for all primary CTAs and active/selected states.
+- Use `--grad` (`#007BA7` flat cerulean) for all primary CTAs and active/selected states.
 - Use `--primary-50` as the "tinted hover" surface; never use pure white as a hover background.
 - Table row hover uses `#F0FDFF` — a very light cyan wash — not a grey.
 
@@ -58,7 +58,7 @@ An enterprise-grade admin shell. The dark cerulean sidebar grounds every page; l
 - **Scale:** 11 / 12 / 13 / 13.5 / 14 / 15 / 18 / 20
 - **Families:**
   - Sans: `Inter` — All body copy, labels, table data, buttons, navigation
-  - Display: `Playfair Display` — Page titles, modal titles, panel titles, profile names
+  - Display: `Be Vietnam Pro` — Page titles, modal titles, panel titles, profile names
   - Mono: `JetBrains Mono` — Currency/numeric cells, IDs, search keyboard shortcut, language code chip
 - **Weights used:** 400, 500, 600, 700, 800
 - **Base size:** 14px, 1.5 line-height
@@ -108,15 +108,16 @@ Named spacing tokens on an **4pt base grid**:
 - Badge: pill, `primary-100` bg → gradient when active
 
 ### Top Bar
-- Height: 60px; white surface; `border-bottom: 2px solid --primary-100`
-- Search: max-width 420px; `primary-50` background; focuses to white + cerulean border + 3px ring
+- Height: 60px; white surface; `border-bottom: 2px solid --primary-100`; subtle cerulean box-shadow `0 1px 8px rgba(0,123,167,0.08)`
+- Search: max-width 420px; `primary-50` background; focuses to white + cerulean border + 3px ring; `kbd` shortcut hint right-aligned (font-mono)
 - Actions: `icon-btn` (36×36px, `--r-md`); notification dot uses `--danger` with white `border`
-- User chip: avatar (28px, gradient) + name; hover uses `--divider`
+- User chip: avatar (28px, cerulean) + name; hover uses `--divider`
+- **Language toggle:** flag emoji + language code chip (`font-mono`, 11px, 0.05em tracking); 34px tall, `--r-md` border; hover → `primary-50` bg + cerulean border + `primary-active` text; active → `primary-100` bg
 
 ### KPI Cards
-- White surface, 1px border, `inset 3px 0 0 var(--cta)` left accent
+- White surface, 1px border, cerulean-tinted shadow `0 2px 14px rgba(0, 123, 167, 0.12)`
 - Label: 12px, muted; Value: 18px bold; Delta badge: pill with semantic color + bg
-- Hover: lifts 1px, box-shadow with blue tint
+- Hover: lifts 2px, shadow intensifies to `0 6px 24px var(--cta-shadow)`
 
 ### Tabs
 - Pill container with `primary-50` background and `1px border`
@@ -214,7 +215,7 @@ Focus ring: `0 0 0 3px var(--cta-50), 0 0 0 1px var(--cta)`
 
 - Product name: **Twendee Work** — shown in topbar breadcrumb and mobile sidebar drawer header.
 - Brand mark: white text on `rgba(255,255,255,0.2)` background, 800 weight, `-0.02em` letter-spacing. Scales up slightly on hover (`scale(1.05)`).
-- Page titles use Playfair Display at 20px; all operational labels use Inter.
+- Page titles use Be Vietnam Pro at 20px; all operational labels use Inter.
 - Action labels are direct and operational: "Add Employee", "Export CSV", "Save Changes", "Confirm Delete".
 - Section labels are uppercase + tracked: `EMPLOYEES`, `PAYROLL`, `REPORTS`.
 

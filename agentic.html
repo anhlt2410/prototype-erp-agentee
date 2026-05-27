@@ -9,18 +9,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    /* Blue gradient palette */
-    --primary: #2563EB;
-    --primary-hover: #1D4ED8;
-    --primary-deep: #1E40AF;
-    --primary-soft: #EFF6FF;
-    --primary-soft-2: #DBEAFE;
-    --accent: #06B6D4;
-    --gradient-primary: linear-gradient(135deg, #2563EB 0%, #06B6D4 100%);
-    --gradient-soft: linear-gradient(135deg, #EFF6FF 0%, #ECFEFF 100%);
-    --gradient-mark: linear-gradient(135deg, #3B82F6 0%, #0EA5E9 50%, #06B6D4 100%);
+    /* Cerulean Blue palette — #007BA7 */
+    --primary: #007BA7;
+    --primary-hover: #006490;
+    --primary-deep: #004f72;
+    --primary-soft: #e8f4f8;
+    --primary-soft-2: #c5e4ef;
+    --accent: #00AADD;
+    --gradient-primary: linear-gradient(135deg, #007BA7 0%, #00AADD 100%);
+    --gradient-soft: linear-gradient(135deg, #e8f4f8 0%, #f0faff 100%);
+    --gradient-mark: linear-gradient(135deg, #007BA7 0%, #00AADD 50%, #00C9E8 100%);
 
-    --secondary: #F8FAFC;
+    --secondary: #F0F8FC;
     --success: #10B981;
     --warning: #F59E0B;
     --danger: #EF4444;
@@ -34,7 +34,7 @@
     --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
     --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06);
     --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.08);
-    --shadow-glow: 0 8px 24px rgba(37, 99, 235, 0.25);
+    --shadow-glow: 0 8px 24px rgba(0, 123, 167, 0.25);
 
     --radius-sm: 8px;
     --radius-md: 12px;
@@ -168,7 +168,7 @@
 
   .new-chat-btn:hover {
     transform: translateY(-1px);
-    box-shadow: 0 12px 28px rgba(37, 99, 235, 0.35);
+    box-shadow: 0 12px 28px rgba(0, 123, 167, 0.35);
   }
 
   .new-chat-btn:hover::before { opacity: 1; }
@@ -594,7 +594,7 @@
   .task-step.active .task-step-icon {
     background: var(--gradient-primary);
     color: var(--surface);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+    box-shadow: 0 0 0 3px rgba(0, 123, 167, 0.18);
   }
 
   .task-step.pending .task-step-icon {
@@ -710,7 +710,7 @@
 
   .composer:focus-within {
     border-color: var(--primary);
-    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1), var(--shadow-md);
+    box-shadow: 0 0 0 4px rgba(0, 123, 167, 0.1), var(--shadow-md);
   }
 
   .composer-input {
@@ -791,7 +791,7 @@
 
   .send-btn:hover {
     transform: translateY(-1px);
-    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.35);
+    box-shadow: 0 10px 24px rgba(0, 123, 167, 0.35);
   }
   .send-btn svg { width: 16px; height: 16px; }
 
@@ -1102,7 +1102,7 @@
   }
 
   .code-block-lang {
-    color: #06B6D4;
+    color: #00AADD;
     font-weight: 600;
   }
 
@@ -1246,7 +1246,7 @@
 
   .btn-primary:hover {
     transform: translateY(-1px);
-    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.35);
+    box-shadow: 0 10px 24px rgba(0, 123, 167, 0.35);
   }
 
   .btn-secondary {
@@ -1437,7 +1437,7 @@
 
   .btn-approve:hover {
     transform: translateY(-1px);
-    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.35);
+    box-shadow: 0 10px 24px rgba(0, 123, 167, 0.35);
   }
 
   .btn-approve:hover::before { opacity: 1; }
@@ -2616,17 +2616,17 @@
               <svg viewBox="0 0 400 100" preserveAspectRatio="none">
                 <defs>
                   <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#2563EB" stop-opacity="0.3"/>
-                    <stop offset="100%" stop-color="#06B6D4" stop-opacity="0"/>
+                    <stop offset="0%" stop-color="#007BA7" stop-opacity="0.3"/>
+                    <stop offset="100%" stop-color="#00AADD" stop-opacity="0"/>
                   </linearGradient>
                 </defs>
                 <path d="M 0,70 L 80,60 L 160,55 L 240,40 L 320,28 L 400,18 L 400,100 L 0,100 Z" fill="url(#lineGrad)"/>
-                <path d="M 0,70 L 80,60 L 160,55 L 240,40 L 320,28 L 400,18" stroke="#2563EB" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                <circle cx="80" cy="60" r="3" fill="#2563EB"/>
-                <circle cx="160" cy="55" r="3" fill="#2563EB"/>
-                <circle cx="240" cy="40" r="3" fill="#2563EB"/>
-                <circle cx="320" cy="28" r="3" fill="#2563EB"/>
-                <circle cx="400" cy="18" r="4" fill="#06B6D4" stroke="white" stroke-width="2"/>
+                <path d="M 0,70 L 80,60 L 160,55 L 240,40 L 320,28 L 400,18" stroke="#007BA7" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="80" cy="60" r="3" fill="#007BA7"/>
+                <circle cx="160" cy="55" r="3" fill="#007BA7"/>
+                <circle cx="240" cy="40" r="3" fill="#007BA7"/>
+                <circle cx="320" cy="28" r="3" fill="#007BA7"/>
+                <circle cx="400" cy="18" r="4" fill="#00AADD" stroke="white" stroke-width="2"/>
               </svg>
             </div>
           </div>
@@ -2790,20 +2790,20 @@
     align-items: center;
     gap: 8px;
     padding: 10px 18px;
-    background: linear-gradient(135deg, #2563EB 0%, #06B6D4 100%);
+    background: linear-gradient(135deg, #007BA7 0%, #00AADD 100%);
     color: #fff;
     font-family: 'Inter', system-ui, sans-serif;
     font-size: 13px;
     font-weight: 600;
     text-decoration: none;
     border-radius: 999px;
-    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.35);
+    box-shadow: 0 4px 16px rgba(0, 123, 167, 0.35);
     transition: transform 0.18s, box-shadow 0.18s, opacity 0.18s;
     opacity: 0.92;
   }
   .back-home-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.45);
+    box-shadow: 0 8px 24px rgba(0, 123, 167, 0.45);
     opacity: 1;
   }
   .back-home-btn svg { flex-shrink: 0; }

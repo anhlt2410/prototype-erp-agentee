@@ -1,27 +1,27 @@
 # Design System — Agentee Chat Interface
 
 > Category: Conversational AI
-> A chat-first interface with a blue-cyan gradient identity, optimized for agentic task delegation, real-time tool call visibility, and progressive disclosure of detail.
+> A chat-first interface with a cerulean blue identity, optimized for agentic task delegation, real-time tool call visibility, and progressive disclosure of detail.
 
 ## 1. Visual Theme & Atmosphere
 
-Conversational AI workspace with a clean two-panel layout — collapsible sidebar on the left, chat canvas on the right. The interface stays out of the user's way; the gradient signal draws attention only to CTAs and active agent states.
+Conversational AI workspace with a clean two-panel layout — collapsible sidebar on the left, chat canvas on the right. The interface stays out of the user's way; the cerulean gradient signal draws attention only to CTAs and active agent states.
 
 - **Visual style:** light, clean, gradient-accented
-- **Color stance:** near-white surfaces with a blue-to-cyan gradient identity
+- **Color stance:** cerulean-tinted surfaces with a cerulean-to-sky blue gradient identity
 - **Design intent:** Make agent activity readable at a glance while keeping the conversation in focus.
 
 ## 2. Color
 
-- **Primary:** `#2563EB` — Blue, core brand and CTA color
-- **Accent:** `#06B6D4` — Cyan, gradient endpoint and interactive highlights
-- **Gradient primary:** `linear-gradient(135deg, #2563EB 0%, #06B6D4 100%)` — Buttons, avatar marks, active states
-- **Gradient soft:** `linear-gradient(135deg, #EFF6FF 0%, #ECFEFF 100%)` — Hover backgrounds, stat cards
-- **Gradient mark:** `linear-gradient(135deg, #3B82F6 0%, #0EA5E9 50%, #06B6D4 100%)` — Brand logomark
-- **Primary soft:** `#EFF6FF` — Chip hover, code background, nav active bg
-- **Primary soft-2:** `#DBEAFE` — Tool preview hover border
-- **Primary deep:** `#1E40AF` — Inline code text color
-- **Secondary (bg):** `#F8FAFC` — App background, sidebar-less areas
+- **Primary:** `#007BA7` — Cerulean Blue, core brand and CTA color
+- **Primary hover:** `#006490`
+- **Accent:** `#00AADD` — Lighter cerulean, gradient endpoint and interactive highlights
+- **Gradient primary:** `linear-gradient(135deg, #007BA7 0%, #00AADD 100%)` — Buttons, avatar marks, active states
+- **Gradient soft:** `linear-gradient(135deg, #e8f4f8 0%, #f0faff 100%)` — Hover backgrounds, stat cards
+- **Gradient mark:** `linear-gradient(135deg, #007BA7 0%, #00AADD 50%, #00C9E8 100%)` — Brand logomark
+- **Primary soft:** `#e8f4f8` — Chip hover, code background, nav active bg
+- **Primary soft-2:** `#c5e4ef` — Tool preview hover border
+- **Secondary (bg):** `#F0F8FC` — App background, cerulean-tinted canvas
 - **Success:** `#10B981` — Task step done, status dot, positive trends
 - **Warning:** `#F59E0B` — At-risk indicators
 - **Danger:** `#EF4444` — Error states, negative trends
@@ -31,6 +31,7 @@ Conversational AI workspace with a clean two-panel layout — collapsible sideba
 - **Text subtle:** `#94A3B8` — Timestamps, placeholders, section labels
 - **Border:** `#E2E8F0` — Visible dividers
 - **Border soft:** `#F1F5F9` — Subtle separators between surface layers
+- **Shadow glow:** `0 8px 24px rgba(0, 123, 167, 0.25)` — on primary CTAs; intensifies to `0 12px 28px rgba(0, 123, 167, 0.35)` on hover
 
 - Use the gradient on any element that represents a primary action or live agent state.
 - Keep `Surface (#FFFFFF)` for all message bubbles and panels.
@@ -40,7 +41,7 @@ Conversational AI workspace with a clean two-panel layout — collapsible sideba
 
 - **Scale:** 11 / 12 / 13 / 14 / 18 / 20 / 22
 - **Families:**
-  - Display: `Playfair Display` — Chat title, panel titles, stat values
+  - Display: `Be Vietnam Pro` — Brand name, chat title, panel titles, stat values
   - Body: `Inter` — All UI labels, messages, buttons
   - Mono: `JetBrains Mono` — Code blocks, timestamps, keyboard hints, tool call descriptions
 - **Weights used:** 400, 500, 600, 700, 800, 900
@@ -124,14 +125,14 @@ Conversational AI workspace with a clean two-panel layout — collapsible sideba
 
 - **Status dot pulse:** 2s ease-in-out infinite — ring expands from 3px to 5px
 - **Typing indicator:** 3 dots, staggered 0.2s, bounce + opacity (1.4s cycle)
-- **Glow shadow:** `0 8px 24px rgba(37, 99, 235, 0.25)` — always on primary buttons; intensifies to `0 12px 28px rgba(37, 99, 235, 0.35)` on hover
+- **Glow shadow:** `0 8px 24px rgba(0, 123, 167, 0.25)` — always on primary buttons; intensifies to `0 12px 28px rgba(0, 123, 167, 0.35)` on hover
 
-All interactive states must be defined: hover, focus-visible, active, disabled. Focus rings use `0 0 0 4px rgba(37, 99, 235, 0.1)`.
+All interactive states must be defined: hover, focus-visible, active, disabled. Focus rings use `0 0 0 4px rgba(0, 123, 167, 0.1)`.
 
 ## 8. Voice & Brand
 
 - Brand name rendered as `Agent` + `<em>ic</em>` — the italic suffix in gradient text creates a subtle product personality.
-- Chat title uses Playfair Display; all labels and messages use Inter — keeps hierarchy readable without competing.
+- Chat title uses Be Vietnam Pro; all labels and messages use Inter — keeps hierarchy readable without competing.
 - Microcopy is action-oriented: "New conversation", "Ask Atlas anything, or delegate a task…", "Show detail", "Use in chat".
 - Section labels are uppercase + spaced (`0.08em`): `WORKSPACE`, `RECENT`.
 
