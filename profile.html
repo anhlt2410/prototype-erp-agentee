@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Twendee Work — Profile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Be+Vietnam+Pro:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  /* ============ DESIGN TOKENS — Cerulean Theme (DESIGN-ERP.md) ============ */
+  :root{
+    --primary:#007BA7; --primary-hover:#006490; --primary-active:#004f72;
+    --primary-50:#e8f4f8; --primary-100:#c5e4ef;
+    --accent:#00AADD; --accent-50:#e8f4f8; --accent-100:#a0d8ef;
+    --grad:#007BA7; --grad-hover:#006490;
+
+    --success:#10B981; --success-50:#ECFDF5;
+    --warning:#F59E0B; --warning-50:#FFFBEB;
+    --danger:#EF4444;  --danger-50:#FEF2F2;
+
+    --surface:#FFFFFF; --bg:#e8f4f8;
+    --text:#111827; --text-secondary:#374151; --text-muted:#6B7280; --text-disabled:#9CA3AF;
+    --border:#E2E8F0; --border-strong:#CBD5E1; --divider:#F1F5F9;
+
+    --cta-50:rgba(0,123,167,0.08); --cta-shadow:rgba(0,123,167,0.28);
+
+    --font-sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    --font-display:'Be Vietnam Pro',Georgia,serif;
+    --font-mono:'JetBrains Mono',ui-monospace,monospace;
+
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+    --r-sm:6px; --r-md:8px; --r-lg:12px; --r-xl:16px; --r-full:9999px;
+    --ease:cubic-bezier(0.4,0,0.2,1); --t-fast:150ms; --t-base:200ms;
+    --shadow-md:0 1px 3px rgba(17,24,39,0.06),0 1px 2px rgba(17,24,39,0.04);
+  }
+
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font-sans);background:var(--bg);color:var(--text);
+    font-size:13.5px;line-height:1.5;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+  button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  svg{display:block}
+
+  .page{max-width:1180px;margin:0 auto;padding:22px;transition:max-width .25s var(--ease)}
+  .page.mobile{max-width:404px}
+  .page.mobile .device{border:1px solid var(--border);border-radius:24px;padding:12px;background:var(--surface);
+    box-shadow:0 10px 34px rgba(0,123,167,.18)}
+
+  /* device is the query container → mobile styles react to ITS width (toggle + real device) */
+  .device{container-type:inline-size}
+
+  /* ============ PREVIEW TOOLBAR ============ */
+  .toolbar{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+  .toolbar b{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);font-weight:600}
+  .toolbar .brand{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-display);
+    font-weight:700;font-size:14px;color:var(--text);margin-right:auto}
+  .toolbar .brand .mk{width:26px;height:26px;border-radius:var(--r-md);background:var(--grad);color:#fff;
+    display:grid;place-items:center;font-weight:800;font-size:13px;letter-spacing:-.02em}
+  .seg{display:inline-flex;background:var(--primary-50);border:1px solid var(--border);border-radius:var(--r-full);padding:2px;gap:2px}
+  .seg button{border:0;background:transparent;font-size:12px;font-weight:600;color:var(--text-muted);
+    padding:5px 14px;border-radius:var(--r-full);transition:all var(--t-fast) var(--ease)}
+  .seg button:hover{color:var(--primary)}
+  .seg button.on{background:var(--grad);color:#fff;box-shadow:0 1px 6px var(--cta-shadow)}
+
+  /* ============ IDENTITY BAND ============ */
+  .id-band{display:flex;align-items:center;gap:18px;padding:18px 22px;border-radius:var(--r-xl);
+    background:linear-gradient(120deg,#004f72 0%,#007BA7 52%,#00AADD 100%);color:#fff;position:relative;overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,123,167,.28)}
+  .id-band::after{content:"";position:absolute;right:-60px;top:-80px;width:260px;height:260px;
+    background:radial-gradient(circle,rgba(255,255,255,.16),transparent 70%);pointer-events:none}
+  .ava{width:60px;height:60px;border-radius:50%;flex:0 0 auto;border:2px solid rgba(255,255,255,.55);
+    background:#cbe3f0 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%236aa3bd"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>') center/70% no-repeat;position:relative;z-index:1}
+  .ava .cam{position:absolute;bottom:-3px;right:-3px;width:22px;height:22px;border-radius:50%;background:#fff;
+    color:var(--primary);display:flex;align-items:center;justify-content:center;cursor:pointer;
+    box-shadow:0 1px 3px rgba(0,0,0,.3);border:0;transition:background var(--t-fast) var(--ease)}
+  .ava .cam svg{width:12px;height:12px}
+  .ava .cam:hover{background:var(--primary-50)}
+  .id-meta{min-width:0;z-index:1;flex:1}
+  .id-meta .name{font-family:var(--font-display);font-size:19px;font-weight:700;letter-spacing:-.01em;line-height:1.15}
+  .id-meta .name small{font-weight:400;opacity:.85;font-size:13px}
+  .id-meta .sub{font-size:12px;opacity:.82;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    display:flex;align-items:center;gap:6px}
+  .id-meta .sub .code{font-family:var(--font-mono);font-size:11px;letter-spacing:.02em}
+  .chips{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+  .id-band .pill{display:inline-flex;align-items:center;font-size:10.5px;font-weight:700;letter-spacing:.04em;
+    padding:3px 9px;border-radius:var(--r-full);text-transform:uppercase;
+    background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.22)}
+
+  /* glass stat cluster (desktop) */
+  .hero-stats{margin-left:auto;display:flex;gap:10px;z-index:1;flex-wrap:wrap;justify-content:flex-end}
+  .tile{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:var(--r-lg);
+    padding:11px 14px;min-width:106px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+  .tile .k{font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;opacity:.85;font-weight:600}
+  .tile .v{font-family:var(--font-mono);font-size:20px;font-weight:600;margin-top:5px;line-height:1}
+  .tile .v small{font-size:11px;font-weight:500;opacity:.8}
+  .tile.att{display:flex;align-items:center;gap:11px;min-width:auto}
+  .ring{width:44px;height:44px;border-radius:50%;flex:0 0 auto;
+    background:conic-gradient(#5eead4 96%,rgba(255,255,255,.22) 0);display:flex;align-items:center;justify-content:center}
+  .ring i{width:34px;height:34px;border-radius:50%;background:#075e6b;display:flex;align-items:center;
+    justify-content:center;font-style:normal;font-family:var(--font-mono);font-weight:600;font-size:12px;color:#7ff0d8}
+  .bar{height:5px;border-radius:var(--r-full);background:rgba(255,255,255,.22);margin-top:8px;overflow:hidden}
+  .bar i{display:block;height:100%;width:71%;background:#5eead4;border-radius:var(--r-full)}
+  .spark{margin-top:7px;display:block}
+
+  /* ============ TABS (ERP pill style) ============ */
+  .tabs{display:flex;gap:2px;background:var(--primary-50);border:1px solid var(--border);
+    padding:3px;border-radius:var(--r-full);margin:18px 0;overflow-x:auto;scrollbar-width:none;width:fit-content;max-width:100%}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs a{font-size:12.5px;font-weight:600;color:var(--text-muted);padding:7px 14px;cursor:pointer;white-space:nowrap;
+    border-radius:var(--r-full);transition:all var(--t-fast) var(--ease)}
+  .tabs a:hover{color:var(--primary)}
+  .tabs a.on{background:var(--grad);color:#fff;box-shadow:0 1px 6px var(--cta-shadow)}
+
+  /* ============ SECTION CARDS ============ */
+  .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;align-items:start}
+  .col{display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);
+    box-shadow:0 2px 14px rgba(0,123,167,.08);overflow:hidden}
+  .card .head{display:flex;align-items:center;gap:10px;padding:13px 18px;border-bottom:1px solid var(--divider)}
+  .card .head h3{margin:0;font-family:var(--font-display);font-size:13px;font-weight:700;letter-spacing:-.01em}
+  .card .head .ic{width:28px;height:28px;border-radius:var(--r-md);background:var(--primary-50);color:var(--primary);
+    display:grid;place-items:center;flex:0 0 auto}
+  .card .head .ic svg{width:15px;height:15px}
+  .card .body{padding:16px 18px}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+  .f label{display:block;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--text-muted);margin-bottom:6px}
+  .f .box{display:flex;align-items:center;gap:9px;background:var(--primary-50);border:1px solid var(--border);
+    border-radius:var(--r-md);padding:10px 12px;min-height:42px;font-weight:500;color:var(--text);font-size:13px}
+  .f .box .ic{color:var(--primary);width:15px;height:15px;flex:0 0 auto}
+  .f .box .ic svg{width:15px;height:15px}
+  .f .box.mono{font-family:var(--font-mono);font-weight:500;font-size:12.5px}
+  .f.wide{grid-column:1/-1}
+  .f .box .badge{margin-right:2px}
+
+  /* ERP badges inside cards */
+  .badge{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:var(--r-full);
+    font-size:11.5px;font-weight:500;line-height:1}
+  .badge::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
+  .badge-primary{background:var(--grad);color:#fff}
+  .badge-neutral{background:var(--divider);color:var(--text-secondary)}
+  .badge-success{background:var(--success-50);color:var(--success)}
+
+  /* ================= MOBILE (container-query driven) ================= */
+  @container (max-width:560px){
+    .id-band{flex-wrap:wrap;gap:14px;padding:16px}
+    .id-meta{flex:1 1 calc(100% - 76px)}
+    .id-meta .name{font-size:17px}
+
+    /* stat cluster → tidy 2×2 glass strip, one frosted panel */
+    .hero-stats{flex-basis:100%;width:100%;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:0;
+      background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);border-radius:var(--r-lg);overflow:hidden;
+      backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+    .tile{background:transparent;border:0;border-radius:0;min-width:0;padding:12px 10px;
+      backdrop-filter:none;-webkit-backdrop-filter:none;display:flex;flex-direction:column;align-items:flex-start;gap:0;
+      border-right:1px solid rgba(255,255,255,.16);border-bottom:1px solid rgba(255,255,255,.16)}
+    .tile:nth-child(2n){border-right:0}
+    .tile:nth-child(n+3){border-bottom:0}
+    .tile .k{font-size:9px;opacity:.82}
+    .tile .v{font-size:17px;margin-top:3px}
+    .tile .v small{font-size:10px}
+    .ring,.bar,.spark{display:none}
+
+    .cols{grid-template-columns:1fr}
+    .tabs a{padding:7px 12px;font-size:12px}
+  }
+  @media(max-width:460px){.page{padding:14px}}
+</style>
+</head>
+<body>
+
+<div class="page" id="page">
+ <div class="toolbar">
+   <span class="brand"><span class="mk">T</span>Twendee Work</span>
+   <b>Preview</b>
+   <div class="seg" id="seg">
+     <button data-m="desktop" class="on">Desktop</button>
+     <button data-m="mobile">Mobile</button>
+   </div>
+ </div>
+
+ <div class="device">
+  <!-- IDENTITY BAND -->
+  <div class="id-band">
+    <div class="ava"><button class="cam" title="Change avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></button></div>
+    <div class="id-meta">
+      <div class="name">Lê Tú Anh <small>· Aaron Le</small></div>
+      <div class="sub">anhlt@twendeesoft.com <span class="code">· TWD212</span></div>
+      <div class="chips">
+        <span class="pill">PM</span><span class="pill">DA</span>
+        <span class="pill">Senior</span><span class="pill">Sales +1</span>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="tile att" title="Attendance this month">
+        <div class="ring"><i>96</i></div>
+        <div><div class="k">Attendance</div><div class="v">96<small>%</small></div></div>
+      </div>
+      <div class="tile" title="Time at Twendee">
+        <div class="k">Tenure</div><div class="v">3y 4m</div>
+      </div>
+      <div class="tile" title="Annual leave remaining">
+        <div class="k">Leave left</div><div class="v">8.5<small>/12 d</small></div>
+        <div class="bar"><i></i></div>
+      </div>
+      <div class="tile" title="Logged hours, last 7 days">
+        <div class="k">Worklog · 7d</div><div class="v">38<small>h</small></div>
+        <svg class="spark" width="72" height="18" viewBox="0 0 72 18" fill="none">
+          <polyline points="0,14 12,9 24,11 36,4 48,7 60,3 72,6" stroke="#7ff0d8" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <a class="on">Personal</a><a>ID &amp; Banking</a><a>Contracts</a>
+    <a>Insurance &amp; Benefits</a><a>Competency</a><a>Settings</a>
+  </div>
+
+  <!-- SECTION CARDS -->
+  <div class="cols">
+    <div class="col">
+      <div class="card">
+        <div class="head"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><h3>Personal details</h3></div>
+        <div class="body grid">
+          <div class="f"><label>Full name</label><div class="box"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>Lê Tú Anh</div></div>
+          <div class="f"><label>Username</label><div class="box mono"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"/></svg></span>anhlt</div></div>
+          <div class="f"><label>Employee code</label><div class="box mono"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h4M7 12h10M7 16h10"/></svg></span>TWD212</div></div>
+          <div class="f"><label>Date of birth</label><div class="box"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>15 Mar 1995</div></div>
+          <div class="f"><label>Gender</label><div class="box"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="14" r="5"/><path d="M19 5l-6 6M15 5h4v4"/></svg></span>Male</div></div>
+          <div class="f"><label>Nationality</label><div class="box"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span>Vietnamese</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="head"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span><h3>Contact</h3></div>
+        <div class="body grid">
+          <div class="f wide"><label>Email</label><div class="box"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>anhlt@twendeesoft.com</div></div>
+          <div class="f"><label>Phone</label><div class="box mono"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>+84 912 345 678</div></div>
+          <div class="f"><label>Zalo</label><div class="box mono"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg></span>0912 345 678</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card">
+        <div class="head"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></span><h3>Employment</h3></div>
+        <div class="body grid">
+          <div class="f"><label>Department</label><div class="box"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg></span>DA</div></div>
+          <div class="f"><label>Position</label><div class="box"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></span>PM</div></div>
+          <div class="f"><label>Job title</label><div class="box"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>TP</div></div>
+          <div class="f"><label>Level</label><div class="box"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 8.5 22 9.3 17 14 18.2 21 12 17.7 5.8 21 7 14 2 9.3 9 8.5 12 2"/></svg></span>Senior (L4)</div></div>
+          <div class="f"><label>Workplace</label><div class="box"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></span>Hanoi HQ</div></div>
+          <div class="f"><label>Role</label><div class="box"><span class="badge badge-primary">Sales</span><span class="badge badge-neutral">Manager</span></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="head"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span><h3>Addresses</h3></div>
+        <div class="body grid">
+          <div class="f wide"><label>Permanent address</label><div class="box"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></span>123 Láng Hạ, Đống Đa, Hà Nội</div></div>
+          <div class="f wide"><label>Current address</label><div class="box"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>45 Nguyễn Chí Thanh, Ba Đình, Hà Nội</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+ </div>
+</div>
+
+<script>
+  const seg=document.getElementById('seg'),page=document.getElementById('page');
+  seg.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    [...seg.children].forEach(x=>x.classList.toggle('on',x===b));
+    page.classList.toggle('mobile',b.dataset.m==='mobile');});
+
+  document.querySelectorAll('.tabs a').forEach(a=>a.addEventListener('click',()=>{
+    document.querySelectorAll('.tabs a').forEach(x=>x.classList.remove('on'));
+    a.classList.add('on');}));
+</script>
+</body>
+</html>

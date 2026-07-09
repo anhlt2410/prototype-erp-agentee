@@ -1,0 +1,217 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Twendee Work — Profile (view-only)</title>
+<style>
+  :root{
+    --bg:#eef3f9; --surface:#ffffff; --surface-2:#f5f8fc;
+    --line:#e4eaf2; --line-2:#eef2f8;
+    --ink:#0f2033; --ink-2:#42546b; --ink-3:#8496ab;
+    --brand:#2563eb; --brand-ink:#1e3a5f; --brand-soft:#e8f0fe;
+    --good:#7dd3a0;
+    --font:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:var(--font);background:var(--bg);color:var(--ink);
+    font-size:13.5px;line-height:1.45;-webkit-font-smoothing:antialiased}
+  .page{max-width:1180px;margin:0 auto;padding:22px;transition:max-width .25s ease}
+  .page.mobile{max-width:404px}
+  .page.mobile .device{border:1px solid var(--line);border-radius:24px;padding:12px;background:var(--surface);
+    box-shadow:0 10px 34px rgba(15,32,51,.14)}
+
+  /* device is the container → mobile styles react to ITS width (toggle + real device) */
+  .device{container-type:inline-size}
+
+  .toolbar{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+  .toolbar b{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3)}
+  .seg{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:3px;gap:2px}
+  .seg button{border:0;background:transparent;font:inherit;font-size:12px;font-weight:600;color:var(--ink-2);
+    padding:6px 14px;border-radius:6px;cursor:pointer}
+  .seg button.on{background:var(--brand);color:#fff}
+
+  /* identity band */
+  .id-band{display:flex;align-items:center;gap:18px;padding:16px 20px;border-radius:14px;
+    background:linear-gradient(120deg,#1e3a5f,#2563eb);color:#fff;position:relative;overflow:hidden}
+  .id-band::after{content:"";position:absolute;right:-60px;top:-80px;width:260px;height:260px;
+    background:radial-gradient(circle,rgba(255,255,255,.13),transparent 70%);pointer-events:none}
+  .ava{width:58px;height:58px;border-radius:50%;flex:0 0 auto;border:2px solid rgba(255,255,255,.55);
+    background:#cbd8ea url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%237c93b3"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>') center/70% no-repeat;position:relative;z-index:1}
+  .ava .cam{position:absolute;bottom:-3px;right:-3px;width:22px;height:22px;border-radius:50%;background:#fff;
+    color:var(--brand);display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;
+    box-shadow:0 1px 3px rgba(0,0,0,.3);border:0}
+  .ava .cam:hover{background:var(--brand-soft)}
+  .id-meta{min-width:0;z-index:1;flex:1}
+  .id-meta .name{font-size:18px;font-weight:800;letter-spacing:-.01em;line-height:1.15}
+  .id-meta .name small{font-weight:500;opacity:.82;font-size:13px}
+  .id-meta .sub{font-size:12px;opacity:.8;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .chips{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap}
+  .badge{display:inline-flex;align-items:center;font-size:10.5px;font-weight:700;letter-spacing:.03em;
+    padding:2px 9px;border-radius:999px;text-transform:uppercase}
+  .id-band .badge{background:rgba(255,255,255,.18);color:#fff}
+  .badge.grey{background:#eef2f7;color:var(--ink-2)}
+  .badge.blue{background:var(--brand-soft);color:var(--brand)}
+
+  /* glass stat cluster (desktop) */
+  .hero-stats{margin-left:auto;display:flex;gap:10px;z-index:1;flex-wrap:wrap;justify-content:flex-end}
+  .tile{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:13px;
+    padding:11px 14px;min-width:104px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+  .tile .k{font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;opacity:.82;font-weight:600}
+  .tile .v{font-size:20px;font-weight:800;margin-top:4px;line-height:1}
+  .tile .v small{font-size:11px;font-weight:600;opacity:.78}
+  .tile.att{display:flex;align-items:center;gap:11px;min-width:auto}
+  .ring{width:44px;height:44px;border-radius:50%;flex:0 0 auto;
+    background:conic-gradient(var(--good) 96%, rgba(255,255,255,.22) 0);display:flex;align-items:center;justify-content:center}
+  .ring i{width:34px;height:34px;border-radius:50%;background:#223f66;display:flex;align-items:center;
+    justify-content:center;font-style:normal;font-weight:800;font-size:13px;color:var(--good)}
+  .bar{height:5px;border-radius:99px;background:rgba(255,255,255,.22);margin-top:7px;overflow:hidden}
+  .bar i{display:block;height:100%;width:71%;background:var(--good);border-radius:99px}
+  .spark{margin-top:6px;display:block}
+
+  /* tabs */
+  .tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin:16px 0;overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs a{font-size:12.5px;font-weight:600;color:var(--ink-3);padding:11px 14px;cursor:pointer;white-space:nowrap;
+    border-bottom:2px solid transparent}
+  .tabs a.on{color:var(--brand);border-bottom-color:var(--brand)}
+
+  /* section cards */
+  .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;align-items:start}
+  .col{display:flex;flex-direction:column;gap:16px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px}
+  .card .head{display:flex;align-items:center;gap:8px;padding:13px 18px;border-bottom:1px solid var(--line-2)}
+  .card .head h3{margin:0;font-size:13px;font-weight:700}
+  .card .head .ic{color:var(--brand);font-size:14px}
+  .card .body{padding:16px 18px}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 14px}
+  .f label{display:block;font-size:11px;font-weight:600;letter-spacing:.02em;color:var(--ink-3);margin-bottom:5px}
+  .f .box{display:flex;align-items:center;gap:9px;background:var(--surface-2);border:1px solid var(--line);
+    border-radius:9px;padding:10px 12px;min-height:42px;font-weight:600;color:var(--ink);font-size:13px}
+  .f .box .ic{color:var(--ink-3);width:15px;text-align:center;flex:0 0 auto}
+  .f.wide{grid-column:1/-1}
+
+  /* ================= MOBILE (container-query driven) ================= */
+  @container (max-width:560px){
+    .id-band{flex-wrap:wrap;gap:14px;padding:16px}
+    .id-meta{flex:1 1 calc(100% - 74px)}
+    .id-meta .name{font-size:17px}
+
+    /* stat cluster → tidy 2×2 glass strip, one frosted panel */
+    .hero-stats{flex-basis:100%;width:100%;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:0;
+      background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:13px;overflow:hidden;
+      backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+    .tile{background:transparent;border:0;border-radius:0;min-width:0;padding:12px 10px;
+      backdrop-filter:none;-webkit-backdrop-filter:none;display:flex;flex-direction:column;align-items:flex-start;gap:0;
+      border-right:1px solid rgba(255,255,255,.16);border-bottom:1px solid rgba(255,255,255,.16)}
+    .tile:nth-child(2n){border-right:0}
+    .tile:nth-child(n+3){border-bottom:0}
+    .tile .k{font-size:9px;opacity:.8}
+    .tile .v{font-size:17px;margin-top:3px}
+    .tile .v small{font-size:10px}
+    .ring,.bar,.spark{display:none}          /* hide micro-visuals; numbers stay crisp */
+
+    .cols{grid-template-columns:1fr}
+    .tabs a{padding:10px 12px;font-size:12px}
+  }
+  @media(max-width:460px){ .page{padding:14px} }
+</style>
+
+<div class="page" id="page">
+ <div class="toolbar">
+   <b>Preview</b>
+   <div class="seg" id="seg">
+     <button data-m="desktop" class="on">Desktop</button>
+     <button data-m="mobile">Mobile</button>
+   </div>
+ </div>
+
+ <div class="device">
+  <div class="id-band">
+    <div class="ava"><button class="cam" title="Change avatar">✎</button></div>
+    <div class="id-meta">
+      <div class="name">Lê Tú Anh <small>· Aaron Le</small></div>
+      <div class="sub">anhlt@twendeesoft.com · TWD212</div>
+      <div class="chips">
+        <span class="badge">PM</span><span class="badge">DA</span>
+        <span class="badge">Senior</span><span class="badge">Sales +1</span>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="tile att" title="Attendance this month">
+        <div class="ring"><i>96</i></div>
+        <div><div class="k">Attendance</div><div class="v">96<small>%</small></div></div>
+      </div>
+      <div class="tile" title="Time at Twendee">
+        <div class="k">Tenure</div><div class="v">3y 4m</div>
+      </div>
+      <div class="tile" title="Annual leave remaining">
+        <div class="k">Leave left</div><div class="v">8.5<small>/12 d</small></div>
+        <div class="bar"><i></i></div>
+      </div>
+      <div class="tile" title="Logged hours, last 7 days">
+        <div class="k">Worklog · 7d</div><div class="v">38<small>h</small></div>
+        <svg class="spark" width="72" height="18" viewBox="0 0 72 18" fill="none">
+          <polyline points="0,14 12,9 24,11 36,4 48,7 60,3 72,6" stroke="#a9e3c3" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <a class="on">Personal</a><a>ID &amp; Banking</a><a>Contracts</a>
+    <a>Insurance &amp; Benefits</a><a>Competency</a><a>Settings</a>
+  </div>
+
+  <div class="cols">
+    <div class="col">
+      <div class="card">
+        <div class="head"><span class="ic">▤</span><h3>Personal details</h3></div>
+        <div class="body grid">
+          <div class="f"><label>Full name</label><div class="box"><span class="ic">◉</span>Lê Tú Anh</div></div>
+          <div class="f"><label>Username</label><div class="box"><span class="ic">@</span>anhlt</div></div>
+          <div class="f"><label>Employee code</label><div class="box"><span class="ic">▢</span>TWD212</div></div>
+          <div class="f"><label>Date of birth</label><div class="box"><span class="ic">▦</span>15 Mar 1995</div></div>
+          <div class="f"><label>Gender</label><div class="box"><span class="ic">♂</span>Male</div></div>
+          <div class="f"><label>Nationality</label><div class="box"><span class="ic">⚑</span>Vietnamese</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="head"><span class="ic">✆</span><h3>Contact</h3></div>
+        <div class="body grid">
+          <div class="f wide"><label>Email</label><div class="box"><span class="ic">✉</span>anhlt@twendeesoft.com</div></div>
+          <div class="f"><label>Phone</label><div class="box"><span class="ic">✆</span>+84 912 345 678</div></div>
+          <div class="f"><label>Zalo</label><div class="box"><span class="ic">◈</span>0912 345 678</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="head"><span class="ic">▣</span><h3>Employment</h3></div>
+        <div class="body grid">
+          <div class="f"><label>Department</label><div class="box"><span class="ic">▤</span>DA</div></div>
+          <div class="f"><label>Position</label><div class="box"><span class="ic">◈</span>PM</div></div>
+          <div class="f"><label>Job title</label><div class="box"><span class="ic">▢</span>TP</div></div>
+          <div class="f"><label>Level</label><div class="box"><span class="ic">▲</span>Senior (L4)</div></div>
+          <div class="f"><label>Workplace</label><div class="box"><span class="ic">⌂</span>Hanoi HQ</div></div>
+          <div class="f"><label>Role</label><div class="box"><span class="badge blue">Sales</span><span class="badge grey">Manager</span></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="head"><span class="ic">⌖</span><h3>Addresses</h3></div>
+        <div class="body grid">
+          <div class="f wide"><label>Permanent address</label><div class="box"><span class="ic">⌂</span>123 Láng Hạ, Đống Đa, Hà Nội</div></div>
+          <div class="f wide"><label>Current address</label><div class="box"><span class="ic">⌖</span>45 Nguyễn Chí Thanh, Ba Đình, Hà Nội</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+ </div>
+</div>
+
+<script>
+  const seg=document.getElementById('seg'),page=document.getElementById('page');
+  seg.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    [...seg.children].forEach(x=>x.classList.toggle('on',x===b));
+    page.classList.toggle('mobile',b.dataset.m==='mobile');});
+</script>

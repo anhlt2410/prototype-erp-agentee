@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Sign in — Twendee</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Be+Vietnam+Pro:ital,wght@0,400;0,600;0,700;0,800;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+/* ============ DESIGN TOKENS ============ */
+:root {
+  --primary: #007BA7;
+  --primary-hover: #006490;
+  --primary-active: #004f72;
+  --primary-50: #e8f4f8;
+  --primary-100: #c5e4ef;
+  --accent: #00AADD;
+  --accent-50: #e8f4f8;
+  --grad: linear-gradient(135deg, #007BA7 0%, #00AADD 100%);
+  --grad-mark: linear-gradient(135deg, #007BA7 0%, #00AADD 50%, #00C9E8 100%);
+  --grad-soft: linear-gradient(135deg, #e8f4f8 0%, #f0faff 100%);
+  --cta-shadow: rgba(0, 123, 167, 0.28);
+  --cta-shadow-hover: rgba(0, 123, 167, 0.40);
+  --success: #10B981;
+  --danger: #EF4444;
+  --surface: #FFFFFF;
+  --bg: #e8f4f8;
+  --text: #111827;
+  --text-secondary: #374151;
+  --text-muted: #6B7280;
+  --text-disabled: #9CA3AF;
+  --border: #E2E8F0;
+  --border-strong: #CBD5E1;
+  --divider: #F1F5F9;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Be Vietnam Pro', Georgia, serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --r-sm: 6px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-xl: 16px;
+  --r-2xl: 20px;
+  --r-full: 9999px;
+  --t-fast: 150ms;
+  --t-base: 200ms;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============ RESET ============ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: var(--font-sans);
+  color: var(--text);
+  background: var(--bg);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============ LAYOUT ============ */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 480px;
+  min-height: 100vh;
+}
+
+/* ============ BRAND PANEL (LEFT) ============ */
+.brand-panel {
+  background: var(--primary);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 52px 56px;
+  overflow: hidden;
+}
+
+/* Decorative background circles */
+.brand-panel::before,
+.brand-panel::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.brand-panel::before {
+  width: 560px;
+  height: 560px;
+  background: rgba(0, 170, 221, 0.18);
+  top: -180px;
+  right: -200px;
+}
+.brand-panel::after {
+  width: 360px;
+  height: 360px;
+  background: rgba(255, 255, 255, 0.05);
+  bottom: -100px;
+  left: -80px;
+}
+
+.brand-orb {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: rgba(0, 201, 232, 0.10);
+  bottom: 180px;
+  right: -60px;
+  pointer-events: none;
+}
+
+/* Top brand mark */
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.brand-mark {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-md);
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.brand-mark svg {
+  width: 20px;
+  height: 20px;
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+
+/* Hero content */
+.brand-hero {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  max-width: 440px;
+}
+
+.brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--r-full);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+  width: fit-content;
+}
+
+.brand-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00C9E8;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.8); }
+}
+
+.brand-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 3vw, 40px);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+
+.brand-hero h1 em {
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.brand-hero p {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.65;
+  max-width: 380px;
+  margin-bottom: 0;
+}
+
+
+/* Footer */
+.brand-footer {
+  position: relative;
+  z-index: 1;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.brand-footer a {
+  color: rgba(255, 255, 255, 0.4);
+  text-decoration: none;
+  transition: color var(--t-fast) var(--ease);
+}
+.brand-footer a:hover { color: rgba(255, 255, 255, 0.7); }
+
+.brand-footer-sep {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ============ LOGIN PANEL (RIGHT) ============ */
+.login-panel {
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 52px 48px;
+  position: relative;
+  border-left: 1px solid var(--border);
+}
+
+.login-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--grad);
+}
+
+.login-inner {
+  width: 100%;
+  max-width: 340px;
+}
+
+/* Login header */
+.login-header { margin-bottom: 32px; }
+
+.login-logo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 28px;
+}
+
+.login-logo-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-md);
+  background: var(--grad);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px var(--cta-shadow);
+}
+
+.login-logo-mark svg {
+  width: 18px;
+  height: 18px;
+}
+
+.login-logo-name {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+.login-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+
+.login-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* Form */
+.login-form { display: flex; flex-direction: column; gap: 16px; }
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+
+.field-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.field-input-wrap { position: relative; }
+
+.field-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-disabled);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  transition: color var(--t-fast) var(--ease);
+}
+
+.field-input-wrap:focus-within .field-icon {
+  color: var(--primary);
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px 0 40px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  outline: none;
+  transition: border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+  -webkit-appearance: none;
+}
+
+input[type="email"]:hover,
+input[type="password"]:hover,
+input[type="text"]:hover {
+  border-color: var(--text-muted);
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="text"]:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 123, 167, 0.12);
+}
+
+input::placeholder { color: var(--text-disabled); }
+
+/* Password field extras */
+.field-pw-wrap { position: relative; }
+
+.toggle-pw {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-disabled);
+  display: flex;
+  align-items: center;
+  padding: 0;
+  transition: color var(--t-fast) var(--ease);
+}
+.toggle-pw:hover { color: var(--text-muted); }
+
+.field-pw-wrap input { padding-right: 40px; }
+
+/* Row: remember + forgot */
+.form-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.remember-me input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  padding: 0;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 4px;
+  cursor: pointer;
+  accent-color: var(--primary);
+  transition: border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+}
+
+.remember-me input[type="checkbox"]:focus-visible {
+  box-shadow: 0 0 0 3px rgba(0, 123, 167, 0.12);
+  outline: none;
+}
+
+.remember-me span {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.forgot-link {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--primary);
+  text-decoration: none;
+  transition: color var(--t-fast) var(--ease);
+}
+.forgot-link:hover { color: var(--primary-hover); }
+
+/* Sign-in button */
+.btn-signin {
+  width: 100%;
+  height: 42px;
+  background: var(--grad);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--r-md);
+  cursor: pointer;
+  box-shadow: 0 4px 14px var(--cta-shadow);
+  transition: transform var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease), filter var(--t-fast) var(--ease);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-signin::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.0);
+  transition: background var(--t-fast) var(--ease);
+}
+
+.btn-signin:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px var(--cta-shadow-hover);
+  filter: brightness(1.04);
+}
+.btn-signin:hover::before { background: rgba(255, 255, 255, 0.08); }
+.btn-signin:active { transform: translateY(0); box-shadow: 0 2px 8px var(--cta-shadow); }
+
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-disabled);
+  font-size: 12px;
+}
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* SSO buttons */
+.sso-group { display: flex; flex-direction: column; gap: 10px; }
+
+.btn-sso {
+  width: 100%;
+  height: 40px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 500;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: background var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+}
+.btn-sso:hover {
+  background: var(--primary-50);
+  border-color: var(--primary-100);
+  color: var(--primary);
+}
+.btn-sso:active { background: #d6ecf5; }
+
+.btn-sso svg { flex-shrink: 0; }
+
+/* Terms */
+.login-terms {
+  margin-top: 28px;
+  font-size: 12px;
+  color: var(--text-disabled);
+  text-align: center;
+  line-height: 1.6;
+}
+.login-terms a {
+  color: var(--text-muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color var(--t-fast) var(--ease);
+}
+.login-terms a:hover { color: var(--primary); }
+
+/* Error state */
+.field-error {
+  display: none;
+  font-size: 12px;
+  color: var(--danger);
+  align-items: center;
+  gap: 4px;
+}
+.field.has-error .field-error { display: flex; }
+.field.has-error input {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.10);
+}
+.field.has-error .field-icon { color: var(--danger); }
+
+/* Loading state */
+.btn-signin.loading {
+  pointer-events: none;
+  opacity: 0.8;
+}
+.spinner {
+  display: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+.btn-signin.loading .spinner { display: block; }
+.btn-signin.loading .btn-label { opacity: 0.7; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 860px) {
+  /* Full-viewport, no scroll */
+  .layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: 60px 1fr;
+    height: 100vh;
+    height: 100svh;
+  }
+
+  /* Brand panel → slim horizontal top bar */
+  .brand-panel {
+    flex-direction: row;
+    align-items: center;
+    padding: 0 20px;
+    height: 60px;
+    overflow: hidden;
+  }
+  .brand-panel::before,
+  .brand-panel::after { display: none; }
+  .brand-orb,
+  .brand-hero,
+  .brand-footer { display: none; }
+
+  /* Login panel fills remaining height */
+  .login-panel {
+    min-height: 0;
+    overflow-y: auto;
+    border-left: none;
+    border-top: 1px solid rgba(0, 123, 167, 0.15);
+    padding: 28px 24px 24px;
+    justify-content: center;
+  }
+  .login-panel::before { display: none; }
+  .login-inner { max-width: 420px; width: 100%; }
+
+  /* Compact spacing — everything fits ~537px of content */
+  .login-header { margin-bottom: 20px; }
+  .login-logo { margin-bottom: 14px; }
+  .login-title { font-size: 20px; }
+  .login-form { gap: 12px; }
+  .login-terms { margin-top: 14px; }
+  .sso-group { gap: 8px; }
+
+  /* Touch-friendly — 16px prevents iOS auto-zoom */
+  input[type="email"],
+  input[type="password"],
+  input[type="text"] { height: 46px; font-size: 16px; }
+  .btn-signin { height: 48px; font-size: 15px; }
+  .btn-sso { height: 44px; }
+}
+
+@media (max-width: 480px) {
+  .brand-panel { padding: 0 16px; }
+  .login-panel { padding: 24px 20px 20px; }
+}
+
+/* Very short screens (e.g. iPhone SE 1st gen): drop SSO to guarantee no scroll */
+@media (max-width: 860px) and (max-height: 640px) {
+  .login-panel { padding: 16px 20px; }
+  .login-header { margin-bottom: 16px; }
+  .login-logo { margin-bottom: 10px; }
+  .login-form { gap: 10px; }
+  .login-terms { margin-top: 10px; }
+  .divider,
+  .sso-group { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ===== LEFT: Brand Panel ===== -->
+  <div class="brand-panel">
+    <div class="brand-orb"></div>
+
+    <!-- Logo -->
+    <div class="brand-logo">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 3L3 7.5V12C3 16.5 6.9 20.7 12 22C17.1 20.7 21 16.5 21 12V7.5L12 3Z" fill="rgba(255,255,255,0.9)"/>
+          <path d="M9 12L11 14L15 10" stroke="#007BA7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <span class="brand-name">Twendee</span>
+    </div>
+
+    <!-- Hero -->
+    <div class="brand-hero">
+      <div class="brand-badge">
+        <span class="brand-badge-dot"></span>
+        Single Sign-On
+      </div>
+
+      <h1>One login.<br><em>All your tools.</em></h1>
+      <p>Access your ERP workspace and AI agent platform with a single set of credentials. Seamless, secure, and unified.</p>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="brand-footer">
+      <span>&copy; 2026 Twendee</span>
+      <span class="brand-footer-sep"></span>
+      <a href="#">Privacy</a>
+      <span class="brand-footer-sep"></span>
+      <a href="#">Security</a>
+      <span class="brand-footer-sep"></span>
+      <a href="#">Support</a>
+    </div>
+  </div>
+
+  <!-- ===== RIGHT: Login Panel ===== -->
+  <div class="login-panel">
+    <div class="login-inner">
+
+      <!-- Logo (mobile + desktop) -->
+      <div class="login-header">
+        <div class="login-logo">
+          <div class="login-logo-mark">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 3L3 7.5V12C3 16.5 6.9 20.7 12 22C17.1 20.7 21 16.5 21 12V7.5L12 3Z" fill="rgba(255,255,255,0.95)"/>
+              <path d="M9 12L11 14L15 10" stroke="#007BA7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="login-logo-name">Twendee</span>
+        </div>
+        <h2 class="login-title">Welcome back</h2>
+        <p class="login-subtitle">Sign in to your workspace</p>
+      </div>
+
+      <!-- Form -->
+      <form class="login-form" id="loginForm" novalidate>
+
+        <!-- Email -->
+        <div class="field" id="field-email">
+          <label class="field-label" for="email">Work email</label>
+          <div class="field-input-wrap">
+            <span class="field-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M20 4H4C2.9 4 2 4.9 2 6v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+                <path d="M2 6l10 7 10-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <input type="email" id="email" name="email" placeholder="you@company.com" autocomplete="email" autofocus>
+          </div>
+          <span class="field-error">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+              <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Please enter a valid email address
+          </span>
+        </div>
+
+        <!-- Password -->
+        <div class="field" id="field-password">
+          <label class="field-label" for="password">Password</label>
+          <div class="field-input-wrap field-pw-wrap">
+            <span class="field-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="1.6"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                <circle cx="12" cy="16" r="1.5" fill="currentColor"/>
+              </svg>
+            </span>
+            <input type="password" id="password" name="password" placeholder="Enter your password" autocomplete="current-password">
+            <button type="button" class="toggle-pw" id="togglePw" aria-label="Show password">
+              <svg id="eyeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M1 12C1 12 5 4 12 4s11 8 11 8-4 8-11 8S1 12 1 12z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/>
+              </svg>
+            </button>
+          </div>
+          <span class="field-error">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+              <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Password is required
+          </span>
+        </div>
+
+        <!-- Remember + Forgot -->
+        <div class="form-row">
+          <label class="remember-me">
+            <input type="checkbox" id="remember" name="remember">
+            <span>Keep me signed in</span>
+          </label>
+          <a href="#" class="forgot-link">Forgot password?</a>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-signin" id="signinBtn">
+          <div class="spinner"></div>
+          <span class="btn-label">Sign in</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <!-- Divider -->
+        <div class="divider">or continue with</div>
+
+        <!-- SSO Options -->
+        <div class="sso-group">
+          <button type="button" class="btn-sso">
+            <!-- Google icon -->
+            <svg width="18" height="18" viewBox="0 0 24 24">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+            Continue with Google
+          </button>
+        </div>
+
+      </form>
+
+      <!-- Terms -->
+      <p class="login-terms">
+        By signing in, you agree to Twendee's<br>
+        <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+      </p>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// Password visibility toggle
+const togglePw = document.getElementById('togglePw');
+const pwInput = document.getElementById('password');
+const eyeIcon = document.getElementById('eyeIcon');
+
+const eyeOpen = `<path d="M1 12C1 12 5 4 12 4s11 8 11 8-4 8-11 8S1 12 1 12z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/>`;
+const eyeClosed = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M1 1l22 22" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>`;
+
+togglePw.addEventListener('click', () => {
+  const isText = pwInput.type === 'text';
+  pwInput.type = isText ? 'password' : 'text';
+  eyeIcon.innerHTML = isText ? eyeOpen : eyeClosed;
+  togglePw.setAttribute('aria-label', isText ? 'Show password' : 'Hide password');
+});
+
+// Form validation & submit
+const form = document.getElementById('loginForm');
+const emailInput = document.getElementById('email');
+const emailField = document.getElementById('field-email');
+const passwordField = document.getElementById('field-password');
+const signinBtn = document.getElementById('signinBtn');
+
+function validateEmail(val) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim());
+}
+
+emailInput.addEventListener('blur', () => {
+  if (emailInput.value && !validateEmail(emailInput.value)) {
+    emailField.classList.add('has-error');
+  } else {
+    emailField.classList.remove('has-error');
+  }
+});
+
+emailInput.addEventListener('input', () => {
+  if (validateEmail(emailInput.value)) emailField.classList.remove('has-error');
+});
+
+pwInput.addEventListener('input', () => {
+  if (pwInput.value) passwordField.classList.remove('has-error');
+});
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  let valid = true;
+
+  if (!validateEmail(emailInput.value)) {
+    emailField.classList.add('has-error');
+    valid = false;
+  } else {
+    emailField.classList.remove('has-error');
+  }
+
+  if (!pwInput.value.trim()) {
+    passwordField.classList.add('has-error');
+    valid = false;
+  } else {
+    passwordField.classList.remove('has-error');
+  }
+
+  if (!valid) return;
+
+  // Simulate loading
+  signinBtn.classList.add('loading');
+  setTimeout(() => {
+    signinBtn.classList.remove('loading');
+    // In production: redirect to the appropriate app
+  }, 2000);
+});
+</script>
+
+</body>
+</html>

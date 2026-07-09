@@ -1855,6 +1855,145 @@
     .sidebar.expanded { width: 260px; } /* mobile width stays at drawer width */
     .app.sidebar-expanded { grid-template-columns: 1fr; } /* no effect on mobile grid */
   }
+
+  /* ============ VIEW SWITCHING ============ */
+  .view[hidden] { display: none; }
+  .user-chip { cursor: pointer; }
+
+  /* ============ MY PROFILE PAGE ============ */
+  .pf-scope { container-type: inline-size; }
+
+  /* identity band */
+  .id-band {
+    display: flex; align-items: center; gap: var(--s5);
+    padding: 18px 22px; border-radius: var(--r-xl); color: #fff;
+    background: linear-gradient(120deg, #004f72 0%, #007BA7 52%, #00AADD 100%);
+    position: relative; overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,123,167,0.28);
+  }
+  .id-band::after {
+    content: ""; position: absolute; right: -60px; top: -80px; width: 260px; height: 260px;
+    background: radial-gradient(circle, rgba(255,255,255,.16), transparent 70%); pointer-events: none;
+  }
+  .id-band .ava {
+    width: 60px; height: 60px; border-radius: 50%; flex: 0 0 auto; position: relative; z-index: 1;
+    border: 2px solid rgba(255,255,255,.55);
+    background: #cbe3f0 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%236aa3bd"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>') center/70% no-repeat;
+  }
+  .id-band .ava .cam {
+    position: absolute; bottom: -3px; right: -3px; width: 22px; height: 22px; border-radius: 50%;
+    background: #fff; color: var(--primary); display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,.3); transition: background var(--t-fast) var(--ease);
+  }
+  .id-band .ava .cam svg { width: 12px; height: 12px; }
+  .id-band .ava .cam:hover { background: var(--primary-50); }
+  .id-meta { min-width: 0; z-index: 1; flex: 1; }
+  .pf-name { font-family: var(--font-display); font-size: 19px; font-weight: 700; letter-spacing: -.01em; line-height: 1.15; }
+  .pf-name small { font-weight: 400; opacity: .85; font-size: 13px; }
+  .pf-sub { font-size: 12px; opacity: .82; margin-top: 2px; display: flex; align-items: center; gap: 6px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pf-code { font-family: var(--font-mono); font-size: 11px; letter-spacing: .02em; }
+  .pf-chips { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+  .pf-pill {
+    display: inline-flex; align-items: center; font-size: 10.5px; font-weight: 700; letter-spacing: .04em;
+    padding: 3px 9px; border-radius: var(--r-full); text-transform: uppercase;
+    background: rgba(255,255,255,.18); color: #fff; border: 1px solid rgba(255,255,255,.22);
+  }
+
+  /* glass stat cluster (desktop) */
+  .hero-stats { margin-left: auto; display: flex; gap: 10px; z-index: 1; flex-wrap: wrap; justify-content: flex-end; }
+  .tile {
+    background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22); border-radius: var(--r-lg);
+    padding: 11px 14px; min-width: 106px; color: #fff;
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  }
+  .tile .k { font-size: 9.5px; letter-spacing: .07em; text-transform: uppercase; opacity: .85; font-weight: 600; }
+  .tile .v { font-family: var(--font-mono); font-size: 20px; font-weight: 600; margin-top: 5px; line-height: 1; }
+  .tile .v small { font-size: 11px; font-weight: 500; opacity: .8; }
+  .tile.att { display: flex; align-items: center; gap: 11px; min-width: auto; }
+  .ring {
+    width: 44px; height: 44px; border-radius: 50%; flex: 0 0 auto;
+    background: conic-gradient(#5eead4 96%, rgba(255,255,255,.22) 0);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .ring i {
+    width: 34px; height: 34px; border-radius: 50%; background: #075e6b; font-style: normal;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-weight: 600; font-size: 12px; color: #7ff0d8;
+  }
+  .bar { height: 5px; border-radius: var(--r-full); background: rgba(255,255,255,.22); margin-top: 8px; overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 71%; background: #5eead4; border-radius: var(--r-full); }
+  .spark { margin-top: 7px; }
+
+  /* tabs (ERP pill style) */
+  .pf-tabs {
+    display: flex; gap: 2px; background: var(--primary-50); border: 1px solid var(--border);
+    padding: 3px; border-radius: var(--r-full); margin: 18px 0; width: fit-content; max-width: 100%;
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .pf-tabs::-webkit-scrollbar { display: none; }
+  .pf-tabs a {
+    font-size: 12.5px; font-weight: 600; color: var(--text-muted); padding: 7px 14px; cursor: pointer;
+    white-space: nowrap; border-radius: var(--r-full); transition: all var(--t-fast) var(--ease);
+  }
+  .pf-tabs a:hover { color: var(--primary); }
+  .pf-tabs a.on { background: var(--grad); color: #fff; box-shadow: 0 1px 6px var(--cta-shadow); }
+
+  /* section cards */
+  .pf-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--s4); align-items: start; }
+  .pf-col { display: flex; flex-direction: column; gap: var(--s4); }
+  .pf-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg);
+    box-shadow: 0 2px 14px rgba(0,123,167,.08); overflow: hidden;
+  }
+  .pf-card .head { display: flex; align-items: center; gap: 10px; padding: 13px 18px; border-bottom: 1px solid var(--divider); }
+  .pf-card .head h3 { margin: 0; font-family: var(--font-display); font-size: 13px; font-weight: 700; letter-spacing: -.01em; }
+  .pf-card .head .ic {
+    width: 28px; height: 28px; border-radius: var(--r-md); background: var(--primary-50); color: var(--primary);
+    display: grid; place-items: center; flex: 0 0 auto;
+  }
+  .pf-card .head .ic svg { width: 15px; height: 15px; }
+  .pf-card .body { padding: 16px 18px; }
+  .pf-card .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+  .pf-card .f label {
+    display: block; font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 6px;
+  }
+  .pf-card .f .box {
+    display: flex; align-items: center; gap: 9px; background: var(--primary-50); border: 1px solid var(--border);
+    border-radius: var(--r-md); padding: 10px 12px; min-height: 42px; font-weight: 500; color: var(--text); font-size: 13px;
+  }
+  .pf-card .f .box.mono { font-family: var(--font-mono); font-weight: 500; font-size: 12.5px; }
+  .pf-card .f .box .ic { color: var(--primary); width: 15px; height: 15px; flex: 0 0 auto; }
+  .pf-card .f .box .ic svg { width: 15px; height: 15px; }
+  .pf-card .f .box .badge { margin-right: 2px; }
+  .pf-card .f.wide { grid-column: 1 / -1; }
+
+  /* mobile — container-query driven, mirrors main content width */
+  @container (max-width: 560px) {
+    .id-band { flex-wrap: wrap; gap: 14px; padding: 16px; }
+    .id-meta { flex: 1 1 calc(100% - 76px); }
+    .pf-name { font-size: 17px; }
+    .hero-stats {
+      flex-basis: 100%; width: 100%; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+      background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.22); border-radius: var(--r-lg);
+      overflow: hidden; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    }
+    .tile {
+      background: transparent; border: 0; border-radius: 0; min-width: 0; padding: 12px 10px;
+      backdrop-filter: none; -webkit-backdrop-filter: none; display: flex; flex-direction: column;
+      align-items: flex-start; gap: 0;
+      border-right: 1px solid rgba(255,255,255,.16); border-bottom: 1px solid rgba(255,255,255,.16);
+    }
+    .tile:nth-child(2n) { border-right: 0; }
+    .tile:nth-child(n+3) { border-bottom: 0; }
+    .tile .k { font-size: 9px; opacity: .82; }
+    .tile .v { font-size: 17px; margin-top: 3px; }
+    .tile .v small { font-size: 10px; }
+    .ring, .bar, .spark { display: none; }
+    .pf-cols { grid-template-columns: 1fr; }
+    .pf-tabs a { padding: 7px 12px; font-size: 12px; }
+  }
 </style>
 </head>
 <body>
@@ -2058,7 +2197,7 @@
         <svg><use href="#i-bell"/></svg>
         <span class="dot"></span>
       </button>
-      <button class="user-chip">
+      <button class="user-chip" onclick="showView('profile')" title="My profile">
         <div class="avatar">AT</div>
         <span class="name">Aaron T.</span>
         <svg width="14" height="14" style="color:var(--text-muted)"><use href="#i-chevron-down"/></svg>
@@ -2068,6 +2207,9 @@
 
   <!-- ============ MAIN ============ -->
   <main class="main">
+
+    <!-- ============ VIEW: EMPLOYEES ============ -->
+    <div id="view-employees" class="view">
 
     <!-- Page header -->
     <div class="page-header">
@@ -2383,6 +2525,112 @@
 
       </div>
     </section>
+
+    </div><!-- /view-employees -->
+
+    <!-- ============ VIEW: MY PROFILE ============ -->
+    <div id="view-profile" class="view" hidden>
+
+      <!-- Page header -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">My Profile</h1>
+          <p class="page-subtitle">Your personal, employment and contact details.</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-secondary" onclick="showView('employees')"><svg><use href="#i-chevron-left"/></svg><span> Back</span></button>
+          <button class="btn btn-primary"><svg><use href="#i-edit"/></svg><span> Edit profile</span></button>
+        </div>
+      </div>
+
+      <div class="pf-scope">
+        <!-- IDENTITY BAND -->
+        <div class="id-band">
+          <div class="ava"><button class="cam" title="Change avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></button></div>
+          <div class="id-meta">
+            <div class="pf-name">Lê Tú Anh <small>· Aaron Le</small></div>
+            <div class="pf-sub">anhlt@twendeesoft.com <span class="pf-code">· TWD212</span></div>
+            <div class="pf-chips">
+              <span class="pf-pill">PM</span><span class="pf-pill">DA</span>
+              <span class="pf-pill">Senior</span><span class="pf-pill">Sales +1</span>
+            </div>
+          </div>
+
+          <div class="hero-stats">
+            <div class="tile att" title="Attendance this month">
+              <div class="ring"><i>96</i></div>
+              <div><div class="k">Attendance</div><div class="v">96<small>%</small></div></div>
+            </div>
+            <div class="tile" title="Time at Twendee">
+              <div class="k">Tenure</div><div class="v">3y 4m</div>
+            </div>
+            <div class="tile" title="Annual leave remaining">
+              <div class="k">Leave left</div><div class="v">8.5<small>/12 d</small></div>
+              <div class="bar"><i></i></div>
+            </div>
+            <div class="tile" title="Logged hours, last 7 days">
+              <div class="k">Worklog · 7d</div><div class="v">38<small>h</small></div>
+              <svg class="spark" width="72" height="18" viewBox="0 0 72 18" fill="none">
+                <polyline points="0,14 12,9 24,11 36,4 48,7 60,3 72,6" stroke="#7ff0d8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- TABS -->
+        <div class="pf-tabs">
+          <a class="on">Personal</a><a>ID &amp; Banking</a><a>Contracts</a>
+          <a>Insurance &amp; Benefits</a><a>Competency</a><a>Settings</a>
+        </div>
+
+        <!-- SECTION CARDS -->
+        <div class="pf-cols">
+          <div class="pf-col">
+            <div class="pf-card">
+              <div class="head"><span class="ic"><svg><use href="#i-users"/></svg></span><h3>Personal details</h3></div>
+              <div class="body grid">
+                <div class="f"><label>Full name</label><div class="box"><span class="ic"><svg><use href="#i-users"/></svg></span>Lê Tú Anh</div></div>
+                <div class="f"><label>Username</label><div class="box mono"><span class="ic"><svg><use href="#i-info"/></svg></span>anhlt</div></div>
+                <div class="f"><label>Employee code</label><div class="box mono"><span class="ic"><svg><use href="#i-file"/></svg></span>TWD212</div></div>
+                <div class="f"><label>Date of birth</label><div class="box"><span class="ic"><svg><use href="#i-calendar"/></svg></span>15 Mar 1995</div></div>
+                <div class="f"><label>Gender</label><div class="box"><span class="ic"><svg><use href="#i-info"/></svg></span>Male</div></div>
+                <div class="f"><label>Nationality</label><div class="box"><span class="ic"><svg><use href="#i-pin"/></svg></span>Vietnamese</div></div>
+              </div>
+            </div>
+            <div class="pf-card">
+              <div class="head"><span class="ic"><svg><use href="#i-phone"/></svg></span><h3>Contact</h3></div>
+              <div class="body grid">
+                <div class="f wide"><label>Email</label><div class="box"><span class="ic"><svg><use href="#i-mail"/></svg></span>anhlt@twendeesoft.com</div></div>
+                <div class="f"><label>Phone</label><div class="box mono"><span class="ic"><svg><use href="#i-phone"/></svg></span>+84 912 345 678</div></div>
+                <div class="f"><label>Zalo</label><div class="box mono"><span class="ic"><svg><use href="#i-info"/></svg></span>0912 345 678</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pf-col">
+            <div class="pf-card">
+              <div class="head"><span class="ic"><svg><use href="#i-briefcase"/></svg></span><h3>Employment</h3></div>
+              <div class="body grid">
+                <div class="f"><label>Department</label><div class="box"><span class="ic"><svg><use href="#i-dashboard"/></svg></span>DA</div></div>
+                <div class="f"><label>Position</label><div class="box"><span class="ic"><svg><use href="#i-briefcase"/></svg></span>PM</div></div>
+                <div class="f"><label>Job title</label><div class="box"><span class="ic"><svg><use href="#i-file"/></svg></span>TP</div></div>
+                <div class="f"><label>Level</label><div class="box"><span class="ic"><svg><use href="#i-arrow-up"/></svg></span>Senior (L4)</div></div>
+                <div class="f"><label>Workplace</label><div class="box"><span class="ic"><svg><use href="#i-pin"/></svg></span>Hanoi HQ</div></div>
+                <div class="f"><label>Role</label><div class="box"><span class="badge badge-primary">Sales</span><span class="badge badge-neutral">Manager</span></div></div>
+              </div>
+            </div>
+            <div class="pf-card">
+              <div class="head"><span class="ic"><svg><use href="#i-pin"/></svg></span><h3>Addresses</h3></div>
+              <div class="body grid">
+                <div class="f wide"><label>Permanent address</label><div class="box"><span class="ic"><svg><use href="#i-pin"/></svg></span>123 Láng Hạ, Đống Đa, Hà Nội</div></div>
+                <div class="f wide"><label>Current address</label><div class="box"><span class="ic"><svg><use href="#i-pin"/></svg></span>45 Nguyễn Chí Thanh, Ba Đình, Hà Nội</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /view-profile -->
 
   </main>
 </div>
@@ -2707,7 +2955,7 @@
     </div>
     <div class="panel-footer">
       <button class="btn btn-ghost" onclick="closePanel('panel-view')" data-i18n="btn.close">Close</button>
-      <button class="btn btn-primary" data-i18n="btn.viewfull">View full profile</button>
+      <button class="btn btn-primary" onclick="closePanel('panel-view'); showView('profile')" data-i18n="btn.viewfull">View full profile</button>
     </div>
   </div>
 
@@ -3012,6 +3260,25 @@
       if (counter) counter.textContent = '0 / 500';
     }
   }
+
+  // ============ VIEW SWITCHING (Employees ↔ My Profile) ============
+  function showView(name) {
+    document.querySelectorAll('main.main > .view').forEach(v => {
+      v.hidden = v.id !== 'view-' + name;
+    });
+    // Update breadcrumb
+    const crumb = document.querySelector('.breadcrumb .current');
+    if (crumb) crumb.textContent = name === 'profile' ? 'My Profile' : t('nav.employees');
+    // Close mobile sidebar drawer if open, and scroll to top
+    document.querySelector('.main')?.scrollTo(0, 0);
+    if (typeof closeMobileSidebar === 'function') closeMobileSidebar();
+  }
+
+  // Profile tab highlighting
+  document.querySelectorAll('.pf-tabs a').forEach(a => a.addEventListener('click', () => {
+    document.querySelectorAll('.pf-tabs a').forEach(x => x.classList.remove('on'));
+    a.classList.add('on');
+  }));
 
   // ============ MODALS (confirm dialogs only) ============
   function openModal(id) {
