@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CRM flow — lead to cash</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBFAF8; --card:#FFFFFF;
+  --ink:#16181C; --ink2:#5C636D; --ink3:#93999F;
+  --rule:#E7E4DD; --rule2:#D4D0C7;
+  --sales:#2F4858; --sales-wash:#EDF1F3;
+  --seal:#BE3A2B; --seal-wash:#FBEEEC;
+  --r:3px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:'Archivo',system-ui,sans-serif; font-size:14px; line-height:1.5;
+  padding:32px 24px 72px;
+}
+.wrap{max-width:1080px;margin:0 auto}
+
+.eyebrow{
+  font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink3);
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--rule);min-width:20px}
+h1{font-size:clamp(24px,3.4vw,34px);font-weight:600;letter-spacing:-.025em;margin:12px 0 6px;line-height:1.1}
+.dek{color:var(--ink2);max-width:58ch;font-size:14.5px}
+
+.chip-row{display:flex;align-items:center;gap:10px;margin-top:20px;flex-wrap:wrap}
+.chip{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid var(--rule2);border-radius:100px;padding:5px 12px 5px 10px;background:var(--card);
+  font-size:12.5px;transition:border-color .35s,background .35s,color .35s;
+}
+.chip .co{font-weight:600}
+.chip .st{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  padding-left:9px;border-left:1px solid var(--rule2);transition:color .35s;
+}
+.chip[data-state="none"]{border-style:dashed;color:var(--ink3)}
+.chip[data-state="none"] .co{font-weight:400}
+.chip[data-state="prospect"] .st{color:var(--sales)}
+.chip[data-state="customer"]{border-color:var(--seal);background:var(--seal-wash)}
+.chip[data-state="customer"] .st{color:var(--seal);border-left-color:#EBBFB9}
+.chip-note{font-size:11.5px;color:var(--ink3)}
+
+.rail{
+  margin:26px 0 30px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+  padding:16px 0;display:flex;align-items:stretch;overflow-x:auto;scrollbar-width:thin;
+}
+.node{
+  appearance:none;background:none;border:0;cursor:pointer;text-align:left;font-family:inherit;
+  padding:8px 16px 8px 0;margin-right:16px;position:relative;flex:1;min-width:112px;
+  border-top:2px solid var(--rule2);color:var(--ink3);transition:color .25s,border-color .25s;
+}
+.node:not(:last-child)::after{
+  content:"";position:absolute;right:0;top:calc(50% - 3px);width:5px;height:5px;
+  border-right:1.5px solid var(--rule2);border-top:1.5px solid var(--rule2);transform:rotate(45deg);
+}
+.node .n{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;display:block;margin-bottom:3px}
+.node .nm{font-size:13.5px;font-weight:500;letter-spacing:-.01em;display:block;color:var(--ink2);transition:color .25s}
+.node:hover .nm{color:var(--ink)}
+.node[aria-current="true"]{border-top-color:var(--sales);color:var(--sales)}
+.node[aria-current="true"] .nm{color:var(--ink);font-weight:600}
+.node[data-phase="live"][aria-current="true"]{border-top-color:var(--seal);color:var(--seal)}
+.node:focus-visible{outline:2px solid var(--sales);outline-offset:3px}
+.brk{flex:0 0 auto;width:1px;background:var(--rule2);margin:0 22px 0 6px;position:relative}
+.brk span{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-90deg);
+  font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--seal);background:var(--paper);padding:4px 0;white-space:nowrap;
+}
+
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:18px;flex-wrap:wrap}
+.head h2{font-size:26px;font-weight:600;letter-spacing:-.02em;line-height:1.15}
+.head .def{color:var(--ink2);margin-top:4px;max-width:52ch}
+.toggle{display:inline-flex;align-items:center;gap:8px;cursor:pointer;user-select:none;font-size:12px;color:var(--ink2)}
+.toggle input{position:absolute;opacity:0;width:0;height:0}
+.track{width:30px;height:17px;border-radius:9px;background:var(--rule2);position:relative;transition:background .2s;flex:0 0 auto}
+.track::after{content:"";position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:#fff;transition:transform .2s}
+.toggle input:checked + .track{background:var(--sales)}
+.toggle input:checked + .track::after{transform:translateX(13px)}
+.toggle input:focus-visible + .track{outline:2px solid var(--sales);outline-offset:2px}
+
+.cols{display:grid;grid-template-columns:1fr 268px;gap:22px;align-items:start}
+.record{background:var(--card);border:1px solid var(--rule);border-radius:var(--r);overflow:hidden;position:relative}
+
+/* segmented control */
+.seg-wrap{padding:14px 20px 12px;border-bottom:1px solid var(--rule);background:var(--paper)}
+.seg-h{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px}
+.seg{display:inline-flex;border:1px solid var(--rule2);border-radius:var(--r);overflow:hidden;background:var(--card)}
+.seg button{
+  appearance:none;background:none;border:0;font-family:inherit;font-size:12.5px;cursor:pointer;
+  padding:6px 14px;color:var(--ink2);transition:background .18s,color .18s;
+}
+.seg button + button{border-left:1px solid var(--rule2)}
+.seg button:hover{background:var(--paper)}
+.seg button[aria-pressed="true"]{background:var(--sales);color:#fff}
+.seg button:focus-visible{outline:2px solid var(--sales);outline-offset:-2px}
+
+.grp + .grp{border-top:1px solid var(--rule)}
+.grp-h{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);padding:14px 20px 8px}
+.field{display:grid;grid-template-columns:150px 1fr;gap:16px;padding:7px 20px;align-items:baseline}
+.field:last-child{padding-bottom:16px}
+.field:hover{background:var(--paper)}
+.f-label{color:var(--ink2);font-size:13px}
+.f-label .req{color:var(--seal);margin-left:2px}
+.f-value{font-size:13.5px;word-break:break-word}
+.f-value.mono{font-family:'IBM Plex Mono',monospace;font-size:12.5px}
+.f-value.empty{color:var(--ink3);font-style:italic}
+.tag{
+  font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.09em;text-transform:uppercase;
+  border:1px solid var(--rule2);border-radius:2px;padding:1px 4px;color:var(--ink3);
+  margin-left:7px;vertical-align:1px;white-space:nowrap;
+}
+.tag.auto{border-color:#C9D6DC;color:var(--sales);background:var(--sales-wash)}
+.tag.lock{border-color:#EBBFB9;color:var(--seal);background:var(--seal-wash)}
+.f-spec{display:none;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--ink3);white-space:nowrap}
+body.spec .field{grid-template-columns:150px 1fr 132px}
+body.spec .f-spec{display:block}
+
+.repeat{margin:2px 20px 16px;border:1px solid var(--rule);border-radius:var(--r)}
+.repeat table{width:100%;border-collapse:collapse}
+.repeat th{
+  font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink3);text-align:left;font-weight:400;padding:8px 12px;border-bottom:1px solid var(--rule);
+}
+.repeat td{padding:8px 12px;font-size:12.5px;border-bottom:1px solid var(--rule)}
+.repeat tr:last-child td{border-bottom:0}
+.repeat td.num{font-family:'IBM Plex Mono',monospace;text-align:right;white-space:nowrap}
+.repeat th.num{text-align:right}
+.role{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--rule2);border-radius:2px;padding:1px 5px}
+.role.blocker{border-color:#EBBFB9;color:var(--seal);background:var(--seal-wash)}
+.add{display:block;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--rule);padding:8px 12px;color:var(--ink3);font-family:inherit;font-size:12px;cursor:not-allowed}
+
+.seal{
+  position:absolute;top:16px;right:18px;width:96px;height:96px;border-radius:50%;
+  border:2.5px solid var(--seal);color:var(--seal);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  transform:rotate(-11deg);opacity:.9;pointer-events:none;
+}
+.seal::before{content:"";position:absolute;inset:5px;border:1px solid var(--seal);border-radius:50%;opacity:.55}
+.seal .star{font-size:17px;line-height:1}
+.seal .t1{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;font-weight:500}
+.seal .t2{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.06em;opacity:.75}
+@media (prefers-reduced-motion:no-preference){
+  .seal{animation:stamp .42s cubic-bezier(.2,1.5,.4,1) both}
+  @keyframes stamp{0%{transform:rotate(-24deg) scale(1.9);opacity:0}60%{opacity:.95}100%{transform:rotate(-11deg) scale(1);opacity:.9}}
+  .grp{animation:rise .34s ease both}
+  .grp:nth-child(2){animation-delay:.04s}
+  .grp:nth-child(3){animation-delay:.08s}
+  .grp:nth-child(4){animation-delay:.12s}
+  @keyframes rise{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+}
+
+.side{display:flex;flex-direction:column;gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:var(--r);overflow:hidden}
+.side section{background:var(--card);padding:14px 16px}
+.side h3{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);font-weight:400;margin-bottom:7px}
+.side p{font-size:12.5px;color:var(--ink2);line-height:1.55}
+.side ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.side li{font-size:12.5px;color:var(--ink2);line-height:1.5;padding-left:14px;position:relative}
+.side li::before{content:"";position:absolute;left:0;top:7px;width:5px;height:1.5px;background:var(--rule2)}
+.side li.warn{color:var(--ink)}
+.side li.warn::before{background:var(--seal);width:6px;height:2px}
+.side b{font-weight:600;color:var(--ink)}
+
+.foot{display:flex;justify-content:space-between;align-items:center;margin-top:22px;gap:12px}
+.btn{appearance:none;background:var(--card);border:1px solid var(--rule2);border-radius:var(--r);padding:8px 14px;font-family:inherit;font-size:12.5px;color:var(--ink);cursor:pointer;transition:border-color .18s}
+.btn:hover:not(:disabled){border-color:var(--ink2)}
+.btn:disabled{opacity:.35;cursor:default}
+.btn:focus-visible{outline:2px solid var(--sales);outline-offset:2px}
+.hint{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--ink3);letter-spacing:.05em}
+kbd{border:1px solid var(--rule2);border-bottom-width:2px;border-radius:3px;padding:0 4px;font-family:inherit;font-size:10px}
+
+@media (max-width:880px){
+  .cols{grid-template-columns:1fr}
+  .field{grid-template-columns:1fr;gap:1px;padding:8px 16px}
+  body.spec .field{grid-template-columns:1fr}
+  .f-label{font-size:11.5px;color:var(--ink3)}
+  .seal{width:70px;height:70px;top:10px;right:10px}
+  .seal .t1{font-size:8px}.seal .t2{display:none}.seal .star{font-size:13px}
+  .hint{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="eyebrow">CRM · Deal-centric · Records are earned, not assumed</p>
+  <h1>Nothing becomes an account until it's won</h1>
+  <p class="dek">The lead carries the company and the whole buying committee through the sales cycle. Only a won deal earns an account. Only a signed contract makes a customer. Watch the chip — it stays dashed a long time.</p>
+
+  <div class="chip-row">
+    <span class="chip" id="chip" data-state="none">
+      <span class="co">Vinatex Đà Nẵng</span>
+      <span class="st" id="chipState">Not an account yet</span>
+    </span>
+    <span class="chip-note" id="chipNote"></span>
+  </div>
+
+  <nav class="rail" id="rail" aria-label="Pipeline stages"></nav>
+
+  <div class="head">
+    <div>
+      <h2 id="stName"></h2>
+      <p class="def" id="stDef"></p>
+    </div>
+    <label class="toggle">
+      <input type="checkbox" id="specToggle">
+      <span class="track"></span>
+      Show field spec
+    </label>
+  </div>
+
+  <div class="cols">
+    <main class="record" id="record"></main>
+    <aside class="side" id="side"></aside>
+  </div>
+
+  <div class="foot">
+    <button class="btn" id="prev">← Previous</button>
+    <span class="hint"><kbd>←</kbd> <kbd>→</kbd> to move through the flow</span>
+    <button class="btn" id="next">Next →</button>
+  </div>
+</div>
+
+<script>
+const F = (label, value, type, req, opt={}) => ({label, value, type, req, ...opt});
+
+const STAGES = [
+{
+  id:'lead', num:'01', name:'Lead', phase:'pipeline',
+  def:'The company and everyone at it, before we\'ve won anything. Carries the whole sales cycle.',
+  chip:'none', chipState:'Not an account yet',
+  chipNote:'Company and people live on the lead. Nothing is linked to anything.',
+  createdBy:'Marketing form, imported list, Apollo enrichment, or a rep typing it in.',
+  endsWhen:'A deal on it is won → becomes an account. Or disqualified with a reason.',
+  rules:[
+    {t:'A lead holds <b>many people</b>, not one. It has to — contacts don\'t exist until a deal is won, and the buying committee needs somewhere to live.', warn:true},
+    {t:'Company name and tax code are still free text. Dirty data is expected and fine.'},
+    {t:'Never deleted after conversion. It\'s what the funnel report counts.'}
+  ],
+  groups:[
+    {name:'Company', fields:[
+      F('Company name','Vinatex Đà Nẵng','Text','Yes',{tag:'free text'}),
+      F('Legal name','Công ty CP Dệt May Vinatex Đà Nẵng','Text','No'),
+      F('Tax code (MST)','0401234567','Text','No',{mono:true, tag:'match key'}),
+      F('Website','vinatexdn.com.vn','URL','No',{mono:true}),
+      F('Industry','Manufacturing — Textiles','Dropdown','No'),
+      F('Company size','200+','Dropdown','No'),
+      F('Address','Lô A2, KCN Hòa Khánh, Liên Chiểu, Đà Nẵng','Address','No'),
+    ]},
+    {name:'People — the buying committee', repeat:{
+      cols:['Name','Job title','Email','Main contact'],
+      rows:[
+        ['Nguyễn Thị Mai Linh','Trưởng phòng CNTT','mailinh.nguyen@vinatexdn.com.vn','<span class="role">yes</span>'],
+        ['Lê Hoàng Nam','Giám đốc Tài chính','nam.le@vinatexdn.com.vn',''],
+        ['Phạm Đức Thắng','Trưởng phòng Mua hàng','thang.pham@vinatexdn.com.vn',''],
+      ]
+    }},
+    {name:'Qualification', fields:[
+      F('Source','Event — Vietnam Manufacturing Expo','Dropdown','Yes'),
+      F('Campaign','VMEX 2026 booth','Lookup','No'),
+      F('Score','78','Number','Auto',{mono:true, tag:'auto'}),
+      F('Status','Working','Dropdown','Yes'),
+      F('Disqualify reason','—','Dropdown','Cond.',{empty:true, tag:'if disqualified'}),
+      F('Owner','Trần Quốc Bảo','User','Yes'),
+    ]},
+  ]
+},
+{
+  id:'deal', num:'02', name:'Deal', phase:'pipeline',
+  def:'One potential sale. Hangs off a lead for new business, or a contact for repeat business.',
+  createdBy:'A rep — from a lead (new) or from a contact on an existing account (repeat).',
+  endsWhen:'Won (creates the account) or Lost (needs a reason).',
+  rules:[
+    {t:'A deal links to <b>a lead or a contact — never both</b>. That link is what tells you if this is new or repeat business.', warn:true},
+    {t:'New-business deals have <b>no account</b> until won. So account-level pipeline reporting only covers repeat business — a real cost of this model.', warn:true},
+    {t:'Won can\'t be set until the lead conversion runs. That\'s the gate.'},
+    {t:'Stakeholders are drawn from whichever parent the deal has — the lead\'s people, or the account\'s contacts.'}
+  ],
+  variants:{
+    new:{
+      label:'New customer',
+      chip:'none', chipState:'Not an account yet',
+      chipNote:'Still no account. The deal hangs off the lead — this is new business.',
+      link:[
+        F('Linked to','LD-2026-0418 — Vinatex Đà Nẵng','Lead','Yes',{mono:true, tag:'lead'}),
+        F('Account','— created when this is won','Lookup','Auto',{empty:true, tag:'not yet'}),
+        F('Business type','New','Badge','Auto',{tag:'from link'}),
+      ],
+      basics:[
+        F('Deal name','Vinatex ĐN — ERP triển khai GĐ1','Text','Yes'),
+        F('Stage','Negotiation','Dropdown','Yes'),
+        F('Value','₫ 1.850.000.000','Currency','Yes',{mono:true}),
+        F('Probability','75%','Percent','Auto',{mono:true, tag:'from stage'}),
+        F('Expected close','30 Sep 2026','Date','Yes',{mono:true}),
+        F('Deal owner','Trần Quốc Bảo','User','Yes'),
+      ],
+      stakeCols:['Person (from lead)','Role','Decision maker'],
+      stake:[
+        ['Nguyễn Thị Mai Linh','<span class="role">champion</span>','—'],
+        ['Lê Hoàng Nam','<span class="role">economic buyer</span>','Yes'],
+        ['Phạm Đức Thắng','<span class="role blocker">blocker</span>','—'],
+      ],
+      products:[
+        ['ERP Core — licence (per seat)','120','₫ 9.500.000','10%','₫ 1.026.000.000'],
+        ['Implementation — GĐ1','1','₫ 680.000.000','0%','₫ 680.000.000'],
+        ['Training — on-site','8','₫ 18.000.000','0%','₫ 144.000.000'],
+      ],
+      closing:[
+        F('Loss reason','—','Dropdown','Cond.',{empty:true, tag:'if lost'}),
+        F('Competitor','Base.vn','Lookup','No'),
+        F('Source','Event — VMEX 2026','Dropdown','Auto',{tag:'from lead'}),
+      ]
+    },
+    existing:{
+      label:'Existing customer',
+      chip:'customer', chipState:'Customer',
+      chipNote:'Account already exists. The deal hangs off a contact — no lead involved.',
+      link:[
+        F('Linked to','Nguyễn Thị Mai Linh — Trưởng phòng CNTT','Contact','Yes',{tag:'contact'}),
+        F('Account','Vinatex Đà Nẵng','Lookup','Auto',{tag:'via contact'}),
+        F('Business type','Repeat','Badge','Auto',{tag:'from link'}),
+      ],
+      basics:[
+        F('Deal name','Vinatex ĐN — mở rộng GĐ2 (Kho + QC)','Text','Yes'),
+        F('Stage','Proposal','Dropdown','Yes'),
+        F('Value','₫ 620.000.000','Currency','Yes',{mono:true}),
+        F('Probability','50%','Percent','Auto',{mono:true, tag:'from stage'}),
+        F('Expected close','28 Feb 2027','Date','Yes',{mono:true}),
+        F('Deal owner','Trần Quốc Bảo','User','Yes'),
+      ],
+      stakeCols:['Contact (from account)','Role','Decision maker'],
+      stake:[
+        ['Nguyễn Thị Mai Linh','<span class="role">champion</span>','—'],
+        ['Lê Hoàng Nam','<span class="role">economic buyer</span>','Yes'],
+      ],
+      products:[
+        ['Warehouse module — licence','40','₫ 7.200.000','5%','₫ 273.600.000'],
+        ['QC module — licence','40','₫ 6.400.000','5%','₫ 243.200.000'],
+        ['Implementation — GĐ2','1','₫ 103.200.000','0%','₫ 103.200.000'],
+      ],
+      closing:[
+        F('Loss reason','—','Dropdown','Cond.',{empty:true, tag:'if lost'}),
+        F('Competitor','—','Lookup','No',{empty:true}),
+        F('Source','Existing customer — upsell','Dropdown','Auto',{tag:'no lead'}),
+      ]
+    }
+  },
+  groups:v=>[
+    {name:'Linked to', fields:v.link},
+    {name:'Basics', fields:v.basics},
+    {name:'Stakeholders', repeat:{cols:v.stakeCols, rows:v.stake}},
+    {name:'Products', repeat:{cols:['Product','Qty','Unit price','Disc.','Line total'], nums:[1,2,3,4], rows:v.products}},
+    {name:'Closing', fields:v.closing},
+  ]
+},
+{
+  id:'account', num:'03', name:'Account + Contact', phase:'live',
+  def:'Born the moment a deal is won. Only companies that actually bought get in here.',
+  chip:'prospect', chipState:'Prospect',
+  chipNote:'Deal won — the account and its contacts exist now. Still nothing signed.',
+  createdBy:'Automatically, when a deal is marked Won. Built from the lead\'s company and people.',
+  endsWhen:'Never. Merged if duplicated, marked churned if lost.',
+  rules:[
+    {t:'The conversion wizard fires <b>at Won</b>, not at qualification. It must dedupe on tax code — two reps winning two deals at the same company have to land on one account.', warn:true},
+    {t:'<b>Stage is read-only.</b> Won makes a prospect. Only a signed contract makes a customer.', warn:true},
+    {t:'Every lead person becomes a contact. Every lead activity re-parents here — if the email thread vanishes at Won, reps stop trusting the system.', warn:true},
+    {t:'Lost deals leave nothing behind but the lead. Accept that, or you\'re back to early accounts.'}
+  ],
+  groups:[
+    {name:'Identity — carried from the lead', fields:[
+      F('Account name','Vinatex Đà Nẵng','Text','Yes'),
+      F('Legal name','Công ty CP Dệt May Vinatex Đà Nẵng','Text','No'),
+      F('Tax code (MST)','0401234567','Text','Yes',{mono:true, tag:'unique'}),
+      F('Website','vinatexdn.com.vn','URL','No',{mono:true}),
+      F('Industry','Manufacturing — Textiles','Dropdown','No'),
+      F('Billing address','Lô A2, KCN Hòa Khánh, Liên Chiểu, Đà Nẵng','Address','No'),
+    ]},
+    {name:'Relationship', fields:[
+      F('Stage','Prospect','Badge','Auto',{tag:'read-only'}),
+      F('Customer since','—','Date','Auto',{empty:true, tag:'on signing'}),
+      F('Account owner','Trần Quốc Bảo','User','Yes'),
+      F('Parent account','—','Lookup','No',{empty:true}),
+      F('Created from','LD-2026-0418 · Deal won 24 Sep 2026','Link','Auto',{mono:true, tag:'auto'}),
+    ]},
+    {name:'Contacts — created from the lead\'s people', repeat:{
+      cols:['Name','Job title','Primary','Email'],
+      rows:[
+        ['Nguyễn Thị Mai Linh','Trưởng phòng CNTT','<span class="role">primary</span>','mailinh.nguyen@vinatexdn.com.vn'],
+        ['Lê Hoàng Nam','Giám đốc Tài chính','','nam.le@vinatexdn.com.vn'],
+        ['Phạm Đức Thắng','Trưởng phòng Mua hàng','','thang.pham@vinatexdn.com.vn'],
+      ]
+    }},
+  ]
+},
+{
+  id:'contract', num:'04', name:'Contract', phase:'live',
+  def:'The signed agreement. The handover from Sales to Finance and Delivery.',
+  chip:'customer', chipState:'Customer', seal:true,
+  chipNote:'The seal lands and the account flips itself. No button was pressed.',
+  createdBy:'Sales, right after the deal is won and the account exists.',
+  endsWhen:'Expires, renews, or is terminated. Never edited after signing.',
+  rules:[
+    {t:'<b>Signed is the moment the account becomes a customer.</b> Automatic. Not settable by hand.', warn:true},
+    {t:'Locked after signature. Changes go through an amendment with a parent contract.'},
+    {t:'Related deal is <b>optional</b> — renewals have no opportunity. Make it mandatory and reps will invent fake deals.', warn:true}
+  ],
+  groups:[
+    {name:'Basics', fields:[
+      F('Contract number','HD-2026-0142','Text','Auto',{mono:true, tag:'auto'}),
+      F('Account','Vinatex Đà Nẵng','Lookup','Yes'),
+      F('Related deal','Vinatex ĐN — ERP triển khai GĐ1','Lookup','No',{tag:'optional'}),
+      F('Contract type','Master agreement','Dropdown','Yes'),
+      F('Parent contract','—','Lookup','Cond.',{empty:true, tag:'if SOW'}),
+      F('Status','Signed','Dropdown','Yes',{tag:'lock'}),
+    ]},
+    {name:'Terms', fields:[
+      F('Start date','01 Oct 2026','Date','Yes',{mono:true}),
+      F('End date','30 Sep 2029','Date','Yes',{mono:true}),
+      F('Total value','₫ 1.850.000.000','Currency','Yes',{mono:true}),
+      F('Payment terms','NET 30','Dropdown','Yes',{mono:true}),
+      F('Auto-renew','Yes','Checkbox','No'),
+      F('Renewal notice','60 days','Number','No',{mono:true}),
+    ]},
+    {name:'Signature', fields:[
+      F('Signed date','26 Sep 2026','Date','Cond.',{mono:true}),
+      F('Signed by','Lê Hoàng Nam — Giám đốc Tài chính','Lookup','Cond.'),
+      F('Signed document','HD-2026-0142-signed.pdf','File','Cond.',{mono:true}),
+    ]},
+  ]
+},
+{
+  id:'po', num:'05', name:'Purchase order', phase:'live',
+  def:"The customer's order, sent to us under the contract — with their own number.",
+  chip:'customer', chipState:'Customer',
+  chipNote:'A live contract can absorb many POs over years, with no new deal at all.',
+  createdBy:'Sales admin, when the customer sends their PO.',
+  endsWhen:'Fully fulfilled, or cancelled.',
+  rules:[
+    {t:'The PO number belongs to <b>the customer</b>. Unique per account, not globally — two customers will both send you "PO-001".', warn:true},
+    {t:'It references the contract, never the deal.'},
+    {t:'Keep the scan. Finance will want to see what they actually sent.'}
+  ],
+  groups:[
+    {name:'Basics', fields:[
+      F('PO number','PO/VNTX/2026/0087','Text','Yes',{mono:true, tag:"customer's"}),
+      F('Account','Vinatex Đà Nẵng','Lookup','Yes'),
+      F('Related contract','HD-2026-0142','Lookup','Yes',{mono:true}),
+      F('Status','Partially fulfilled','Dropdown','Auto',{tag:'auto'}),
+    ]},
+    {name:'Dates & amount', fields:[
+      F('Issue date','08 Oct 2026','Date','Yes',{mono:true}),
+      F('Required by','15 Dec 2026','Date','No',{mono:true}),
+      F('Total amount','₫ 1.706.000.000','Currency','Auto',{mono:true, tag:'sum of lines'}),
+      F('PO document','PO-VNTX-0087-scan.pdf','File','No',{mono:true}),
+    ]},
+    {name:'Ordered items', repeat:{
+      cols:['Product','Qty','Unit price','Line total'], nums:[1,2,3],
+      rows:[
+        ['ERP Core — licence (per seat)','120','₫ 8.550.000','₫ 1.026.000.000'],
+        ['Implementation — GĐ1','1','₫ 680.000.000','₫ 680.000.000'],
+      ]
+    }},
+  ]
+},
+{
+  id:'invoice', num:'06', name:'Invoice', phase:'live',
+  def:'Our request for payment against a PO. One PO can produce several.',
+  chip:'customer', chipState:'Customer',
+  chipNote:'Milestone billing — this is invoice 1 of 3 against the same PO.',
+  createdBy:'Finance, against a purchase order.',
+  endsWhen:'Paid in full, or voided.',
+  rules:[
+    {t:'Exchange rate is <b>locked at issue date</b>. Never recalculated — or last quarter\'s revenue changes every time you rerun the report.', warn:true},
+    {t:'Each line links back to a PO line. The system blocks billing more than was ordered.'},
+    {t:'Bill-to can differ from the account — HQ often pays for a branch.'}
+  ],
+  groups:[
+    {name:'Basics', fields:[
+      F('Invoice number','INV-2026-0311','Text','Auto',{mono:true, tag:'auto'}),
+      F('Account','Vinatex Đà Nẵng','Lookup','Yes'),
+      F('Bill to','— same as account','Lookup','No',{empty:true}),
+      F('Related PO','PO/VNTX/2026/0087','Lookup','Yes',{mono:true}),
+      F('Status','Issued','Dropdown','Auto',{tag:'auto'}),
+    ]},
+    {name:'Dates', fields:[
+      F('Issue date','12 Oct 2026','Date','Yes',{mono:true}),
+      F('Due date','11 Nov 2026','Date','Auto',{mono:true, tag:'issue + NET 30'}),
+    ]},
+    {name:'Amounts', fields:[
+      F('Subtotal','₫ 513.000.000','Currency','Auto',{mono:true, tag:'auto'}),
+      F('VAT rate','10%','Percent','Yes',{mono:true}),
+      F('VAT amount','₫ 51.300.000','Currency','Auto',{mono:true, tag:'auto'}),
+      F('Total','₫ 564.300.000','Currency','Auto',{mono:true, tag:'auto'}),
+      F('Amount paid','₫ 0','Currency','Auto',{mono:true}),
+      F('Balance due','₫ 564.300.000','Currency','Auto',{mono:true, tag:'auto'}),
+      F('Exchange rate','1,000000','Number','Auto',{mono:true, tag:'lock'}),
+    ]},
+    {name:'E-invoice (Vietnam)', fields:[
+      F('E-invoice code','C26TVN-0000311','Text','Auto',{mono:true, tag:'MISA'}),
+      F('E-invoice status','Signed','Badge','Auto',{tag:'auto'}),
+    ]},
+    {name:'Billed items — milestone 1 of 3', repeat:{
+      cols:['PO line','Qty billed','of ordered','Line total'], nums:[1,2,3],
+      rows:[['ERP Core — licence (per seat)','60','120','₫ 513.000.000']]
+    }},
+  ]
+},
+];
+
+let cur = 0, variant = 'new';
+const $ = id => document.getElementById(id);
+
+const rail = $('rail');
+STAGES.forEach((s,i)=>{
+  if(i===2){
+    const b=document.createElement('div'); b.className='brk';
+    b.innerHTML='<span>won</span>'; rail.appendChild(b);
+  }
+  const btn=document.createElement('button');
+  btn.className='node'; btn.dataset.phase=s.phase;
+  btn.innerHTML=`<span class="n">${s.num}</span><span class="nm">${s.name}</span>`;
+  btn.onclick=()=>go(i);
+  rail.appendChild(btn);
+});
+const nodes=[...rail.querySelectorAll('.node')];
+
+const fieldHTML = f => {
+  const cls = ['f-value', f.mono?'mono':'', f.empty?'empty':''].filter(Boolean).join(' ');
+  const tagCls = f.tag==='lock' ? 'lock' : (f.req==='Auto' ? 'auto' : '');
+  const tag = f.tag ? `<span class="tag ${tagCls}">${f.tag==='lock'?'locked':f.tag}</span>` : '';
+  const req = f.req==='Yes' ? '<span class="req">*</span>' : '';
+  return `<div class="field">
+    <span class="f-label">${f.label}${req}</span>
+    <span class="${cls}">${f.value}${tag}</span>
+    <span class="f-spec">${f.type} · ${f.req}</span>
+  </div>`;
+};
+
+const repeatHTML = r => {
+  const nums = new Set(r.nums||[]);
+  const th = r.cols.map((c,i)=>`<th class="${nums.has(i)?'num':''}">${c}</th>`).join('');
+  const tr = r.rows.map(row=>`<tr>${row.map((c,i)=>`<td class="${nums.has(i)?'num':''}">${c||'—'}</td>`).join('')}</tr>`).join('');
+  return `<div class="repeat"><table><thead><tr>${th}</tr></thead><tbody>${tr}</tbody></table>
+    <button class="add" disabled>+ Add row</button></div>`;
+};
+
+function go(i){
+  cur = i;
+  const s = STAGES[i];
+  const v = s.variants ? s.variants[variant] : null;
+  const groups = typeof s.groups === 'function' ? s.groups(v) : s.groups;
+
+  nodes.forEach((n,k)=>n.setAttribute('aria-current', k===i));
+  $('stName').textContent = s.name;
+  $('stDef').textContent  = s.def;
+
+  $('chip').dataset.state    = v?.chip      ?? s.chip;
+  $('chipState').textContent = v?.chipState ?? s.chipState;
+  $('chipNote').textContent  = v?.chipNote  ?? s.chipNote;
+
+  const seg = s.variants ? `<div class="seg-wrap">
+      <div class="seg-h">This deal is for a</div>
+      <div class="seg" role="group">
+        ${Object.entries(s.variants).map(([k,val])=>
+          `<button data-v="${k}" aria-pressed="${k===variant}">${val.label}</button>`).join('')}
+      </div>
+    </div>` : '';
+
+  $('record').innerHTML = seg +
+    (s.seal ? `<div class="seal"><span class="star">★</span><span class="t1">ĐÃ KÝ</span><span class="t2">26.09.2026</span></div>` : '') +
+    groups.map(g=>`<div class="grp">
+      <div class="grp-h">${g.name}</div>
+      ${g.fields ? g.fields.map(fieldHTML).join('') : repeatHTML(g.repeat)}
+    </div>`).join('');
+
+  $('record').querySelectorAll('.seg button').forEach(b=>{
+    b.onclick = ()=>{ variant = b.dataset.v; go(cur); };
+  });
+
+  $('side').innerHTML = `
+    <section><h3>Created by</h3><p>${s.createdBy}</p></section>
+    <section><h3>Ends when</h3><p>${s.endsWhen}</p></section>
+    <section><h3>Rules the system enforces</h3>
+      <ul>${s.rules.map(r=>`<li class="${r.warn?'warn':''}">${r.t}</li>`).join('')}</ul>
+    </section>`;
+
+  $('prev').disabled = i===0;
+  $('next').disabled = i===STAGES.length-1;
+  nodes[i].scrollIntoView({block:'nearest', inline:'nearest', behavior:'smooth'});
+}
+
+$('prev').onclick = ()=> cur>0 && go(cur-1);
+$('next').onclick = ()=> cur<STAGES.length-1 && go(cur+1);
+$('specToggle').onchange = e => document.body.classList.toggle('spec', e.target.checked);
+addEventListener('keydown', e=>{
+  if(e.target.matches('input,button')) return;
+  if(e.key==='ArrowLeft'  && cur>0) go(cur-1);
+  if(e.key==='ArrowRight' && cur<STAGES.length-1) go(cur+1);
+});
+
+go(0);
+</script>
+</body>
+</html>
