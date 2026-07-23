@@ -172,6 +172,20 @@
     transform: scale(1.05);
   }
 
+  /* Scroll container: rail-nav + rail-bottom scroll as one block.
+     When content is short (collapsed) rail-nav grows and pins rail-bottom to
+     the bottom; when it overflows (expanded) everything scrolls together. */
+  .rail-scroll {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: visible;
+  }
+  .rail-scroll::-webkit-scrollbar { width: 0; height: 0; }
+
   .rail-nav {
     display: flex;
     flex-direction: column;
@@ -180,10 +194,8 @@
     flex: 1;
     width: 100%;
     gap: 2px;
-    overflow-y: auto;
     overflow-x: visible;
   }
-  .rail-nav::-webkit-scrollbar { width: 0; height: 0; }
 
   .rail-item {
     width: 100%;
@@ -283,6 +295,15 @@
   }
 
   .flyout-items { padding: var(--s1) 0; }
+
+  .flyout-subgroup {
+    padding: 8px 16px 4px;
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-tertiary, var(--text-secondary));
+  }
 
   .flyout-item {
     display: flex;
@@ -1781,15 +1802,12 @@
     width: 100%;
     padding: 0 0 6px 0;
   }
-  /* Accordion: only the open section's submenu shows — keeps the whole menu on one screen, no scroll */
+  /* Expanded: show every section's submenu at once (no accordion) */
   .sidebar.expanded .rail-submenu {
-    display: none;
+    display: flex;
     border-bottom: 1px solid var(--sidebar-border);
     margin-bottom: 2px;
     padding-bottom: 4px;
-  }
-  .sidebar.expanded .rail-item.open + .rail-submenu {
-    display: flex;
   }
   /* No separator on the last submenu in rail-bottom */
   .rail-bottom .rail-submenu:last-child {
@@ -1802,14 +1820,10 @@
     width: 7px; height: 7px;
     border-right: 2px solid var(--sidebar-text-muted);
     border-bottom: 2px solid var(--sidebar-text-muted);
-    transform: rotate(45deg);
+    transform: rotate(-135deg);
     transition: transform var(--t-base) var(--ease);
     margin-left: auto;
     flex-shrink: 0;
-  }
-  .sidebar.expanded .rail-item[data-flyout].open::after {
-    transform: rotate(-135deg);
-    border-color: var(--sidebar-text);
   }
   .sidebar.expanded .rail-item[data-flyout] { cursor: pointer; }
 
@@ -1861,6 +1875,18 @@
     background: rgba(255, 255, 255, 0.25);
     color: white;
   }
+
+  /* ── Sub-group label inside an expanded submenu ── */
+  .rail-subgroup {
+    padding: 8px 12px 4px 20px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--sidebar-text-muted);
+    white-space: nowrap;
+  }
+  .rail-subgroup:first-child { padding-top: 2px; }
 
   /* ── Back-home button shifts right when expanded ── */
   body.sidebar-expanded .back-home-btn {
@@ -2072,6 +2098,8 @@
       <span class="brand-name">Twendee Work</span>
     </div>
 
+    <!-- Scroll region: nav + bottom scroll together when expanded -->
+    <div class="rail-scroll">
     <!-- Main navigation rail -->
     <nav class="rail-nav">
       <div class="rail-item" data-flyout="flyout-overview">
@@ -2154,20 +2182,49 @@
         <span class="rail-label" data-i18n="nav.crm">CRM</span>
       </div>
       <div class="rail-submenu">
-        <div class="rail-subitem" onclick="selectSubItem(this,'crm','Leads')">
-          <svg><use href="#i-pin"/></svg><span data-i18n="nav.leads"> Leads</span>
+        <div class="rail-subgroup" data-i18n="nav.crm.general">General</div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'crm','Dashboard')">
+          <svg><use href="#i-dashboard"/></svg><span data-i18n="nav.crm.dashboard"> Dashboard</span>
         </div>
-        <div class="rail-subitem" onclick="selectSubItem(this,'crm','Deals')">
-          <svg><use href="#i-dollar"/></svg><span data-i18n="nav.deals"> Deals</span>
+        <div class="rail-subitem" onclick="selectSubItem(this,'crm','KPI Tracking')">
+          <svg><use href="#i-arrow-up"/></svg><span data-i18n="nav.crm.kpitracking"> KPI Tracking</span>
         </div>
+
+        <div class="rail-subgroup" data-i18n="nav.crm.salespipeline">Sales Pipeline</div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'crm','Newsletter')">
+          <svg><use href="#i-mail"/></svg><span data-i18n="nav.crm.newsletter"> Newsletter</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'crm','Lead Generation')">
+          <svg><use href="#i-send"/></svg><span data-i18n="nav.crm.leadgeneration"> Lead Generation</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'crm','Company')">
+          <svg><use href="#i-briefcase"/></svg><span data-i18n="nav.crm.company"> Company</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'crm','Lead')">
+          <svg><use href="#i-pin"/></svg><span data-i18n="nav.crm.lead"> Lead</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'crm','Deal')">
+          <svg><use href="#i-dollar"/></svg><span data-i18n="nav.crm.deal"> Deal</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'crm','Activity Log')">
+          <svg><use href="#i-calendar"/></svg><span data-i18n="nav.crm.activitylog"> Activity Log</span>
+        </div>
+
+        <div class="rail-subgroup" data-i18n="nav.crm.accountmanagement">Account Management</div>
         <div class="rail-subitem" onclick="selectSubItem(this,'crm','Account'); showView('account')">
-          <svg><use href="#i-package"/></svg><span data-i18n="nav.account"> Account</span>
+          <svg><use href="#i-package"/></svg><span data-i18n="nav.crm.account"> Account</span>
         </div>
-        <div class="rail-subitem" onclick="selectSubItem(this,'crm','Contacts')">
-          <svg><use href="#i-users"/></svg><span data-i18n="nav.contacts"> Contacts</span>
+        <div class="rail-subitem" onclick="selectSubItem(this,'crm','Contact')">
+          <svg><use href="#i-users"/></svg><span data-i18n="nav.crm.contact"> Contact</span>
         </div>
-        <div class="rail-subitem" onclick="selectSubItem(this,'crm','Contracts')">
-          <svg><use href="#i-file"/></svg><span data-i18n="nav.contracts"> Contracts</span>
+        <div class="rail-subitem" onclick="selectSubItem(this,'crm','Contract')">
+          <svg><use href="#i-file"/></svg><span data-i18n="nav.crm.contract"> Contract</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'crm','Purchase Order')">
+          <svg><use href="#i-download"/></svg><span data-i18n="nav.crm.purchaseorder"> Purchase Order</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'crm','Invoice')">
+          <svg><use href="#i-dollar"/></svg><span data-i18n="nav.crm.invoice"> Invoice</span>
         </div>
       </div>
     </nav>
@@ -2209,6 +2266,7 @@
         </div>
       </div>
     </div>
+    </div><!-- /rail-scroll -->
 
     <!-- Collapse / expand toggle at bottom -->
     <div class="sidebar-toggle-wrap">
@@ -2802,29 +2860,74 @@
 <div class="rail-flyout" id="flyout-crm">
   <div class="flyout-header" data-i18n="nav.crm">CRM</div>
   <div class="flyout-items">
+    <div class="flyout-subgroup" data-i18n="nav.crm.general">General</div>
     <div class="flyout-item" onclick="selectFlyoutItem(this,'crm')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-pin"/></svg><span data-i18n="nav.leads"> Leads</span>
+        <svg><use href="#i-dashboard"/></svg><span data-i18n="nav.crm.dashboard"> Dashboard</span>
       </div>
     </div>
     <div class="flyout-item" onclick="selectFlyoutItem(this,'crm')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-dollar"/></svg><span data-i18n="nav.deals"> Deals</span>
+        <svg><use href="#i-arrow-up"/></svg><span data-i18n="nav.crm.kpitracking"> KPI Tracking</span>
       </div>
     </div>
+
+    <div class="flyout-subgroup" data-i18n="nav.crm.salespipeline">Sales Pipeline</div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'crm')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-mail"/></svg><span data-i18n="nav.crm.newsletter"> Newsletter</span>
+      </div>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'crm')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-send"/></svg><span data-i18n="nav.crm.leadgeneration"> Lead Generation</span>
+      </div>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'crm')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-briefcase"/></svg><span data-i18n="nav.crm.company"> Company</span>
+      </div>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'crm')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-pin"/></svg><span data-i18n="nav.crm.lead"> Lead</span>
+      </div>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'crm')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-dollar"/></svg><span data-i18n="nav.crm.deal"> Deal</span>
+      </div>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'crm')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-calendar"/></svg><span data-i18n="nav.crm.activitylog"> Activity Log</span>
+      </div>
+    </div>
+
+    <div class="flyout-subgroup" data-i18n="nav.crm.accountmanagement">Account Management</div>
     <div class="flyout-item" onclick="selectFlyoutItem(this,'crm'); showView('account')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-package"/></svg><span data-i18n="nav.account"> Account</span>
+        <svg><use href="#i-package"/></svg><span data-i18n="nav.crm.account"> Account</span>
       </div>
     </div>
     <div class="flyout-item" onclick="selectFlyoutItem(this,'crm')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-users"/></svg><span data-i18n="nav.contacts"> Contacts</span>
+        <svg><use href="#i-users"/></svg><span data-i18n="nav.crm.contact"> Contact</span>
       </div>
     </div>
     <div class="flyout-item" onclick="selectFlyoutItem(this,'crm')">
       <div class="flyout-item-inner">
-        <svg><use href="#i-file"/></svg><span data-i18n="nav.contracts"> Contracts</span>
+        <svg><use href="#i-file"/></svg><span data-i18n="nav.crm.contract"> Contract</span>
+      </div>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'crm')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-download"/></svg><span data-i18n="nav.crm.purchaseorder"> Purchase Order</span>
+      </div>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'crm')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-dollar"/></svg><span data-i18n="nav.crm.invoice"> Invoice</span>
       </div>
     </div>
   </div>
@@ -3080,6 +3183,9 @@
       'nav.operations': 'Operations', 'nav.inventory': 'Inventory', 'nav.invoices': 'Invoices', 'nav.suppliers': 'Suppliers', 'nav.purchaseorders': 'Purchase Orders',
       'nav.finance': 'Finance', 'nav.accounts': 'Accounts', 'nav.expenses': 'Expenses', 'nav.budget': 'Budget', 'nav.taxcompliance': 'Tax & Compliance',
       'nav.crm': 'CRM', 'nav.leads': 'Leads', 'nav.deals': 'Deals', 'nav.account': 'Account', 'nav.contacts': 'Contacts', 'nav.contracts': 'Contracts',
+      'nav.crm.general': 'General', 'nav.crm.dashboard': 'Dashboard', 'nav.crm.kpitracking': 'KPI Tracking',
+      'nav.crm.salespipeline': 'Sales Pipeline', 'nav.crm.newsletter': 'Newsletter', 'nav.crm.leadgeneration': 'Lead Generation', 'nav.crm.company': 'Company', 'nav.crm.lead': 'Lead', 'nav.crm.deal': 'Deal', 'nav.crm.activitylog': 'Activity Log',
+      'nav.crm.accountmanagement': 'Account Management', 'nav.crm.account': 'Account', 'nav.crm.contact': 'Contact', 'nav.crm.contract': 'Contract', 'nav.crm.purchaseorder': 'Purchase Order', 'nav.crm.invoice': 'Invoice',
       'nav.settings': 'Settings', 'nav.general': 'General', 'nav.usersroles': 'Users & Roles', 'nav.integrations': 'Integrations', 'nav.notifications': 'Notifications',
       'nav.help': 'Help', 'nav.helpsupport': 'Help & Support', 'nav.documentation': 'Documentation', 'nav.contactsupport': 'Contact Support', 'nav.whatsnew': "What's New",
       // Search & topbar
@@ -3139,6 +3245,9 @@
       'nav.operations': 'Vận hành', 'nav.inventory': 'Kho hàng', 'nav.invoices': 'Hóa đơn', 'nav.suppliers': 'Nhà cung cấp', 'nav.purchaseorders': 'Đơn đặt hàng',
       'nav.finance': 'Tài chính', 'nav.accounts': 'Tài khoản', 'nav.expenses': 'Chi phí', 'nav.budget': 'Ngân sách', 'nav.taxcompliance': 'Thuế & Tuân thủ',
       'nav.crm': 'CRM', 'nav.leads': 'Khách hàng tiềm năng', 'nav.deals': 'Cơ hội', 'nav.account': 'Khách hàng', 'nav.contacts': 'Liên hệ', 'nav.contracts': 'Hợp đồng',
+      'nav.crm.general': 'Tổng quan', 'nav.crm.dashboard': 'Bảng điều khiển', 'nav.crm.kpitracking': 'Theo dõi KPI',
+      'nav.crm.salespipeline': 'Quy trình bán hàng', 'nav.crm.newsletter': 'Bản tin', 'nav.crm.leadgeneration': 'Tạo khách tiềm năng', 'nav.crm.company': 'Công ty', 'nav.crm.lead': 'Khách tiềm năng', 'nav.crm.deal': 'Cơ hội', 'nav.crm.activitylog': 'Nhật ký hoạt động',
+      'nav.crm.accountmanagement': 'Quản lý khách hàng', 'nav.crm.account': 'Khách hàng', 'nav.crm.contact': 'Liên hệ', 'nav.crm.contract': 'Hợp đồng', 'nav.crm.purchaseorder': 'Đơn mua hàng', 'nav.crm.invoice': 'Hóa đơn',
       'nav.settings': 'Cài đặt', 'nav.general': 'Chung', 'nav.usersroles': 'Người dùng & Vai trò', 'nav.integrations': 'Tích hợp', 'nav.notifications': 'Thông báo',
       'nav.help': 'Trợ giúp', 'nav.helpsupport': 'Trợ giúp & Hỗ trợ', 'nav.documentation': 'Tài liệu', 'nav.contactsupport': 'Liên hệ hỗ trợ', 'nav.whatsnew': 'Tính năng mới',
       // Search & topbar
@@ -3417,33 +3526,14 @@
   // ============ SIDEBAR EXPAND / COLLAPSE ============
   let sidebarIsExpanded = false;
 
-  // Accordion: open only one section's submenu at a time (keeps the whole menu visible without scrolling)
-  function openRailSection(item) {
-    document.querySelectorAll('.rail-item.open').forEach(i => i.classList.remove('open'));
-    if (item) item.classList.add('open');
-  }
-  function openActiveRailSection() {
-    openRailSection(document.querySelector('.rail-nav .rail-item.active, .rail-item.active'));
-  }
-
   function toggleSidebar() {
     const sidebar = document.querySelector('.sidebar');
     const app = document.querySelector('.app');
     sidebarIsExpanded = sidebar.classList.toggle('expanded');
     app.classList.toggle('sidebar-expanded', sidebarIsExpanded);
     document.body.classList.toggle('sidebar-expanded', sidebarIsExpanded);
-    if (sidebarIsExpanded) openActiveRailSection();
-    else document.querySelectorAll('.rail-item.open').forEach(i => i.classList.remove('open'));
     try { localStorage.setItem('erpSidebarExpanded', sidebarIsExpanded); } catch(e) {}
   }
-
-  // Toggle a section's submenu when its rail item is clicked (expanded mode only)
-  document.querySelectorAll('.rail-item[data-flyout]').forEach(item => {
-    item.addEventListener('click', () => {
-      if (!sidebarIsExpanded) return;
-      openRailSection(item.classList.contains('open') ? null : item);
-    });
-  });
 
   // Restore saved sidebar state
   try {
@@ -3452,7 +3542,6 @@
       document.querySelector('.app').classList.add('sidebar-expanded');
       document.body.classList.add('sidebar-expanded');
       sidebarIsExpanded = true;
-      openActiveRailSection();
     }
   } catch(e) {}
 
