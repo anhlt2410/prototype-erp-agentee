@@ -2189,28 +2189,6 @@
         <div class="rail-subitem" onclick="selectSubItem(this,'crm','KPI Tracking')">
           <svg><use href="#i-arrow-up"/></svg><span data-i18n="nav.crm.kpitracking"> KPI Tracking</span>
         </div>
-
-        <div class="rail-subgroup" data-i18n="nav.crm.salespipeline">Sales Pipeline</div>
-        <div class="rail-subitem" onclick="selectSubItem(this,'crm','Newsletter')">
-          <svg><use href="#i-mail"/></svg><span data-i18n="nav.crm.newsletter"> Newsletter</span>
-        </div>
-        <div class="rail-subitem" onclick="selectSubItem(this,'crm','Lead Generation')">
-          <svg><use href="#i-send"/></svg><span data-i18n="nav.crm.leadgeneration"> Lead Generation</span>
-        </div>
-        <div class="rail-subitem" onclick="selectSubItem(this,'crm','Company')">
-          <svg><use href="#i-briefcase"/></svg><span data-i18n="nav.crm.company"> Company</span>
-        </div>
-        <div class="rail-subitem" onclick="selectSubItem(this,'crm','Lead')">
-          <svg><use href="#i-pin"/></svg><span data-i18n="nav.crm.lead"> Lead</span>
-        </div>
-        <div class="rail-subitem" onclick="selectSubItem(this,'crm','Deal')">
-          <svg><use href="#i-dollar"/></svg><span data-i18n="nav.crm.deal"> Deal</span>
-        </div>
-        <div class="rail-subitem" onclick="selectSubItem(this,'crm','Activity Log')">
-          <svg><use href="#i-calendar"/></svg><span data-i18n="nav.crm.activitylog"> Activity Log</span>
-        </div>
-
-        <div class="rail-subgroup" data-i18n="nav.crm.accountmanagement">Account Management</div>
         <div class="rail-subitem" onclick="selectSubItem(this,'crm','Account'); showView('account')">
           <svg><use href="#i-package"/></svg><span data-i18n="nav.crm.account"> Account</span>
         </div>
@@ -2639,6 +2617,11 @@
       <iframe class="embed-frame" src="account-management.html?embed=1" title="Account detail" loading="lazy"></iframe>
     </div>
 
+    <!-- ============ VIEW: CRM EVENT TRACKING (embedded) ============ -->
+    <div id="view-events" class="view view-embed" hidden>
+      <iframe class="embed-frame" src="event-tracking.html?embed=1" title="Event Tracking" loading="lazy"></iframe>
+    </div>
+
     <!-- ============ VIEW: MY PROFILE ============ -->
     <div id="view-profile" class="view" hidden>
 
@@ -2871,40 +2854,6 @@
         <svg><use href="#i-arrow-up"/></svg><span data-i18n="nav.crm.kpitracking"> KPI Tracking</span>
       </div>
     </div>
-
-    <div class="flyout-subgroup" data-i18n="nav.crm.salespipeline">Sales Pipeline</div>
-    <div class="flyout-item" onclick="selectFlyoutItem(this,'crm')">
-      <div class="flyout-item-inner">
-        <svg><use href="#i-mail"/></svg><span data-i18n="nav.crm.newsletter"> Newsletter</span>
-      </div>
-    </div>
-    <div class="flyout-item" onclick="selectFlyoutItem(this,'crm')">
-      <div class="flyout-item-inner">
-        <svg><use href="#i-send"/></svg><span data-i18n="nav.crm.leadgeneration"> Lead Generation</span>
-      </div>
-    </div>
-    <div class="flyout-item" onclick="selectFlyoutItem(this,'crm')">
-      <div class="flyout-item-inner">
-        <svg><use href="#i-briefcase"/></svg><span data-i18n="nav.crm.company"> Company</span>
-      </div>
-    </div>
-    <div class="flyout-item" onclick="selectFlyoutItem(this,'crm')">
-      <div class="flyout-item-inner">
-        <svg><use href="#i-pin"/></svg><span data-i18n="nav.crm.lead"> Lead</span>
-      </div>
-    </div>
-    <div class="flyout-item" onclick="selectFlyoutItem(this,'crm')">
-      <div class="flyout-item-inner">
-        <svg><use href="#i-dollar"/></svg><span data-i18n="nav.crm.deal"> Deal</span>
-      </div>
-    </div>
-    <div class="flyout-item" onclick="selectFlyoutItem(this,'crm')">
-      <div class="flyout-item-inner">
-        <svg><use href="#i-calendar"/></svg><span data-i18n="nav.crm.activitylog"> Activity Log</span>
-      </div>
-    </div>
-
-    <div class="flyout-subgroup" data-i18n="nav.crm.accountmanagement">Account Management</div>
     <div class="flyout-item" onclick="selectFlyoutItem(this,'crm'); showView('account')">
       <div class="flyout-item-inner">
         <svg><use href="#i-package"/></svg><span data-i18n="nav.crm.account"> Account</span>
@@ -3183,9 +3132,6 @@
       'nav.operations': 'Operations', 'nav.inventory': 'Inventory', 'nav.invoices': 'Invoices', 'nav.suppliers': 'Suppliers', 'nav.purchaseorders': 'Purchase Orders',
       'nav.finance': 'Finance', 'nav.accounts': 'Accounts', 'nav.expenses': 'Expenses', 'nav.budget': 'Budget', 'nav.taxcompliance': 'Tax & Compliance',
       'nav.crm': 'CRM', 'nav.leads': 'Leads', 'nav.deals': 'Deals', 'nav.account': 'Account', 'nav.contacts': 'Contacts', 'nav.contracts': 'Contracts',
-      'nav.crm.general': 'General', 'nav.crm.dashboard': 'Dashboard', 'nav.crm.kpitracking': 'KPI Tracking',
-      'nav.crm.salespipeline': 'Sales Pipeline', 'nav.crm.newsletter': 'Newsletter', 'nav.crm.leadgeneration': 'Lead Generation', 'nav.crm.company': 'Company', 'nav.crm.lead': 'Lead', 'nav.crm.deal': 'Deal', 'nav.crm.activitylog': 'Activity Log',
-      'nav.crm.accountmanagement': 'Account Management', 'nav.crm.account': 'Account', 'nav.crm.contact': 'Contact', 'nav.crm.contract': 'Contract', 'nav.crm.purchaseorder': 'Purchase Order', 'nav.crm.invoice': 'Invoice',
       'nav.settings': 'Settings', 'nav.general': 'General', 'nav.usersroles': 'Users & Roles', 'nav.integrations': 'Integrations', 'nav.notifications': 'Notifications',
       'nav.help': 'Help', 'nav.helpsupport': 'Help & Support', 'nav.documentation': 'Documentation', 'nav.contactsupport': 'Contact Support', 'nav.whatsnew': "What's New",
       // Search & topbar
@@ -3245,9 +3191,6 @@
       'nav.operations': 'Vận hành', 'nav.inventory': 'Kho hàng', 'nav.invoices': 'Hóa đơn', 'nav.suppliers': 'Nhà cung cấp', 'nav.purchaseorders': 'Đơn đặt hàng',
       'nav.finance': 'Tài chính', 'nav.accounts': 'Tài khoản', 'nav.expenses': 'Chi phí', 'nav.budget': 'Ngân sách', 'nav.taxcompliance': 'Thuế & Tuân thủ',
       'nav.crm': 'CRM', 'nav.leads': 'Khách hàng tiềm năng', 'nav.deals': 'Cơ hội', 'nav.account': 'Khách hàng', 'nav.contacts': 'Liên hệ', 'nav.contracts': 'Hợp đồng',
-      'nav.crm.general': 'Tổng quan', 'nav.crm.dashboard': 'Bảng điều khiển', 'nav.crm.kpitracking': 'Theo dõi KPI',
-      'nav.crm.salespipeline': 'Quy trình bán hàng', 'nav.crm.newsletter': 'Bản tin', 'nav.crm.leadgeneration': 'Tạo khách tiềm năng', 'nav.crm.company': 'Công ty', 'nav.crm.lead': 'Khách tiềm năng', 'nav.crm.deal': 'Cơ hội', 'nav.crm.activitylog': 'Nhật ký hoạt động',
-      'nav.crm.accountmanagement': 'Quản lý khách hàng', 'nav.crm.account': 'Khách hàng', 'nav.crm.contact': 'Liên hệ', 'nav.crm.contract': 'Hợp đồng', 'nav.crm.purchaseorder': 'Đơn mua hàng', 'nav.crm.invoice': 'Hóa đơn',
       'nav.settings': 'Cài đặt', 'nav.general': 'Chung', 'nav.usersroles': 'Người dùng & Vai trò', 'nav.integrations': 'Tích hợp', 'nav.notifications': 'Thông báo',
       'nav.help': 'Trợ giúp', 'nav.helpsupport': 'Trợ giúp & Hỗ trợ', 'nav.documentation': 'Tài liệu', 'nav.contactsupport': 'Liên hệ hỗ trợ', 'nav.whatsnew': 'Tính năng mới',
       // Search & topbar
@@ -3467,12 +3410,15 @@
     if (name === 'account') {
       if (bc) bc.innerHTML = `<span>CRM</span><svg width="14" height="14"><use href="#i-chevron-right"/></svg><span class="current">Account</span>`;
       document.title = 'Account — Twendee Work';
+    } else if (name === 'events') {
+      if (bc) bc.innerHTML = `<span>CRM</span><svg width="14" height="14"><use href="#i-chevron-right"/></svg><span class="current">Event Tracking</span>`;
+      document.title = 'Event Tracking — Twendee Work';
     } else {
       const crumb = document.querySelector('.breadcrumb .current');
       if (crumb) crumb.textContent = name === 'profile' ? 'My Profile' : t('nav.employees');
     }
-    // Full-bleed the content area for the embedded account view
-    document.querySelector('.main')?.classList.toggle('embed-active', name === 'account');
+    // Full-bleed the content area for embedded views (account, events)
+    document.querySelector('.main')?.classList.toggle('embed-active', name === 'account' || name === 'events');
     // Close mobile sidebar drawer if open, and scroll to top
     document.querySelector('.main')?.scrollTo(0, 0);
     if (typeof closeMobileSidebar === 'function') closeMobileSidebar();
