@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c \"import playwright\")",
+      "Bash(open -a \"Google Chrome\" \"/Users/hungcris/Projects/prototype/erp-agentee/erp.html\")",
+      "Bash(open \"/Users/hungcris/Projects/prototype/erp-agentee/erp.html\")",
+      "Bash(node -e \"const fs=require\\('fs'\\);const h=fs.readFileSync\\('account-management.html','utf8'\\);const o=\\(h.match\\(/<script/g\\)||[]\\).length,c=\\(h.match\\(/<\\\\/script>/g\\)||[]\\).length;console.log\\('script tags',o,c\\);['finBar','poDonut','ctDonut','sectionNav'].forEach\\(id=>console.log\\(id, h.includes\\('id=\\\\\"'+id+'\\\\\"'\\)?'ok':'MISSING'\\)\\);\")",
+      "Bash(node -e ' *)"
+    ]
+  }
+}
