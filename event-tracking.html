@@ -225,6 +225,12 @@ tbody tr:hover{background:var(--primary-50)}
 /* right-aligned action cell */
 th.col-act,td.col-act{width:1%;white-space:nowrap;text-align:right}
 .row-actions{display:inline-flex;align-items:center;gap:4px;justify-content:flex-end}
+@media(max-width:640px){
+  thead th{padding:8px var(--s3);font-size:11px}
+  tbody td{padding:10px var(--s3);font-size:13px}
+  .card-head{flex-wrap:wrap;padding:var(--s3) var(--s4)}
+  .card-body{padding:var(--s4)}
+}
 
 /* ============ TOOLTIP ============ */
 [data-tip]{position:relative}
@@ -310,6 +316,15 @@ th.col-act,td.col-act{width:1%;white-space:nowrap;text-align:right}
 .callout .txt{font-size:13px;color:var(--text-secondary)}
 .callout.success{background:var(--success-50);border-color:#a7f3d0}
 .callout.success svg{color:var(--success)}
+.camp-leads{display:flex;flex-direction:column;gap:2px;max-height:280px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--r-md);padding:6px}
+.camp-lead{display:flex;align-items:center;gap:10px;padding:8px 8px;border-radius:var(--r-sm)}
+.camp-lead+.camp-lead{border-top:1px solid var(--border)}
+.camp-lead-av{width:30px;height:30px;flex-shrink:0;border-radius:50%;background:var(--primary);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.camp-lead-main{min-width:0;flex:1}
+.camp-lead-name{font-size:13px;font-weight:600;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.camp-lead-sub{font-size:12px;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.camp-lead-rating{font-size:12px;flex-shrink:0;white-space:nowrap}
+.camp-lead-empty{font-size:13px;color:var(--text-secondary);padding:12px;text-align:center}
 
 /* summary rows (payment request) */
 .sum-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;font-size:14px;border-bottom:1px dashed var(--divider)}
@@ -585,7 +600,7 @@ th.col-act,td.col-act{width:1%;white-space:nowrap;text-align:right}
 <!-- Quick campaign -->
 <aside class="panel" id="drawer-campaign">
   <div class="panel-head">
-    <div><h3>Create follow-up campaign</h3><div class="sub">Nurture the leads captured at this event</div></div>
+    <div><h3>Save as Lead Generation Campaign</h3><div class="sub">Nurture the leads captured at this event</div></div>
     <button class="panel-close" onclick="closeDrawer()"><svg><use href="#i-x"/></svg></button>
   </div>
   <div class="panel-body">
@@ -603,14 +618,13 @@ th.col-act,td.col-act{width:1%;white-space:nowrap;text-align:right}
       <div class="field"><label>Send / start</label><input class="input" id="c-start" type="date"></div>
       <div class="field"><label>Owner</label><select class="select" id="c-owner"></select></div>
     </div>
-    <div class="field"><label>Email template</label>
-      <select class="select" id="c-template"><option>Thanks for stopping by our booth</option><option>Great to connect at the event</option><option>Follow-up: the demo you asked for</option><option>Start from blank</option></select>
+    <div class="field"><label>Leads added as campaign audience <span class="opt" id="c-leads-count"></span></label>
+      <div class="camp-leads" id="c-leads"></div>
     </div>
-    <div class="field"><label>First message <span class="opt">— optional</span></label><textarea class="textarea" id="c-msg" placeholder="Hi {{first_name}}, it was great meeting you at…"></textarea></div>
   </div>
   <div class="panel-foot">
     <button class="btn btn-ghost" onclick="closeDrawer()">Cancel</button>
-    <button class="btn btn-primary" onclick="saveCampaign()"><svg><use href="#i-send"/></svg> Launch campaign</button>
+    <button class="btn btn-primary" onclick="saveCampaign()"><svg><use href="#i-send"/></svg> Save campaign</button>
   </div>
 </aside>
 
@@ -900,7 +914,7 @@ function renderBudget(ev, spent, pct){
   const paid = ev.budget.filter(b=>b.status==='paid').reduce((s,b)=>s+b.amount,0);
   const plannedItems = ev.budget.filter(b=>b.status==='planned');
   $('#sec-budget').innerHTML = sectionHead('i-dollar','Budget Planning','Plan costs, then send payment requests to Accounting for approval') + `
-    <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
+    <div class="kpi-grid">
       <div class="kpi-card"><div class="kpi-label"><svg><use href="#i-target"/></svg> Planned budget</div><div class="kpi-value" style="font-size:22px">${money(ev.plannedBudget)}</div></div>
       <div class="kpi-card"><div class="kpi-label"><svg><use href="#i-dollar"/></svg> Allocated</div><div class="kpi-value" style="font-size:22px">${money(spent)}</div><div class="kpi-sub">${pct}% of plan</div></div>
       <div class="kpi-card"><div class="kpi-label"><svg><use href="#i-clock"/></svg> Pending accounting</div><div class="kpi-value" style="font-size:22px">${money(requested)}</div><div class="kpi-sub">awaiting payment</div></div>
@@ -1044,7 +1058,11 @@ function openCampaign(){
   $('#camp-audience').innerHTML = `All <strong>${ev.leads.length} leads</strong> captured at "${ev.name}" will be added to the campaign audience.`;
   $('#c-name').value = ev.leads.length ? '' : '';
   $('#c-name').placeholder = 'e.g. Post-'+ev.name.split(' ')[0]+' follow-up';
-  $('#c-start').value=''; $('#c-msg').value=''; $('#c-template').selectedIndex=0; $('#ct-email').checked=true;
+  $('#c-start').value=''; $('#ct-email').checked=true;
+  $('#c-leads-count').textContent = '— '+ev.leads.length+(ev.leads.length===1?' lead':' leads');
+  $('#c-leads').innerHTML = ev.leads.length
+    ? ev.leads.map(l=>`<div class="camp-lead"><div class="camp-lead-av">${l.name.split(' ').map(w=>w[0]).slice(0,2).join('')}</div><div class="camp-lead-main"><div class="camp-lead-name">${l.name}</div><div class="camp-lead-sub">${[l.title,l.company].filter(Boolean).join(' · ')}</div></div><span class="camp-lead-rating">${l.rating}</span></div>`).join('')
+    : `<div class="camp-lead-empty">No leads captured at this event yet.</div>`;
   openDrawer('drawer-campaign');
 }
 function saveCampaign(){
