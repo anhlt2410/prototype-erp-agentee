@@ -778,23 +778,31 @@ function renderList(){
 
 /* ============ SCREEN SWITCH ============ */
 function showList(){ $('#screen-detail').classList.add('hidden'); $('#screen-list').classList.remove('hidden'); currentEventId=null; window.scrollTo(0,0); renderKPIs(); renderCatChips(); renderList(); }
-function openEvent(id){ currentEventId=id; $('#screen-list').classList.add('hidden'); $('#screen-detail').classList.remove('hidden'); window.scrollTo(0,0); document.querySelectorAll('.nav-pill').forEach((p,i)=>p.classList.toggle('active',i===0)); renderDetail(); initScrollspy(); }
+function openEvent(id){ currentEventId=id; $('#screen-list').classList.add('hidden'); $('#screen-detail').classList.remove('hidden'); window.scrollTo(0,0); setActivePill('sec-overview'); renderDetail(); initScrollspy(); }
 const curEvent = () => EVENTS.find(e=>e.id===currentEventId);
 
 /* Sticky pill nav + scrollspy (Account pattern) */
 let scrollspyBound = false;
 function goToSection(id){ document.getElementById(id)?.scrollIntoView({behavior:'smooth', block:'start'}); }
+function setActivePill(id){ document.querySelectorAll('.nav-pill').forEach(p=> p.classList.toggle('active', p.dataset.target===id)); }
 function initScrollspy(){
+  if(scrollspyBound) return;
   const pills = [...document.querySelectorAll('.nav-pill')];
-  const map = {}; pills.forEach(p=> map[p.dataset.target]=p);
-  if(!scrollspyBound){
-    pills.forEach(p=> p.addEventListener('click', e=>{ e.preventDefault(); goToSection(p.dataset.target); }));
-    const obs = new IntersectionObserver(entries=>{
-      entries.forEach(en=>{ if(en.isIntersecting){ pills.forEach(x=>x.classList.remove('active')); map[en.target.id]?.classList.add('active'); } });
-    }, {rootMargin:'-45% 0px -50% 0px', threshold:0});
-    pills.map(p=>document.getElementById(p.dataset.target)).forEach(s=> s && obs.observe(s));
-    scrollspyBound = true;
-  }
+  const sections = pills.map(p=> document.getElementById(p.dataset.target)).filter(Boolean);
+  pills.forEach(p=> p.addEventListener('click', e=>{ e.preventDefault(); goToSection(p.dataset.target); }));
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(en=>{ if(en.isIntersecting) setActivePill(en.target.id); });
+  }, {rootMargin:'-45% 0px -50% 0px', threshold:0});
+  sections.forEach(s=> obs.observe(s));
+  // Fallback: at the very bottom the last (short) section may never reach the
+  // detection band, so force-select it once the page is scrolled to the end.
+  window.addEventListener('scroll', ()=>{
+    if(!sections.length) return;
+    if(window.innerHeight + Math.ceil(window.scrollY) >= document.documentElement.scrollHeight - 2){
+      setActivePill(sections[sections.length-1].id);
+    }
+  }, {passive:true});
+  scrollspyBound = true;
 }
 
 /* ============ DETAIL RENDER ============ */
@@ -931,18 +939,6 @@ function renderBudget(ev, spent, pct){
         ${ev.budget.length?`<table><thead><tr><th>Item</th><th>Category</th><th class="num">Amount</th><th>Status</th><th class="col-act">Action</th></tr></thead>
           <tbody>${rows}</tbody></table>`
         :`<div class="empty"><svg><use href="#i-dollar"/></svg><h4>No budget items yet</h4><p>Add planned costs, then send a payment request to Accounting.</p></div>`}
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-head"><h3><svg><use href="#i-file"/></svg> Payment requests → Accounting</h3></div>
-      <div class="card-body">
-        <div class="flow">
-          <div class="flow-step done"><div class="ring"><svg><use href="#i-check"/></svg></div><div class="txt"><div class="t">Budget planned by event owner</div><div class="d">${ev.budget.length} line items · ${money(spent)}</div></div></div>
-          <div class="flow-line ${requested||paid?'done':''}"></div>
-          <div class="flow-step ${requested||paid?'done':'active'}"><div class="ring">${requested||paid?'<svg><use href=\"#i-check\"/></svg>':'2'}</div><div class="txt"><div class="t">Payment request sent to Accounting</div><div class="d">${requested?money(requested)+' pending approval':(paid?'All requests processed':'No requests submitted yet')}</div></div></div>
-          <div class="flow-line ${paid?'done':''}"></div>
-          <div class="flow-step ${paid?'done':''}"><div class="ring">${paid?'<svg><use href=\"#i-check\"/></svg>':'3'}</div><div class="txt"><div class="t">Approved &amp; paid by Finance</div><div class="d">${paid?money(paid)+' disbursed':'Awaiting accounting'}</div></div></div>
-        </div>
       </div>
     </div>`;
 }
