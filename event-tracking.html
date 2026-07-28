@@ -109,7 +109,9 @@ body.embed .topbar{display:none}
 
 /* ============ KPI CARDS ============ */
 .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s4);margin-bottom:var(--s5)}
+#kpiRow{grid-template-columns:repeat(3,1fr)}
 @media(max-width:900px){ .kpi-grid{grid-template-columns:repeat(2,1fr)} }
+@media(max-width:900px){ #kpiRow{grid-template-columns:1fr} }
 @media(max-width:520px){ .kpi-grid{grid-template-columns:1fr} }
 .kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--s4) var(--s5);box-shadow:var(--shadow-sm)}
 .kpi-label{display:flex;align-items:center;gap:8px;color:var(--text-muted);font-size:13px;font-weight:500;margin-bottom:8px}
@@ -135,6 +137,13 @@ body.embed .topbar{display:none}
 .event-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow-sm);transition:all var(--t-base) var(--ease);cursor:pointer;display:flex;flex-direction:column}
 .event-card:hover{box-shadow:var(--shadow-lg);border-color:var(--primary-100);transform:translateY(-3px)}
 .ec-banner{height:6px}
+.ec-thumb{position:relative;height:158px;overflow:hidden;background:var(--divider)}
+.ec-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.ec-thumb .ec-accent{position:absolute;left:0;right:0;bottom:0;height:4px}
+.thumb-ph{display:grid;place-items:center}
+.thumb-ph svg{width:38px;height:38px;opacity:.55}
+.event-card:hover .ec-thumb img{transform:scale(1.04)}
+.ec-thumb img{transition:transform var(--t-base) var(--ease)}
 .ec-body{padding:var(--s4) var(--s5);display:flex;flex-direction:column;gap:10px;flex:1}
 .ec-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
 .ec-cat{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--text-muted)}
@@ -202,6 +211,29 @@ body.embed .section-nav{top:0}
 .info-item .lbl{font-size:12px;color:var(--text-muted);margin-bottom:3px}
 .info-item .val{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
 .info-item .val svg{width:15px;height:15px;color:var(--primary)}
+
+/* Overview thumbnail (replaces budget/team cards) */
+.two-col{align-items:stretch}
+.ov-thumb-card{overflow:hidden;height:100%;display:flex;flex-direction:column}
+.ov-thumb{flex:1;min-height:220px;position:relative;overflow:hidden;background:var(--divider)}
+.ov-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.ov-thumb .thumb-ph{display:grid;place-items:center}
+.ov-thumb-upload{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:var(--r-sm);display:grid;place-items:center;background:rgba(17,24,39,.62);color:#fff;backdrop-filter:blur(4px);transition:background var(--t-fast) var(--ease)}
+.ov-thumb-upload:hover{background:rgba(17,24,39,.85)}
+.ov-thumb-upload svg{width:16px;height:16px}
+
+/* Thumbnail upload (create/edit drawer) */
+.thumb-drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;border:1.5px dashed var(--border-strong);border-radius:var(--r-md);padding:var(--s5) var(--s4);color:var(--text-muted);cursor:pointer;transition:all var(--t-fast) var(--ease)}
+.thumb-drop:hover{border-color:var(--primary);background:var(--primary-50);color:var(--primary-active)}
+.thumb-drop svg{width:26px;height:26px;color:var(--primary)}
+.thumb-drop .t{font-size:13px;font-weight:600}
+.thumb-drop .h{font-size:12px}
+.thumb-preview{position:relative;border-radius:var(--r-md);overflow:hidden;border:1px solid var(--border)}
+.thumb-preview img{width:100%;height:180px;object-fit:cover;display:block}
+.thumb-preview .thumb-actions{position:absolute;top:8px;right:8px;display:flex;gap:6px}
+.thumb-preview .thumb-btn{width:32px;height:32px;border-radius:var(--r-sm);display:grid;place-items:center;background:rgba(17,24,39,.62);color:#fff;backdrop-filter:blur(4px);transition:background var(--t-fast) var(--ease)}
+.thumb-preview .thumb-btn:hover{background:rgba(17,24,39,.85)}
+.thumb-preview .thumb-btn svg{width:15px;height:15px}
 
 /* ============ TABLES ============ */
 .table-wrap{overflow-x:auto}
@@ -342,6 +374,52 @@ th.col-act,td.col-act{width:1%;white-space:nowrap;text-align:right}
 .toast-title{font-size:13px;font-weight:700}
 .toast-msg{font-size:12px;color:var(--text-muted)}
 
+/* ============ CREATE FROM LINK ============ */
+.link-input-wrap{display:flex;gap:8px;align-items:stretch}
+.link-input-field{flex:1;display:flex;align-items:center;gap:8px;height:44px;padding:0 14px;border:1px solid var(--border);border-radius:var(--r-md);background:var(--surface);transition:all var(--t-fast) var(--ease)}
+.link-input-field:focus-within{border-color:var(--primary);box-shadow:0 0 0 3px var(--cta-50)}
+.link-input-field svg{width:17px;height:17px;color:var(--text-muted);flex-shrink:0}
+.link-input-field input{border:none;outline:none;background:none;width:100%;font-size:14px}
+.link-examples{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.link-eg{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--border);border-radius:var(--r-full);background:var(--surface);font-size:12.5px;font-weight:500;color:var(--text-secondary);transition:all var(--t-fast) var(--ease);cursor:pointer}
+.link-eg:hover{border-color:var(--primary-100);background:var(--primary-50);color:var(--primary-active)}
+.link-eg svg{width:12px;height:12px;color:var(--text-muted)}
+
+/* Scan / analysing state */
+.scan-hero{display:flex;flex-direction:column;align-items:center;text-align:center;padding:var(--s5) var(--s4) var(--s4)}
+.scan-orb{position:relative;width:76px;height:76px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,var(--primary-50),var(--surface));border:1px solid var(--primary-100);margin-bottom:var(--s4)}
+.scan-orb::before{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid transparent;border-top-color:var(--primary);border-right-color:var(--accent);animation:spin 1s linear infinite}
+.scan-orb svg{width:30px;height:30px;color:var(--primary)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.scan-url{display:inline-flex;align-items:center;gap:7px;max-width:100%;margin-top:6px;padding:5px 12px;border-radius:var(--r-full);background:var(--divider);font-family:var(--font-mono);font-size:12px;color:var(--text-secondary);overflow:hidden}
+.scan-url svg{width:13px;height:13px;flex-shrink:0}
+.scan-url span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.scan-title{font-family:var(--font-display);font-size:17px;font-weight:700;margin-top:2px}
+.scan-steps{display:flex;flex-direction:column;gap:2px;margin-top:var(--s5)}
+.scan-step{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:var(--r-md);font-size:13.5px;color:var(--text-muted);transition:all var(--t-base) var(--ease)}
+.scan-step .sdot{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:grid;place-items:center;flex-shrink:0;color:var(--text-disabled);background:var(--surface)}
+.scan-step .sdot svg{width:12px;height:12px;opacity:0}
+.scan-step.active{color:var(--text);background:var(--primary-50)}
+.scan-step.active .sdot{border-color:var(--primary);border-top-color:transparent;animation:spin .7s linear infinite}
+.scan-step.done{color:var(--text-secondary)}
+.scan-step.done .sdot{background:var(--success);border-color:var(--success);color:#fff;animation:none}
+.scan-step.done .sdot svg{opacity:1}
+
+/* Preview state */
+.lp-banner{display:flex;align-items:flex-start;gap:12px;padding:13px 15px;border-radius:var(--r-md);background:linear-gradient(120deg,var(--primary-50),var(--accent-50));border:1px solid var(--primary-100);margin-bottom:var(--s5)}
+.lp-banner svg{width:19px;height:19px;color:var(--primary);flex-shrink:0;margin-top:1px}
+.lp-banner .txt{font-size:13px;color:var(--text-secondary)}
+.lp-banner .txt strong{color:var(--primary-active)}
+.lp-source{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted);margin-top:5px}
+.lp-source svg{width:13px;height:13px}
+.lp-source a{color:var(--primary);font-weight:600;text-decoration:underline;text-underline-offset:2px}
+.lp-thumb{position:relative;height:150px;border-radius:var(--r-md);overflow:hidden;border:1px solid var(--border);margin-bottom:var(--s5)}
+.lp-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.lp-thumb .lp-conf{position:absolute;top:10px;left:10px;display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:var(--r-full);background:rgba(17,24,39,.62);backdrop-filter:blur(4px);color:#fff;font-size:11.5px;font-weight:600}
+.lp-thumb .lp-conf svg{width:12px;height:12px}
+.lp-detected{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--success);margin-left:6px}
+.lp-detected svg{width:12px;height:12px}
+
 .hidden{display:none!important}
 .mono{font-family:var(--font-mono)}
 </style>
@@ -373,6 +451,12 @@ th.col-act,td.col-act{width:1%;white-space:nowrap;text-align:right}
   <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
   <symbol id="i-building" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="9" y1="6" x2="9" y2="6.01"/><line x1="15" y1="6" x2="15" y2="6.01"/><line x1="9" y1="10" x2="9" y2="10.01"/><line x1="15" y1="10" x2="15" y2="10.01"/><line x1="9" y1="14" x2="15" y2="14"/></symbol>
   <symbol id="i-activity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+  <symbol id="i-sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/><path d="M19 15l.7 1.9L21.6 18l-1.9.7L19 21l-.7-2.3L16.4 18l1.9-1.1L19 15z"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+  <symbol id="i-loader" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></symbol>
 </svg>
 
 <div class="app">
@@ -395,6 +479,7 @@ th.col-act,td.col-act{width:1%;white-space:nowrap;text-align:right}
         </div>
         <div class="page-actions">
           <button class="btn btn-secondary" data-tip="Export events to calendar (.ics)" onclick="toast('Export started','Event calendar (.ics) will download shortly')"><svg><use href="#i-download"/></svg> Export</button>
+          <button class="btn btn-secondary" data-tip="Paste a link — AI reads it and pre-fills the event" onclick="openLinkCreate()"><svg><use href="#i-link"/></svg> Create from link</button>
           <button class="btn btn-primary tip-left" data-tip="Create a new event" onclick="openCreate()"><svg><use href="#i-plus"/></svg> Create Event</button>
         </div>
       </div>
@@ -463,6 +548,22 @@ th.col-act,td.col-act{width:1%;white-space:nowrap;text-align:right}
     <div class="field">
       <label>Category</label>
       <div class="cat-picker" id="f-cat-picker"></div>
+    </div>
+    <div class="field">
+      <label>Thumbnail <span class="opt">— optional</span></label>
+      <input type="file" id="f-thumb-file" accept="image/*" class="hidden" onchange="onThumbFile(this)">
+      <div id="f-thumb-empty" class="thumb-drop" onclick="document.getElementById('f-thumb-file').click()">
+        <svg><use href="#i-image"/></svg>
+        <div class="t">Upload a thumbnail</div>
+        <div class="h">PNG or JPG · shown on the event card</div>
+      </div>
+      <div id="f-thumb-preview" class="thumb-preview hidden">
+        <img id="f-thumb-img" alt="Event thumbnail preview">
+        <div class="thumb-actions">
+          <button type="button" class="thumb-btn" data-tip="Replace image" onclick="document.getElementById('f-thumb-file').click()"><svg><use href="#i-upload"/></svg></button>
+          <button type="button" class="thumb-btn" data-tip="Remove image" onclick="clearThumb()"><svg><use href="#i-trash"/></svg></button>
+        </div>
+      </div>
     </div>
     <div class="field-row">
       <div class="field"><label>Start date</label><input class="input" id="f-start" type="date"></div>
@@ -628,6 +729,80 @@ th.col-act,td.col-act{width:1%;white-space:nowrap;text-align:right}
   </div>
 </aside>
 
+<!-- Create from link (AI link reader) -->
+<aside class="panel" id="drawer-link">
+  <div class="panel-head">
+    <div><h3 id="linkPanelTitle">Create event from a link</h3><div class="sub" id="linkPanelSub">Paste a link — we'll read the page and pre-fill the event for you</div></div>
+    <button class="panel-close" onclick="closeDrawer()"><svg><use href="#i-x"/></svg></button>
+  </div>
+  <div class="panel-body">
+
+    <!-- STEP 1: input -->
+    <div id="link-step-input">
+      <div class="callout"><svg><use href="#i-sparkles"/></svg><div class="txt">Drop in an event page, ticketing link or announcement. We'll scan it and extract the name, dates, venue, category and an estimated budget — you review before creating.</div></div>
+      <div class="field" style="margin-bottom:6px">
+        <label>Event link</label>
+        <div class="link-input-wrap">
+          <div class="link-input-field">
+            <svg><use href="#i-link"/></svg>
+            <input type="url" id="link-url" placeholder="https://…" onkeydown="if(event.key==='Enter')runLinkAnalysis()">
+          </div>
+        </div>
+        <div class="hint">Works with conference sites, Eventbrite / Luma, Meetup, product launches and more.</div>
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label class="opt" style="font-weight:500;color:var(--text-muted)">Or try an example</label>
+        <div class="link-examples" id="link-examples"></div>
+      </div>
+    </div>
+
+    <!-- STEP 2: scanning -->
+    <div id="link-step-scan" class="hidden">
+      <div class="scan-hero">
+        <div class="scan-orb"><svg><use href="#i-globe"/></svg></div>
+        <div class="scan-title">Reading the page…</div>
+        <div class="scan-url"><svg><use href="#i-link"/></svg><span id="scan-url-text"></span></div>
+      </div>
+      <div class="scan-steps" id="scan-steps"></div>
+    </div>
+
+    <!-- STEP 3: preview -->
+    <div id="link-step-preview" class="hidden">
+      <div class="lp-banner"><svg><use href="#i-sparkles"/></svg><div class="txt"><strong>Here's what we found.</strong> Review and tweak anything below, then create the event. Fields we detected are marked.</div></div>
+      <div class="lp-thumb" id="lp-thumb"></div>
+      <div class="field">
+        <label>Event name <span class="lp-detected" id="lpd-name"><svg><use href="#i-check"/></svg> detected</span></label>
+        <input class="input" id="lk-name" placeholder="Event name">
+      </div>
+      <div class="field">
+        <label>Category</label>
+        <div class="cat-picker" id="lk-cat-picker"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Start date</label><input class="input" id="lk-start" type="date"></div>
+        <div class="field"><label>End date</label><input class="input" id="lk-end" type="date"></div>
+      </div>
+      <div class="field">
+        <label>Location / Venue <span class="lp-detected hidden" id="lpd-loc"><svg><use href="#i-check"/></svg> detected</span></label>
+        <input class="input" id="lk-loc" placeholder="Venue">
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Event owner</label><select class="select" id="lk-owner"></select></div>
+        <div class="field"><label>Est. budget (USD)</label><input class="input" id="lk-budget" type="number" min="0" placeholder="0"></div>
+      </div>
+      <div class="field">
+        <label>Goal / description</label>
+        <textarea class="textarea" id="lk-desc" placeholder="What is this event for?"></textarea>
+      </div>
+      <div class="lp-source"><svg><use href="#i-globe"/></svg> Extracted from <a id="lp-source-link" href="#" target="_blank" rel="noopener">source</a></div>
+    </div>
+
+  </div>
+  <div class="panel-foot" id="link-foot">
+    <!-- footer swapped by state -->
+  </div>
+</aside>
+
 <div class="toast-wrap" id="toastWrap"></div>
 
 <script>
@@ -648,6 +823,13 @@ const CATEGORIES = [
   {id:'launch',     name:'Product Launch',color:'#EF4444'},
 ];
 const catById = id => CATEGORIES.find(c=>c.id===id) || CATEGORIES[0];
+/* Thumbnail markup: real image when uploaded, else a category-tinted placeholder */
+function thumbInner(ev){
+  const c = catById(ev.category);
+  return ev.thumbnail
+    ? `<img src="${ev.thumbnail}" alt="${ev.name}">`
+    : `<div class="thumb-ph" style="width:100%;height:100%;background:linear-gradient(135deg,${c.color}22,${c.color}0d)"><svg style="color:${c.color}"><use href="#i-image"/></svg></div>`;
+}
 
 const TEAM = [
   {id:1, name:'Aaron Le',      role:'Sales Lead'},
@@ -666,6 +848,7 @@ let EVENTS = [
     id:'ev1', name:'SaaStr Annual 2026', category:'conference', status:'planning',
     start:'2026-09-08', end:'2026-09-10', location:'San Mateo County Event Center, CA',
     owner:1, plannedBudget:48000, desc:'Flagship SaaS conference. Booth #214, 2 speaking slots. Target 120 qualified leads.',
+    thumbnail:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='240'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23004f72'/%3E%3Cstop offset='1' stop-color='%2300AADD'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='480' height='240' fill='url(%23g)'/%3E%3Ccircle cx='390' cy='58' r='96' fill='%23ffffff' opacity='0.09'/%3E%3Ccircle cx='96' cy='210' r='72' fill='%23ffffff' opacity='0.07'/%3E%3Crect x='150' y='150' width='180' height='14' rx='7' fill='%23ffffff' opacity='0.18'/%3E%3C/svg%3E",
     attendees:[1,3,5,8],
     budget:[
       {id:'b1', name:'Booth design & construction', cat:'Booth & Setup', amount:18500, vendor:'ExpoWorks', status:'requested'},
@@ -683,6 +866,7 @@ let EVENTS = [
     id:'ev2', name:'Product Launch — Agentee AI', category:'launch', status:'live',
     start:'2026-07-30', end:'2026-07-30', location:'Twendee HQ + Livestream, Hồ Chí Minh City',
     owner:2, plannedBudget:12000, desc:'Public launch of the Agentee AI workspace. Press, customers and partners invited.',
+    thumbnail:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='240'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23b21e1e'/%3E%3Cstop offset='1' stop-color='%238B5CF6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='480' height='240' fill='url(%23g)'/%3E%3Ccircle cx='110' cy='70' r='84' fill='%23ffffff' opacity='0.10'/%3E%3Ccircle cx='400' cy='200' r='110' fill='%23ffffff' opacity='0.06'/%3E%3Cpolygon points='240,80 258,128 310,128 268,158 284,208 240,178 196,208 212,158 170,128 222,128' fill='%23ffffff' opacity='0.22'/%3E%3C/svg%3E",
     attendees:[1,2,5,6,7],
     budget:[
       {id:'b1', name:'Livestream production', cat:'Speakers & Talent', amount:4500, vendor:'StreamHub', status:'requested'},
@@ -697,6 +881,7 @@ let EVENTS = [
     id:'ev3', name:'RevOps Roundtable Hà Nội', category:'networking', status:'completed',
     start:'2026-06-12', end:'2026-06-12', location:'Lotte Hotel, Hà Nội',
     owner:3, plannedBudget:6500, desc:'Invite-only dinner for 30 RevOps leaders in Northern Vietnam.',
+    thumbnail:'',
     attendees:[3,4],
     budget:[
       {id:'b1', name:'Private dining room + F&B', cat:'Catering', amount:5200, vendor:'Lotte Hotel', status:'paid'},
@@ -715,6 +900,7 @@ let currentEventId = null;
 let editingEvent = false;
 let attSelection = new Set();
 let leadKeepOpen = false;
+let formThumb = '';
 
 /* ============ KPI + LIST RENDER ============ */
 function statusBadge(s){
@@ -726,27 +912,42 @@ function eventBudgetSpent(ev){ return ev.budget.reduce((s,b)=>s+b.amount,0); }
 
 function renderKPIs(){
   const total = EVENTS.length;
-  const upcoming = EVENTS.filter(e=> new Date(e.end) >= new Date('2026-07-24')).length;
-  const budget = EVENTS.reduce((s,e)=>s+eventBudgetSpent(e),0);
+  const now = new Date('2026-07-28');
+  const in3mo = new Date('2026-07-28'); in3mo.setMonth(in3mo.getMonth()+3);
+  const upcoming = EVENTS.filter(e=>{ const d=new Date(e.start); return d>=now && d<=in3mo; }).length;
+  const spent = EVENTS.reduce((s,e)=>s+eventBudgetSpent(e),0);
   const leads = EVENTS.reduce((s,e)=>s+e.leads.length,0);
+  const hotLeads = EVENTS.reduce((s,e)=>s+e.leads.filter(l=>l.rating.includes('Hot')).length,0);
+  const hotPct = leads ? Math.round(hotLeads/leads*100) : 0;
   $('#kpiRow').innerHTML = `
-    <div class="kpi-card"><div class="kpi-label"><svg><use href="#i-calendar"/></svg> Total events</div><div class="kpi-value">${total}</div><div class="kpi-sub"><span class="up">${upcoming} upcoming</span> · this year</div></div>
-    <div class="kpi-card"><div class="kpi-label"><svg><use href="#i-users"/></svg> Team assigned</div><div class="kpi-value">${new Set(EVENTS.flatMap(e=>e.attendees)).size}</div><div class="kpi-sub">across all events</div></div>
-    <div class="kpi-card"><div class="kpi-label"><svg><use href="#i-dollar"/></svg> Budget allocated</div><div class="kpi-value">${money(budget)}</div><div class="kpi-sub">planned + committed</div></div>
-    <div class="kpi-card"><div class="kpi-label"><svg><use href="#i-target"/></svg> Leads captured</div><div class="kpi-value">${leads}</div><div class="kpi-sub"><span class="up">+${leads}</span> new pipeline</div></div>`;
+    <div class="kpi-card"><div class="kpi-label"><svg><use href="#i-calendar"/></svg> Total events</div><div class="kpi-value">${total}</div><div class="kpi-sub"><span class="up">${upcoming} upcoming</span> · next 3 months</div></div>
+    <div class="kpi-card"><div class="kpi-label"><svg><use href="#i-dollar"/></svg> Actual spent budget</div><div class="kpi-value">${money(spent)}</div><div class="kpi-sub">across all events</div></div>
+    <div class="kpi-card"><div class="kpi-label"><svg><use href="#i-target"/></svg> Leads captured</div><div class="kpi-value">${leads}</div><div class="kpi-sub"><span class="up">🔥 ${hotLeads} converted to hot lead</span> · ${hotPct}%</div></div>`;
 }
 
+function eventFilters(){
+  const now = new Date('2026-07-28');
+  const limit = m => { const d=new Date(now); d.setMonth(d.getMonth()+m); return d; };
+  const upTest = m => e => { const d=new Date(e.start); return d>=now && d<=limit(m); };
+  return [
+    {id:'all',       label:'All',           test:()=>true},
+    {id:'up3',       label:'Upcoming (3M)', test:upTest(3)},
+    {id:'up6',       label:'Upcoming (6M)', test:upTest(6)},
+    {id:'completed', label:'Completed',     test:e=>e.status==='completed'},
+  ];
+}
 function renderCatChips(){
-  const counts = {}; EVENTS.forEach(e=>counts[e.category]=(counts[e.category]||0)+1);
-  let html = `<button class="chip ${activeCat==='all'?'active':''}" onclick="setCat('all')">All <span class="cnt">${EVENTS.length}</span></button>`;
-  CATEGORIES.forEach(c=>{ if(counts[c.id]) html += `<button class="chip ${activeCat===c.id?'active':''}" onclick="setCat('${c.id}')"><span class="dot" style="width:8px;height:8px;border-radius:50%;background:${c.color}"></span>${c.name} <span class="cnt">${counts[c.id]}</span></button>`; });
-  $('#catChips').innerHTML = html;
+  $('#catChips').innerHTML = eventFilters().map(f=>{
+    const cnt = EVENTS.filter(f.test).length;
+    return `<button class="chip ${activeCat===f.id?'active':''}" onclick="setCat('${f.id}')">${f.label} <span class="cnt">${cnt}</span></button>`;
+  }).join('');
 }
 function setCat(c){ activeCat=c; renderCatChips(); renderList(); }
 
 function renderList(){
   const q = ($('#eventSearch').value||'').toLowerCase();
-  let list = EVENTS.filter(e=> (activeCat==='all'||e.category===activeCat) && (e.name.toLowerCase().includes(q)||e.location.toLowerCase().includes(q)));
+  const f = eventFilters().find(x=>x.id===activeCat) || eventFilters()[0];
+  let list = EVENTS.filter(e=> f.test(e) && (e.name.toLowerCase().includes(q)||e.location.toLowerCase().includes(q)));
   const grid = $('#eventGrid');
   if(!list.length){ grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><svg><use href="#i-calendar"/></svg><h4>No events found</h4><p>Try a different filter or create a new event.</p></div>`; return; }
   grid.innerHTML = list.map(ev=>{
@@ -755,7 +956,7 @@ function renderList(){
     const avs = ev.attendees.slice(0,4).map(id=>{const p=TEAM.find(t=>t.id===id);return `<span class="av" title="${p.name}">${initials(p.name)}</span>`}).join('');
     const more = ev.attendees.length>4 ? `<span class="av more">+${ev.attendees.length-4}</span>` : '';
     return `<div class="event-card" onclick="openEvent('${ev.id}')">
-      <div class="ec-banner" style="background:${c.color}"></div>
+      <div class="ec-thumb">${thumbInner(ev)}<span class="ec-accent" style="background:${c.color}"></span></div>
       <div class="ec-body">
         <div class="ec-top">
           <span class="ec-cat"><span class="dot" style="background:${c.color}"></span>${c.name}</span>
@@ -834,8 +1035,7 @@ function sectionHead(icon, title, desc, actions){
 
 function renderOverview(ev, c, spent, pct){
   const owner = TEAM.find(t=>t.id===ev.owner);
-  const pctCls = pct>100?'danger':pct>85?'warn':'';
-  $('#sec-overview').innerHTML = sectionHead('i-info','Overview','Key details, budget health and team for this event') + `
+  $('#sec-overview').innerHTML = sectionHead('i-info','Overview','Key details and thumbnail for this event') + `
     <div class="two-col">
       <div class="card">
         <div class="card-head"><h3><svg><use href="#i-info"/></svg> Event details</h3></div>
@@ -851,20 +1051,11 @@ function renderOverview(ev, c, spent, pct){
           ${ev.desc?`<div style="margin-top:var(--s5)"><div class="lbl" style="font-size:12px;color:var(--text-muted);margin-bottom:4px">Goal / description</div><p style="color:var(--text-secondary);font-size:14px">${ev.desc}</p></div>`:''}
         </div>
       </div>
-      <div>
-        <div class="card">
-          <div class="card-head"><h3><svg><use href="#i-dollar"/></svg> Budget health</h3></div>
-          <div class="card-body">
-            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px"><span style="font-size:22px;font-weight:800;font-family:var(--font-display)">${money(spent)}</span><span style="font-size:13px;color:var(--text-muted)">of ${money(ev.plannedBudget)}</span></div>
-            <div class="progress ${pctCls}"><i style="width:${Math.min(100,pct)}%"></i></div>
-            <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:12px;color:var(--text-muted)"><span>${pct}% allocated</span><span>${money(Math.max(0,ev.plannedBudget-spent))} remaining</span></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-head"><h3><svg><use href="#i-users"/></svg> Team on this event</h3></div>
-          <div class="card-body" style="display:flex;flex-wrap:wrap;gap:8px">
-            ${ev.attendees.map(id=>{const p=TEAM.find(t=>t.id===id);return `<span class="badge badge-primary no-dot" style="padding:5px 10px 5px 5px;gap:6px"><span class="av" style="width:22px;height:22px;border-radius:50%;background:var(--primary);color:#fff;display:grid;place-items:center;font-size:10px;font-weight:700">${initials(p.name)}</span>${p.name}</span>`}).join('') || '<span style="color:var(--text-muted);font-size:13px">No attendees yet</span>'}
-          </div>
+      <div class="card ov-thumb-card">
+        <div class="ov-thumb">
+          ${thumbInner(ev)}
+          <button class="thumb-btn ov-thumb-upload" data-tip="Replace image" onclick="document.getElementById('ov-thumb-file').click()"><svg><use href="#i-upload"/></svg></button>
+          <input type="file" id="ov-thumb-file" accept="image/*" class="hidden" onchange="onOverviewThumbFile(this)">
         </div>
       </div>
     </div>`;
@@ -920,13 +1111,14 @@ function renderBudget(ev, spent, pct){
   const pctCls = pct>100?'danger':pct>85?'warn':'';
   const requested = ev.budget.filter(b=>b.status==='requested').reduce((s,b)=>s+b.amount,0);
   const paid = ev.budget.filter(b=>b.status==='paid').reduce((s,b)=>s+b.amount,0);
+  const actualRequested = requested + paid;
   const plannedItems = ev.budget.filter(b=>b.status==='planned');
   $('#sec-budget').innerHTML = sectionHead('i-dollar','Budget Planning','Plan costs, then send payment requests to Accounting for approval') + `
     <div class="kpi-grid">
-      <div class="kpi-card"><div class="kpi-label"><svg><use href="#i-target"/></svg> Planned budget</div><div class="kpi-value" style="font-size:22px">${money(ev.plannedBudget)}</div></div>
-      <div class="kpi-card"><div class="kpi-label"><svg><use href="#i-dollar"/></svg> Allocated</div><div class="kpi-value" style="font-size:22px">${money(spent)}</div><div class="kpi-sub">${pct}% of plan</div></div>
-      <div class="kpi-card"><div class="kpi-label"><svg><use href="#i-clock"/></svg> Pending accounting</div><div class="kpi-value" style="font-size:22px">${money(requested)}</div><div class="kpi-sub">awaiting payment</div></div>
-      <div class="kpi-card"><div class="kpi-label"><svg><use href="#i-check"/></svg> Paid</div><div class="kpi-value" style="font-size:22px">${money(paid)}</div></div>
+      <div class="kpi-card"><div class="kpi-label"><svg><use href="#i-target"/></svg> Planned</div><div class="kpi-value" style="font-size:22px">${money(ev.plannedBudget)}</div></div>
+      <div class="kpi-card"><div class="kpi-label"><svg><use href="#i-send"/></svg> Actual requested</div><div class="kpi-value" style="font-size:22px">${money(actualRequested)}</div></div>
+      <div class="kpi-card"><div class="kpi-label"><svg><use href="#i-check"/></svg> Actual spent</div><div class="kpi-value" style="font-size:22px">${money(paid)}</div><div class="kpi-sub">${pct}% of plan</div></div>
+      <div class="kpi-card"><div class="kpi-label"><svg><use href="#i-clock"/></svg> Approval awaiting</div><div class="kpi-value" style="font-size:22px">${money(requested)}</div><div class="kpi-sub">pending accounting</div></div>
     </div>
     <div class="card">
       <div class="card-head"><h3><svg><use href="#i-dollar"/></svg> Budget line items</h3>
@@ -975,7 +1167,7 @@ function createActivity(id){ const ev=curEvent(); const l=ev.leads.find(x=>x.id=
 /* ============ DRAWER PLUMBING ============ */
 let openDrawerId = null;
 function openDrawer(id){ openDrawerId=id; $('#'+id).classList.add('open'); $('#drawer-overlay').classList.add('open'); document.body.style.overflow='hidden'; }
-function closeDrawer(){ if(openDrawerId) $('#'+openDrawerId).classList.remove('open'); $('#drawer-overlay').classList.remove('open'); document.body.style.overflow=''; openDrawerId=null; }
+function closeDrawer(){ if(openDrawerId==='drawer-link' && typeof clearLinkTimers==='function') clearLinkTimers(); if(openDrawerId) $('#'+openDrawerId).classList.remove('open'); $('#drawer-overlay').classList.remove('open'); document.body.style.overflow=''; openDrawerId=null; }
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeDrawer(); });
 
 function fillOwnerSelects(){
@@ -993,16 +1185,45 @@ function openCreate(edit=false){
     $('#f-name').value=ev.name; $('#f-start').value=ev.start; $('#f-end').value=ev.end; $('#f-loc').value=ev.location;
     $('#f-budget').value=ev.plannedBudget; $('#f-desc').value=ev.desc; $('#f-owner').value=ev.owner;
     const r=$('#fc-'+ev.category); if(r) r.checked=true;
+    setFormThumb(ev.thumbnail||'');
   } else {
     $('#evPanelTitle').textContent='Create Event'; $('#evSaveLabel').textContent='Create Event';
     ['f-name','f-start','f-end','f-loc','f-budget','f-desc'].forEach(id=>$('#'+id).value='');
+    setFormThumb('');
   }
   openDrawer('drawer-event');
+}
+function setFormThumb(src){
+  formThumb = src || '';
+  $('#f-thumb-file').value = '';
+  if(formThumb){
+    $('#f-thumb-img').src = formThumb;
+    $('#f-thumb-preview').classList.remove('hidden');
+    $('#f-thumb-empty').classList.add('hidden');
+  } else {
+    $('#f-thumb-preview').classList.add('hidden');
+    $('#f-thumb-empty').classList.remove('hidden');
+  }
+}
+function onThumbFile(input){
+  const file = input.files && input.files[0]; if(!file) return;
+  if(!file.type.startsWith('image/')){ toast('Unsupported file','Please choose an image file'); input.value=''; return; }
+  const reader = new FileReader();
+  reader.onload = e => setFormThumb(e.target.result);
+  reader.readAsDataURL(file);
+}
+function clearThumb(){ setFormThumb(''); }
+function onOverviewThumbFile(input){
+  const file = input.files && input.files[0]; if(!file) return;
+  if(!file.type.startsWith('image/')){ toast('Unsupported file','Please choose an image file'); input.value=''; return; }
+  const reader = new FileReader();
+  reader.onload = e => { curEvent().thumbnail = e.target.result; renderDetail(); toast('Thumbnail updated', curEvent().name); };
+  reader.readAsDataURL(file);
 }
 function saveEvent(){
   const name = $('#f-name').value.trim(); if(!name){ toast('Name required','Please enter an event name'); return; }
   const cat = document.querySelector('input[name=fcat]:checked').value;
-  const data = { name, category:cat, start:$('#f-start').value, end:$('#f-end').value||$('#f-start').value, location:$('#f-loc').value.trim()||'TBD', owner:parseInt($('#f-owner').value), plannedBudget:parseInt($('#f-budget').value)||0, desc:$('#f-desc').value.trim() };
+  const data = { name, category:cat, start:$('#f-start').value, end:$('#f-end').value||$('#f-start').value, location:$('#f-loc').value.trim()||'TBD', owner:parseInt($('#f-owner').value), plannedBudget:parseInt($('#f-budget').value)||0, desc:$('#f-desc').value.trim(), thumbnail:formThumb };
   if(editingEvent && currentEventId){ Object.assign(curEvent(), data); toast('Event updated', name); renderDetail(); }
   else { const ev = {id:'ev'+Date.now(), status:'planning', attendees:[], budget:[], leads:[], campaigns:[], ...data}; EVENTS.unshift(ev); toast('Event created', name+' added to calendar'); showList(); }
   closeDrawer();
@@ -1068,6 +1289,137 @@ function saveCampaign(){
   ev.campaigns.push({id:'c'+Date.now(), name, type:typeLabel, audience:ev.leads.length});
   closeDrawer();
   toast('Campaign launched', name+' · '+ev.leads.length+' leads targeted');
+}
+
+/* ============ CREATE FROM LINK (simulated AI link reader) ============ */
+/* Build a category-tinted gradient thumbnail as a data URI (same look as seeded events) */
+function makeThumbSVG(c1,c2){
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='480' height='240'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='${c1}'/><stop offset='1' stop-color='${c2}'/></linearGradient></defs><rect width='480' height='240' fill='url(#g)'/><circle cx='388' cy='56' r='96' fill='#ffffff' opacity='0.10'/><circle cx='92' cy='208' r='74' fill='#ffffff' opacity='0.07'/><rect x='150' y='150' width='180' height='13' rx='6' fill='#ffffff' opacity='0.16'/></svg>`;
+  return 'data:image/svg+xml,' + encodeURIComponent(svg);
+}
+/* Known-source samples → realistic extractions. First matching host substring wins. */
+const LINK_SAMPLES = [
+  { match:['saastr'], data:{ name:'SaaStr Annual 2026', category:'conference', start:'2026-09-08', end:'2026-09-10', location:'San Mateo County Event Center, CA', budget:45000, desc:'Flagship SaaS conference — 12,500+ founders & execs. Booth + speaking slots. Detected from event page.', locDetected:true } },
+  { match:['websummit','web-summit'], data:{ name:'Web Summit 2026', category:'conference', start:'2026-11-02', end:'2026-11-05', location:'Altice Arena, Lisbon, Portugal', budget:52000, desc:'Europe\'s largest tech conference — 70,000+ attendees across startups, investors and media.', locDetected:true } },
+  { match:['ces.tech','ces2026','/ces'], data:{ name:'CES 2026', category:'tradeshow', start:'2027-01-06', end:'2027-01-09', location:'Las Vegas Convention Center, NV', budget:60000, desc:'Global stage for consumer tech innovation. Exhibitor booth + product demos.', locDetected:true } },
+  { match:['eventbrite'], data:{ name:'Growth Marketing Summit', category:'conference', start:'2026-08-20', end:'2026-08-20', location:'Marriott Downtown — from Eventbrite listing', budget:8000, desc:'Full-day summit for growth & demand-gen leaders. Ticketed via Eventbrite.', locDetected:true } },
+  { match:['lu.ma','luma'], data:{ name:'AI Builders Meetup', category:'networking', start:'2026-08-14', end:'2026-08-14', location:'Detected from Luma — venue TBC', budget:2500, desc:'Evening meetup for AI product builders. RSVP via Luma.', locDetected:false } },
+  { match:['meetup.com'], data:{ name:'RevOps Community Meetup', category:'networking', start:'2026-08-27', end:'2026-08-27', location:'WeWork, District 1 — from Meetup', budget:1800, desc:'Community meetup for revenue operations professionals.', locDetected:true } },
+  { match:['webinar','zoom.us','on24','livestorm'], data:{ name:'Product Webinar — Live Demo', category:'webinar', start:'2026-08-06', end:'2026-08-06', location:'Online — Livestream', budget:1200, desc:'Live product walkthrough + Q&A. Registration page detected.', locDetected:true } },
+  { match:['workshop','training'], data:{ name:'Hands-on Product Workshop', category:'workshop', start:'2026-08-12', end:'2026-08-12', location:'Twendee HQ, Hồ Chí Minh City', budget:3000, desc:'Interactive workshop for customers and partners.', locDetected:false } },
+  { match:['launch','product-hunt','producthunt'], data:{ name:'Product Launch Event', category:'launch', start:'2026-08-05', end:'2026-08-05', location:'HQ + Livestream', budget:12000, desc:'Public launch with press, customers and partners. Detected from announcement page.', locDetected:false } },
+];
+function prettyHost(url){ try{ return new URL(url).hostname.replace(/^www\./,''); }catch(e){ return url.replace(/^https?:\/\//,'').split('/')[0]; } }
+function titleCase(s){ return s.replace(/[-_]+/g,' ').replace(/\.\w+$/,'').trim().replace(/\b\w/g,m=>m.toUpperCase()); }
+/* Fallback: derive a plausible event from the URL slug + host when no sample matches */
+function deriveFromUrl(url){
+  let slug='';
+  try{ const u=new URL(url); const parts=u.pathname.split('/').filter(Boolean); slug=parts[parts.length-1]||u.hostname.split('.')[0]; }
+  catch(e){ slug = prettyHost(url).split('.')[0]; }
+  const name = titleCase(slug) || 'Untitled Event';
+  return { name, category:'conference', start:'2026-09-01', end:'2026-09-01', location:'Detected from '+prettyHost(url), budget:10000, desc:'Auto-extracted from '+prettyHost(url)+'. Review the details before creating.', locDetected:true };
+}
+function analyzeLink(url){
+  const host = (url||'').toLowerCase();
+  const hit = LINK_SAMPLES.find(s=>s.match.some(m=>host.includes(m)));
+  const data = hit ? {...hit.data} : deriveFromUrl(url);
+  const c = catById(data.category);
+  data.thumbnail = makeThumbSVG(c.color, catById(data.category).id==='launch'?'#8B5CF6':'#00AADD');
+  data.sourceUrl = url;
+  data.confidence = hit ? 96 : 78;
+  return data;
+}
+
+let linkTimers = [];
+function clearLinkTimers(){ linkTimers.forEach(clearTimeout); linkTimers=[]; }
+function setLinkStep(step){
+  ['input','scan','preview'].forEach(s=> $('#link-step-'+s).classList.toggle('hidden', s!==step));
+  const foot = $('#link-foot');
+  if(step==='input'){
+    $('#linkPanelTitle').textContent='Create event from a link';
+    $('#linkPanelSub').textContent="Paste a link — we'll read the page and pre-fill the event for you";
+    foot.innerHTML = `<button class="btn btn-ghost" onclick="closeDrawer()">Cancel</button>
+      <button class="btn btn-primary" onclick="runLinkAnalysis()"><svg><use href="#i-sparkles"/></svg> Analyze link</button>`;
+  } else if(step==='scan'){
+    foot.innerHTML = `<button class="btn btn-ghost" onclick="cancelLinkScan()">Cancel</button>
+      <button class="btn btn-primary" disabled><svg><use href="#i-loader"/></svg> Reading…</button>`;
+  } else {
+    $('#linkPanelTitle').textContent='Review event details';
+    $('#linkPanelSub').textContent='Auto-filled from the link — edit anything, then create';
+    foot.innerHTML = `<button class="btn btn-ghost" onclick="setLinkStep('input')"><svg><use href="#i-chevron-left"/></svg> Back</button>
+      <button class="btn btn-primary" onclick="createFromLink()"><svg><use href="#i-check"/></svg> Create event</button>`;
+  }
+}
+function openLinkCreate(){
+  clearLinkTimers();
+  $('#link-url').value='';
+  $('#link-examples').innerHTML = [
+    ['SaaStr Annual','https://www.saastr.com/annual/'],
+    ['Web Summit','https://websummit.com/'],
+    ['Eventbrite listing','https://www.eventbrite.com/e/growth-marketing-summit'],
+    ['Luma meetup','https://lu.ma/ai-builders'],
+    ['Product webinar','https://livestorm.co/product-demo'],
+  ].map(([label,url])=>`<button class="link-eg" onclick="fillLinkExample('${url}')"><svg><use href="#i-globe"/></svg>${label}</button>`).join('');
+  setLinkStep('input');
+  openDrawer('drawer-link');
+  setTimeout(()=>$('#link-url').focus(),300);
+}
+function fillLinkExample(url){ $('#link-url').value=url; runLinkAnalysis(); }
+function cancelLinkScan(){ clearLinkTimers(); setLinkStep('input'); }
+
+function runLinkAnalysis(){
+  const url = $('#link-url').value.trim();
+  if(!url){ toast('Add a link','Paste an event link to analyze'); return; }
+  const normalized = /^https?:\/\//i.test(url) ? url : 'https://'+url;
+  $('#scan-url-text').textContent = normalized;
+  const steps = ['Fetching page…','Reading title & metadata','Detecting dates & venue','Classifying event type','Estimating budget','Composing preview'];
+  $('#scan-steps').innerHTML = steps.map((t,i)=>`<div class="scan-step" data-i="${i}"><div class="sdot"><svg><use href="#i-check"/></svg></div><div>${t}</div></div>`).join('');
+  setLinkStep('scan');
+  clearLinkTimers();
+  const stepEls = [...document.querySelectorAll('#scan-steps .scan-step')];
+  const per = 480;
+  stepEls.forEach((el,i)=>{
+    linkTimers.push(setTimeout(()=>{ el.classList.add('active'); stepEls[i-1]?.classList.replace('active','done'); }, i*per));
+  });
+  linkTimers.push(setTimeout(()=>{
+    stepEls[stepEls.length-1]?.classList.replace('active','done');
+    renderLinkPreview(analyzeLink(normalized));
+  }, steps.length*per + 200));
+}
+
+function renderLinkPreview(d){
+  const c = catById(d.category);
+  $('#lk-cat-picker').innerHTML = CATEGORIES.map(cat=>`<div class="cat-opt"><input type="radio" name="lkcat" id="lkc-${cat.id}" value="${cat.id}" ${cat.id===d.category?'checked':''}><label for="lkc-${cat.id}"><span class="dot" style="background:${cat.color}"></span>${cat.name}</label></div>`).join('');
+  $('#lk-name').value = d.name;
+  $('#lk-start').value = d.start; $('#lk-end').value = d.end;
+  $('#lk-loc').value = d.location;
+  $('#lk-budget').value = d.budget;
+  $('#lk-desc').value = d.desc;
+  $('#lk-owner').innerHTML = TEAM.map(t=>`<option value="${t.id}">${t.name} — ${t.role}</option>`).join('');
+  $('#lpd-loc').classList.toggle('hidden', !d.locDetected);
+  $('#lp-thumb').innerHTML = `<img src="${d.thumbnail}" alt="${d.name}"><span class="lp-conf"><svg><use href="#i-sparkles"/></svg> ${d.confidence}% match · ${c.name}</span>`;
+  const link = $('#lp-source-link'); link.href = d.sourceUrl; link.textContent = prettyHost(d.sourceUrl);
+  linkPreviewData = d;
+  setLinkStep('preview');
+  $('#link-step-preview').parentElement.scrollTop = 0;
+}
+let linkPreviewData = null;
+function createFromLink(){
+  const name = $('#lk-name').value.trim();
+  if(!name){ toast('Name required','Please enter an event name'); return; }
+  const cat = document.querySelector('input[name=lkcat]:checked').value;
+  const ev = {
+    id:'ev'+Date.now(), status:'planning', attendees:[], budget:[], leads:[], campaigns:[],
+    name, category:cat, start:$('#lk-start').value, end:$('#lk-end').value||$('#lk-start').value,
+    location:$('#lk-loc').value.trim()||'TBD', owner:parseInt($('#lk-owner').value),
+    plannedBudget:parseInt($('#lk-budget').value)||0, desc:$('#lk-desc').value.trim(),
+    thumbnail:(linkPreviewData&&linkPreviewData.thumbnail)||''
+  };
+  EVENTS.unshift(ev);
+  clearLinkTimers();
+  closeDrawer();
+  showList();
+  toast('Event created from link', name+' added to calendar');
 }
 
 /* ============ TOAST ============ */
