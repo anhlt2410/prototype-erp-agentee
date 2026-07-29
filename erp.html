@@ -2123,7 +2123,7 @@
         <span class="rail-label" data-i18n="nav.workforce">Workforce</span>
       </div>
       <div class="rail-submenu">
-        <div class="rail-subitem active" onclick="selectSubItem(this,'workforce','Employees')">
+        <div class="rail-subitem active" onclick="selectSubItem(this,'workforce','Employees'); showView('employees')">
           <svg><use href="#i-users"/></svg><span data-i18n="nav.employees"> Employees</span>
           <span class="rail-subitem-badge">248</span>
         </div>
@@ -2785,7 +2785,7 @@
 <div class="rail-flyout" id="flyout-workforce">
   <div class="flyout-header" data-i18n="nav.workforce">Workforce</div>
   <div class="flyout-items">
-    <div class="flyout-item active" onclick="selectFlyoutItem(this,'workforce')">
+    <div class="flyout-item active" onclick="selectFlyoutItem(this,'workforce'); showView('employees')">
       <div class="flyout-item-inner">
         <svg><use href="#i-users"/></svg><span data-i18n="nav.employees"> Employees</span>
       </div>
@@ -3492,7 +3492,30 @@
     // Close mobile sidebar drawer if open, and scroll to top
     document.querySelector('.main')?.scrollTo(0, 0);
     if (typeof closeMobileSidebar === 'function') closeMobileSidebar();
+    // Reflect the active view in the URL so each feature has its own deep-linkable address
+    if (location.hash.slice(1) !== name) location.hash = name;
   }
+
+  // ============ HASH ROUTING — one URL per feature ============
+  // #employees · #account · #events · #profile
+  const ROUTE_VIEWS = ['employees', 'account', 'events', 'profile'];
+  function applyRoute() {
+    let name = location.hash.slice(1);
+    if (!ROUTE_VIEWS.includes(name)) name = 'employees';
+    // Sync the sidebar highlight + breadcrumb for the routable views
+    if (name === 'employees') {
+      const el = document.querySelector('.rail-subitem[onclick*="\'workforce\',\'Employees\'"]');
+      if (el) selectSubItem(el, 'workforce', 'Employees');
+    } else if (name === 'account') {
+      const el = document.querySelector('.rail-subitem[onclick*="\'crm\',\'Account\'"]');
+      if (el) selectSubItem(el, 'crm', 'Account');
+    } else if (name === 'events') {
+      const el = document.querySelector('.rail-subitem[onclick*="\'crm\',\'Event Tracking\'"]');
+      if (el) selectSubItem(el, 'crm', 'Event Tracking');
+    }
+    showView(name);
+  }
+  window.addEventListener('hashchange', applyRoute);
 
   // Profile tab highlighting
   document.querySelectorAll('.pf-tabs a').forEach(a => a.addEventListener('click', () => {
@@ -3734,6 +3757,8 @@
     if (savedLang === 'vi') applyLanguage('vi');
   } catch(e) {}
   renderEmployees();
+  // Open the view named in the URL hash (defaults to #employees)
+  applyRoute();
 </script>
 
 <!-- Floating back-to-home button -->
