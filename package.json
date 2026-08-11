@@ -1,0 +1,13 @@
+{
+  "name": "erp-agentee-prototypes",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Static HTML prototypes for customer review, deployed on Vercel.",
+  "scripts": {
+    "dev": "serve . --listen 8000"
+  },
+  "devDependencies": {
+    "serve": "^14.2.4"
+  },
+  "packageManager": "pnpm@10.33.0"
+}

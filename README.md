@@ -10,17 +10,17 @@ Static HTML prototypes for customer review, deployed on Vercel.
 
 ## Local preview
 
-Just open `index.html` in a browser, or run a quick local server:
-
 ```bash
-# Python 3
-python3 -m http.server 8000
-
-# Or Node
-npx serve .
+pnpm install
+pnpm dev
 ```
 
-Then visit `http://localhost:8000`.
+Then visit `http://localhost:8000`. The dev server mirrors the production
+`cleanUrls` setting, so `/erp.html` redirects to `/erp` just like on Vercel.
+
+There is no build step — the prototypes are self-contained HTML and are
+deployed exactly as they sit in the repo. You can still just open
+`index.html` in a browser if you prefer.
 
 ## Deploying to Vercel
 

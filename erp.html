@@ -2183,7 +2183,7 @@
       </div>
       <div class="rail-submenu">
         <div class="rail-subgroup" data-i18n="nav.crm.general">General</div>
-        <div class="rail-subitem" onclick="selectSubItem(this,'crm','Dashboard')">
+        <div class="rail-subitem" onclick="selectSubItem(this,'crm','Dashboard'); showView('crmdash')">
           <svg><use href="#i-dashboard"/></svg><span data-i18n="nav.crm.dashboard"> Dashboard</span>
         </div>
         <div class="rail-subitem" onclick="selectSubItem(this,'crm','KPI Tracking')">
@@ -2637,6 +2637,11 @@
 
     </div><!-- /view-employees -->
 
+    <!-- ============ VIEW: CRM DASHBOARD (embedded) ============ -->
+    <div id="view-crmdash" class="view view-embed" hidden>
+      <iframe class="embed-frame" src="crm-dashboard.html?embed=1" title="CRM Dashboard" loading="lazy"></iframe>
+    </div>
+
     <!-- ============ VIEW: CRM ACCOUNT (embedded) ============ -->
     <div id="view-account" class="view view-embed" hidden>
       <iframe class="embed-frame" src="account-management.html?embed=1" title="Account detail" loading="lazy"></iframe>
@@ -2869,7 +2874,7 @@
   <div class="flyout-header" data-i18n="nav.crm">CRM</div>
   <div class="flyout-items">
     <div class="flyout-subgroup" data-i18n="nav.crm.general">General</div>
-    <div class="flyout-item" onclick="selectFlyoutItem(this,'crm')">
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'crm'); showView('crmdash')">
       <div class="flyout-item-inner">
         <svg><use href="#i-dashboard"/></svg><span data-i18n="nav.crm.dashboard"> Dashboard</span>
       </div>
@@ -3477,7 +3482,10 @@
     });
     // Update breadcrumb
     const bc = document.querySelector('.breadcrumb');
-    if (name === 'account') {
+    if (name === 'crmdash') {
+      if (bc) bc.innerHTML = `<span>CRM</span><svg width="14" height="14"><use href="#i-chevron-right"/></svg><span class="current">Dashboard</span>`;
+      document.title = 'Dashboard — Twendee Work';
+    } else if (name === 'account') {
       if (bc) bc.innerHTML = `<span>CRM</span><svg width="14" height="14"><use href="#i-chevron-right"/></svg><span class="current">Account</span>`;
       document.title = 'Account — Twendee Work';
     } else if (name === 'events') {
@@ -3488,7 +3496,7 @@
       if (crumb) crumb.textContent = name === 'profile' ? 'My Profile' : t('nav.employees');
     }
     // Full-bleed the content area for embedded views (account, events)
-    document.querySelector('.main')?.classList.toggle('embed-active', name === 'account' || name === 'events');
+    document.querySelector('.main')?.classList.toggle('embed-active', name === 'account' || name === 'events' || name === 'crmdash');
     // Close mobile sidebar drawer if open, and scroll to top
     document.querySelector('.main')?.scrollTo(0, 0);
     if (typeof closeMobileSidebar === 'function') closeMobileSidebar();
@@ -3497,8 +3505,8 @@
   }
 
   // ============ HASH ROUTING — one URL per feature ============
-  // #employees · #account · #events · #profile
-  const ROUTE_VIEWS = ['employees', 'account', 'events', 'profile'];
+  // #employees · #crmdash · #account · #events · #profile
+  const ROUTE_VIEWS = ['employees', 'crmdash', 'account', 'events', 'profile'];
   function applyRoute() {
     let name = location.hash.slice(1);
     if (!ROUTE_VIEWS.includes(name)) name = 'employees';
@@ -3506,6 +3514,9 @@
     if (name === 'employees') {
       const el = document.querySelector('.rail-subitem[onclick*="\'workforce\',\'Employees\'"]');
       if (el) selectSubItem(el, 'workforce', 'Employees');
+    } else if (name === 'crmdash') {
+      const el = document.querySelector('.rail-subitem[onclick*="\'crm\',\'Dashboard\'"]');
+      if (el) selectSubItem(el, 'crm', 'Dashboard');
     } else if (name === 'account') {
       const el = document.querySelector('.rail-subitem[onclick*="\'crm\',\'Account\'"]');
       if (el) selectSubItem(el, 'crm', 'Account');

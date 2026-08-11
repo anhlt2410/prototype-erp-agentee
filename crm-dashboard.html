@@ -1,0 +1,1709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard · CRM — Twendee Work ERP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Be+Vietnam+Pro:ital,wght@0,400;0,600;0,700;0,800&display=swap" rel="stylesheet">
+<style>
+/* ============ DESIGN TOKENS (Cerulean ERP theme) ============ */
+:root{
+  --primary:#007BA7; --primary-hover:#006490; --primary-active:#004f72;
+  --primary-50:#e8f4f8; --primary-100:#c5e4ef;
+  --accent:#00AADD; --accent-50:#e8f4f8; --accent-100:#a0d8ef;
+  --grad:#007BA7; --grad-hover:#006490;
+
+  --success:#10B981; --success-50:#ECFDF5;
+  --warning:#F59E0B; --warning-50:#FFFBEB;
+  --danger:#EF4444;  --danger-50:#FEF2F2;
+  --info:#0EA5E9;    --info-50:#E0F2FE;
+
+  --cta:#007BA7; --cta-hover:#006490; --cta-active:#004f72;
+  --cta-50:rgba(0,123,167,0.08); --cta-shadow:rgba(0,123,167,0.28);
+
+  --surface:#FFFFFF; --bg:#e8f4f8;
+  --text:#111827; --text-secondary:#374151; --text-muted:#6B7280; --text-disabled:#9CA3AF;
+  --border:#E2E8F0; --border-strong:#CBD5E1; --divider:#F1F5F9;
+
+  --font-sans:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-display:'Be Vietnam Pro',Georgia,serif;
+  --font-mono:'JetBrains Mono',ui-monospace,monospace;
+
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:64px;
+  --r-sm:6px; --r-md:8px; --r-lg:12px; --r-xl:16px; --r-full:9999px;
+
+  --shadow-sm:0 1px 2px rgba(17,24,39,0.04);
+  --shadow-md:0 1px 3px rgba(17,24,39,0.06),0 1px 2px rgba(17,24,39,0.04);
+  --shadow-lg:0 4px 12px rgba(17,24,39,0.08),0 2px 4px rgba(17,24,39,0.04);
+
+  --ease:cubic-bezier(0.4,0,0.2,1); --t-fast:150ms; --t-base:200ms;
+  --topbar-h:60px;
+
+  /* ---- Data-viz palette ----------------------------------------------
+     Validated with dataviz/scripts/validate_palette.js against the white
+     chart surface (light mode, --pairs all for the 3-slot set):
+     lightness band PASS · chroma floor PASS · CVD separation PASS
+     · normal-vision floor PASS · contrast >= 3:1 PASS.
+     Slots 1-3 double as the Cold / Warm / Hot temperature scale — the
+     mockup's blue / amber / red identity, re-stepped for a light surface
+     (the mockup's dark-mode steps #5B9BD5 #F0A15A #E0645C fail both the
+     normal-vision floor and 3:1 contrast on white).
+     Order is the CVD-safety mechanism: never re-order, never cycle. */
+  --series-1:#007BA7;  /* cerulean — Cold  · ODC              */
+  --series-2:#C4801F;  /* amber    — Warm  · Fixed Price      */
+  --series-3:#AF3A4C;  /* rose     — Hot   · T&M              */
+  --series-4:#7E57C2;  /* violet   —       · Headhunt         */
+  --series-5:#2C8C5A;  /* green    —       · Commission Sales */
+  --series-1-soft:#6AB7D4;              /* light step of slot 1, part-whole remainder */
+  --series-1-wash:rgba(0,123,167,.10);
+  --grid:#F1F5F9; --axis:#E2E8F0;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:var(--font-sans); font-size:14px; line-height:1.5;
+  color:var(--text); background:var(--bg);
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+svg{display:block}
+
+/* ============ SHELL ============ */
+.app{min-height:100vh;display:flex;flex-direction:column}
+.topbar{height:var(--topbar-h);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--s4);padding:0 var(--s5);position:sticky;top:0;z-index:100}
+.topbar-brand{display:flex;align-items:center;gap:var(--s3);font-weight:800;font-family:var(--font-display);font-size:16px}
+.topbar-brand .mark{width:32px;height:32px;border-radius:var(--r-md);background:var(--grad);color:#fff;display:grid;place-items:center;font-size:14px}
+.topbar-spacer{flex:1}
+/* Embedded inside the ERP shell: drop own chrome */
+body.embed .topbar{display:none}
+
+.main{flex:1;padding:var(--s6) var(--s6) var(--s8);max-width:1360px;margin:0 auto;width:100%}
+@media(max-width:640px){ .main{padding:var(--s4)} }
+
+/* ============ PAGE HEADER ============ */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s4);margin-bottom:var(--s5);flex-wrap:wrap}
+.page-title{font-family:var(--font-display);font-size:26px;font-weight:800;letter-spacing:-.02em}
+.page-subtitle{color:var(--text-muted);font-size:14px;margin-top:2px}
+.page-actions{display:flex;gap:var(--s2);flex-wrap:wrap;align-items:center}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted);margin-bottom:6px}
+.breadcrumb .current{color:var(--text);font-weight:600}
+.breadcrumb svg{width:13px;height:13px}
+
+/* ============ BUTTONS ============ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s2);height:38px;padding:0 var(--s4);border-radius:var(--r-md);font-weight:600;font-size:14px;transition:all 180ms var(--ease);white-space:nowrap;border:1px solid transparent;letter-spacing:.01em}
+.btn svg{width:16px;height:16px}
+.btn:focus-visible{outline:none;box-shadow:0 0 0 3px var(--cta-50),0 0 0 1px var(--cta)}
+.btn-primary{background:var(--grad);color:#fff;box-shadow:0 2px 8px var(--cta-shadow)}
+.btn-primary:hover{background:var(--grad-hover);box-shadow:0 4px 14px var(--cta-shadow);transform:translateY(-1px)}
+.btn-secondary{background:var(--surface);color:var(--text);border-color:var(--primary-100);font-weight:500}
+.btn-secondary:hover{background:var(--primary-50);border-color:var(--primary);color:var(--primary-active)}
+.btn:disabled{opacity:.45;pointer-events:none;box-shadow:none}
+.btn-sm{height:32px;padding:0 var(--s3);font-size:13px}
+.btn-sm svg{width:14px;height:14px}
+
+/* ============ CURRENCY + PERIOD FILTER ============ */
+.period-select{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--primary-100);border-radius:var(--r-md);background:var(--surface);font-size:13.5px;font-weight:600;color:var(--text-secondary)}
+.period-select svg{width:15px;height:15px;color:var(--primary);flex-shrink:0}
+.period-select select{border:none;outline:none;background:none;font-weight:600;font-size:13.5px;color:var(--text);cursor:pointer;font-family:inherit;min-width:0}
+.period-select:focus-within{border-color:var(--primary);box-shadow:0 0 0 3px var(--cta-50)}
+/* Static caption inside a field — says what the value means without a label row */
+.period-select .field-label{color:var(--text-muted);font-weight:500;font-size:12.5px;white-space:nowrap}
+
+/* ---- trigger: states the resolved span, so the page never hides what it shows ---- */
+.period-picker{position:relative}
+.period-trigger{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--primary-100);border-radius:var(--r-md);background:var(--surface);font-size:13px;font-weight:600;color:var(--primary-active);white-space:nowrap;transition:border-color var(--t-fast) var(--ease)}
+.period-trigger svg{width:15px;height:15px;color:var(--primary);flex-shrink:0}
+.period-trigger .pt-caret{width:14px;height:14px;color:var(--text-muted);transition:transform var(--t-fast) var(--ease)}
+.period-trigger[aria-expanded="true"]{border-color:var(--primary);background:var(--primary-50)}
+.period-trigger[aria-expanded="true"] .pt-caret{transform:rotate(180deg)}
+.period-trigger:hover{border-color:var(--primary)}
+.period-trigger:focus-visible{outline:none;box-shadow:0 0 0 3px var(--cta-50),0 0 0 1px var(--cta)}
+/* mode name is the quiet qualifier; the dates are the payload */
+.period-trigger .pt-mode{color:var(--text-muted);font-weight:500}
+.period-trigger .pt-mode::after{content:'·';margin-left:8px;color:var(--border-strong)}
+
+/* ---- popover ---- */
+.period-pop{position:absolute;top:calc(100% + 6px);right:0;z-index:60;width:max-content;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow-lg)}
+.period-pop[hidden]{display:none}
+.pop-body{display:flex;align-items:stretch}
+.mode-list{display:flex;flex-direction:column;gap:2px;padding:var(--s3);border-right:1px solid var(--divider);min-width:132px}
+.mode-list button{text-align:left;padding:8px 11px;border-radius:var(--r-md);font-size:13px;font-weight:600;color:var(--text-secondary);white-space:nowrap;transition:all var(--t-fast) var(--ease)}
+.mode-list button:hover{background:var(--primary-50);color:var(--primary-active)}
+.mode-list button[aria-checked="true"]{background:var(--grad);color:#fff}
+.mode-list button:focus-visible{outline:none;box-shadow:0 0 0 3px var(--cta-50),0 0 0 1px var(--cta)}
+
+.cal{padding:var(--s3);width:280px}
+.cal-head{display:flex;align-items:center;justify-content:space-between;gap:var(--s2);margin-bottom:var(--s2)}
+.cal-title{font-size:13.5px;font-weight:700;font-family:var(--font-display)}
+.cal-nav{display:grid;place-items:center;width:28px;height:28px;border-radius:var(--r-md);color:var(--text-secondary);transition:all var(--t-fast) var(--ease)}
+.cal-nav svg{width:15px;height:15px}
+.cal-nav:hover{background:var(--primary-50);color:var(--primary)}
+.cal-nav:disabled{opacity:.35;pointer-events:none}
+.cal-nav:focus-visible{outline:none;box-shadow:0 0 0 3px var(--cta-50),0 0 0 1px var(--cta)}
+.cal-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;margin-bottom:2px}
+.cal-dow[hidden]{display:none}
+.cal-dow span{text-align:center;font-size:11px;font-weight:600;color:var(--text-muted);padding:4px 0}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px}
+.cal-grid.months{grid-template-columns:repeat(3,1fr);gap:var(--s2)}
+.cal-grid.years{grid-template-columns:repeat(3,1fr);gap:var(--s2)}
+.cal-hint{margin-top:var(--s2);font-size:11.5px;color:var(--text-muted);line-height:1.35}
+
+/* Day cells sit on a seamless 1px grid so a highlighted week reads as one
+   continuous band rather than seven separate chips. */
+.cal-cell{position:relative;height:34px;display:grid;place-items:center;font-size:12.5px;font-weight:600;color:var(--text-secondary);border-radius:var(--r-sm);transition:background var(--t-fast) var(--ease),color var(--t-fast) var(--ease)}
+.cal-cell.muted{color:var(--text-disabled);font-weight:500}
+.cal-cell.today::after{content:'';position:absolute;bottom:4px;width:4px;height:4px;border-radius:50%;background:var(--primary)}
+.cal-cell:hover{background:var(--primary-50);color:var(--primary-active)}
+.cal-cell:focus-visible{outline:none;box-shadow:0 0 0 2px var(--cta) inset}
+/* whole-week band — hover or keyboard focus anywhere in the row lights all 7 */
+.cal-cell.wk{background:var(--primary-50);color:var(--primary-active);border-radius:0}
+.cal-cell.sel-wk,.cal-cell.sel-wk:hover{background:var(--grad);color:#fff;border-radius:0}
+.cal-cell.sel-wk.today::after{background:#fff}
+.cal-cell.wk-start{border-top-left-radius:var(--r-sm);border-bottom-left-radius:var(--r-sm)}
+.cal-cell.wk-end{border-top-right-radius:var(--r-sm);border-bottom-right-radius:var(--r-sm)}
+/* in-range days of a custom range, plus its live hover preview */
+.cal-cell.in-range{background:var(--primary-50);color:var(--primary-active);border-radius:0}
+.cal-cell.range-start{border-top-left-radius:var(--r-sm);border-bottom-left-radius:var(--r-sm)}
+.cal-cell.range-end{border-top-right-radius:var(--r-sm);border-bottom-right-radius:var(--r-sm)}
+/* selection always outranks the hover states above */
+.cal-cell.sel,.cal-cell.sel:hover{background:var(--grad);color:#fff;border-radius:var(--r-sm);box-shadow:0 1px 4px var(--cta-shadow)}
+.cal-cell.sel.today::after{background:#fff}
+.cal-grid.months .cal-cell,.cal-grid.years .cal-cell{height:38px;border-radius:var(--r-md)}
+.cal-grid.years .cal-cell{font-variant-numeric:tabular-nums}
+
+.pop-foot{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);padding:var(--s3);border-top:1px solid var(--divider);background:var(--primary-50);border-radius:0 0 var(--r-lg) var(--r-lg)}
+.pop-preview{font-size:12.5px;font-weight:600;color:var(--primary-active)}
+.pop-preview .qualifier{color:var(--text-muted);font-weight:500}
+.pop-preview.pending{color:var(--text-muted);font-weight:500}
+.pop-actions{display:flex;gap:var(--s2);flex-shrink:0}
+
+/* Narrow screens: the two controls stack full-width and the popover spans the
+   picker, so the trigger's date span truncates instead of pushing the page wide. */
+@media(max-width:640px){
+  .page-actions{width:100%;flex-direction:column;align-items:stretch}
+  .period-picker{width:100%}
+  .period-trigger{width:100%;justify-content:flex-start;overflow:hidden}
+  .period-trigger .pt-range{min-width:0;overflow:hidden;text-overflow:ellipsis}
+  .period-trigger .pt-caret{margin-left:auto}
+  .period-pop{left:0;right:0;width:auto}
+  .pop-body{flex-direction:column}
+  .mode-list{flex-direction:row;flex-wrap:wrap;border-right:none;border-bottom:1px solid var(--divider);min-width:0}
+  .cal{width:auto}
+  .pop-foot{flex-wrap:wrap}
+}
+
+/* ============ TAB NAV (sticky pill nav — ERP section-nav pattern) ============ */
+.section-nav{position:sticky;top:var(--topbar-h);z-index:40;padding:var(--s3) 0;margin-bottom:var(--s4);background:linear-gradient(var(--bg) 78%,transparent);display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap}
+body.embed .section-nav{top:0}
+.section-nav-inner{display:flex;gap:2px;background:var(--surface);padding:4px;border-radius:var(--r-full);border:1px solid var(--border);box-shadow:var(--shadow-sm);width:max-content;max-width:100%;overflow-x:auto;scrollbar-width:none}
+.section-nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;font-size:13px;font-weight:600;color:var(--text-muted);border-radius:var(--r-full);transition:all var(--t-fast) var(--ease);white-space:nowrap;cursor:pointer}
+.nav-pill svg{width:15px;height:15px}
+.nav-pill:hover{color:var(--primary);background:var(--cta-50)}
+.nav-pill.active{background:var(--grad);color:#fff;box-shadow:0 1px 6px var(--cta-shadow)}
+.nav-pill:focus-visible{outline:none;box-shadow:0 0 0 3px var(--cta-50),0 0 0 1px var(--cta)}
+
+/* ============ PANELS ============ */
+.tab-panel[hidden]{display:none}
+.panel{margin-bottom:var(--s5)}
+.panel-head{display:flex;align-items:center;gap:var(--s3);margin-bottom:var(--s3)}
+.panel-num{font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--primary);background:var(--primary-50);border:1px solid var(--primary-100);border-radius:var(--r-sm);padding:3px 7px;flex-shrink:0}
+.panel-title{font-family:var(--font-display);font-size:17px;font-weight:700;letter-spacing:-.01em;line-height:1.25}
+.panel-desc{font-size:12.5px;color:var(--text-muted)}
+.panel-head-actions{margin-left:auto;display:flex;gap:var(--s2)}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow-sm)}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);padding:var(--s4) var(--s5);border-bottom:1px solid var(--divider);flex-wrap:wrap}
+.card-head h3{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+.card-head h3 svg{width:17px;height:17px;color:var(--primary)}
+.card-head .sub{font-size:12px;color:var(--text-muted);font-weight:400}
+.card-body{padding:var(--s5)}
+@media(max-width:640px){ .card-head{padding:var(--s3) var(--s4)} .card-body{padding:var(--s4)} }
+
+/* ============ KPI / STAT TILES ============ */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s4)}
+.kpi-grid.three{grid-template-columns:repeat(3,1fr)}
+@media(max-width:900px){ .kpi-grid,.kpi-grid.three{grid-template-columns:repeat(2,1fr)} }
+@media(max-width:520px){ .kpi-grid,.kpi-grid.three{grid-template-columns:1fr} }
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--s4) var(--s5);box-shadow:var(--shadow-sm)}
+.kpi-label{display:flex;align-items:center;gap:8px;color:var(--text-muted);font-size:13px;font-weight:500;margin-bottom:8px}
+.kpi-label svg{width:15px;height:15px;color:var(--primary)}
+.kpi-value{font-size:26px;font-weight:700;letter-spacing:-.02em;line-height:1.15}
+.kpi-value .unit{font-size:12px;font-weight:600;color:var(--text-muted);margin-left:5px;letter-spacing:0}
+.kpi-sub{font-size:12px;color:var(--text-muted);margin-top:5px}
+.kpi-sub b{color:var(--text-secondary);font-weight:600}
+/* temperature-tinted values */
+.kpi-value.cold{color:var(--series-1)} .kpi-value.warm{color:var(--series-2)} .kpi-value.hot{color:var(--series-3)}
+
+/* ============ HERO FIGURE + TYPE BREAKDOWN (Overall · panel 1) ============ */
+.hero-split{display:grid;grid-template-columns:280px 1fr;gap:var(--s6);align-items:start}
+@media(max-width:820px){ .hero-split{grid-template-columns:1fr;gap:var(--s5)} }
+.hero-label{font-size:13px;color:var(--text-muted);font-weight:500;margin-bottom:6px}
+.hero-figure{font-size:48px;font-weight:700;letter-spacing:-.03em;line-height:1.05}
+.hero-figure .unit{font-size:15px;font-weight:600;color:var(--text-muted);margin-left:7px;letter-spacing:0}
+.hero-meta{margin-top:var(--s3);padding-top:var(--s3);border-top:1px solid var(--divider);display:flex;flex-direction:column;gap:7px}
+.hero-meta .row{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s3);font-size:13px;color:var(--text-muted)}
+.hero-meta .row b{color:var(--text);font-weight:600;font-family:var(--font-mono);font-size:13px}
+
+.breakdown{display:flex;flex-direction:column;gap:var(--s4)}
+.bd-row{display:grid;grid-template-columns:1fr auto;gap:4px var(--s4);align-items:center}
+.bd-name{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600}
+.bd-name .swatch{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.bd-val{font-family:var(--font-mono);font-size:13.5px;font-weight:600;white-space:nowrap}
+.bd-val .pct{color:var(--text-muted);font-weight:500;margin-left:8px;font-size:12.5px}
+.bd-track{grid-column:1 / -1;height:10px;background:var(--divider);border-radius:var(--r-full);overflow:hidden}
+.bd-fill{height:100%;border-radius:var(--r-full)}
+
+/* ============ CHARTS ============ */
+.chart-wrap{position:relative;height:320px}
+.chart-wrap.tall{height:380px}
+.chart-wrap.short{height:260px}
+.chart-duo{display:grid;grid-template-columns:1fr 1fr;gap:var(--s4)}
+@media(max-width:900px){ .chart-duo{grid-template-columns:1fr} }
+
+.legend{display:flex;gap:var(--s4);flex-wrap:wrap;margin-bottom:var(--s4);font-size:12.5px;color:var(--text-secondary)}
+.legend span.item{display:inline-flex;align-items:center;gap:7px;font-weight:500}
+.legend .dot{width:10px;height:10px;border-radius:3px;display:inline-block;flex-shrink:0}
+
+/* ============ TABLES ============ */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead th{text-align:left;font-size:11.5px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;padding:10px var(--s4);border-bottom:1px solid var(--border);white-space:nowrap;background:linear-gradient(90deg,var(--primary-50) 0%,var(--accent-50) 100%)}
+thead th.num{text-align:right}
+thead th:first-child{border-top-left-radius:var(--r-sm)}
+thead th:last-child{border-top-right-radius:var(--r-sm)}
+tbody td{padding:12px var(--s4);border-bottom:1px solid var(--divider);font-size:13.5px;vertical-align:middle}
+tbody td.num{text-align:right;font-family:var(--font-mono);font-weight:600;font-variant-numeric:tabular-nums}
+tbody tr:hover{background:#F0FDFF}
+tfoot td{padding:12px var(--s4);font-weight:700;font-size:13.5px;border-top:2px solid var(--border-strong);background:var(--primary-50)}
+tfoot td.num{text-align:right;font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.person-cell{display:flex;align-items:center;gap:10px;white-space:nowrap}
+.person-cell .av{width:30px;height:30px;border-radius:50%;background:var(--primary-100);color:var(--primary-active);display:grid;place-items:center;font-size:11.5px;font-weight:700;flex-shrink:0}
+.person-cell .nm{font-weight:600}
+.est-note{font-size:11px;color:var(--text-disabled);font-weight:400}
+@media(max-width:640px){
+  thead th{padding:8px var(--s3);font-size:11px}
+  tbody td,tfoot td{padding:10px var(--s3);font-size:13px}
+}
+
+/* Rate pill — performance status (ERP semantic tokens) */
+.rate{display:inline-block;padding:2px 9px;border-radius:var(--r-full);font-size:12.5px;font-weight:600;font-family:var(--font-sans);letter-spacing:0}
+.rate.hi{background:var(--success-50);color:var(--success)}
+.rate.mid{background:var(--warning-50);color:#B45309}
+.rate.lo{background:var(--danger-50);color:var(--danger)}
+
+/* KPI attainment meter inside table cells */
+.meter{display:flex;align-items:center;gap:10px;justify-content:flex-end}
+.meter .track{display:block;width:74px;height:7px;background:var(--divider);border-radius:var(--r-full);overflow:hidden;flex-shrink:0}
+.meter .fill{display:block;height:100%;border-radius:var(--r-full);background:var(--primary)}
+.meter .fill.over{background:var(--success)}
+.meter .fill.under{background:var(--warning)}
+.meter .fill.low{background:var(--danger)}
+.meter .pct{font-family:var(--font-mono);font-weight:600;font-size:13px;min-width:52px;text-align:right;font-variant-numeric:tabular-nums}
+
+/* ============ INSIGHTS ============ */
+.insight{display:flex;gap:var(--s3);padding:var(--s4) 0;border-bottom:1px solid var(--divider)}
+.insight:first-child{padding-top:0}
+.insight:last-child{border-bottom:none;padding-bottom:0}
+.insight .tag{flex:0 0 auto;font-size:11px;font-weight:700;padding:3px 9px;border-radius:var(--r-sm);height:fit-content;letter-spacing:.02em;white-space:nowrap}
+.tag.cold{background:var(--primary-50);color:var(--primary-active)}
+.tag.warm{background:#FBF0E0;color:#8A5A12}
+.tag.hot{background:#FBEAEC;color:#8E2C3B}
+.tag.gap{background:var(--danger-50);color:var(--danger)}
+.tag.win{background:var(--success-50);color:#047857}
+.insight p{margin:0;font-size:13.5px;color:var(--text-secondary);line-height:1.6}
+.insight p b{color:var(--text);font-weight:600}
+
+/* Utility */
+.mt-4{margin-top:var(--s4)}
+.hidden{display:none}
+.foot-note{color:var(--text-muted);font-size:12px;margin-top:var(--s6);text-align:center}
+</style>
+</head>
+<body>
+
+<!-- ============ ICON SPRITE ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-dollar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+  <symbol id="i-activity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></symbol>
+  <symbol id="i-briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></symbol>
+  <symbol id="i-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></symbol>
+  <symbol id="i-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></symbol>
+  <symbol id="i-coins" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></symbol>
+  <symbol id="i-table" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></symbol>
+  <symbol id="i-award" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></symbol>
+</svg>
+
+<div class="app">
+
+  <!-- Own topbar (hidden when embedded in the ERP shell) -->
+  <header class="topbar">
+    <div class="topbar-brand"><span class="mark">T</span> Twendee Work</div>
+    <div class="topbar-spacer"></div>
+  </header>
+
+  <main class="main">
+
+    <!-- ============ PAGE HEADER ============ -->
+    <div class="page-header">
+      <div>
+        <div class="breadcrumb"><span>CRM</span><svg><use href="#i-chevron-right"/></svg><span class="current">Dashboard</span></div>
+        <h1 class="page-title">Dashboard</h1>
+        <p class="page-subtitle">Signed revenue, lead-up activity and deal throughput for the sales team.</p>
+      </div>
+      <div class="page-actions">
+        <!-- Currency first: it reframes every number on the page, so it reads
+             before the period the numbers cover. -->
+        <label class="period-select">
+          <svg><use href="#i-coins"/></svg>
+          <span class="field-label">Currency</span>
+          <select id="currencySelect" aria-label="Display currency"></select>
+        </label>
+
+        <!-- Period picker — one trigger stating the resolved span, one popover
+             holding both the granularity and the calendar for it. -->
+        <div class="period-picker">
+          <button type="button" class="period-trigger" id="periodTrigger"
+                  aria-haspopup="dialog" aria-expanded="false" aria-controls="periodPop">
+            <svg><use href="#i-calendar"/></svg>
+            <span class="pt-mode" id="ptMode">Year</span>
+            <span class="pt-range" id="ptRange">—</span>
+            <svg class="pt-caret"><use href="#i-chevron-down"/></svg>
+          </button>
+
+          <div class="period-pop" id="periodPop" role="dialog" aria-label="Select reporting period" hidden>
+            <div class="pop-body">
+              <div class="mode-list" role="radiogroup" aria-label="Period type">
+                <button type="button" role="radio" aria-checked="false" data-mode="day">Day</button>
+                <button type="button" role="radio" aria-checked="false" data-mode="week">Week</button>
+                <button type="button" role="radio" aria-checked="false" data-mode="month">Month</button>
+                <button type="button" role="radio" aria-checked="true"  data-mode="year">Year</button>
+                <button type="button" role="radio" aria-checked="false" data-mode="custom">Custom range</button>
+              </div>
+
+              <div class="cal">
+                <div class="cal-head">
+                  <button type="button" class="cal-nav" id="calPrev" aria-label="Previous"><svg><use href="#i-chevron-left"/></svg></button>
+                  <div class="cal-title" id="calTitle" aria-live="polite"></div>
+                  <button type="button" class="cal-nav" id="calNext" aria-label="Next"><svg><use href="#i-chevron-right"/></svg></button>
+                </div>
+                <div class="cal-dow" id="calDow" aria-hidden="true"></div>
+                <div class="cal-grid" id="calGrid"></div>
+                <p class="cal-hint" id="calHint"></p>
+              </div>
+            </div>
+
+            <div class="pop-foot">
+              <span class="pop-preview" id="popPreview" aria-live="polite">—</span>
+              <span class="pop-actions">
+                <button type="button" class="btn btn-secondary btn-sm" id="popCancel">Cancel</button>
+                <button type="button" class="btn btn-primary btn-sm" id="popApply">Apply</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ TABS ============ -->
+    <nav class="section-nav" aria-label="Dashboard sections">
+      <div class="section-nav-inner" role="tablist">
+        <button class="nav-pill active" role="tab" aria-selected="true" aria-controls="tab-overall" id="pill-overall" onclick="switchTab('overall')">
+          <svg><use href="#i-activity"/></svg> Overall
+        </button>
+        <button class="nav-pill" role="tab" aria-selected="false" aria-controls="tab-leadup" id="pill-leadup" onclick="switchTab('leadup')">
+          <svg><use href="#i-send"/></svg> Lead
+        </button>
+        <button class="nav-pill" role="tab" aria-selected="false" aria-controls="tab-deal" id="pill-deal" onclick="switchTab('deal')">
+          <svg><use href="#i-briefcase"/></svg> Deal
+        </button>
+      </div>
+    </nav>
+
+    <!-- ==================================================================
+         TAB 1 · OVERALL
+         ================================================================== -->
+    <section class="tab-panel" id="tab-overall" role="tabpanel" aria-labelledby="pill-overall">
+
+      <!-- Panel 1 — total signed contract value + split by contract type -->
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-num">01</span>
+          <div>
+            <div class="panel-title">Signed contract value</div>
+            <div class="panel-desc">Company total for the period, split by contract type.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="hero-split">
+              <div>
+                <div class="hero-label">Total signed</div>
+                <div class="hero-figure" id="ovTotal">—<span class="unit">USD</span></div>
+                <div class="hero-meta">
+                  <div class="row"><span>Contracts signed</span><b id="ovContracts">—</b></div>
+                  <div class="row"><span>Average contract</span><b id="ovAvg">—</b></div>
+                  <div class="row"><span>Team KPI target</span><b id="ovTarget">—</b></div>
+                  <div class="row"><span>Attainment</span><b id="ovAttain">—</b></div>
+                </div>
+              </div>
+              <div class="breakdown" id="ovBreakdown"><!-- injected --></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 2 — per-member detail -->
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-num">02</span>
+          <div>
+            <div class="panel-title">Per-member performance</div>
+            <div class="panel-desc">Signed value overall and by type, KPI attainment, deals created and won.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <h3><svg><use href="#i-users"/></svg> Sales team</h3>
+            <span class="sub">Values in <span class="cur-unit">USD</span></span>
+          </div>
+          <div class="table-wrap">
+            <table id="ovMemberTable">
+              <thead>
+                <tr>
+                  <th>Member</th>
+                  <th class="num">Total signed</th>
+                  <th class="num">ODC</th>
+                  <th class="num">Fixed Price</th>
+                  <th class="num">T&amp;M</th>
+                  <th class="num">Headhunt</th>
+                  <th class="num">Commission Sales</th>
+                  <th class="num">KPI attainment</th>
+                  <th class="num">Deals created</th>
+                  <th class="num">Deals won</th>
+                </tr>
+              </thead>
+              <tbody><!-- injected --></tbody>
+              <tfoot><!-- injected --></tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 3 — company revenue by period -->
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-num">03</span>
+          <div>
+            <div class="panel-title">Company revenue by period</div>
+            <div class="panel-desc">Signed contract value per month, stacked by contract type.</div>
+          </div>
+          <div class="panel-head-actions">
+            <button class="btn btn-secondary btn-sm" id="ovPeriodTableBtn" onclick="toggleTable('ovPeriodTable','ovPeriodTableBtn')" aria-expanded="false" aria-controls="ovPeriodTable">
+              <svg><use href="#i-table"/></svg> Data table
+            </button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="legend" id="ovPeriodLegend"><!-- injected --></div>
+            <div class="chart-wrap tall">
+              <canvas id="chartPeriod" role="img"
+                aria-label="Stacked column chart of monthly signed contract value from January to August 2026, split by contract type. Use the Data table button for exact values."></canvas>
+            </div>
+          </div>
+          <div class="table-wrap hidden" id="ovPeriodTable">
+            <table>
+              <thead><tr><th>Month</th><th class="num">ODC</th><th class="num">Fixed Price</th><th class="num">T&amp;M</th><th class="num">Headhunt</th><th class="num">Commission Sales</th><th class="num">Total</th></tr></thead>
+              <tbody><!-- injected --></tbody>
+              <tfoot><!-- injected --></tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 4 — member revenue comparison -->
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-num">04</span>
+          <div>
+            <div class="panel-title">Revenue comparison by member</div>
+            <div class="panel-desc">Total signed value per member — exact figures in panel 02.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="chart-wrap short">
+              <canvas id="chartMemberRevenue" role="img"
+                aria-label="Horizontal bar chart comparing total signed contract value per member. Exact values are labelled on each bar and listed in the per-member table above."></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==================================================================
+         TAB 2 · LEADUP
+         ================================================================== -->
+    <section class="tab-panel" id="tab-leadup" role="tabpanel" aria-labelledby="pill-leadup" hidden>
+
+      <!-- Panel 1 — reply-rate KPIs -->
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-num">01</span>
+          <div>
+            <div class="panel-title">Outreach &amp; reply rate</div>
+            <div class="panel-desc">Leads contacted in the period, split by temperature.</div>
+          </div>
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label"><svg><use href="#i-send"/></svg> Leads contacted</div>
+            <div class="kpi-value">322</div>
+            <div class="kpi-sub"><b>197</b> cold · <b>103</b> warm · <b>22</b> hot</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label"><svg><use href="#i-mail"/></svg> Reply — Cold</div>
+            <div class="kpi-value cold">12.7%</div>
+            <div class="kpi-sub"><b>25</b> replies / 197 leads</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label"><svg><use href="#i-mail"/></svg> Reply — Warm</div>
+            <div class="kpi-value warm">21.4%</div>
+            <div class="kpi-sub"><b>22</b> replies / 103 leads</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label"><svg><use href="#i-mail"/></svg> Reply — Hot</div>
+            <div class="kpi-value hot">31.8%</div>
+            <div class="kpi-sub"><b>7</b> replies / 22 leads</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 2 — reply rate by member & channel -->
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-num">02</span>
+          <div>
+            <div class="panel-title">Reply rate by member &amp; temperature</div>
+            <div class="panel-desc">Percentage of contacted leads that replied.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="legend" id="luLegend"><!-- injected --></div>
+            <div class="chart-wrap">
+              <canvas id="chartLeadRate" role="img"
+                aria-label="Grouped column chart of reply rate by member and lead temperature. Sophie: cold 20.5%, warm 20.0%, hot 28.6%. Chloe: cold 9.5%, warm 20.0%, hot 0%. Steve: cold 4.0%, warm 23.3%, hot 60.0%. Kai: cold 20.0%, warm 21.4%, hot 33.3%."></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 3 — detail table -->
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-num">03</span>
+          <div>
+            <div class="panel-title">Detailed metrics</div>
+            <div class="panel-desc">Leads contacted / replies received, per temperature.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table id="luTable">
+              <thead>
+                <tr>
+                  <th>Member</th>
+                  <th class="num">Cold (leads / replies)</th><th class="num">Rate</th>
+                  <th class="num">Warm (leads / replies)</th><th class="num">Rate</th>
+                  <th class="num">Hot (leads / replies)</th><th class="num">Rate</th>
+                </tr>
+              </thead>
+              <tbody><!-- injected --></tbody>
+              <tfoot><!-- injected --></tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 4 — insights -->
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-num">04</span>
+          <div>
+            <div class="panel-title">Findings &amp; recommendations</div>
+            <div class="panel-desc">What the numbers say, and what to do next.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="insight">
+              <span class="tag cold">Cold</span>
+              <p><b>Sophie</b> holds the best reply rate (20.5%) on the smallest volume; <b>Chloe</b> runs the highest volume (63 leads) at the weakest rate among members with tracked data (9.5%) — review targeting quality before increasing send volume.</p>
+            </div>
+            <div class="insight">
+              <span class="tag warm">Warm</span>
+              <p>All four members land within a narrow band (20–23%) — nobody has broken away. Worth A/B-testing message content and report format per client industry to find the lever.</p>
+            </div>
+            <div class="insight">
+              <span class="tag hot">Hot</span>
+              <p><b>Steve</b> is the clear outlier (60%) by attaching an article relevant to the prospect's industry or project before opening the conversation — roll this approach out to Sophie and Chloe.</p>
+            </div>
+            <div class="insight">
+              <span class="tag gap">Data gap</span>
+              <p><b>Sophie</b>'s source doc does not log replies per lead — the cold/warm/hot figures come from a supplementary report, so no individual reply is traceable. Standardise tracking on <b>Steve</b>'s format (logged by day, by lead) across the team.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==================================================================
+         TAB 3 · DEAL
+         ================================================================== -->
+    <section class="tab-panel" id="tab-deal" role="tabpanel" aria-labelledby="pill-deal" hidden>
+
+      <!-- Panel 1 — deal KPIs -->
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-num">01</span>
+          <div>
+            <div class="panel-title">Deal throughput</div>
+            <div class="panel-desc">Deals created, deals won and total pipeline value for the period.</div>
+          </div>
+        </div>
+        <div class="kpi-grid three">
+          <div class="kpi-card">
+            <div class="kpi-label"><svg><use href="#i-briefcase"/></svg> Total deals</div>
+            <div class="kpi-value" id="dlTotalDeals">—</div>
+            <div class="kpi-sub">Created across <b>4</b> members</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label"><svg><use href="#i-award"/></svg> Won deals</div>
+            <div class="kpi-value" id="dlWonDeals">—</div>
+            <div class="kpi-sub">Win rate <b id="dlWinRate">—</b></div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label"><svg><use href="#i-dollar"/></svg> Total deal value</div>
+            <div class="kpi-value" id="dlTotalValue">—<span class="unit">USD</span></div>
+            <div class="kpi-sub">Average deal <b id="dlAvgValue">—</b></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 2 — per-member charts -->
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-num">02</span>
+          <div>
+            <div class="panel-title">Per-member breakdown</div>
+            <div class="panel-desc">Deal count and deal value carry different units, so each gets its own axis-scale chart.</div>
+          </div>
+        </div>
+        <div class="chart-duo">
+          <div class="card">
+            <div class="card-head">
+              <h3><svg><use href="#i-briefcase"/></svg> Deals created &amp; won</h3>
+              <span class="sub">count</span>
+            </div>
+            <div class="card-body">
+              <div class="legend" id="dlCountLegend"><!-- injected --></div>
+              <div class="chart-wrap short">
+                <canvas id="chartDealCount" role="img"
+                  aria-label="Stacked column chart of deals per member, split into won and still open or lost. Sophie 42 deals of which 14 won, Chloe 51 of which 11 won, Steve 38 of which 13 won, Kai 29 of which 8 won."></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <h3><svg><use href="#i-dollar"/></svg> Total deal value</h3>
+              <span class="sub"><span class="cur-unit">USD</span></span>
+            </div>
+            <div class="card-body">
+              <div class="chart-wrap short">
+                <canvas id="chartDealValue" role="img"
+                  aria-label="Column chart of total deal value per member. Values are labelled on each column and listed in the table below."></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 3 — detail table -->
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-num">03</span>
+          <div>
+            <div class="panel-title">Detailed metrics</div>
+            <div class="panel-desc">Deal counts, win rate and value per member.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table id="dlTable">
+              <thead>
+                <tr>
+                  <th>Member</th>
+                  <th class="num">Total deals</th>
+                  <th class="num">Won deals</th>
+                  <th class="num">Win rate</th>
+                  <th class="num">Total deal value</th>
+                  <th class="num">Won value</th>
+                  <th class="num">Avg deal size</th>
+                </tr>
+              </thead>
+              <tbody><!-- injected --></tbody>
+              <tfoot><!-- injected --></tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel 4 — insights -->
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-num">04</span>
+          <div>
+            <div class="panel-title">Findings &amp; recommendations</div>
+            <div class="panel-desc">What the numbers say, and what to do next.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="insight">
+              <span class="tag win">Win rate</span>
+              <p><b>Steve</b> (34.2%) and <b>Sophie</b> (33.3%) convert roughly half again as well as <b>Chloe</b> (21.6%) on comparable pipeline value. Chloe creates the most deals (51) but converts the fewest — the bottleneck is qualification, not volume.</p>
+            </div>
+            <div class="insight">
+              <span class="tag cold">Deal size</span>
+              <p><b>Steve</b> carries the largest average deal (<span id="insAvgDeal">66,842 USD</span>) and the highest won value; his pipeline skews to ODC and T&amp;M work, the two highest-value contract types.</p>
+            </div>
+            <div class="insight">
+              <span class="tag warm">Capacity</span>
+              <p><b>Kai</b> runs the smallest pipeline (29 deals) at a mid-pack win rate — there is headroom to raise volume without hurting conversion. Reallocating a slice of Chloe's unqualified cold leads to Kai is the cheapest test.</p>
+            </div>
+            <div class="insight">
+              <span class="tag gap">Watch</span>
+              <p>Won value (<span id="insWonValue">4,710,000 USD</span>) is <b>52.7%</b> of total pipeline value. Deals that neither close nor drop out inflate the pipeline — enforce a stage-age limit so stale deals are marked lost rather than carried.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <p class="foot-note">Twendee Work · CRM Dashboard — figures are for the selected reporting period.</p>
+
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+/* ==================================================================
+   DATA
+   Contract values are stored in thousands of USD.
+   ================================================================== */
+const SURFACE = '#FFFFFF';
+const CSS = getComputedStyle(document.documentElement);
+const C = n => CSS.getPropertyValue('--' + n).trim();
+
+const TYPES = [
+  { key:'odc',        name:'ODC',               color:C('series-1') },
+  { key:'fixed',      name:'Fixed Price',       color:C('series-2') },
+  { key:'tm',         name:'T&M',               color:C('series-3') },
+  { key:'headhunt',   name:'Headhunt',          color:C('series-4') },
+  { key:'commission', name:'Commission Sales',  color:C('series-5') },
+];
+
+const MEMBERS = [
+  { name:'Sophie', initials:'SO', target:1600, contracts:12,
+    signed:{ odc:620, fixed:410, tm:180, headhunt:150, commission:90 },
+    deals:42, won:14, dealValue:2410,
+    lead:{ cold:[39,8], warm:[30,6], hot:[7,2] } },
+  { name:'Chloe',  initials:'CH', target:1400, contracts:10,
+    signed:{ odc:430, fixed:320, tm:260, headhunt:110, commission:80 },
+    deals:51, won:11, dealValue:2180,
+    lead:{ cold:[63,6], warm:[15,3], hot:[4,0] } },
+  { name:'Steve',  initials:'ST', target:1200, contracts:11,
+    signed:{ odc:520, fixed:300, tm:300, headhunt:90,  commission:70 },
+    deals:38, won:13, dealValue:2540,
+    lead:{ cold:[50,2], warm:[30,7], hot:[5,3] } },
+  { name:'Kai',    initials:'KA', target:1000, contracts:8, estimated:true,
+    signed:{ odc:280, fixed:210, tm:150, headhunt:70,  commission:70 },
+    deals:29, won:8,  dealValue:1810,
+    lead:{ cold:[45,9], warm:[28,6], hot:[6,2] } },
+];
+
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug'];
+const MONTHLY = {
+  odc:        [180,150,240,210,270,300,290,210],
+  fixed:      [120,140,170,150,180,160,180,140],
+  tm:         [ 60, 70, 90,100,120,150,160,140],
+  headhunt:   [ 40, 50, 60, 45, 55, 60, 60, 50],
+  commission: [ 30, 35, 40, 35, 40, 45, 45, 40],
+};
+
+const TEMPS = [
+  { key:'cold', name:'Cold', color:C('series-1') },
+  { key:'warm', name:'Warm', color:C('series-2') },
+  { key:'hot',  name:'Hot',  color:C('series-3') },
+];
+
+/* ---------------- derived ---------------- */
+const memberTotal = m => TYPES.reduce((s,t) => s + m.signed[t.key], 0);
+const typeTotal   = k => MEMBERS.reduce((s,m) => s + m.signed[k], 0);
+const GRAND       = MEMBERS.reduce((s,m) => s + memberTotal(m), 0);
+const TARGET      = MEMBERS.reduce((s,m) => s + m.target, 0);
+const CONTRACTS   = MEMBERS.reduce((s,m) => s + m.contracts, 0);
+const DEALS       = MEMBERS.reduce((s,m) => s + m.deals, 0);
+const WON         = MEMBERS.reduce((s,m) => s + m.won, 0);
+const DEAL_VALUE  = MEMBERS.reduce((s,m) => s + m.dealValue, 0);
+
+/* ---------------- currency ----------------
+   Source figures are thousands of USD; every displayed amount goes through
+   money() so one switch reframes the whole page. VND is reported in millions —
+   the convention Vietnamese finance teams already read, and the only way the
+   table cells stay legible at ~26,000 VND to the dollar. Rates are indicative
+   prototype figures, not a live feed. */
+const CURRENCIES = [
+  { code:'USD', symbol:'$',  rate:1,     scale:1,   scaleLabel:'',         scaleShort:'' },
+  { code:'EUR', symbol:'€',  rate:0.92,  scale:1,   scaleLabel:'',         scaleShort:'' },
+  { code:'JPY', symbol:'¥',  rate:157,   scale:1,   scaleLabel:'',         scaleShort:'' },
+  { code:'VND', symbol:'₫',  rate:26100, scale:1e6, scaleLabel:'millions', scaleShort:'m' },
+];
+let CUR = CURRENCIES[0];
+
+/* thousands-of-USD -> the magnitude actually printed in the active currency */
+const conv = k => k * 1000 * CUR.rate / CUR.scale;
+const money = k => Math.round(conv(k)).toLocaleString('en-US');               // 1450 -> "1,450,000"
+const moneyComp = k => {                                                      // axis ticks
+  const v = conv(k);
+  if (v >= 1e6)  return (v / 1e6).toFixed(2).replace(/\.?0+$/,'') + 'M';
+  if (v >= 1e4)  return Math.round(v / 1000) + 'K';
+  if (v >= 1000) return (v / 1000).toFixed(1) + 'K';
+  return String(Math.round(v));
+};
+const axisTick  = v => CUR.symbol + (v === 0 ? '0' : moneyComp(v));
+/* "USD" / "VND (millions)" — the caption that keeps a scaled figure honest.
+   Short form for the unit chip riding alongside a big number, where the full
+   caption would wrap the figure onto two lines. */
+const curUnit      = () => CUR.scaleLabel ? `${CUR.code} (${CUR.scaleLabel})` : CUR.code;
+const curUnitShort = () => CUR.scaleShort ? `${CUR.code} (${CUR.scaleShort})` : CUR.code;
+
+const pct     = (n, d) => d ? (n / d * 100).toFixed(1) + '%' : '0.0%';
+const num     = n => n.toLocaleString('en-US');
+
+/* rate pill class — performance banding, shared by leadup + deal tables */
+function rateClass(v, hi, lo){ return v >= hi ? 'hi' : v >= lo ? 'mid' : 'lo'; }
+function ratePill(value, hi, lo){
+  return `<span class="rate ${rateClass(value, hi, lo)}">${value.toFixed(1)}%</span>`;
+}
+
+/* ==================================================================
+   RENDER — Overall
+   ================================================================== */
+function renderOverall(){
+  document.getElementById('ovTotal').innerHTML     = money(GRAND) + `<span class="unit">${curUnitShort()}</span>`;
+  document.getElementById('ovContracts').textContent = CONTRACTS;
+  document.getElementById('ovAvg').textContent     = money(GRAND / CONTRACTS);
+  document.getElementById('ovTarget').textContent  = money(TARGET);
+  document.getElementById('ovAttain').textContent  = pct(GRAND, TARGET);
+
+  /* Panel 1 — type breakdown meters, direct-labelled */
+  document.getElementById('ovBreakdown').innerHTML = TYPES.map(t => {
+    const v = typeTotal(t.key), share = v / GRAND * 100;
+    return `<div class="bd-row">
+      <div class="bd-name"><span class="swatch" style="background:${t.color}"></span>${t.name}</div>
+      <div class="bd-val">${money(v)}<span class="pct">${share.toFixed(1)}%</span></div>
+      <div class="bd-track"><div class="bd-fill" style="width:${share}%;background:${t.color}"></div></div>
+    </div>`;
+  }).join('');
+
+  /* Panel 2 — per-member table */
+  const tbl = document.getElementById('ovMemberTable');
+  tbl.querySelector('tbody').innerHTML = MEMBERS.map(m => {
+    const total = memberTotal(m), att = total / m.target * 100;
+    const fill  = att >= 100 ? 'over' : att >= 85 ? '' : att >= 70 ? 'under' : 'low';
+    return `<tr>
+      <td><div class="person-cell"><span class="av">${m.initials}</span>
+        <span class="nm">${m.name}${m.estimated ? ' <span class="est-note">(est.)</span>' : ''}</span></div></td>
+      <td class="num">${money(total)}</td>
+      ${TYPES.map(t => `<td class="num">${money(m.signed[t.key])}</td>`).join('')}
+      <td class="num"><div class="meter">
+        <span class="track"><span class="fill ${fill}" style="width:${Math.min(att,100)}%"></span></span>
+        <span class="pct">${att.toFixed(1)}%</span></div></td>
+      <td class="num">${m.deals}</td>
+      <td class="num">${m.won}</td>
+    </tr>`;
+  }).join('');
+  tbl.querySelector('tfoot').innerHTML = `<tr>
+    <td>Team total</td>
+    <td class="num">${money(GRAND)}</td>
+    ${TYPES.map(t => `<td class="num">${money(typeTotal(t.key))}</td>`).join('')}
+    <td class="num">${pct(GRAND, TARGET)}</td>
+    <td class="num">${DEALS}</td>
+    <td class="num">${WON}</td>
+  </tr>`;
+
+  /* Panel 3 — data table behind the stacked chart */
+  const pt = document.getElementById('ovPeriodTable');
+  pt.querySelector('tbody').innerHTML = MONTHS.map((mo, i) => {
+    const row = TYPES.map(t => MONTHLY[t.key][i]);
+    return `<tr><td>${mo} 2026</td>${row.map(v => `<td class="num">${money(v)}</td>`).join('')}
+      <td class="num">${money(row.reduce((a,b) => a+b, 0))}</td></tr>`;
+  }).join('');
+  pt.querySelector('tfoot').innerHTML = `<tr><td>Total</td>
+    ${TYPES.map(t => `<td class="num">${money(typeTotal(t.key))}</td>`).join('')}
+    <td class="num">${money(GRAND)}</td></tr>`;
+
+  legend('ovPeriodLegend', TYPES);
+}
+
+/* ==================================================================
+   RENDER — Leadup
+   ================================================================== */
+function leadTotals(){
+  const t = { cold:[0,0], warm:[0,0], hot:[0,0] };
+  MEMBERS.forEach(m => TEMPS.forEach(x => {
+    t[x.key][0] += m.lead[x.key][0];
+    t[x.key][1] += m.lead[x.key][1];
+  }));
+  return t;
+}
+
+function renderLeadup(){
+  const tbl = document.getElementById('luTable');
+  tbl.querySelector('tbody').innerHTML = MEMBERS.map(m => `<tr>
+    <td><div class="person-cell"><span class="av">${m.initials}</span>
+      <span class="nm">${m.name}${m.estimated ? ' <span class="est-note">(est.)</span>' : ''}</span></div></td>
+    ${TEMPS.map(x => {
+      const [leads, replies] = m.lead[x.key];
+      const rate = leads ? replies / leads * 100 : 0;
+      return `<td class="num">${leads} / ${replies}</td><td class="num">${ratePill(rate, 20, 10)}</td>`;
+    }).join('')}
+  </tr>`).join('');
+
+  const t = leadTotals();
+  tbl.querySelector('tfoot').innerHTML = `<tr><td>Team total</td>
+    ${TEMPS.map(x => {
+      const [leads, replies] = t[x.key];
+      return `<td class="num">${leads} / ${replies}</td><td class="num">${pct(replies, leads)}</td>`;
+    }).join('')}
+  </tr>`;
+
+  legend('luLegend', TEMPS);
+}
+
+/* ==================================================================
+   RENDER — Deal
+   ================================================================== */
+function renderDeal(){
+  document.getElementById('dlTotalDeals').textContent = DEALS;
+  document.getElementById('dlWonDeals').textContent   = WON;
+  document.getElementById('dlWinRate').textContent    = pct(WON, DEALS);
+  document.getElementById('dlTotalValue').innerHTML   = money(DEAL_VALUE) + `<span class="unit">${curUnitShort()}</span>`;
+  document.getElementById('dlAvgValue').textContent   = `${money(DEAL_VALUE / DEALS)} ${curUnitShort()}`;
+
+  const tbl = document.getElementById('dlTable');
+  tbl.querySelector('tbody').innerHTML = MEMBERS.map(m => {
+    const winRate = m.won / m.deals * 100;
+    return `<tr>
+      <td><div class="person-cell"><span class="av">${m.initials}</span>
+        <span class="nm">${m.name}${m.estimated ? ' <span class="est-note">(est.)</span>' : ''}</span></div></td>
+      <td class="num">${m.deals}</td>
+      <td class="num">${m.won}</td>
+      <td class="num">${ratePill(winRate, 30, 22)}</td>
+      <td class="num">${money(m.dealValue)}</td>
+      <td class="num">${money(memberTotal(m))}</td>
+      <td class="num">${money(m.dealValue / m.deals)}</td>
+    </tr>`;
+  }).join('');
+  tbl.querySelector('tfoot').innerHTML = `<tr>
+    <td>Team total</td>
+    <td class="num">${DEALS}</td>
+    <td class="num">${WON}</td>
+    <td class="num">${pct(WON, DEALS)}</td>
+    <td class="num">${money(DEAL_VALUE)}</td>
+    <td class="num">${money(GRAND)}</td>
+    <td class="num">${money(DEAL_VALUE / DEALS)}</td>
+  </tr>`;
+
+  /* Figures quoted in the written findings follow the currency too — a prose
+     number that disagrees with the table above it is worse than no number. */
+  const steve = MEMBERS.find(m => m.name === 'Steve');
+  document.getElementById('insAvgDeal').textContent  = `${money(steve.dealValue / steve.deals)} ${curUnit()}`;
+  document.getElementById('insWonValue').textContent = `${money(GRAND)} ${curUnit()}`;
+
+  legend('dlCountLegend', [
+    { name:'Won',          color:C('series-1') },
+    { name:'Open or lost', color:C('series-1-soft') },
+  ]);
+}
+
+/* Shared HTML legend — identity never rests on colour alone */
+function legend(id, items){
+  document.getElementById(id).innerHTML = items
+    .map(i => `<span class="item"><span class="dot" style="background:${i.color}"></span>${i.name}</span>`)
+    .join('');
+}
+
+/* ==================================================================
+   CHARTS
+   ================================================================== */
+Chart.defaults.color = C('text-muted');
+Chart.defaults.font.family = "Inter,-apple-system,BlinkMacSystemFont,sans-serif";
+Chart.defaults.font.size = 12;
+Chart.defaults.maintainAspectRatio = false;
+
+const TOOLTIP = {
+  backgroundColor:'#111827', titleColor:'#fff', bodyColor:'#E5E7EB',
+  borderColor:'rgba(255,255,255,.12)', borderWidth:1,
+  padding:10, cornerRadius:6, displayColors:true, boxWidth:9, boxHeight:9, boxPadding:4,
+  titleFont:{ weight:'600', size:12.5 }, bodyFont:{ size:12.5 },
+};
+const GRID = { color:C('grid'), lineWidth:1, drawTicks:false };
+const NO_GRID = { display:false };
+
+/* Direct value labels — selective by design: only on the two single-series
+   charts, where there is one number per mark and no risk of a label storm. */
+function valueLabels({ format, axis = 'y', offset = 8 }){
+  return {
+    id:'valueLabels_' + axis,
+    afterDatasetsDraw(chart){
+      const ctx = chart.ctx;
+      ctx.save();
+      ctx.font = '600 12px Inter, sans-serif';
+      ctx.fillStyle = C('text-secondary');
+      chart.data.datasets.forEach((ds, di) => {
+        const meta = chart.getDatasetMeta(di);
+        if (meta.hidden) return;
+        meta.data.forEach((el, i) => {
+          const v = ds.data[i];
+          if (v == null) return;
+          if (axis === 'x'){ // horizontal bars — label past the bar end
+            ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+            ctx.fillText(format(v), el.x + offset, el.y);
+          } else {           // columns — label on the cap
+            ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+            ctx.fillText(format(v), el.x, el.y - offset);
+          }
+        });
+      });
+      ctx.restore();
+    }
+  };
+}
+
+const charts = {};
+
+function buildOverallCharts(){
+  /* Panel 3 — monthly revenue stacked by contract type.
+     2px surface-coloured gap separates touching segments (never an ink border). */
+  charts.period = new Chart(document.getElementById('chartPeriod'), {
+    type:'bar',
+    data:{
+      labels: MONTHS,
+      datasets: TYPES.map((t, i) => ({
+        label: t.name,
+        data: MONTHLY[t.key],
+        backgroundColor: t.color,
+        borderColor: SURFACE,
+        borderWidth: { top:2, right:0, bottom:0, left:0 },
+        // only the top of the stack carries the 4px rounded data-end
+        borderRadius: i === TYPES.length - 1 ? { topLeft:4, topRight:4 } : 0,
+        maxBarThickness: 24,
+      })),
+    },
+    options:{
+      responsive:true,
+      interaction:{ mode:'index', intersect:false },
+      plugins:{
+        legend:{ display:false },
+        tooltip:{ ...TOOLTIP,
+          callbacks:{
+            label: c => ` ${c.dataset.label}: ${money(c.parsed.y)} ${curUnit()}`,
+            footer: items => `Total: ${money(items.reduce((s,i) => s + i.parsed.y, 0))} ${curUnit()}`,
+          },
+          footerFont:{ weight:'600', size:12.5 }, footerColor:'#fff',
+        },
+      },
+      scales:{
+        x:{ stacked:true, grid:NO_GRID, border:{ color:C('axis') } },
+        y:{ stacked:true, beginAtZero:true, grid:GRID, border:{ display:false },
+            ticks:{ callback: axisTick } },
+      },
+    },
+  });
+
+  /* Panel 4 — member comparison. One series, one colour, direct labels, no legend. */
+  charts.memberRevenue = new Chart(document.getElementById('chartMemberRevenue'), {
+    type:'bar',
+    data:{
+      labels: MEMBERS.map(m => m.name),
+      datasets:[{
+        label:'Total signed',
+        data: MEMBERS.map(memberTotal),
+        backgroundColor: C('series-1'),
+        borderRadius:{ topLeft:0, bottomLeft:0, topRight:4, bottomRight:4 },
+        maxBarThickness:24,
+      }],
+    },
+    options:{
+      indexAxis:'y',
+      responsive:true,
+      layout:{ padding:{ right:96 } },
+      plugins:{
+        legend:{ display:false },
+        tooltip:{ ...TOOLTIP, callbacks:{ label: c => ` ${money(c.parsed.x)} ${curUnit()}` } },
+      },
+      scales:{
+        x:{ beginAtZero:true, grid:GRID, border:{ display:false },
+            ticks:{ callback: axisTick } },
+        y:{ grid:NO_GRID, border:{ color:C('axis') },
+            ticks:{ font:{ size:13, weight:'600' }, color:C('text-secondary') } },
+      },
+    },
+    plugins:[ valueLabels({ axis:'x', format: v => money(v) }) ],
+  });
+}
+
+function buildLeadupCharts(){
+  charts.leadRate = new Chart(document.getElementById('chartLeadRate'), {
+    type:'bar',
+    data:{
+      labels: MEMBERS.map(m => m.name),
+      datasets: TEMPS.map(x => ({
+        label: x.name,
+        data: MEMBERS.map(m => {
+          const [leads, replies] = m.lead[x.key];
+          return leads ? +(replies / leads * 100).toFixed(1) : 0;
+        }),
+        backgroundColor: x.color,
+        borderRadius:{ topLeft:4, topRight:4, bottomLeft:0, bottomRight:0 },
+        maxBarThickness:24,
+        // keep the three bars of a member tight together, air between members
+        categoryPercentage:0.55, barPercentage:0.9,
+      })),
+    },
+    options:{
+      responsive:true,
+      plugins:{
+        legend:{ display:false },
+        tooltip:{ ...TOOLTIP,
+          callbacks:{
+            label: c => {
+              const [leads, replies] = MEMBERS[c.dataIndex].lead[TEMPS[c.datasetIndex].key];
+              return ` ${c.dataset.label}: ${c.parsed.y}%  (${replies} / ${leads} leads)`;
+            },
+          },
+        },
+      },
+      scales:{
+        x:{ grid:NO_GRID, border:{ color:C('axis') },
+            ticks:{ font:{ size:13, weight:'600' }, color:C('text-secondary') } },
+        y:{ beginAtZero:true, suggestedMax:65, grid:GRID, border:{ display:false },
+            ticks:{ callback: v => v + '%' } },
+      },
+    },
+  });
+}
+
+function buildDealCharts(){
+  /* Won is a part of created — a one-hue part-to-whole stack, not two
+     categorical slots (green-for-won would read as a status colour). */
+  charts.dealCount = new Chart(document.getElementById('chartDealCount'), {
+    type:'bar',
+    data:{
+      labels: MEMBERS.map(m => m.name),
+      datasets:[
+        { label:'Won', data: MEMBERS.map(m => m.won),
+          backgroundColor:C('series-1'), maxBarThickness:24,
+          borderColor:SURFACE, borderWidth:{ top:2 } },
+        { label:'Open or lost', data: MEMBERS.map(m => m.deals - m.won),
+          backgroundColor:C('series-1-soft'), maxBarThickness:24,
+          borderRadius:{ topLeft:4, topRight:4 } },
+      ],
+    },
+    options:{
+      responsive:true,
+      interaction:{ mode:'index', intersect:false },
+      plugins:{
+        legend:{ display:false },
+        tooltip:{ ...TOOLTIP,
+          callbacks:{
+            label: c => ` ${c.dataset.label}: ${c.parsed.y} deals`,
+            footer: items => {
+              const m = MEMBERS[items[0].dataIndex];
+              return `Total: ${m.deals} deals · win rate ${pct(m.won, m.deals)}`;
+            },
+          },
+          footerFont:{ weight:'600', size:12.5 }, footerColor:'#fff',
+        },
+      },
+      scales:{
+        x:{ stacked:true, grid:NO_GRID, border:{ color:C('axis') },
+            ticks:{ font:{ size:13, weight:'600' }, color:C('text-secondary') } },
+        y:{ stacked:true, beginAtZero:true, grid:GRID, border:{ display:false },
+            ticks:{ precision:0 } },
+      },
+    },
+  });
+
+  charts.dealValue = new Chart(document.getElementById('chartDealValue'), {
+    type:'bar',
+    data:{
+      labels: MEMBERS.map(m => m.name),
+      datasets:[{
+        label:'Total deal value',
+        data: MEMBERS.map(m => m.dealValue),
+        backgroundColor:C('series-1'),
+        borderRadius:{ topLeft:4, topRight:4 },
+        maxBarThickness:24,
+      }],
+    },
+    options:{
+      responsive:true,
+      layout:{ padding:{ top:22 } },
+      plugins:{
+        legend:{ display:false },
+        tooltip:{ ...TOOLTIP, callbacks:{ label: c => ` ${money(c.parsed.y)} ${curUnit()}` } },
+      },
+      scales:{
+        x:{ grid:NO_GRID, border:{ color:C('axis') },
+            ticks:{ font:{ size:13, weight:'600' }, color:C('text-secondary') } },
+        y:{ beginAtZero:true, grid:GRID, border:{ display:false },
+            ticks:{ callback: axisTick } },
+      },
+    },
+    plugins:[ valueLabels({ axis:'y', format: axisTick, offset:6 }) ],
+  });
+}
+
+/* ==================================================================
+   TABS — charts are built lazily; a canvas in a hidden container sizes to 0
+   ================================================================== */
+const TABS = {
+  overall: { built:false, build: buildOverallCharts },
+  leadup:  { built:false, build: buildLeadupCharts  },
+  deal:    { built:false, build: buildDealCharts    },
+};
+
+let currentTab = 'overall';   // the currency switch rebuilds only this one
+
+function switchTab(name){
+  currentTab = name;
+  Object.keys(TABS).forEach(k => {
+    document.getElementById('tab-' + k).hidden = k !== name;
+    const pill = document.getElementById('pill-' + k);
+    pill.classList.toggle('active', k === name);
+    pill.setAttribute('aria-selected', k === name);
+  });
+  const tab = TABS[name];
+  if (!tab.built){ tab.build(); tab.built = true; }
+  if (location.hash.slice(1) !== name) history.replaceState(null, '', '#' + name);
+}
+
+function toggleTable(tableId, btnId){
+  const el  = document.getElementById(tableId);
+  const btn = document.getElementById(btnId);
+  const show = el.classList.contains('hidden');
+  el.classList.toggle('hidden', !show);
+  btn.setAttribute('aria-expanded', show);
+}
+
+/* ==================================================================
+   BOOT
+   ================================================================== */
+if (new URLSearchParams(location.search).has('embed') || window.self !== window.top){
+  document.body.classList.add('embed');
+}
+
+renderOverall();
+renderLeadup();
+renderDeal();
+
+const initial = ['overall','leadup','deal'].includes(location.hash.slice(1))
+  ? location.hash.slice(1) : 'overall';
+switchTab(initial);
+
+/* ==================================================================
+   CURRENCY SWITCH
+   Tables re-render in place; charts are torn down and rebuilt because
+   axis ticks, tooltips and direct labels all bake in the currency.
+   Hidden tabs are only marked stale — they rebuild on their next open,
+   keeping the lazy-build contract intact.
+   ================================================================== */
+const currencySelect = document.getElementById('currencySelect');
+currencySelect.innerHTML = CURRENCIES
+  .map(c => `<option value="${c.code}">${c.symbol} ${c.code}</option>`).join('');
+currencySelect.value = CUR.code;
+
+function applyCurrency(){
+  document.querySelectorAll('.cur-unit').forEach(el => { el.textContent = curUnit(); });
+
+  renderOverall();
+  renderLeadup();
+  renderDeal();
+
+  Object.keys(charts).forEach(k => { charts[k].destroy(); delete charts[k]; });
+  Object.values(TABS).forEach(t => { t.built = false; });
+  TABS[currentTab].build();
+  TABS[currentTab].built = true;
+}
+
+currencySelect.addEventListener('change', e => {
+  CUR = CURRENCIES.find(c => c.code === e.target.value) || CURRENCIES[0];
+  applyCurrency();
+});
+
+/* ==================================================================
+   PERIOD PICKER
+   Day / Week / Month / Year / Custom range — granularity and calendar
+   live in one popover, so picking a period is a single interaction.
+   Every mode resolves to a from–to pair; the trigger states that span
+   so what the page is showing is never implicit. A single day prints
+   as one date, not a range.
+   The prototype ships one dataset, so applying a period re-states the
+   selection rather than faking new numbers.
+   ================================================================== */
+const MONTH_NAMES  = ['January','February','March','April','May','June',
+                      'July','August','September','October','November','December'];
+const MONTH_SHORT  = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DOW          = ['Mo','Tu','We','Th','Fr','Sa','Su'];      // ISO week starts Monday
+const DEFAULT_YEAR = 2026;
+
+/* ---------------- date helpers (local time, no UTC drift) ---------------- */
+const iso      = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const fmtDate  = d => d.toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+const sameDay  = (a,b) => iso(a) === iso(b);
+const addDays  = (d,n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+
+/* Monday-start week, ISO 8601 — how the sales team already reports. */
+function weekStart(d){ return addDays(d, -((d.getDay() + 6) % 7)); }
+function isoWeekNumber(d){
+  const t = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  t.setDate(t.getDate() + 3 - ((t.getDay() + 6) % 7));            // Thursday of this week
+  const firstThu = new Date(t.getFullYear(), 0, 4);
+  firstThu.setDate(firstThu.getDate() + 3 - ((firstThu.getDay() + 6) % 7));
+  return 1 + Math.round((t - firstThu) / 604800000);
+}
+
+/* ---------------- state ----------------
+   `applied` is what the dashboard shows; `draft` is what the open popover is
+   editing. Cancel throws the draft away, Apply promotes it. */
+const today = new Date();
+const seed  = today.getFullYear() === DEFAULT_YEAR ? today : new Date(DEFAULT_YEAR, 7, 15);
+
+const defaultState = () => ({
+  mode:   'year',
+  day:    new Date(seed),
+  week:   weekStart(seed),                       // Monday of the selected week
+  month:  { y: DEFAULT_YEAR, m: seed.getMonth() },
+  year:   DEFAULT_YEAR,
+  custom: { from:new Date(DEFAULT_YEAR, 0, 1), to:new Date(DEFAULT_YEAR, 7, 31) },
+});
+const clone = s => ({ ...s,
+  day:    new Date(s.day),
+  week:   new Date(s.week),
+  month:  { ...s.month },
+  custom: { from:s.custom.from && new Date(s.custom.from), to:s.custom.to && new Date(s.custom.to) },
+});
+
+let applied = defaultState();
+let draft   = clone(applied);
+let view    = { y: seed.getFullYear(), m: seed.getMonth() };   // month the calendar is showing
+let hoverDate = null;                                          // drives week band + range preview
+
+const pop      = document.getElementById('periodPop');
+const trigger  = document.getElementById('periodTrigger');
+const calGrid  = document.getElementById('calGrid');
+const calDow   = document.getElementById('calDow');
+const calTitle = document.getElementById('calTitle');
+const calHint  = document.getElementById('calHint');
+
+/* ---------------- resolve a state to {from, to} ---------------- */
+function resolve(s){
+  if (s.mode === 'day')   return { from:s.day, to:s.day };
+  if (s.mode === 'week')  return { from:s.week, to:addDays(s.week, 6), qualifier:`Week ${isoWeekNumber(s.week)}` };
+  if (s.mode === 'month') return { from:new Date(s.month.y, s.month.m, 1), to:new Date(s.month.y, s.month.m + 1, 0) };
+  if (s.mode === 'year')  return { from:new Date(s.year, 0, 1), to:new Date(s.year, 11, 31) };
+  const { from, to } = s.custom;
+  if (!from || !to) return { from, to, incomplete:true };
+  return { from, to };
+}
+
+/* One date for a single day, a from → to pair for everything else. */
+function spanText(r){
+  if (r.incomplete) return null;
+  return sameDay(r.from, r.to) ? fmtDate(r.from) : `${fmtDate(r.from)} → ${fmtDate(r.to)}`;
+}
+function spanHTML(r){
+  const span = spanText(r);
+  return r.qualifier ? `<span class="qualifier">${r.qualifier} ·</span> ${span}` : span;
+}
+
+/* ---------------- calendar rendering ---------------- */
+const MODE_LABEL = { day:'Day', week:'Week', month:'Month', year:'Year', custom:'Custom range' };
+const HINTS = {
+  day:    'Pick the day to report on.',
+  week:   'Hover a date to preview its Monday–Sunday week, then click to select it.',
+  month:  'Pick a month; the range covers the whole month.',
+  year:   'Pick a year; the range covers 1 Jan to 31 Dec.',
+  custom: 'Click the start date, then the end date.',
+};
+
+function renderCalendar(){
+  const mode = draft.mode;
+  calHint.textContent = HINTS[mode];
+  calDow.hidden = (mode === 'month' || mode === 'year');
+  calGrid.className = 'cal-grid' + (mode === 'month' ? ' months' : mode === 'year' ? ' years' : '');
+
+  if (mode === 'month'){ renderMonthGrid(); return; }
+  if (mode === 'year'){ renderYearGrid();  return; }
+  renderDayGrid();
+}
+
+function renderDayGrid(){
+  calTitle.textContent = `${MONTH_NAMES[view.m]} ${view.y}`;
+  calDow.innerHTML = DOW.map(d => `<span>${d}</span>`).join('');
+
+  /* Six Monday-aligned rows always — a fixed height stops the popover
+     jumping as you page through months. */
+  const first = weekStart(new Date(view.y, view.m, 1));
+  const cells = [];
+  for (let i = 0; i < 42; i++){
+    const d = addDays(first, i);
+    const muted = d.getMonth() !== view.m;
+    cells.push(`<button type="button" class="cal-cell${muted ? ' muted' : ''}${sameDay(d, today) ? ' today' : ''}"
+      data-date="${iso(d)}" data-week="${iso(weekStart(d))}"
+      aria-label="${fmtDate(d)}">${d.getDate()}</button>`);
+  }
+  calGrid.innerHTML = cells.join('');
+  paintDayGrid();
+}
+
+/* Selection + hover states are painted separately from the grid build so a
+   hover repaint never rebuilds 42 buttons (and never drops focus). */
+function paintDayGrid(){
+  const cells = calGrid.querySelectorAll('.cal-cell');
+  const mode  = draft.mode;
+  const selWeek = iso(draft.week);
+  const hoverWeek = hoverDate ? iso(weekStart(hoverDate)) : null;
+
+  /* Custom range: once a start is set and the end is still open, the hovered
+     date stands in for the end so the band you see is the band you'd get. */
+  let rFrom = null, rTo = null;
+  if (mode === 'custom'){
+    rFrom = draft.custom.from;
+    rTo   = draft.custom.to || (rFrom && hoverDate && hoverDate >= rFrom ? hoverDate : null);
+  }
+
+  cells.forEach(cell => {
+    const d = new Date(cell.dataset.date + 'T00:00:00');
+    cell.className = 'cal-cell'
+      + (d.getMonth() !== view.m ? ' muted' : '')
+      + (sameDay(d, today) ? ' today' : '');
+
+    if (mode === 'day'){
+      if (sameDay(d, draft.day)) cell.classList.add('sel');
+      return;
+    }
+
+    /* Selected week stays solid while a different week previews underneath,
+       so hovering around never loses track of the current selection. */
+    if (mode === 'week'){
+      const wk = cell.dataset.week;
+      if (wk === selWeek)        cell.classList.add('sel-wk');
+      else if (wk === hoverWeek) cell.classList.add('wk');
+      if (wk === selWeek || wk === hoverWeek){
+        if (d.getDay() === 1) cell.classList.add('wk-start');   // Monday
+        if (d.getDay() === 0) cell.classList.add('wk-end');     // Sunday
+      }
+      return;
+    }
+
+    /* custom — the band runs through the end date so a hovered end reads as
+       part of the range; `sel` then repaints a committed end on top of it. */
+    if (rFrom && rTo && d > rFrom && d <= rTo) cell.classList.add('in-range');
+    if (rFrom && sameDay(d, rFrom)) cell.classList.add('sel');
+    if (draft.custom.to && sameDay(d, draft.custom.to)) cell.classList.add('sel');
+    if (rFrom && rTo && !sameDay(rFrom, rTo)){
+      if (sameDay(d, rFrom)) cell.classList.add('range-start');
+      if (sameDay(d, rTo))   cell.classList.add('range-end');
+    }
+  });
+}
+
+function renderMonthGrid(){
+  calTitle.textContent = String(view.y);
+  calGrid.innerHTML = MONTH_SHORT.map((n, i) => {
+    const sel = draft.month.y === view.y && draft.month.m === i;
+    return `<button type="button" class="cal-cell${sel ? ' sel' : ''}" data-month="${i}"
+      aria-label="${MONTH_NAMES[i]} ${view.y}">${n}</button>`;
+  }).join('');
+}
+
+/* 12-year block, paged by the same prev/next controls as the month view. */
+const yearBlockStart = y => y - ((y % 12 + 12) % 12);
+function renderYearGrid(){
+  const start = yearBlockStart(view.y);
+  calTitle.textContent = `${start} – ${start + 11}`;
+  calGrid.innerHTML = Array.from({ length:12 }, (_, i) => {
+    const y = start + i;
+    return `<button type="button" class="cal-cell${draft.year === y ? ' sel' : ''}" data-year="${y}">${y}</button>`;
+  }).join('');
+}
+
+/* ---------------- popover chrome ---------------- */
+function syncModeList(){
+  pop.querySelectorAll('.mode-list button').forEach(b => {
+    b.setAttribute('aria-checked', b.dataset.mode === draft.mode);
+  });
+}
+
+function syncPreview(){
+  const r = resolve(draft);
+  const text = spanText(r);
+  document.getElementById('popPreview').classList.toggle('pending', !text);
+  document.getElementById('popPreview').innerHTML = text
+    ? spanHTML(r)
+    : 'Pick an end date to finish the range';
+  document.getElementById('popApply').disabled = !text;
+}
+
+function renderPop(){ syncModeList(); renderCalendar(); syncPreview(); }
+
+function openPop(){
+  draft = clone(applied);
+  hoverDate = null;
+  const r = resolve(applied);
+  if (r.from){ view = { y:r.from.getFullYear(), m:r.from.getMonth() }; }
+  pop.hidden = false;
+  trigger.setAttribute('aria-expanded', 'true');
+  renderPop();
+  pop.querySelector('.mode-list button[aria-checked="true"]').focus();
+}
+
+function closePop({ focusTrigger = true } = {}){
+  pop.hidden = true;
+  trigger.setAttribute('aria-expanded', 'false');
+  if (focusTrigger) trigger.focus();
+}
+
+/* ---------------- commit ---------------- */
+function renderTrigger(){
+  const r = resolve(applied);
+  document.getElementById('ptMode').textContent  = MODE_LABEL[applied.mode];
+  document.getElementById('ptRange').innerHTML   = spanHTML(r);
+}
+
+trigger.addEventListener('click', () => pop.hidden ? openPop() : closePop());
+document.getElementById('popCancel').addEventListener('click', () => closePop());
+document.getElementById('popApply').addEventListener('click', () => {
+  applied = clone(draft);
+  renderTrigger();
+  closePop();
+});
+
+/* mode switch — keeps the calendar on the month the current draft points at */
+pop.querySelector('.mode-list').addEventListener('click', e => {
+  const btn = e.target.closest('button[data-mode]');
+  if (!btn) return;
+  draft.mode = btn.dataset.mode;
+  hoverDate = null;
+  if (draft.mode === 'custom') draft.custom = { from:draft.custom.from, to:draft.custom.to };
+  const r = resolve(draft);
+  if (r.from) view = { y:r.from.getFullYear(), m:r.from.getMonth() };
+  renderPop();
+});
+
+/* prev / next — one month, one year or one 12-year block, per mode */
+function page(step){
+  if (draft.mode === 'month'){ view.y += step; }
+  else if (draft.mode === 'year'){ view.y = yearBlockStart(view.y) + step * 12; }
+  else {
+    const d = new Date(view.y, view.m + step, 1);
+    view = { y:d.getFullYear(), m:d.getMonth() };
+  }
+  renderCalendar();
+}
+document.getElementById('calPrev').addEventListener('click', () => page(-1));
+document.getElementById('calNext').addEventListener('click', () => page(1));
+
+/* ---------------- calendar interaction ---------------- */
+calGrid.addEventListener('click', e => {
+  const cell = e.target.closest('.cal-cell');
+  if (!cell) return;
+
+  if (cell.dataset.month !== undefined){
+    draft.month = { y:view.y, m:+cell.dataset.month };
+    renderPop();
+    return;
+  }
+  if (cell.dataset.year !== undefined){
+    draft.year = +cell.dataset.year;
+    renderPop();
+    return;
+  }
+
+  const d = new Date(cell.dataset.date + 'T00:00:00');
+  /* Clicking a neighbouring month's day pages the view to it, so the
+     selection never lands somewhere you can no longer see. */
+  if (d.getMonth() !== view.m) view = { y:d.getFullYear(), m:d.getMonth() };
+
+  if (draft.mode === 'day')  draft.day  = d;
+  if (draft.mode === 'week') draft.week = weekStart(d);
+  if (draft.mode === 'custom'){
+    const { from, to } = draft.custom;
+    // a complete range restarts; an open one closes — clicking before the
+    // start re-anchors instead of producing a backwards range
+    if (!from || to || d < from) draft.custom = { from:d, to:null };
+    else                         draft.custom = { from, to:d };
+  }
+  hoverDate = null;
+  renderCalendar();
+  syncPreview();
+});
+
+/* Hover / keyboard focus drive the same preview: the whole Monday–Sunday week
+   in Week mode, the pending range in Custom mode. */
+function setHover(cell){
+  const next = cell && cell.dataset.date ? new Date(cell.dataset.date + 'T00:00:00') : null;
+  if (draft.mode !== 'week' && draft.mode !== 'custom') return;
+  if (next && hoverDate && sameDay(next, hoverDate)) return;
+  hoverDate = next;
+  paintDayGrid();
+}
+calGrid.addEventListener('mouseover', e => setHover(e.target.closest('.cal-cell')));
+calGrid.addEventListener('focusin',   e => setHover(e.target.closest('.cal-cell')));
+calGrid.addEventListener('mouseleave', () => setHover(null));
+
+/* ---------------- dismissal ---------------- */
+document.addEventListener('pointerdown', e => {
+  if (pop.hidden) return;
+  if (!pop.contains(e.target) && !trigger.contains(e.target)) closePop({ focusTrigger:false });
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && !pop.hidden){ e.stopPropagation(); closePop(); }
+});
+
+renderTrigger();
+</script>
+</body>
+</html>
