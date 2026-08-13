@@ -85,13 +85,9 @@ body.embed .topbar{display:none}
 @media(max-width:640px){ .main{padding:var(--s4)} }
 
 /* ============ PAGE HEADER ============ */
-.page-header{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s4);margin-bottom:var(--s5);flex-wrap:wrap}
-.page-title{font-family:var(--font-display);font-size:26px;font-weight:800;letter-spacing:-.02em}
-.page-subtitle{color:var(--text-muted);font-size:14px;margin-top:2px}
+/* Controls only — the page title and breadcrumb belong to the ERP shell header. */
+.page-header{display:flex;align-items:flex-start;justify-content:flex-end;gap:var(--s4);margin-bottom:var(--s4);flex-wrap:wrap}
 .page-actions{display:flex;gap:var(--s2);flex-wrap:wrap;align-items:center}
-.breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted);margin-bottom:6px}
-.breadcrumb .current{color:var(--text);font-weight:600}
-.breadcrumb svg{width:13px;height:13px}
 
 /* ============ BUTTONS ============ */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s2);height:38px;padding:0 var(--s4);border-radius:var(--r-md);font-weight:600;font-size:14px;transition:all 180ms var(--ease);white-space:nowrap;border:1px solid transparent;letter-spacing:.01em}
@@ -150,6 +146,7 @@ body.embed .topbar{display:none}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px}
 .cal-grid.months{grid-template-columns:repeat(3,1fr);gap:var(--s2)}
 .cal-grid.years{grid-template-columns:repeat(3,1fr);gap:var(--s2)}
+.cal-grid.quarters{grid-template-columns:repeat(2,1fr);gap:var(--s2)}
 .cal-hint{margin-top:var(--s2);font-size:11.5px;color:var(--text-muted);line-height:1.35}
 
 /* Day cells sit on a seamless 1px grid so a highlighted week reads as one
@@ -174,6 +171,12 @@ body.embed .topbar{display:none}
 .cal-cell.sel.today::after{background:#fff}
 .cal-grid.months .cal-cell,.cal-grid.years .cal-cell{height:38px;border-radius:var(--r-md)}
 .cal-grid.years .cal-cell{font-variant-numeric:tabular-nums}
+/* Quarters name the months they cover — Q3 alone is not a date range. */
+.cal-grid.quarters .cal-cell{height:52px;border-radius:var(--r-md);align-content:center;gap:2px}
+.cal-grid.quarters .q-months{font-size:11px;font-weight:500;color:var(--text-muted)}
+.cal-grid.quarters .cal-cell:hover .q-months{color:var(--primary-active)}
+.cal-grid.quarters .cal-cell.sel .q-months,
+.cal-grid.quarters .cal-cell.sel:hover .q-months{color:rgba(255,255,255,.82)}
 
 .pop-foot{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);padding:var(--s3);border-top:1px solid var(--divider);background:var(--primary-50);border-radius:0 0 var(--r-lg) var(--r-lg)}
 .pop-preview{font-size:12.5px;font-weight:600;color:var(--primary-active)}
@@ -196,19 +199,8 @@ body.embed .topbar{display:none}
   .pop-foot{flex-wrap:wrap}
 }
 
-/* ============ TAB NAV (sticky pill nav — ERP section-nav pattern) ============ */
-.section-nav{position:sticky;top:var(--topbar-h);z-index:40;padding:var(--s3) 0;margin-bottom:var(--s4);background:linear-gradient(var(--bg) 78%,transparent);display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap}
-body.embed .section-nav{top:0}
-.section-nav-inner{display:flex;gap:2px;background:var(--surface);padding:4px;border-radius:var(--r-full);border:1px solid var(--border);box-shadow:var(--shadow-sm);width:max-content;max-width:100%;overflow-x:auto;scrollbar-width:none}
-.section-nav-inner::-webkit-scrollbar{display:none}
-.nav-pill{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;font-size:13px;font-weight:600;color:var(--text-muted);border-radius:var(--r-full);transition:all var(--t-fast) var(--ease);white-space:nowrap;cursor:pointer}
-.nav-pill svg{width:15px;height:15px}
-.nav-pill:hover{color:var(--primary);background:var(--cta-50)}
-.nav-pill.active{background:var(--grad);color:#fff;box-shadow:0 1px 6px var(--cta-shadow)}
-.nav-pill:focus-visible{outline:none;box-shadow:0 0 0 3px var(--cta-50),0 0 0 1px var(--cta)}
-
 /* ============ PANELS ============ */
-.tab-panel[hidden]{display:none}
+.section-panel[hidden]{display:none}
 .panel{margin-bottom:var(--s5)}
 .panel-head{display:flex;align-items:center;gap:var(--s3);margin-bottom:var(--s3)}
 .panel-num{font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--primary);background:var(--primary-50);border:1px solid var(--primary-100);border-radius:var(--r-sm);padding:3px 7px;flex-shrink:0}
@@ -234,6 +226,10 @@ body.embed .section-nav{top:0}
 .kpi-label svg{width:15px;height:15px;color:var(--primary)}
 .kpi-value{font-size:26px;font-weight:700;letter-spacing:-.02em;line-height:1.15}
 .kpi-value .unit{font-size:12px;font-weight:600;color:var(--text-muted);margin-left:5px;letter-spacing:0}
+/* value riding the top-right corner of a KPI card — the money figure that
+   belongs with the count but must not compete with it */
+.kpi-corner{margin-left:auto;font-size:13px;font-weight:700;color:var(--text-secondary);letter-spacing:-.01em;white-space:nowrap}
+.kpi-corner .unit{font-size:11px;font-weight:600;color:var(--text-muted);margin-left:4px;letter-spacing:0}
 .kpi-sub{font-size:12px;color:var(--text-muted);margin-top:5px}
 .kpi-sub b{color:var(--text-secondary);font-weight:600}
 /* temperature-tinted values */
@@ -265,7 +261,9 @@ body.embed .section-nav{top:0}
 .chart-duo{display:grid;grid-template-columns:1fr 1fr;gap:var(--s4)}
 @media(max-width:900px){ .chart-duo{grid-template-columns:1fr} }
 
-.legend{display:flex;gap:var(--s4);flex-wrap:wrap;margin-bottom:var(--s4);font-size:12.5px;color:var(--text-secondary)}
+/* min-height keeps side-by-side charts on one baseline: a card with a one-item
+   legend starts its plot at the same y as a card with three */
+.legend{display:flex;align-items:center;gap:var(--s4);flex-wrap:wrap;min-height:20px;margin-bottom:var(--s4);font-size:12.5px;color:var(--text-secondary)}
 .legend span.item{display:inline-flex;align-items:center;gap:7px;font-weight:500}
 .legend .dot{width:10px;height:10px;border-radius:3px;display:inline-block;flex-shrink:0}
 
@@ -304,6 +302,132 @@ tfoot td.num{text-align:right;font-family:var(--font-mono);font-variant-numeric:
 .meter .fill.under{background:var(--warning)}
 .meter .fill.low{background:var(--danger)}
 .meter .pct{font-family:var(--font-mono);font-weight:600;font-size:13px;min-width:52px;text-align:right;font-variant-numeric:tabular-nums}
+
+/* ============ MEMBER SCORECARDS (Sales · panel 03) ============ */
+/* One card per member. Reading order inside a card is the order the questions
+   get asked: how well do they convert, what is that worth, what is still open,
+   and are they on their deal-count KPI. */
+.mcard-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s3)}
+@media(max-width:1180px){ .mcard-grid{grid-template-columns:repeat(2,1fr)} }
+@media(max-width:560px){ .mcard-grid{grid-template-columns:1fr} }
+.mcard{display:flex;flex-direction:column;gap:7px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow-sm);padding:9px var(--s4) 10px}
+.mcard-head{display:flex;align-items:center;gap:9px;padding-bottom:7px;border-bottom:1px solid var(--divider)}
+.mcard-head .av{width:26px;height:26px;border-radius:50%;background:var(--primary-100);color:var(--primary-active);display:grid;place-items:center;font-size:10.5px;font-weight:700;flex-shrink:0}
+.mcard-head .nm{font-weight:700;font-size:14px;white-space:nowrap}
+.mcard-head .rate{margin-left:auto;font-size:11.5px;padding:2px 8px}
+
+/* conversion rate — the headline figure, with its own part-to-whole bar */
+.mcard-hero{display:flex;align-items:baseline;gap:8px;margin-bottom:-4px}
+.mcard-hero .val{font-size:23px;font-weight:700;letter-spacing:-.02em;line-height:1.1;font-variant-numeric:tabular-nums}
+.mcard-hero .cap{font-size:11.5px;color:var(--text-muted);font-weight:500}
+.mcard-hero .frac{margin-left:auto;font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--text-secondary);white-space:nowrap}
+.mini-track{height:6px;background:var(--divider);border-radius:var(--r-full);overflow:hidden}
+.mini-track span{display:block;height:100%;border-radius:var(--r-full);background:var(--series-1)}
+
+.ms-row{display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-size:12px;color:var(--text-muted)}
+.ms-row .v{font-family:var(--font-mono);font-size:12.5px;font-weight:600;color:var(--text);font-variant-numeric:tabular-nums}
+.ms-row .v .of{color:var(--text-muted);font-weight:500}
+
+.mcard-duo{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-top:7px;border-top:1px solid var(--divider)}
+.mcard-duo .lbl{display:block;font-size:11.5px;color:var(--text-muted);margin-bottom:1px;line-height:1.35}
+.mcard-duo .n{font-size:15.5px;font-weight:700;letter-spacing:-.01em;line-height:1.3;font-variant-numeric:tabular-nums}
+.mcard-duo .n .u{font-size:10.5px;font-weight:600;color:var(--text-muted);margin-left:4px;letter-spacing:0}
+
+/* deal-count KPI — tinted by attainment band: red under 50%, amber under 80%.
+   The band is also spelled out in the header chip, so the status never rests
+   on colour alone. */
+.mcard-kpi{margin-top:auto;padding:7px 10px;border-radius:var(--r-md);border:1px solid transparent;background:var(--success-50)}
+.mcard-kpi .top{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:5px}
+.mcard-kpi .lbl{font-size:11.5px;font-weight:600;color:var(--text-secondary)}
+.mcard-kpi .lbl .frac{font-family:var(--font-mono);font-weight:600;color:var(--text-muted);margin-left:6px}
+.mcard-kpi .pct{font-size:13.5px;font-weight:700;color:#047857;font-variant-numeric:tabular-nums}
+.mcard-kpi .track{display:block;height:6px;border-radius:var(--r-full);background:rgba(17,24,39,.08);overflow:hidden}
+.mcard-kpi .fill{display:block;height:100%;border-radius:var(--r-full);background:var(--success)}
+.mcard-kpi.mid{background:var(--warning-50);border-color:#FDE68A}
+.mcard-kpi.mid .pct{color:#B45309}
+.mcard-kpi.mid .fill{background:var(--warning)}
+.mcard-kpi.lo{background:var(--danger-50);border-color:#FECACA}
+.mcard-kpi.lo .pct{color:var(--danger)}
+.mcard-kpi.lo .fill{background:var(--danger)}
+.mcard.mid{border-color:#FCD34D}
+.mcard.lo{border-color:#FCA5A5}
+/* temperature ledger inside a scorecard — the three rows the leadup table used
+   to carry, one line each: contacted / replied and the rate they produce */
+.mcard-temps{display:flex;flex-direction:column;gap:5px;padding-top:7px;border-top:1px solid var(--divider)}
+.mcard-temps .tr{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:8px}
+.mcard-temps .nm{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--text-secondary)}
+.mcard-temps .sw{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.mcard-temps .ct{font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--text);font-variant-numeric:tabular-nums}
+.rate.sm{font-size:11px;padding:1px 7px;min-width:52px;text-align:center}
+
+.head-note{font-size:12px;color:var(--text-muted);align-self:center}
+
+/* ============ SALES SCREEN DENSITY ============
+   Panels 01-03 are read together — conversion charts against the scorecards
+   that quantify them — so the screen is tuned to land all three in one view.
+   Only spacing and type scale move; nothing is hidden. */
+body.screen-deal .main{padding-top:var(--s5)}
+body.screen-deal .page-header{margin-bottom:var(--s3)}
+#sec-deal .panel{margin-bottom:var(--s4)}
+#sec-deal .panel-head{margin-bottom:var(--s2)}
+/* title and its description share one line here — three stacked panel heads
+   cost 45px of pure heading, which is the difference between fitting and not */
+#sec-deal .panel-head > div{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+#sec-deal .panel-title{font-size:15.5px}
+#sec-deal .panel-desc{font-size:12px}
+#sec-deal .kpi-grid,#sec-deal .chart-duo{gap:var(--s3)}
+#sec-deal .kpi-card{padding:10px var(--s4) 11px}
+#sec-deal .kpi-label{margin-bottom:3px}
+#sec-deal .kpi-value{font-size:21px}
+#sec-deal .kpi-sub{margin-top:3px}
+#sec-deal .card-head{padding:9px var(--s4)}
+#sec-deal .card-body{padding:var(--s3) var(--s4)}
+#sec-deal .legend{min-height:18px;margin-bottom:6px}
+/* the charts are the only elastic part of the screen: they take their full
+   152px where there is room and give height back on a short viewport, so the
+   scorecards stay above the fold instead of the panels spilling into a scroll */
+#sec-deal .chart-wrap.short{height:clamp(108px,15vh,152px)}
+
+/* ============ BUSINESS DEVELOPMENT SCREEN DENSITY ============
+   Same bargain as Sales: panels 01-03 — the outreach KPIs, the rate chart and
+   the scorecards that itemise it — are read as one argument, so the screen is
+   tuned to land all three in a single view. Spacing and type scale only. */
+body.screen-leadup .main{padding-top:var(--s5)}
+body.screen-leadup .page-header{margin-bottom:var(--s3)}
+#sec-leadup .panel{margin-bottom:var(--s4)}
+#sec-leadup .panel-head{margin-bottom:var(--s2)}
+#sec-leadup .panel-head > div{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+#sec-leadup .panel-title{font-size:15.5px}
+#sec-leadup .panel-desc{font-size:12px}
+#sec-leadup .kpi-grid{gap:var(--s3)}
+#sec-leadup .kpi-card{padding:10px var(--s4) 11px}
+#sec-leadup .kpi-label{margin-bottom:3px}
+#sec-leadup .kpi-value{font-size:21px}
+#sec-leadup .kpi-sub{margin-top:3px}
+#sec-leadup .card-body{padding:var(--s3) var(--s4)}
+#sec-leadup .legend{min-height:18px;margin-bottom:6px}
+#sec-leadup .mcard{gap:6px;padding:8px var(--s4) 9px}
+#sec-leadup .mcard-hero .val{font-size:21px}
+/* The chart is the elastic part: it takes whatever the viewport has left once
+   panels 01 and 03 are placed, so panel 02 is as tall as it can be and the
+   three panels still land in one view. 629px is the measured height of
+   everything else between the top of the viewport and the bottom of panel 03;
+   the rest is headroom for the fold. Panel 04 sits below it, by design. */
+#sec-leadup .chart-wrap{height:clamp(110px,calc(100vh - 639px),340px)}
+/* short viewport — the screen gives up padding and type scale, in that order,
+   before it gives up the single-view fit */
+@media(max-height:760px){
+  body.screen-leadup .main{padding-top:var(--s4)}
+  body.screen-leadup .page-header{margin-bottom:var(--s2)}
+  #sec-leadup .panel{margin-bottom:10px}
+  #sec-leadup .kpi-card{padding:8px var(--s4) 9px}
+  #sec-leadup .kpi-value{font-size:19px}
+  #sec-leadup .mcard{gap:5px}
+  #sec-leadup .mcard-temps{gap:3px}
+  #sec-leadup .mcard-hero .val{font-size:19px}
+  /* same budget, 588px of it — this tier spends less on padding and type */
+  #sec-leadup .chart-wrap{height:max(110px,calc(100vh - 598px))}
+}
 
 /* ============ INSIGHTS ============ */
 .insight{display:flex;gap:var(--s3);padding:var(--s4) 0;border-bottom:1px solid var(--divider)}
@@ -357,13 +481,10 @@ tfoot td.num{text-align:right;font-family:var(--font-mono);font-variant-numeric:
 
   <main class="main">
 
-    <!-- ============ PAGE HEADER ============ -->
+    <!-- ============ PAGE HEADER ============
+         Title and breadcrumb live in the ERP shell header, so this page
+         carries only the controls that reframe its numbers. -->
     <div class="page-header">
-      <div>
-        <div class="breadcrumb"><span>CRM</span><svg><use href="#i-chevron-right"/></svg><span class="current">Dashboard</span></div>
-        <h1 class="page-title">Dashboard</h1>
-        <p class="page-subtitle">Signed revenue, lead-up activity and deal throughput for the sales team.</p>
-      </div>
       <div class="page-actions">
         <!-- Currency first: it reframes every number on the page, so it reads
              before the period the numbers cover. -->
@@ -390,6 +511,7 @@ tfoot td.num{text-align:right;font-family:var(--font-mono);font-variant-numeric:
                 <button type="button" role="radio" aria-checked="false" data-mode="day">Day</button>
                 <button type="button" role="radio" aria-checked="false" data-mode="week">Week</button>
                 <button type="button" role="radio" aria-checked="false" data-mode="month">Month</button>
+                <button type="button" role="radio" aria-checked="false" data-mode="quarter">Quarter</button>
                 <button type="button" role="radio" aria-checked="true"  data-mode="year">Year</button>
                 <button type="button" role="radio" aria-checked="false" data-mode="custom">Custom range</button>
               </div>
@@ -418,25 +540,10 @@ tfoot td.num{text-align:right;font-family:var(--font-mono);font-variant-numeric:
       </div>
     </div>
 
-    <!-- ============ TABS ============ -->
-    <nav class="section-nav" aria-label="Dashboard sections">
-      <div class="section-nav-inner" role="tablist">
-        <button class="nav-pill active" role="tab" aria-selected="true" aria-controls="tab-overall" id="pill-overall" onclick="switchTab('overall')">
-          <svg><use href="#i-activity"/></svg> Overall
-        </button>
-        <button class="nav-pill" role="tab" aria-selected="false" aria-controls="tab-leadup" id="pill-leadup" onclick="switchTab('leadup')">
-          <svg><use href="#i-send"/></svg> Lead
-        </button>
-        <button class="nav-pill" role="tab" aria-selected="false" aria-controls="tab-deal" id="pill-deal" onclick="switchTab('deal')">
-          <svg><use href="#i-briefcase"/></svg> Deal
-        </button>
-      </div>
-    </nav>
-
     <!-- ==================================================================
-         TAB 1 · OVERALL
+         SCREEN · OVERALL  (#overall — CRM › Dashboard)
          ================================================================== -->
-    <section class="tab-panel" id="tab-overall" role="tabpanel" aria-labelledby="pill-overall">
+    <section class="section-panel" id="sec-overall" aria-label="Overall performance">
 
       <!-- Panel 1 — total signed contract value + split by contract type -->
       <div class="panel">
@@ -557,9 +664,9 @@ tfoot td.num{text-align:right;font-family:var(--font-mono);font-variant-numeric:
     </section>
 
     <!-- ==================================================================
-         TAB 2 · LEADUP
+         SCREEN · LEAD  (#leadup — Dashboard › CRM › Business Development)
          ================================================================== -->
-    <section class="tab-panel" id="tab-leadup" role="tabpanel" aria-labelledby="pill-leadup" hidden>
+    <section class="section-panel" id="sec-leadup" aria-label="Lead performance" hidden>
 
       <!-- Panel 1 — reply-rate KPIs -->
       <div class="panel">
@@ -600,7 +707,7 @@ tfoot td.num{text-align:right;font-family:var(--font-mono);font-variant-numeric:
           <span class="panel-num">02</span>
           <div>
             <div class="panel-title">Reply rate by member &amp; temperature</div>
-            <div class="panel-desc">Percentage of contacted leads that replied.</div>
+            <div class="panel-desc">Percentage of contacted leads that replied — replies / leads labelled under each rate.</div>
           </div>
         </div>
         <div class="card">
@@ -608,37 +715,22 @@ tfoot td.num{text-align:right;font-family:var(--font-mono);font-variant-numeric:
             <div class="legend" id="luLegend"><!-- injected --></div>
             <div class="chart-wrap">
               <canvas id="chartLeadRate" role="img"
-                aria-label="Grouped column chart of reply rate by member and lead temperature. Sophie: cold 20.5%, warm 20.0%, hot 28.6%. Chloe: cold 9.5%, warm 20.0%, hot 0%. Steve: cold 4.0%, warm 23.3%, hot 60.0%. Kai: cold 20.0%, warm 21.4%, hot 33.3%."></canvas>
+                aria-label="Grouped column chart of reply rate by member and lead temperature, each column labelled with its rate and the replies over leads behind it. Sophie: cold 20.5% (8 of 39), warm 20.0% (6 of 30), hot 28.6% (2 of 7). Chloe: cold 9.5% (6 of 63), warm 20.0% (3 of 15), hot 0% (0 of 4). Steve: cold 4.0% (2 of 50), warm 23.3% (7 of 30), hot 60.0% (3 of 5). Kai: cold 20.0% (9 of 45), warm 21.4% (6 of 28), hot 33.3% (2 of 6)."></canvas>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Panel 3 — detail table -->
+      <!-- Panel 3 — per-member scorecards -->
       <div class="panel">
         <div class="panel-head">
           <span class="panel-num">03</span>
           <div>
             <div class="panel-title">Detailed metrics</div>
-            <div class="panel-desc">Leads contacted / replies received, per temperature.</div>
+            <div class="panel-desc">One scorecard per member — reply rate, replies / leads contacted per temperature, and the lead-count KPI.</div>
           </div>
         </div>
-        <div class="card">
-          <div class="table-wrap">
-            <table id="luTable">
-              <thead>
-                <tr>
-                  <th>Member</th>
-                  <th class="num">Cold (leads / replies)</th><th class="num">Rate</th>
-                  <th class="num">Warm (leads / replies)</th><th class="num">Rate</th>
-                  <th class="num">Hot (leads / replies)</th><th class="num">Rate</th>
-                </tr>
-              </thead>
-              <tbody><!-- injected --></tbody>
-              <tfoot><!-- injected --></tfoot>
-            </table>
-          </div>
-        </div>
+        <div class="mcard-grid" id="luMemberCards"><!-- injected --></div>
       </div>
 
       <!-- Panel 4 — insights -->
@@ -675,9 +767,9 @@ tfoot td.num{text-align:right;font-family:var(--font-mono);font-variant-numeric:
     </section>
 
     <!-- ==================================================================
-         TAB 3 · DEAL
+         SCREEN · DEAL  (#deal — Dashboard › CRM › Sales)
          ================================================================== -->
-    <section class="tab-panel" id="tab-deal" role="tabpanel" aria-labelledby="pill-deal" hidden>
+    <section class="section-panel" id="sec-deal" aria-label="Deal performance" hidden>
 
       <!-- Panel 1 — deal KPIs -->
       <div class="panel">
@@ -690,19 +782,21 @@ tfoot td.num{text-align:right;font-family:var(--font-mono);font-variant-numeric:
         </div>
         <div class="kpi-grid three">
           <div class="kpi-card">
-            <div class="kpi-label"><svg><use href="#i-briefcase"/></svg> Total deals</div>
+            <div class="kpi-label"><svg><use href="#i-briefcase"/></svg> Total deals
+              <span class="kpi-corner" id="dlTotalValueCorner">—</span></div>
             <div class="kpi-value" id="dlTotalDeals">—</div>
             <div class="kpi-sub">Created across <b>4</b> members</div>
           </div>
           <div class="kpi-card">
-            <div class="kpi-label"><svg><use href="#i-award"/></svg> Won deals</div>
+            <div class="kpi-label"><svg><use href="#i-award"/></svg> Won deals
+              <span class="kpi-corner" id="dlWonValueCorner">—</span></div>
             <div class="kpi-value" id="dlWonDeals">—</div>
-            <div class="kpi-sub">Win rate <b id="dlWinRate">—</b></div>
+            <div class="kpi-sub">Conversion rate <b id="dlWinRate">—</b></div>
           </div>
           <div class="kpi-card">
-            <div class="kpi-label"><svg><use href="#i-dollar"/></svg> Total deal value</div>
-            <div class="kpi-value" id="dlTotalValue">—<span class="unit">USD</span></div>
-            <div class="kpi-sub">Average deal <b id="dlAvgValue">—</b></div>
+            <div class="kpi-label"><svg><use href="#i-dollar"/></svg> In pipeline</div>
+            <div class="kpi-value" id="dlOpenDeals">—<span class="unit">open deals</span></div>
+            <div class="kpi-sub">In pipeline value <b id="dlOpenValue">—</b></div>
           </div>
         </div>
       </div>
@@ -713,66 +807,52 @@ tfoot td.num{text-align:right;font-family:var(--font-mono);font-variant-numeric:
           <span class="panel-num">02</span>
           <div>
             <div class="panel-title">Per-member breakdown</div>
-            <div class="panel-desc">Deal count and deal value carry different units, so each gets its own axis-scale chart.</div>
+            <div class="panel-desc">Deals created against deals won, and what each member still carries in the pipeline.</div>
           </div>
         </div>
         <div class="chart-duo">
           <div class="card">
             <div class="card-head">
               <h3><svg><use href="#i-briefcase"/></svg> Deals created &amp; won</h3>
-              <span class="sub">count</span>
+              <span class="sub">count · % = conversion rate</span>
             </div>
             <div class="card-body">
               <div class="legend" id="dlCountLegend"><!-- injected --></div>
               <div class="chart-wrap short">
                 <canvas id="chartDealCount" role="img"
-                  aria-label="Stacked column chart of deals per member, split into won and still open or lost. Sophie 42 deals of which 14 won, Chloe 51 of which 11 won, Steve 38 of which 13 won, Kai 29 of which 8 won."></canvas>
+                  aria-label="Stacked column chart of deals per member, split into won and still open or lost, with the conversion rate labelled inside the won segment. Sophie 42 deals of which 14 won, 33.3%. Chloe 51 of which 11 won, 21.6%. Steve 38 of which 13 won, 34.2%. Kai 29 of which 8 won, 27.6%."></canvas>
               </div>
             </div>
           </div>
           <div class="card">
             <div class="card-head">
-              <h3><svg><use href="#i-dollar"/></svg> Total deal value</h3>
-              <span class="sub"><span class="cur-unit">USD</span></span>
+              <h3><svg><use href="#i-briefcase"/></svg> In pipeline</h3>
+              <span class="sub">count</span>
             </div>
             <div class="card-body">
+              <div class="legend" id="dlOpenLegend"><!-- injected --></div>
               <div class="chart-wrap short">
-                <canvas id="chartDealValue" role="img"
-                  aria-label="Column chart of total deal value per member. Values are labelled on each column and listed in the table below."></canvas>
+                <canvas id="chartDealOpen" role="img"
+                  aria-label="Column chart of deals still in the pipeline per member, excluding won and lost. Sophie 20, Chloe 28, Steve 18, Kai 15. Counts are labelled on each column."></canvas>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Panel 3 — detail table -->
+      <!-- Panel 3 — per-member scorecards -->
       <div class="panel">
         <div class="panel-head">
           <span class="panel-num">03</span>
           <div>
             <div class="panel-title">Detailed metrics</div>
-            <div class="panel-desc">Deal counts, win rate and value per member.</div>
+            <div class="panel-desc">One scorecard per member — conversion, value, pipeline and deal-count KPI.</div>
+          </div>
+          <div class="panel-head-actions">
+            <span class="head-note">Values in <span class="cur-unit">USD</span></span>
           </div>
         </div>
-        <div class="card">
-          <div class="table-wrap">
-            <table id="dlTable">
-              <thead>
-                <tr>
-                  <th>Member</th>
-                  <th class="num">Total deals</th>
-                  <th class="num">Won deals</th>
-                  <th class="num">Win rate</th>
-                  <th class="num">Total deal value</th>
-                  <th class="num">Won value</th>
-                  <th class="num">Avg deal size</th>
-                </tr>
-              </thead>
-              <tbody><!-- injected --></tbody>
-              <tfoot><!-- injected --></tfoot>
-            </table>
-          </div>
-        </div>
+        <div class="mcard-grid" id="dlMemberCards"><!-- injected --></div>
       </div>
 
       <!-- Panel 4 — insights -->
@@ -796,11 +876,11 @@ tfoot td.num{text-align:right;font-family:var(--font-mono);font-variant-numeric:
             </div>
             <div class="insight">
               <span class="tag warm">Capacity</span>
-              <p><b>Kai</b> runs the smallest pipeline (29 deals) at a mid-pack win rate — there is headroom to raise volume without hurting conversion. Reallocating a slice of Chloe's unqualified cold leads to Kai is the cheapest test.</p>
+              <p><b>Kai</b> runs the smallest pipeline (29 deals) at a mid-pack win rate, and sits at <span id="insKaiKpi">—</span> — the only member in the red band. There is headroom to raise volume without hurting conversion: reallocating a slice of Chloe's unqualified cold leads to Kai is the cheapest test.</p>
             </div>
             <div class="insight">
               <span class="tag gap">Watch</span>
-              <p>Won value (<span id="insWonValue">4,710,000 USD</span>) is <b>52.7%</b> of total pipeline value. Deals that neither close nor drop out inflate the pipeline — enforce a stage-age limit so stale deals are marked lost rather than carried.</p>
+              <p>Won value (<span id="insWonValue">3,030,000 USD</span>) is <b id="insWonShare">33.9%</b> of total deal value. Deals that neither close nor drop out inflate the pipeline — enforce a stage-age limit so stale deals are marked lost rather than carried.</p>
             </div>
           </div>
         </div>
@@ -831,22 +911,28 @@ const TYPES = [
   { key:'commission', name:'Commission Sales',  color:C('series-5') },
 ];
 
+/* target      — signed-value KPI, thousands of USD
+   dealTarget  — deal-count KPI: how many deals the member is expected to open
+                 in the period, the denominator of the attainment band shown on
+                 each scorecard
+   leadTarget  — lead-count KPI: how many leads the member is expected to
+                 contact in the period, the same role on the leadup scorecard */
 const MEMBERS = [
-  { name:'Sophie', initials:'SO', target:1600, contracts:12,
+  { name:'Sophie', initials:'SO', target:1600, contracts:12, dealTarget:45, leadTarget:85,
     signed:{ odc:620, fixed:410, tm:180, headhunt:150, commission:90 },
-    deals:42, won:14, dealValue:2410,
+    deals:42, won:14, dealValue:2410, wonValue:890, open:20, openValue:1180,
     lead:{ cold:[39,8], warm:[30,6], hot:[7,2] } },
-  { name:'Chloe',  initials:'CH', target:1400, contracts:10,
+  { name:'Chloe',  initials:'CH', target:1400, contracts:10, dealTarget:48, leadTarget:95,
     signed:{ odc:430, fixed:320, tm:260, headhunt:110, commission:80 },
-    deals:51, won:11, dealValue:2180,
+    deals:51, won:11, dealValue:2180, wonValue:620, open:28, openValue:1150,
     lead:{ cold:[63,6], warm:[15,3], hot:[4,0] } },
-  { name:'Steve',  initials:'ST', target:1200, contracts:11,
+  { name:'Steve',  initials:'ST', target:1200, contracts:11, dealTarget:55, leadTarget:120,
     signed:{ odc:520, fixed:300, tm:300, headhunt:90,  commission:70 },
-    deals:38, won:13, dealValue:2540,
+    deals:38, won:13, dealValue:2540, wonValue:980, open:18, openValue:1240,
     lead:{ cold:[50,2], warm:[30,7], hot:[5,3] } },
-  { name:'Kai',    initials:'KA', target:1000, contracts:8, estimated:true,
+  { name:'Kai',    initials:'KA', target:1000, contracts:8, estimated:true, dealTarget:60, leadTarget:160,
     signed:{ odc:280, fixed:210, tm:150, headhunt:70,  commission:70 },
-    deals:29, won:8,  dealValue:1810,
+    deals:29, won:8,  dealValue:1810, wonValue:540, open:15, openValue:950,
     lead:{ cold:[45,9], warm:[28,6], hot:[6,2] } },
 ];
 
@@ -874,6 +960,9 @@ const CONTRACTS   = MEMBERS.reduce((s,m) => s + m.contracts, 0);
 const DEALS       = MEMBERS.reduce((s,m) => s + m.deals, 0);
 const WON         = MEMBERS.reduce((s,m) => s + m.won, 0);
 const DEAL_VALUE  = MEMBERS.reduce((s,m) => s + m.dealValue, 0);
+const WON_VALUE   = MEMBERS.reduce((s,m) => s + m.wonValue, 0);
+const OPEN        = MEMBERS.reduce((s,m) => s + m.open, 0);
+const OPEN_VALUE  = MEMBERS.reduce((s,m) => s + m.openValue, 0);
 
 /* ---------------- currency ----------------
    Source figures are thousands of USD; every displayed amount goes through
@@ -909,10 +998,15 @@ const curUnitShort = () => CUR.scaleShort ? `${CUR.code} (${CUR.scaleShort})` : 
 const pct     = (n, d) => d ? (n / d * 100).toFixed(1) + '%' : '0.0%';
 const num     = n => n.toLocaleString('en-US');
 
-/* rate pill class — performance banding, shared by leadup + deal tables */
+/* rate pill class — performance banding, shared by the leadup scorecards */
 function rateClass(v, hi, lo){ return v >= hi ? 'hi' : v >= lo ? 'mid' : 'lo'; }
-function ratePill(value, hi, lo){
-  return `<span class="rate ${rateClass(value, hi, lo)}">${value.toFixed(1)}%</span>`;
+
+/* KPI attainment band — red below 50%, amber below 80%, green at or above.
+   The label ships with the class so the status is never colour-only. */
+function kpiBand(att){
+  if (att < 50) return { cls:'lo',  label:'Behind KPI' };
+  if (att < 80) return { cls:'mid', label:'At risk' };
+  return { cls:'hi', label:'On track' };
 }
 
 /* ==================================================================
@@ -978,34 +1072,61 @@ function renderOverall(){
 /* ==================================================================
    RENDER — Leadup
    ================================================================== */
-function leadTotals(){
-  const t = { cold:[0,0], warm:[0,0], hot:[0,0] };
-  MEMBERS.forEach(m => TEMPS.forEach(x => {
-    t[x.key][0] += m.lead[x.key][0];
-    t[x.key][1] += m.lead[x.key][1];
-  }));
-  return t;
+/* leads contacted and replies received by one member, all temperatures */
+function memberLeadTotals(m){
+  return TEMPS.reduce((a, x) => {
+    a[0] += m.lead[x.key][0];
+    a[1] += m.lead[x.key][1];
+    return a;
+  }, [0, 0]);
 }
 
 function renderLeadup(){
-  const tbl = document.getElementById('luTable');
-  tbl.querySelector('tbody').innerHTML = MEMBERS.map(m => `<tr>
-    <td><div class="person-cell"><span class="av">${m.initials}</span>
-      <span class="nm">${m.name}${m.estimated ? ' <span class="est-note">(est.)</span>' : ''}</span></div></td>
-    ${TEMPS.map(x => {
-      const [leads, replies] = m.lead[x.key];
-      const rate = leads ? replies / leads * 100 : 0;
-      return `<td class="num">${leads} / ${replies}</td><td class="num">${ratePill(rate, 20, 10)}</td>`;
-    }).join('')}
-  </tr>`).join('');
+  /* Panel 3 — one scorecard per member, the same shape the Sales screen uses:
+     headline rate, the rows it decomposes into, then the count KPI that bands
+     the card. */
+  document.getElementById('luMemberCards').innerHTML = MEMBERS.map(m => {
+    const [leads, replies] = memberLeadTotals(m);
+    const rate   = leads ? replies / leads * 100 : 0;
+    const attain = m.leadTarget ? leads / m.leadTarget * 100 : 0;
+    const band   = kpiBand(attain);
+    return `<article class="mcard ${band.cls}">
+      <div class="mcard-head">
+        <span class="av">${m.initials}</span>
+        <span class="nm">${m.name}${m.estimated ? ' <span class="est-note">(est.)</span>' : ''}</span>
+        <span class="rate ${band.cls}">${band.label}</span>
+      </div>
 
-  const t = leadTotals();
-  tbl.querySelector('tfoot').innerHTML = `<tr><td>Team total</td>
-    ${TEMPS.map(x => {
-      const [leads, replies] = t[x.key];
-      return `<td class="num">${leads} / ${replies}</td><td class="num">${pct(replies, leads)}</td>`;
-    }).join('')}
-  </tr>`;
+      <div class="mcard-hero">
+        <span class="val">${rate.toFixed(1)}%</span>
+        <span class="cap">reply rate</span>
+        <span class="frac">${replies} / ${leads} replied</span>
+      </div>
+      <div class="mini-track"><span style="width:${rate.toFixed(1)}%"></span></div>
+
+      <div class="mcard-temps">
+        ${TEMPS.map(x => {
+          const [l, r] = m.lead[x.key];
+          const tr = l ? r / l * 100 : 0;
+          /* replies over leads, the same order the hero figure and the chart
+             labels use — one reading direction across the whole screen */
+          return `<div class="tr">
+            <span class="nm"><span class="sw" style="background:${x.color}"></span>${x.name}</span>
+            <span class="ct">${r} / ${l}</span>
+            <span class="rate sm ${rateClass(tr, 20, 10)}">${tr.toFixed(1)}%</span>
+          </div>`;
+        }).join('')}
+      </div>
+
+      <div class="mcard-kpi ${band.cls}">
+        <div class="top">
+          <span class="lbl">Lead KPI<span class="frac">${leads} / ${m.leadTarget}</span></span>
+          <span class="pct">${attain.toFixed(1)}%</span>
+        </div>
+        <span class="track"><span class="fill" style="width:${Math.min(attain,100).toFixed(1)}%"></span></span>
+      </div>
+    </article>`;
+  }).join('');
 
   legend('luLegend', TEMPS);
 }
@@ -1017,42 +1138,72 @@ function renderDeal(){
   document.getElementById('dlTotalDeals').textContent = DEALS;
   document.getElementById('dlWonDeals').textContent   = WON;
   document.getElementById('dlWinRate').textContent    = pct(WON, DEALS);
-  document.getElementById('dlTotalValue').innerHTML   = money(DEAL_VALUE) + `<span class="unit">${curUnitShort()}</span>`;
-  document.getElementById('dlAvgValue').textContent   = `${money(DEAL_VALUE / DEALS)} ${curUnitShort()}`;
+  document.getElementById('dlOpenDeals').innerHTML    = OPEN + `<span class="unit">open deals</span>`;
+  document.getElementById('dlOpenValue').textContent  = `${money(OPEN_VALUE)} ${curUnitShort()}`;
+  /* money figures in the card corners — deal value beside its count, won value
+     beside the won count, so each pairing reads without a second lookup */
+  document.getElementById('dlTotalValueCorner').innerHTML =
+    money(DEAL_VALUE) + `<span class="unit">${curUnitShort()}</span>`;
+  document.getElementById('dlWonValueCorner').innerHTML =
+    money(WON_VALUE) + `<span class="unit">${curUnitShort()}</span>`;
 
-  const tbl = document.getElementById('dlTable');
-  tbl.querySelector('tbody').innerHTML = MEMBERS.map(m => {
-    const winRate = m.won / m.deals * 100;
-    return `<tr>
-      <td><div class="person-cell"><span class="av">${m.initials}</span>
-        <span class="nm">${m.name}${m.estimated ? ' <span class="est-note">(est.)</span>' : ''}</span></div></td>
-      <td class="num">${m.deals}</td>
-      <td class="num">${m.won}</td>
-      <td class="num">${ratePill(winRate, 30, 22)}</td>
-      <td class="num">${money(m.dealValue)}</td>
-      <td class="num">${money(memberTotal(m))}</td>
-      <td class="num">${money(m.dealValue / m.deals)}</td>
-    </tr>`;
+  /* Panel 3 — one scorecard per member */
+  document.getElementById('dlMemberCards').innerHTML = MEMBERS.map(m => {
+    const winRate  = m.won / m.deals * 100;
+    const valRate  = m.wonValue / m.dealValue * 100;
+    const attain   = m.deals / m.dealTarget * 100;
+    const band     = kpiBand(attain);
+    return `<article class="mcard ${band.cls}">
+      <div class="mcard-head">
+        <span class="av">${m.initials}</span>
+        <span class="nm">${m.name}${m.estimated ? ' <span class="est-note">(est.)</span>' : ''}</span>
+        <span class="rate ${band.cls}">${band.label}</span>
+      </div>
+
+      <div class="mcard-hero">
+        <span class="val">${winRate.toFixed(1)}%</span>
+        <span class="cap">conversion</span>
+        <span class="frac">${m.won} / ${m.deals} won</span>
+      </div>
+      <div class="mini-track"><span style="width:${winRate.toFixed(1)}%"></span></div>
+
+      <div class="ms-row"><span>Won value</span>
+        <span class="v">${money(m.wonValue)} <span class="of">/ ${money(m.dealValue)}</span></span></div>
+
+      <div class="mcard-duo">
+        <div><span class="lbl">In pipeline</span>
+          <span class="n">${m.open}<span class="u">deals</span></span></div>
+        <div><span class="lbl">Avg deal size</span>
+          <span class="n">${money(m.dealValue / m.deals)}</span></div>
+      </div>
+
+      <div class="mcard-kpi ${band.cls}">
+        <div class="top">
+          <span class="lbl">Deal KPI<span class="frac">${m.deals} / ${m.dealTarget}</span></span>
+          <span class="pct">${attain.toFixed(1)}%</span>
+        </div>
+        <span class="track"><span class="fill" style="width:${Math.min(attain,100).toFixed(1)}%"></span></span>
+      </div>
+    </article>`;
   }).join('');
-  tbl.querySelector('tfoot').innerHTML = `<tr>
-    <td>Team total</td>
-    <td class="num">${DEALS}</td>
-    <td class="num">${WON}</td>
-    <td class="num">${pct(WON, DEALS)}</td>
-    <td class="num">${money(DEAL_VALUE)}</td>
-    <td class="num">${money(GRAND)}</td>
-    <td class="num">${money(DEAL_VALUE / DEALS)}</td>
-  </tr>`;
 
   /* Figures quoted in the written findings follow the currency too — a prose
-     number that disagrees with the table above it is worse than no number. */
+     number that disagrees with the cards above it is worse than no number.
+     Won value is the deal figure (WON_VALUE), the same one panel 01 prints. */
   const steve = MEMBERS.find(m => m.name === 'Steve');
+  const kai   = MEMBERS.find(m => m.name === 'Kai');
   document.getElementById('insAvgDeal').textContent  = `${money(steve.dealValue / steve.deals)} ${curUnit()}`;
-  document.getElementById('insWonValue').textContent = `${money(GRAND)} ${curUnit()}`;
+  document.getElementById('insWonValue').textContent = `${money(WON_VALUE)} ${curUnit()}`;
+  document.getElementById('insWonShare').textContent = pct(WON_VALUE, DEAL_VALUE);
+  document.getElementById('insKaiKpi').textContent   =
+    `${(kai.deals / kai.dealTarget * 100).toFixed(1)}% of his ${kai.dealTarget}-deal KPI`;
 
   legend('dlCountLegend', [
     { name:'Won',          color:C('series-1') },
     { name:'Open or lost', color:C('series-1-soft') },
+  ]);
+  legend('dlOpenLegend', [
+    { name:'Open deals — neither won nor lost', color:C('series-1') },
   ]);
 }
 
@@ -1104,6 +1255,77 @@ function valueLabels({ format, axis = 'y', offset = 8 }){
             ctx.fillText(format(v), el.x, el.y - offset);
           }
         });
+      });
+      ctx.restore();
+    }
+  };
+}
+
+/* Rate + count labels — a percentage means little without the base it was
+   taken from (60% of five hot leads is three replies), so the raw
+   replies / leads pair is printed under each rate on the bar cap. */
+function rateCountLabels({ counts }){
+  return {
+    id:'rateCountLabels',
+    afterDatasetsDraw(chart){
+      const ctx = chart.ctx;
+      ctx.save();
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'bottom';
+      chart.data.datasets.forEach((ds, di) => {
+        const meta = chart.getDatasetMeta(di);
+        if (meta.hidden) return;
+        meta.data.forEach((el, i) => {
+          const v = ds.data[i];
+          if (v == null) return;
+          const [leads, replies] = counts(i, di);
+          ctx.font = '700 11.5px Inter, sans-serif';
+          ctx.fillStyle = C('text-secondary');
+          ctx.fillText(v.toFixed(1) + '%', el.x, el.y - 15);
+          ctx.font = '600 10.5px Inter, sans-serif';
+          ctx.fillStyle = C('text-muted');
+          ctx.fillText(`${replies}/${leads}`, el.x, el.y - 3);
+        });
+      });
+      ctx.restore();
+    }
+  };
+}
+
+/* In-segment labels — a rate printed inside the bar it belongs to, so the
+   percentage sits on the ink it describes instead of floating above the stack.
+   The whole series is placed together: if any one segment is too shallow or too
+   narrow to hold its text, every label moves to the column cap instead. A rate
+   shown for three members out of four reads as missing data, not as a layout
+   decision, so the chart never mixes the two placements. */
+function segmentLabels({ datasetIndex, format, minHeight = 18 }){
+  return {
+    id:'segmentLabels_' + datasetIndex,
+    afterDatasetsDraw(chart){
+      const meta = chart.getDatasetMeta(datasetIndex);
+      if (meta.hidden) return;
+      const ctx = chart.ctx;
+      ctx.save();
+      ctx.font = '700 11px Inter, sans-serif';
+      ctx.textAlign = 'center';
+
+      const inside = meta.data.every((el, i) => {
+        const { y, base, width } = el.getProps(['y','base','width'], true);
+        return Math.abs(base - y) >= minHeight
+            && ctx.measureText(format(i)).width <= width - 6;
+      });
+
+      /* cap = the top of the whole stack, not of this dataset */
+      const capY = i => chart.data.datasets.reduce((top, _, di) => {
+        const m = chart.getDatasetMeta(di);
+        return m.hidden ? top : Math.min(top, m.data[i].getProps(['y'], true).y);
+      }, Infinity);
+
+      ctx.fillStyle   = inside ? '#fff' : C('text-secondary');  // on series-1 — 4.8:1
+      ctx.textBaseline = inside ? 'middle' : 'bottom';
+      meta.data.forEach((el, i) => {
+        const { y, base } = el.getProps(['y','base'], true);
+        ctx.fillText(format(i), el.x, inside ? (y + base) / 2 : capY(i) - 6);
       });
       ctx.restore();
     }
@@ -1196,9 +1418,10 @@ function buildLeadupCharts(){
         }),
         backgroundColor: x.color,
         borderRadius:{ topLeft:4, topRight:4, bottomLeft:0, bottomRight:0 },
-        maxBarThickness:24,
-        // keep the three bars of a member tight together, air between members
-        categoryPercentage:0.55, barPercentage:0.9,
+        maxBarThickness:30,
+        /* keep the three bars of a member tight together, air between members —
+           wide enough that the two-line label sits over its own bar */
+        categoryPercentage:0.62, barPercentage:0.86,
       })),
     },
     options:{
@@ -1214,13 +1437,18 @@ function buildLeadupCharts(){
           },
         },
       },
+      /* headroom for the two-line label sitting on the tallest bar cap */
+      layout:{ padding:{ top:6 } },
       scales:{
         x:{ grid:NO_GRID, border:{ color:C('axis') },
             ticks:{ font:{ size:13, weight:'600' }, color:C('text-secondary') } },
-        y:{ beginAtZero:true, suggestedMax:65, grid:GRID, border:{ display:false },
+        y:{ beginAtZero:true, suggestedMax:78, grid:GRID, border:{ display:false },
             ticks:{ callback: v => v + '%' } },
       },
     },
+    plugins:[ rateCountLabels({
+      counts: (i, di) => MEMBERS[i].lead[TEMPS[di].key],
+    }) ],
   });
 }
 
@@ -1233,15 +1461,18 @@ function buildDealCharts(){
       labels: MEMBERS.map(m => m.name),
       datasets:[
         { label:'Won', data: MEMBERS.map(m => m.won),
-          backgroundColor:C('series-1'), maxBarThickness:24,
+          backgroundColor:C('series-1'), maxBarThickness:44,
           borderColor:SURFACE, borderWidth:{ top:2 } },
         { label:'Open or lost', data: MEMBERS.map(m => m.deals - m.won),
-          backgroundColor:C('series-1-soft'), maxBarThickness:24,
+          backgroundColor:C('series-1-soft'), maxBarThickness:44,
           borderRadius:{ topLeft:4, topRight:4 } },
       ],
     },
     options:{
       responsive:true,
+      /* same top padding as its neighbour — the two plot areas in this duo are
+         drawn at one height so their baselines and caps line up */
+      layout:{ padding:{ top:22 } },
       interaction:{ mode:'index', intersect:false },
       plugins:{
         legend:{ display:false },
@@ -1250,7 +1481,7 @@ function buildDealCharts(){
             label: c => ` ${c.dataset.label}: ${c.parsed.y} deals`,
             footer: items => {
               const m = MEMBERS[items[0].dataIndex];
-              return `Total: ${m.deals} deals · win rate ${pct(m.won, m.deals)}`;
+              return `Total: ${m.deals} deals · conversion rate ${pct(m.won, m.deals)}`;
             },
           },
           footerFont:{ weight:'600', size:12.5 }, footerColor:'#fff',
@@ -1263,18 +1494,25 @@ function buildDealCharts(){
             ticks:{ precision:0 } },
       },
     },
+    /* conversion rate written into the won segment, dataset 0 of the stack */
+    plugins:[ segmentLabels({
+      datasetIndex:0,
+      format: i => pct(MEMBERS[i].won, MEMBERS[i].deals),
+    }) ],
   });
 
-  charts.dealValue = new Chart(document.getElementById('chartDealValue'), {
+  /* Open deals only — won and lost are both out, so this is what each member
+     is still carrying. A count, like its neighbour, on its own axis scale. */
+  charts.dealOpen = new Chart(document.getElementById('chartDealOpen'), {
     type:'bar',
     data:{
       labels: MEMBERS.map(m => m.name),
       datasets:[{
-        label:'Total deal value',
-        data: MEMBERS.map(m => m.dealValue),
+        label:'In pipeline',
+        data: MEMBERS.map(m => m.open),
         backgroundColor:C('series-1'),
         borderRadius:{ topLeft:4, topRight:4 },
-        maxBarThickness:24,
+        maxBarThickness:44,
       }],
     },
     options:{
@@ -1282,41 +1520,65 @@ function buildDealCharts(){
       layout:{ padding:{ top:22 } },
       plugins:{
         legend:{ display:false },
-        tooltip:{ ...TOOLTIP, callbacks:{ label: c => ` ${money(c.parsed.y)} ${curUnit()}` } },
+        tooltip:{ ...TOOLTIP,
+          callbacks:{
+            label: c => ` ${c.parsed.y} deals in pipeline`,
+            footer: items => {
+              const m = MEMBERS[items[0].dataIndex];
+              return `Pipeline value: ${money(m.openValue)} ${curUnit()} · ${pct(m.open, m.deals)} of ${m.deals} created`;
+            },
+          },
+          footerFont:{ weight:'600', size:12.5 }, footerColor:'#fff',
+        },
       },
       scales:{
         x:{ grid:NO_GRID, border:{ color:C('axis') },
             ticks:{ font:{ size:13, weight:'600' }, color:C('text-secondary') } },
         y:{ beginAtZero:true, grid:GRID, border:{ display:false },
-            ticks:{ callback: axisTick } },
+            ticks:{ precision:0 } },
       },
     },
-    plugins:[ valueLabels({ axis:'y', format: axisTick, offset:6 }) ],
+    plugins:[ valueLabels({ axis:'y', format: v => String(v), offset:6 }) ],
   });
 }
 
 /* ==================================================================
-   TABS — charts are built lazily; a canvas in a hidden container sizes to 0
+   SCREENS — Sales, Business Development and Overall are separate pages,
+   each addressed by its own URL; this file holds all three so they keep
+   one dataset, one currency switch and one period picker.
+   Charts are built lazily; a canvas in a hidden container sizes to 0.
    ================================================================== */
-const TABS = {
-  overall: { built:false, build: buildOverallCharts },
-  leadup:  { built:false, build: buildLeadupCharts  },
-  deal:    { built:false, build: buildDealCharts    },
+const SECTIONS = {
+  overall: { title:'Overall',              build: buildOverallCharts, built:false },
+  leadup:  { title:'Business Development', build: buildLeadupCharts,  built:false },
+  deal:    { title:'Sales',                build: buildDealCharts,    built:false },
 };
 
-let currentTab = 'overall';   // the currency switch rebuilds only this one
+/* Which screen this page instance is. The address is the hash (#deal), not a
+   query param: `cleanUrls` redirects /crm-dashboard.html → /crm-dashboard and
+   drops the query string on the way, while the fragment survives because it
+   never reaches the server. ?section= is still honoured for direct links. */
+const SECTION_NAMES = Object.keys(SECTIONS);
 
-function switchTab(name){
-  currentTab = name;
-  Object.keys(TABS).forEach(k => {
-    document.getElementById('tab-' + k).hidden = k !== name;
-    const pill = document.getElementById('pill-' + k);
-    pill.classList.toggle('active', k === name);
-    pill.setAttribute('aria-selected', k === name);
+function resolveSection(){
+  const h = location.hash.slice(1);
+  if (SECTION_NAMES.includes(h)) return h;
+  const q = new URLSearchParams(location.search).get('section');
+  return SECTION_NAMES.includes(q) ? q : 'overall';
+}
+
+const currentSection = resolveSection();
+
+function showSection(){
+  Object.keys(SECTIONS).forEach(k => {
+    document.getElementById('sec-' + k).hidden = k !== currentSection;
   });
-  const tab = TABS[name];
-  if (!tab.built){ tab.build(); tab.built = true; }
-  if (location.hash.slice(1) !== name) history.replaceState(null, '', '#' + name);
+  /* the screen name on <body> lets a screen tune the shell padding it sits in
+     — the Sales screen trades outer whitespace for a single-view fit */
+  document.body.classList.add('screen-' + currentSection);
+  const s = SECTIONS[currentSection];
+  if (!s.built){ s.build(); s.built = true; }
+  document.title = s.title + ' · CRM — Twendee Work ERP';
 }
 
 function toggleTable(tableId, btnId){
@@ -1338,16 +1600,14 @@ renderOverall();
 renderLeadup();
 renderDeal();
 
-const initial = ['overall','leadup','deal'].includes(location.hash.slice(1))
-  ? location.hash.slice(1) : 'overall';
-switchTab(initial);
+showSection();
 
 /* ==================================================================
    CURRENCY SWITCH
    Tables re-render in place; charts are torn down and rebuilt because
    axis ticks, tooltips and direct labels all bake in the currency.
-   Hidden tabs are only marked stale — they rebuild on their next open,
-   keeping the lazy-build contract intact.
+   Only the section this page shows is rebuilt — the other two never
+   became visible, so they stay unbuilt.
    ================================================================== */
 const currencySelect = document.getElementById('currencySelect');
 currencySelect.innerHTML = CURRENCIES
@@ -1362,9 +1622,9 @@ function applyCurrency(){
   renderDeal();
 
   Object.keys(charts).forEach(k => { charts[k].destroy(); delete charts[k]; });
-  Object.values(TABS).forEach(t => { t.built = false; });
-  TABS[currentTab].build();
-  TABS[currentTab].built = true;
+  Object.values(SECTIONS).forEach(s => { s.built = false; });
+  SECTIONS[currentSection].build();
+  SECTIONS[currentSection].built = true;
 }
 
 currencySelect.addEventListener('change', e => {
@@ -1374,7 +1634,7 @@ currencySelect.addEventListener('change', e => {
 
 /* ==================================================================
    PERIOD PICKER
-   Day / Week / Month / Year / Custom range — granularity and calendar
+   Day / Week / Month / Quarter / Year / Custom range — granularity and calendar
    live in one popover, so picking a period is a single interaction.
    Every mode resolves to a from–to pair; the trigger states that span
    so what the page is showing is never implicit. A single day prints
@@ -1415,6 +1675,7 @@ const defaultState = () => ({
   day:    new Date(seed),
   week:   weekStart(seed),                       // Monday of the selected week
   month:  { y: DEFAULT_YEAR, m: seed.getMonth() },
+  quarter:{ y: DEFAULT_YEAR, q: Math.floor(seed.getMonth() / 3) },   // 0-based: Q1 = 0
   year:   DEFAULT_YEAR,
   custom: { from:new Date(DEFAULT_YEAR, 0, 1), to:new Date(DEFAULT_YEAR, 7, 31) },
 });
@@ -1422,6 +1683,7 @@ const clone = s => ({ ...s,
   day:    new Date(s.day),
   week:   new Date(s.week),
   month:  { ...s.month },
+  quarter:{ ...s.quarter },
   custom: { from:s.custom.from && new Date(s.custom.from), to:s.custom.to && new Date(s.custom.to) },
 });
 
@@ -1442,6 +1704,11 @@ function resolve(s){
   if (s.mode === 'day')   return { from:s.day, to:s.day };
   if (s.mode === 'week')  return { from:s.week, to:addDays(s.week, 6), qualifier:`Week ${isoWeekNumber(s.week)}` };
   if (s.mode === 'month') return { from:new Date(s.month.y, s.month.m, 1), to:new Date(s.month.y, s.month.m + 1, 0) };
+  if (s.mode === 'quarter'){
+    const m0 = s.quarter.q * 3;                                   // first month of the quarter
+    return { from:new Date(s.quarter.y, m0, 1), to:new Date(s.quarter.y, m0 + 3, 0),
+             qualifier:`Q${s.quarter.q + 1} ${s.quarter.y}` };
+  }
   if (s.mode === 'year')  return { from:new Date(s.year, 0, 1), to:new Date(s.year, 11, 31) };
   const { from, to } = s.custom;
   if (!from || !to) return { from, to, incomplete:true };
@@ -1459,23 +1726,26 @@ function spanHTML(r){
 }
 
 /* ---------------- calendar rendering ---------------- */
-const MODE_LABEL = { day:'Day', week:'Week', month:'Month', year:'Year', custom:'Custom range' };
+const MODE_LABEL = { day:'Day', week:'Week', month:'Month', quarter:'Quarter', year:'Year', custom:'Custom range' };
 const HINTS = {
-  day:    'Pick the day to report on.',
-  week:   'Hover a date to preview its Monday–Sunday week, then click to select it.',
-  month:  'Pick a month; the range covers the whole month.',
-  year:   'Pick a year; the range covers 1 Jan to 31 Dec.',
-  custom: 'Click the start date, then the end date.',
+  day:     'Pick the day to report on.',
+  week:    'Hover a date to preview its Monday–Sunday week, then click to select it.',
+  month:   'Pick a month; the range covers the whole month.',
+  quarter: 'Pick a quarter; the range covers its three calendar months.',
+  year:    'Pick a year; the range covers 1 Jan to 31 Dec.',
+  custom:  'Click the start date, then the end date.',
 };
+const GRID_CLASS = { month:' months', quarter:' quarters', year:' years' };
 
 function renderCalendar(){
   const mode = draft.mode;
   calHint.textContent = HINTS[mode];
-  calDow.hidden = (mode === 'month' || mode === 'year');
-  calGrid.className = 'cal-grid' + (mode === 'month' ? ' months' : mode === 'year' ? ' years' : '');
+  calDow.hidden = mode in GRID_CLASS;
+  calGrid.className = 'cal-grid' + (GRID_CLASS[mode] || '');
 
-  if (mode === 'month'){ renderMonthGrid(); return; }
-  if (mode === 'year'){ renderYearGrid();  return; }
+  if (mode === 'month'){   renderMonthGrid();   return; }
+  if (mode === 'quarter'){ renderQuarterGrid(); return; }
+  if (mode === 'year'){    renderYearGrid();    return; }
   renderDayGrid();
 }
 
@@ -1559,6 +1829,19 @@ function renderMonthGrid(){
   }).join('');
 }
 
+/* Four quarters of the year the calendar is paged to, each labelled with the
+   months it covers so the span is readable without doing the arithmetic. */
+function renderQuarterGrid(){
+  calTitle.textContent = String(view.y);
+  calGrid.innerHTML = Array.from({ length:4 }, (_, q) => {
+    const sel   = draft.quarter.y === view.y && draft.quarter.q === q;
+    const span  = `${MONTH_SHORT[q * 3]} – ${MONTH_SHORT[q * 3 + 2]}`;
+    return `<button type="button" class="cal-cell${sel ? ' sel' : ''}" data-quarter="${q}"
+      aria-label="Q${q + 1} ${view.y}, ${MONTH_NAMES[q * 3]} to ${MONTH_NAMES[q * 3 + 2]}"
+      ><span>Q${q + 1}</span><span class="q-months">${span}</span></button>`;
+  }).join('');
+}
+
 /* 12-year block, paged by the same prev/next controls as the month view. */
 const yearBlockStart = y => y - ((y % 12 + 12) % 12);
 function renderYearGrid(){
@@ -1635,7 +1918,7 @@ pop.querySelector('.mode-list').addEventListener('click', e => {
 
 /* prev / next — one month, one year or one 12-year block, per mode */
 function page(step){
-  if (draft.mode === 'month'){ view.y += step; }
+  if (draft.mode === 'month' || draft.mode === 'quarter'){ view.y += step; }
   else if (draft.mode === 'year'){ view.y = yearBlockStart(view.y) + step * 12; }
   else {
     const d = new Date(view.y, view.m + step, 1);
@@ -1653,6 +1936,11 @@ calGrid.addEventListener('click', e => {
 
   if (cell.dataset.month !== undefined){
     draft.month = { y:view.y, m:+cell.dataset.month };
+    renderPop();
+    return;
+  }
+  if (cell.dataset.quarter !== undefined){
+    draft.quarter = { y:view.y, q:+cell.dataset.quarter };
     renderPop();
     return;
   }
