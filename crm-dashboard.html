@@ -235,6 +235,23 @@ body.embed .topbar{display:none}
 /* temperature-tinted values */
 .kpi-value.cold{color:var(--series-1)} .kpi-value.warm{color:var(--series-2)} .kpi-value.hot{color:var(--series-3)}
 
+/* ---- Compact scorecard column (Sales · panel 1) ----------------------
+   The same three KPIs, folded from a full-width row into a narrow column of
+   two-line cards: caption and count on the first line, context and the money
+   figure on the second. The width they give up goes to the donut beside them,
+   which needs room outside the ring for the labels of its small slices. */
+/* columns match panel 02's .chart-duo (1fr 1fr) so the split lines up vertically */
+.deal-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--s3);align-items:stretch}
+@media(max-width:900px){ .deal-split{grid-template-columns:1fr} }
+.kpi-stack{display:flex;flex-direction:column;gap:var(--s3)}
+.kpi-stack .kpi-card{flex:1;display:grid;grid-template-columns:1fr auto;align-items:center;
+  column-gap:var(--s4);row-gap:2px;padding:10px var(--s4)}
+.kpi-stack .kpi-label{margin-bottom:0;font-size:12.5px}
+.kpi-stack .kpi-value{font-size:20px;text-align:right}
+.kpi-stack .kpi-value .unit{font-size:11px;margin-left:4px}
+.kpi-stack .kpi-sub{margin-top:0;font-size:11.5px}
+.kpi-stack .kpi-corner{text-align:right;font-size:12.5px}
+
 /* ============ HERO FIGURE + TYPE BREAKDOWN (Overall · panel 1) ============ */
 .hero-split{display:grid;grid-template-columns:280px 1fr;gap:var(--s6);align-items:start}
 @media(max-width:820px){ .hero-split{grid-template-columns:1fr;gap:var(--s5)} }
@@ -258,6 +275,17 @@ body.embed .topbar{display:none}
 .chart-wrap{position:relative;height:320px}
 .chart-wrap.tall{height:380px}
 .chart-wrap.short{height:260px}
+/* the donut's height is stated, never inferred — a plot area left to size
+   itself from its own aspect ratio grows until it dwarfs the cards beside it.
+   On the Sales screen the figure is a viewport budget; see that block. */
+.chart-wrap.donut{height:192px}
+.deal-split > .card{display:flex;flex-direction:column}
+.deal-split > .card > .card-body{flex:1;display:flex;flex-direction:column;min-height:0}
+/* donut card: chart on the left, legend running down the right edge */
+.deal-split > .card > .card-body.donut-body{flex-direction:row;align-items:center;gap:var(--s4)}
+.donut-body .chart-wrap.donut{flex:1;min-width:0}
+.donut-body .legend-vert{flex-direction:column;align-items:flex-start;flex-wrap:nowrap;
+  gap:10px;margin:0;min-height:0;flex-shrink:0}
 .chart-duo{display:grid;grid-template-columns:1fr 1fr;gap:var(--s4)}
 @media(max-width:900px){ .chart-duo{grid-template-columns:1fr} }
 
@@ -380,13 +408,58 @@ body.screen-deal .page-header{margin-bottom:var(--s3)}
 #sec-deal .kpi-label{margin-bottom:3px}
 #sec-deal .kpi-value{font-size:21px}
 #sec-deal .kpi-sub{margin-top:3px}
+/* the panel-01 cards are laid out as grid rows, so the stacked-card margins
+   the row form needs would only push the two lines apart */
+#sec-deal .kpi-stack .kpi-label{margin-bottom:0}
+#sec-deal .kpi-stack .kpi-value{font-size:20px}
+#sec-deal .kpi-stack .kpi-sub{margin-top:0}
 #sec-deal .card-head{padding:9px var(--s4)}
 #sec-deal .card-body{padding:var(--s3) var(--s4)}
 #sec-deal .legend{min-height:18px;margin-bottom:6px}
-/* the charts are the only elastic part of the screen: they take their full
-   152px where there is room and give height back on a short viewport, so the
-   scorecards stay above the fold instead of the panels spilling into a scroll */
+#sec-deal .donut-body .legend-vert{margin-bottom:0}
+/* the two plots are the elastic part of the screen: they take their full
+   height where there is room and give it back on a short viewport, so the
+   scorecards stay above the fold instead of the panels spilling into a scroll.
+   The donut runs on a measured budget — 704px is everything else between the
+   top of the viewport and the bottom of panel 03 at this tier, including the
+   panel-02 plot at its own floor — so whatever the viewport has spare goes to
+   the ring, and what it does not have comes off the ring first. */
 #sec-deal .chart-wrap.short{height:clamp(108px,15vh,152px)}
+#sec-deal .chart-wrap.donut{height:clamp(140px,calc(100vh - 704px),192px)}
+/* Short viewport — the screen gives up padding, then type scale, before it
+   gives up the single-view fit. The scorecards carry the most trimmable air:
+   four of them sit in one row, so every pixel off a card is a pixel off the
+   screen. */
+@media(max-height:1000px){
+  body.screen-deal .main{padding-top:var(--s4)}
+  body.screen-deal .page-header{margin-bottom:var(--s2)}
+  #sec-deal .panel{margin-bottom:8px}
+  #sec-deal .kpi-stack .kpi-card{padding:7px var(--s4) 8px}
+  #sec-deal .card-body{padding:9px var(--s4)}
+  #sec-deal .legend{min-height:16px;margin-bottom:4px}
+  #sec-deal .mcard{gap:4px;padding:7px var(--s4) 8px}
+  #sec-deal .mcard-head{padding-bottom:5px}
+  #sec-deal .mcard-hero .val{font-size:20px}
+  #sec-deal .mcard-duo{gap:6px;padding-top:5px}
+  #sec-deal .mcard-duo .n{font-size:14.5px}
+  #sec-deal .mcard-kpi{padding:6px 9px 7px}
+  #sec-deal .chart-wrap.short{height:clamp(104px,13.5vh,152px)}
+}
+/* Very short viewport — the last pixels come off the panel heads and the
+   scorecards' own type. The one thing that goes is each card's conversion bar:
+   it is a second reading of the percentage printed directly above it, so the
+   card loses a picture of a number it still states in full. */
+@media(max-height:860px){
+  body.screen-deal .main{padding-top:var(--s3)}
+  #sec-deal .panel{margin-bottom:6px}
+  #sec-deal .panel-head{margin-bottom:4px}
+  #sec-deal .panel-title{font-size:14.5px}
+  #sec-deal .mcard{gap:3px}
+  #sec-deal .mcard .mini-track{display:none}
+  #sec-deal .mcard-hero .val{font-size:19px}
+  #sec-deal .chart-wrap.short{height:clamp(100px,12vh,152px)}
+  #sec-deal .chart-wrap.donut{height:clamp(140px,calc(100vh - 650px),180px)}
+}
 
 /* ============ BUSINESS DEVELOPMENT SCREEN DENSITY ============
    Same bargain as Sales: panels 01-03 — the outreach KPIs, the rate chart and
@@ -706,7 +779,7 @@ body.screen-leadup .page-header{margin-bottom:var(--s3)}
         <div class="panel-head">
           <span class="panel-num">02</span>
           <div>
-            <div class="panel-title">Reply rate by member &amp; temperature</div>
+            <div class="panel-title">Reply rate by member</div>
             <div class="panel-desc">Percentage of contacted leads that replied — replies / leads labelled under each rate.</div>
           </div>
         </div>
@@ -771,32 +844,48 @@ body.screen-leadup .page-header{margin-bottom:var(--s3)}
          ================================================================== -->
     <section class="section-panel" id="sec-deal" aria-label="Deal performance" hidden>
 
-      <!-- Panel 1 — deal KPIs -->
+      <!-- Panel 1 — deal KPIs, and the won value split by contract type.
+           The three scorecards run down the left in a compact two-line form so
+           the donut beside them gets the width its outside labels need. -->
       <div class="panel">
         <div class="panel-head">
           <span class="panel-num">01</span>
           <div>
             <div class="panel-title">Deal throughput</div>
-            <div class="panel-desc">Deals created, deals won and total pipeline value for the period.</div>
+            <div class="panel-desc">Deals created, deals won and total pipeline value — with won value split by contract type.</div>
           </div>
         </div>
-        <div class="kpi-grid three">
-          <div class="kpi-card">
-            <div class="kpi-label"><svg><use href="#i-briefcase"/></svg> Total deals
-              <span class="kpi-corner" id="dlTotalValueCorner">—</span></div>
-            <div class="kpi-value" id="dlTotalDeals">—</div>
-            <div class="kpi-sub">Created across <b>4</b> members</div>
+        <div class="deal-split">
+          <div class="kpi-stack">
+            <div class="kpi-card">
+              <div class="kpi-label"><svg><use href="#i-briefcase"/></svg> Total deals</div>
+              <div class="kpi-value" id="dlTotalDeals">—</div>
+              <div class="kpi-sub">Created across <b>4</b> members</div>
+              <div class="kpi-corner" id="dlTotalValueCorner">—</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label"><svg><use href="#i-award"/></svg> Won deals</div>
+              <div class="kpi-value" id="dlWonDeals">—</div>
+              <div class="kpi-sub">Conversion rate <b id="dlWinRate">—</b></div>
+              <div class="kpi-corner" id="dlWonValueCorner">—</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label"><svg><use href="#i-dollar"/></svg> In pipeline</div>
+              <div class="kpi-value" id="dlOpenDeals">—<span class="unit">deals</span></div>
+              <div class="kpi-sub">Open deals</div>
+              <div class="kpi-corner" id="dlOpenValue">—</div>
+            </div>
           </div>
-          <div class="kpi-card">
-            <div class="kpi-label"><svg><use href="#i-award"/></svg> Won deals
-              <span class="kpi-corner" id="dlWonValueCorner">—</span></div>
-            <div class="kpi-value" id="dlWonDeals">—</div>
-            <div class="kpi-sub">Conversion rate <b id="dlWinRate">—</b></div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-label"><svg><use href="#i-dollar"/></svg> In pipeline</div>
-            <div class="kpi-value" id="dlOpenDeals">—<span class="unit">open deals</span></div>
-            <div class="kpi-sub">In pipeline value <b id="dlOpenValue">—</b></div>
+          <!-- no card head: the panel head above already names the split, and
+               the denominator every slice is a share of sits in the hole -->
+          <div class="card">
+            <div class="card-body donut-body">
+              <div class="chart-wrap donut">
+                <canvas id="chartWonMix" role="img"
+                  aria-label="Doughnut chart of won deal value split across five contract types, as a share of total won value. ODC 38.9%, Fixed Price 22.8%, T and M 22.4%, Headhunt 9.6%, Commission Sales 6.3%. Each slice is labelled with its percentage and amount."></canvas>
+              </div>
+              <div class="legend legend-vert" id="dlMixLegend"><!-- injected --></div>
+            </div>
           </div>
         </div>
       </div>
@@ -921,18 +1010,22 @@ const MEMBERS = [
   { name:'Sophie', initials:'SO', target:1600, contracts:12, dealTarget:45, leadTarget:85,
     signed:{ odc:620, fixed:410, tm:180, headhunt:150, commission:90 },
     deals:42, won:14, dealValue:2410, wonValue:890, open:20, openValue:1180,
+    wonType:{ odc:340, fixed:210, tm:180, headhunt:100, commission:60 },
     lead:{ cold:[39,8], warm:[30,6], hot:[7,2] } },
   { name:'Chloe',  initials:'CH', target:1400, contracts:10, dealTarget:48, leadTarget:95,
     signed:{ odc:430, fixed:320, tm:260, headhunt:110, commission:80 },
     deals:51, won:11, dealValue:2180, wonValue:620, open:28, openValue:1150,
+    wonType:{ odc:230, fixed:150, tm:140, headhunt:60,  commission:40 },
     lead:{ cold:[63,6], warm:[15,3], hot:[4,0] } },
   { name:'Steve',  initials:'ST', target:1200, contracts:11, dealTarget:55, leadTarget:120,
     signed:{ odc:520, fixed:300, tm:300, headhunt:90,  commission:70 },
     deals:38, won:13, dealValue:2540, wonValue:980, open:18, openValue:1240,
+    wonType:{ odc:400, fixed:200, tm:250, headhunt:80,  commission:50 },
     lead:{ cold:[50,2], warm:[30,7], hot:[5,3] } },
   { name:'Kai',    initials:'KA', target:1000, contracts:8, estimated:true, dealTarget:60, leadTarget:160,
     signed:{ odc:280, fixed:210, tm:150, headhunt:70,  commission:70 },
     deals:29, won:8,  dealValue:1810, wonValue:540, open:15, openValue:950,
+    wonType:{ odc:210, fixed:130, tm:110, headhunt:50,  commission:40 },
     lead:{ cold:[45,9], warm:[28,6], hot:[6,2] } },
 ];
 
@@ -963,6 +1056,10 @@ const DEAL_VALUE  = MEMBERS.reduce((s,m) => s + m.dealValue, 0);
 const WON_VALUE   = MEMBERS.reduce((s,m) => s + m.wonValue, 0);
 const OPEN        = MEMBERS.reduce((s,m) => s + m.open, 0);
 const OPEN_VALUE  = MEMBERS.reduce((s,m) => s + m.openValue, 0);
+/* Won value split by contract type — the five type totals sum to WON_VALUE,
+   which is what makes the panel-01 donut a true part-to-whole. */
+const wonTypeTotal = k => MEMBERS.reduce((s,m) => s + m.wonType[k], 0);
+const WON_MIX      = TYPES.map(t => wonTypeTotal(t.key));
 
 /* ---------------- currency ----------------
    Source figures are thousands of USD; every displayed amount goes through
@@ -1138,10 +1235,12 @@ function renderDeal(){
   document.getElementById('dlTotalDeals').textContent = DEALS;
   document.getElementById('dlWonDeals').textContent   = WON;
   document.getElementById('dlWinRate').textContent    = pct(WON, DEALS);
-  document.getElementById('dlOpenDeals').innerHTML    = OPEN + `<span class="unit">open deals</span>`;
-  document.getElementById('dlOpenValue').textContent  = `${money(OPEN_VALUE)} ${curUnitShort()}`;
-  /* money figures in the card corners — deal value beside its count, won value
-     beside the won count, so each pairing reads without a second lookup */
+  document.getElementById('dlOpenDeals').innerHTML    = OPEN + `<span class="unit">deals</span>`;
+  /* money figures on the second line of each card — deal value beside its
+     count, won value beside the won count, pipeline value beside the open
+     count, so each pairing reads without a second lookup */
+  document.getElementById('dlOpenValue').innerHTML =
+    money(OPEN_VALUE) + `<span class="unit">${curUnitShort()}</span>`;
   document.getElementById('dlTotalValueCorner').innerHTML =
     money(DEAL_VALUE) + `<span class="unit">${curUnitShort()}</span>`;
   document.getElementById('dlWonValueCorner').innerHTML =
@@ -1198,12 +1297,13 @@ function renderDeal(){
   document.getElementById('insKaiKpi').textContent   =
     `${(kai.deals / kai.dealTarget * 100).toFixed(1)}% of his ${kai.dealTarget}-deal KPI`;
 
+  legend('dlMixLegend', TYPES);
   legend('dlCountLegend', [
     { name:'Won',          color:C('series-1') },
     { name:'Open or lost', color:C('series-1-soft') },
   ]);
   legend('dlOpenLegend', [
-    { name:'Open deals — neither won nor lost', color:C('series-1') },
+    { name:'Number of open deals', color:C('series-1') },
   ]);
 }
 
@@ -1332,6 +1432,184 @@ function segmentLabels({ datasetIndex, format, minHeight = 18 }){
   };
 }
 
+/* WCAG relative luminance and contrast ratio. An arc label sits on the series
+   fill rather than on the surface, so which ink it wears is a per-slice
+   measurement — the palette runs from cerulean to amber and no single ink
+   clears 4.5:1 on all five. */
+const luminance = hex => {
+  const ch = [1,3,5].map(i => {
+    const v = parseInt(hex.slice(i, i + 2), 16) / 255;
+    return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126*ch[0] + 0.7152*ch[1] + 0.0722*ch[2];
+};
+const contrastRatio = (a, b) => {
+  const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+  return (hi + 0.05) / (lo + 0.05);
+};
+/* the better of white / near-black on a given fill, with the ratio it scores —
+   a slice whose best ink still falls short pushes its label outside instead */
+function inkOn(fill){
+  const w = contrastRatio('#FFFFFF', fill);
+  const d = contrastRatio('#111827', fill);
+  return w >= d ? { ink:'#FFFFFF', ratio:w } : { ink:'#111827', ratio:d };
+}
+
+/* Arc labels — the share and the money behind it, written on the slice itself,
+   because a part-to-whole read off a legend is two lookups per segment.
+
+   Whether a label can sit on its slice is a geometry question, not a size
+   threshold: the text block is horizontal while the space it has to fit in is
+   a wedge of a ring, so near 3 and 9 o'clock the block's *width* is spent on
+   the ring depth and near 12 and 6 on the arc length. Both extents are tested,
+   the block only stays inside if both clear and the slice's best ink clears
+   4.5:1, and anything left over goes outside on a leader line. Labels on the
+   same side are then spread down a column so two thin neighbours never
+   overprint — the small slices are exactly the ones that end up adjacent.
+
+   The money line has two candidate formats, exact and compact, and the one
+   that keeps more labels on their slice is used for every label on the chart:
+   a mix of "1,180,000" and "690K" in one ring reads as two different figures.
+   That is also what carries the chart into VND, where every figure is longer. */
+function arcLabels({ format, compact, minRatio = 4.5, gap = 28 }){
+  const PCT_FONT  = '700 12px Inter, sans-serif';
+  const VAL_FONT  = '600 10.5px Inter, sans-serif';
+  const NAME_FONT = '700 11px Inter, sans-serif';
+  const OUT_FONT  = '600 10.5px Inter, sans-serif';
+  const BLOCK_H   = 24;                     // the two stacked lines, with lead
+  return {
+    id:'arcLabels',
+    afterDatasetsDraw(chart){
+      const meta = chart.getDatasetMeta(0);
+      if (meta.hidden) return;
+      const ctx    = chart.ctx;
+      const data   = chart.data.datasets[0].data;
+      const fills  = chart.data.datasets[0].backgroundColor;
+      const total  = data.reduce((s, v) => s + v, 0);
+      if (!total) return;
+
+      ctx.save();
+      const geo = meta.data.map((el, i) => {
+        const p = el.getProps(['x','y','startAngle','endAngle','innerRadius','outerRadius'], true);
+        const mid = (p.startAngle + p.endAngle) / 2;
+        const midR = (p.outerRadius + p.innerRadius) / 2;
+        return { i, v:data[i], p, mid, midR,
+          ring: p.outerRadius - p.innerRadius,
+          arc: (p.endAngle - p.startAngle) * midR,
+          cos: Math.abs(Math.cos(mid)),
+          sin: Math.abs(Math.sin(mid)),
+          pctText: (data[i] / total * 100).toFixed(1) + '%',
+          ...inkOn(fills[i]),
+        };
+      });
+
+      /* width the block needs in a given format — the wider of its two lines */
+      const blockW = (g, fmt) => {
+        ctx.font = PCT_FONT; const a = ctx.measureText(g.pctText).width;
+        ctx.font = VAL_FONT; const b = ctx.measureText(fmt(g.v)).width;
+        return Math.max(a, b) + 6;
+      };
+      const fitsInside = (g, fmt) => {
+        const w = blockW(g, fmt);
+        return g.ratio >= minRatio
+            && g.cos * w + g.sin * BLOCK_H <= g.ring    // radial extent
+            && g.sin * w + g.cos * BLOCK_H <= g.arc;    // tangential extent
+      };
+      const placed = fmt => geo.filter(g => g.v && fitsInside(g, fmt)).length;
+      const fmt = placed(compact) > placed(format) ? compact : format;
+
+      const outside = [];
+      geo.forEach(g => {
+        if (!g.v) return;
+        const valText = fmt(g.v);
+        if (fitsInside(g, fmt)){
+          const lx = g.p.x + Math.cos(g.mid) * g.midR;
+          const ly = g.p.y + Math.sin(g.mid) * g.midR;
+          ctx.fillStyle = g.ink;
+          ctx.textAlign = 'center';
+          ctx.font = PCT_FONT; ctx.textBaseline = 'bottom'; ctx.fillText(g.pctText, lx, ly + 1);
+          ctx.font = VAL_FONT; ctx.textBaseline = 'top';    ctx.fillText(valText, lx, ly + 2);
+        } else {
+          outside.push({
+            cx:g.p.x, cy:g.p.y, mid:g.mid, r:g.p.outerRadius,
+            name: chart.data.labels[g.i], pctText:g.pctText, valText,
+            side: Math.cos(g.mid) < 0 ? -1 : 1,
+            ly: g.p.y + Math.sin(g.mid) * (g.p.outerRadius + 2),
+          });
+        }
+      });
+
+      /* spread each side's labels apart, then pull the whole column back
+         inside the canvas if the spreading pushed it past an edge */
+      [-1, 1].forEach(side => {
+        const col = outside.filter(o => o.side === side).sort((a, b) => a.ly - b.ly);
+        for (let k = 1; k < col.length; k++)
+          if (col[k].ly - col[k-1].ly < gap) col[k].ly = col[k-1].ly + gap;
+        if (!col.length) return;
+        const over  = col[col.length-1].ly - (chart.height - 12);
+        if (over > 0) col.forEach(o => { o.ly -= over; });
+        const under = 12 - col[0].ly;
+        if (under > 0) col.forEach(o => { o.ly += under; });
+      });
+
+      /* stub then rule: the line leaves the arc along its own radius, turns at
+         the label's height and runs flat into a common column, so the labels
+         on one side start at one x instead of each floating at its own */
+      outside.forEach(o => {
+        const ax = o.cx + Math.cos(o.mid) * (o.r + 2);
+        const ay = o.cy + Math.sin(o.mid) * (o.r + 2);
+        const bx = o.cx + Math.cos(o.mid) * (o.r + 15);
+        const tx = o.cx + o.side * (o.r + 22);
+        ctx.strokeStyle = C('text-muted');
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(ax, ay);
+        ctx.lineTo(bx, o.ly);
+        ctx.lineTo(tx, o.ly);
+        ctx.stroke();
+
+        ctx.textAlign  = o.side < 0 ? 'right' : 'left';
+        const lx = tx + o.side * 4;
+        ctx.textBaseline = 'bottom';
+        ctx.font = NAME_FONT; ctx.fillStyle = C('text-secondary');
+        ctx.fillText(`${o.name} ${o.pctText}`, lx, o.ly + 1);
+        ctx.textBaseline = 'top';
+        ctx.font = OUT_FONT; ctx.fillStyle = C('text-muted');
+        ctx.fillText(o.valText, lx, o.ly + 3);
+      });
+      ctx.restore();
+    }
+  };
+}
+
+/* The hole carries the denominator: every slice is a share of this figure, and
+   the ring has no other place to say so now that the card runs without a head.
+   Compact, because the hole is ~70px across — the exact total is printed in
+   full on the Won deals card beside it. */
+function donutCenter({ value, caption }){
+  return {
+    id:'donutCenter',
+    afterDatasetsDraw(chart){
+      const el = chart.getDatasetMeta(0).data[0];
+      if (!el) return;
+      const p = el.getProps(['x','y','innerRadius'], true);
+      if (p.innerRadius < 28) return;
+      const ctx = chart.ctx;
+      ctx.save();
+      ctx.textAlign = 'center';
+      ctx.font = '700 15px Inter, sans-serif';
+      ctx.fillStyle = C('text');
+      ctx.textBaseline = 'bottom';
+      ctx.fillText(value(), p.x, p.y + 1);
+      ctx.font = '600 10px Inter, sans-serif';
+      ctx.fillStyle = C('text-muted');
+      ctx.textBaseline = 'top';
+      ctx.fillText(caption(), p.x, p.y + 4);
+      ctx.restore();
+    }
+  };
+}
+
 const charts = {};
 
 function buildOverallCharts(){
@@ -1453,6 +1731,45 @@ function buildLeadupCharts(){
 }
 
 function buildDealCharts(){
+  /* Panel 1 — won value split across the five contract types. Part-to-whole at
+     a glance, five segments, every slice labelled with its share and the money
+     it stands for; the two thin ones carry their label outside the ring. */
+  charts.wonMix = new Chart(document.getElementById('chartWonMix'), {
+    type:'doughnut',
+    data:{
+      labels: TYPES.map(t => t.name),
+      datasets:[{
+        label:'Won value',
+        data: WON_MIX,
+        backgroundColor: TYPES.map(t => t.color),
+        /* 2px surface ring, never an ink border — the same spacer the stacked
+           columns use between touching segments */
+        borderColor: SURFACE, borderWidth:2, hoverBorderColor: SURFACE,
+      }],
+    },
+    options:{
+      responsive:true,
+      /* a deep ring, not a thin band — the labels ride on it */
+      cutout:'45%',
+      /* room outside the ring for the leader-line labels of the thin slices */
+      layout:{ padding:{ left:116, right:116, top:12, bottom:12 } },
+      plugins:{
+        legend:{ display:false },
+        tooltip:{ ...TOOLTIP,
+          callbacks:{
+            label: c => ` ${c.label}: ${money(c.parsed)} ${curUnit()} · ${pct(c.parsed, WON_VALUE)}`,
+            footer: () => `Total won: ${money(WON_VALUE)} ${curUnit()}`,
+          },
+          footerFont:{ weight:'600', size:12.5 }, footerColor:'#fff',
+        },
+      },
+    },
+    plugins:[
+      arcLabels({ format: v => money(v), compact: v => moneyComp(v) }),
+      donutCenter({ value: () => moneyComp(WON_VALUE), caption: () => `${curUnitShort()} won` }),
+    ],
+  });
+
   /* Won is a part of created — a one-hue part-to-whole stack, not two
      categorical slots (green-for-won would read as a status colour). */
   charts.dealCount = new Chart(document.getElementById('chartDealCount'), {
