@@ -239,6 +239,13 @@ body.embed .topbar{display:none}
 .kpi-label svg{width:15px;height:15px;color:var(--primary)}
 .kpi-value{font-size:26px;font-weight:700;letter-spacing:-.02em;line-height:1.15}
 .kpi-value .unit{font-size:12px;font-weight:600;color:var(--text-muted);margin-left:5px;letter-spacing:0}
+/* abbreviated amount — the exact figure lives in a hover tooltip (data-tip) */
+[data-tip]{cursor:help}
+#amtTip{position:fixed;z-index:1000;pointer-events:none;opacity:0;transition:opacity .09s ease;
+  background:#1f2937;color:#fff;font-size:12px;font-weight:600;font-family:var(--font-mono);
+  font-variant-numeric:tabular-nums;padding:5px 9px;border-radius:6px;white-space:nowrap;
+  box-shadow:0 6px 18px rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.08)}
+#amtTip.show{opacity:1}
 /* value riding the top-right corner of a KPI card — the money figure that
    belongs with the count but must not compete with it */
 .kpi-corner{margin-left:auto;font-size:13px;font-weight:700;color:var(--text-secondary);letter-spacing:-.01em;white-space:nowrap}
@@ -259,13 +266,10 @@ body.embed .topbar{display:none}
    which needs room outside the ring for the labels of its small slices. */
 /* columns match panel 02's .chart-duo (1fr 1fr) so the split lines up vertically */
 .deal-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--s3);align-items:stretch}
-@media(max-width:900px){ .deal-split{grid-template-columns:1fr} }
-/* narrow: donut over the legend table instead of a squeezed side-by-side */
-@media(max-width:560px){
-  .deal-split > .card > .card-body.donut-body{flex-direction:column;align-items:stretch}
-  .donut-body .chart-wrap.donut{flex:none;width:100%}
-}
-.kpi-stack{display:flex;flex-direction:column;gap:var(--s3)}
+/* minmax(0,1fr), not 1fr: a bare 1fr track keeps a min-content floor, which a
+   wide un-wrapping money figure would push the column (and the page) out to */
+@media(max-width:900px){ .deal-split{grid-template-columns:minmax(0,1fr)} }
+.kpi-stack{display:flex;flex-direction:column;gap:var(--s3);min-width:0}
 .kpi-stack .kpi-card{flex:1;display:grid;grid-template-columns:1fr auto;align-items:center;
   column-gap:var(--s4);row-gap:2px;padding:10px var(--s4)}
 .kpi-stack .kpi-label{margin-bottom:0;font-size:12.5px}
@@ -309,6 +313,13 @@ body.embed .topbar{display:none}
 /* donut card: chart on the left, legend table running down the right */
 .deal-split > .card > .card-body.donut-body{flex-direction:row;align-items:center;gap:var(--s5)}
 .donut-body .chart-wrap.donut{flex:0 0 42%;min-width:0}
+/* narrow: donut over the legend table instead of a squeezed side-by-side that
+   overprints the name/value/% columns. Placed after the row base rule above so
+   it wins on equal specificity. */
+@media(max-width:560px){
+  .deal-split > .card > .card-body.donut-body{flex-direction:column;align-items:stretch;gap:var(--s4)}
+  .donut-body .chart-wrap.donut{flex:none;width:100%}
+}
 /* right-hand legend: dot + name on the left, value and % right-aligned in
    their own columns so the numbers stack into a clean table */
 .legend-table{flex:1;min-width:0;display:flex;flex-direction:column;gap:14px}
@@ -322,7 +333,24 @@ body.embed .topbar{display:none}
 .legend-table .lg-pct{text-align:right;font-size:14px;font-weight:700;
   min-width:52px;color:var(--text-primary);font-variant-numeric:tabular-nums}
 .chart-duo{display:grid;grid-template-columns:1fr 1fr;gap:var(--s4)}
+/* a grid track defaults to min-content width, and a Chart.js canvas reports its
+   own pixel width as that min-content — so without pinning the items back to 0
+   the two plots push the grid, and the whole page, wider than the viewport on
+   desktop too (not just the mobile case handled below) */
+.chart-duo > .card,.chart-duo > .card > .card-body{min-width:0}
 @media(max-width:900px){ .chart-duo{grid-template-columns:1fr} }
+
+/* On mobile a bar/column chart with many categories would either squash to
+   nothing or, once its labels push past the card, drag the whole page into a
+   horizontal scroll. Instead the chart keeps a legible minimum width and the
+   scroll is trapped inside its own box — the page never moves sideways. */
+.chart-scroll{min-width:0}
+@media(max-width:640px){
+  /* the items are already pinned to min-width:0 above; here the scroll box is
+     let loose so a legible-minimum chart scrolls inside its own box */
+  .chart-scroll{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+  .chart-scroll > .chart-wrap{min-width:480px}
+}
 
 /* min-height keeps side-by-side charts on one baseline: a card with a one-item
    legend starts its plot at the same y as a card with three */
@@ -402,9 +430,15 @@ tfoot td.num{text-align:right;font-family:var(--font-mono);font-variant-numeric:
    over a grey caption. Won value is the emphasised figure; the other three
    share one smaller size. Left column: won/total then pipeline value; right
    column: conversion rate then avg deal size. */
-.mcard-stats{display:grid;grid-template-columns:1fr 1fr;gap:9px 12px;padding-top:8px;border-top:1px solid var(--divider)}
+/* the single divider under the name (mcard-head's border-bottom) already
+   separates head from content, so this block carries none of its own */
+.mcard-stats{display:grid;grid-template-columns:1fr 1fr;gap:14px 12px;padding-top:8px;margin-bottom:8px}
 .mcard-stats .cell{display:flex;flex-direction:column;gap:1px;min-width:0}
-.mcard-stats .v{font-size:15px;font-weight:700;letter-spacing:-.01em;line-height:1.2;font-variant-numeric:tabular-nums;white-space:nowrap}
+/* the left column carries the longest figures (won / total, pipeline value); a
+   big amount here would print past its track and overlap the right column, so
+   the value wraps at its space — the secondary "/ total" or "(count)" drops to
+   its own line instead of colliding */
+.mcard-stats .v{font-size:15px;font-weight:700;letter-spacing:-.01em;line-height:1.25;font-variant-numeric:tabular-nums;white-space:normal;overflow-wrap:break-word}
 .mcard-stats .v.hero{font-size:18px}
 .mcard-stats .v.v-won{color:#047857}
 .mcard-stats .v.v-progress{color:#B45309}
@@ -489,7 +523,7 @@ body.screen-deal .page-header{margin-bottom:var(--s3)}
   #sec-deal .legend{min-height:16px;margin-bottom:4px}
   #sec-deal .mcard{gap:4px;padding:7px var(--s4) 8px}
   #sec-deal .mcard-head{padding-bottom:5px}
-  #sec-deal .mcard-stats{gap:7px 12px;padding-top:6px}
+  #sec-deal .mcard-stats{gap:11px 12px;padding-top:6px}
   #sec-deal .mcard-stats .v{font-size:14px}
   #sec-deal .mcard-stats .v.hero{font-size:17px}
   #sec-deal .mcard-kpi{padding:6px 9px 7px}
@@ -845,25 +879,29 @@ body.screen-leadup .page-header{margin-bottom:var(--s3)}
         <div class="chart-duo">
           <div class="card">
             <div class="card-head">
-              <h3><svg><use href="#i-mail"/></svg> Reply amount</h3>
+              <h3><svg><use href="#i-mail"/></svg> Contacted Lead Amount</h3>
             </div>
             <div class="card-body">
               <div class="legend" id="luLegendAmt"><!-- injected --></div>
+              <div class="chart-scroll">
               <div class="chart-wrap lead-tall">
                 <canvas id="chartLeadAmt" role="img"
-                  aria-label="Horizontal stacked bar chart of replies per member split by lead temperature, each bar labelled with its total. Sophie: cold 8, warm 6, hot 2, total 16. Chloe: cold 6, warm 3, hot 0, total 9. Steve: cold 2, warm 7, hot 3, total 12. Kai: cold 9, warm 6, hot 2, total 17."></canvas>
+                  aria-label="Horizontal stacked bar chart of contacted leads per member split by lead temperature, each bar labelled with its total. Sophie: cold 39, warm 30, hot 7, total 76. Chloe: cold 63, warm 15, hot 4, total 82. Steve: cold 50, warm 30, hot 5, total 85. Kai: cold 45, warm 28, hot 6, total 79."></canvas>
+              </div>
               </div>
             </div>
           </div>
           <div class="card">
             <div class="card-head">
-              <h3><svg><use href="#i-mail"/></svg> Reply rate</h3>
+              <h3><svg><use href="#i-mail"/></svg> Reply Rate</h3>
             </div>
             <div class="card-body">
               <div class="legend" id="luLegend"><!-- injected --></div>
+              <div class="chart-scroll">
               <div class="chart-wrap lead-tall">
                 <canvas id="chartLeadRate" role="img"
                   aria-label="Horizontal grouped bar chart of reply rate by member and lead temperature, each bar labelled with its rate. Sophie: cold 20.5% (8 of 39), warm 20.0% (6 of 30), hot 28.6% (2 of 7). Chloe: cold 9.5% (6 of 63), warm 20.0% (3 of 15), hot 0% (0 of 4). Steve: cold 4.0% (2 of 50), warm 23.3% (7 of 30), hot 60.0% (3 of 5). Kai: cold 20.0% (9 of 45), warm 21.4% (6 of 28), hot 33.3% (2 of 6)."></canvas>
+              </div>
               </div>
             </div>
           </div>
@@ -940,7 +978,6 @@ body.screen-leadup .page-header{margin-bottom:var(--s3)}
           <div class="card">
             <div class="card-head">
               <h3>Won value by contract type</h3>
-              <span class="sub" id="dlMixUnit">USD</span>
             </div>
             <div class="card-body donut-body">
               <div class="chart-wrap donut">
@@ -959,9 +996,6 @@ body.screen-leadup .page-header{margin-bottom:var(--s3)}
           <span class="panel-num">02</span>
           <div>
             <div class="panel-title">Detailed metrics</div>
-          </div>
-          <div class="panel-head-actions">
-            <span class="head-note">Values in <span class="cur-unit">USD</span></span>
           </div>
         </div>
         <div class="mcard-grid" id="dlMemberCards"><!-- injected --></div>
@@ -983,9 +1017,11 @@ body.screen-leadup .page-header{margin-bottom:var(--s3)}
             </div>
             <div class="card-body">
               <div class="legend" id="dlCountLegend"><!-- injected --></div>
+              <div class="chart-scroll">
               <div class="chart-wrap short">
                 <canvas id="chartDealCount" role="img"
                   aria-label="Stacked column chart of deals per member, split into won (green) and still open or lost, with the conversion rate labelled inside the won segment."></canvas>
+              </div>
               </div>
             </div>
           </div>
@@ -996,9 +1032,11 @@ body.screen-leadup .page-header{margin-bottom:var(--s3)}
             </div>
             <div class="card-body">
               <div class="legend" id="dlOpenLegend"><!-- injected --></div>
+              <div class="chart-scroll">
               <div class="chart-wrap short">
                 <canvas id="chartDealOpen" role="img"
                   aria-label="Column chart of the value still in each member's pipeline, excluding won and lost deals. Bars are amber and labelled with the pipeline value."></canvas>
+              </div>
               </div>
             </div>
           </div>
@@ -1069,43 +1107,43 @@ const TYPES = [
 const MEMBERS = [
   { name:'Sophie', initials:'SO', target:1600, contracts:12, dealTarget:45, leadTarget:85,
     signed:{ odc:620, fixed:410, tm:180, headhunt:150, commission:90 },
-    deals:42, won:14, dealValue:2410, wonValue:890, open:20, openValue:1180,
-    wonType:{ odc:340, fixed:210, tm:180, headhunt:100, commission:60 },
+    deals:42, won:14, dealValue:3450, wonValue:1270, open:20, openValue:1690,
+    wonType:{ odc:490, fixed:300, tm:260, headhunt:140, commission:80 },
     lead:{ cold:[39,8], warm:[30,6], hot:[7,2] } },
   { name:'Chloe',  initials:'CH', target:1400, contracts:10, dealTarget:48, leadTarget:95,
     signed:{ odc:430, fixed:320, tm:260, headhunt:110, commission:80 },
-    deals:51, won:11, dealValue:2180, wonValue:620, open:28, openValue:1150,
-    wonType:{ odc:230, fixed:150, tm:140, headhunt:60,  commission:40 },
+    deals:51, won:11, dealValue:3120, wonValue:890, open:28, openValue:1640,
+    wonType:{ odc:330, fixed:210, tm:200, headhunt:90,  commission:60 },
     lead:{ cold:[63,6], warm:[15,3], hot:[4,0] } },
   { name:'Steve',  initials:'ST', target:1200, contracts:11, dealTarget:55, leadTarget:120,
     signed:{ odc:520, fixed:300, tm:300, headhunt:90,  commission:70 },
-    deals:38, won:13, dealValue:2540, wonValue:980, open:18, openValue:1240,
-    wonType:{ odc:400, fixed:200, tm:250, headhunt:80,  commission:50 },
+    deals:38, won:13, dealValue:3630, wonValue:1400, open:18, openValue:1770,
+    wonType:{ odc:570, fixed:290, tm:360, headhunt:110, commission:70 },
     lead:{ cold:[50,2], warm:[30,7], hot:[5,3] } },
   { name:'Kai',    initials:'KA', target:1000, contracts:8, estimated:true, dealTarget:60, leadTarget:160,
     signed:{ odc:280, fixed:210, tm:150, headhunt:70,  commission:70 },
-    deals:29, won:8,  dealValue:1810, wonValue:540, open:15, openValue:950,
-    wonType:{ odc:210, fixed:130, tm:110, headhunt:50,  commission:40 },
+    deals:29, won:8,  dealValue:2590, wonValue:770, open:15, openValue:1360,
+    wonType:{ odc:300, fixed:190, tm:160, headhunt:70,  commission:50 },
     lead:{ cold:[45,9], warm:[28,6], hot:[6,2] } },
   { name:'Evelyn', initials:'EV', target:1500, contracts:11, dealTarget:50, leadTarget:100,
     signed:{ odc:560, fixed:360, tm:220, headhunt:130, commission:85 },
-    deals:46, won:15, dealValue:2350, wonValue:940, open:22, openValue:1120,
-    wonType:{ odc:360, fixed:220, tm:190, headhunt:100, commission:70 },
+    deals:46, won:15, dealValue:3360, wonValue:1340, open:22, openValue:1600,
+    wonType:{ odc:510, fixed:310, tm:270, headhunt:150, commission:100 },
     lead:{ cold:[42,9], warm:[32,7], hot:[8,3] } },
   { name:'Erik',   initials:'ER', target:1300, contracts:9, dealTarget:52, leadTarget:110,
     signed:{ odc:470, fixed:300, tm:240, headhunt:100, commission:75 },
-    deals:44, won:10, dealValue:2050, wonValue:600, open:26, openValue:1080,
-    wonType:{ odc:220, fixed:150, tm:130, headhunt:60,  commission:40 },
+    deals:44, won:10, dealValue:2930, wonValue:860, open:26, openValue:1540,
+    wonType:{ odc:310, fixed:210, tm:190, headhunt:90,  commission:60 },
     lead:{ cold:[55,5], warm:[20,4], hot:[5,1] } },
   { name:'Cris',   initials:'CR', target:1100, contracts:9, dealTarget:48, leadTarget:105,
     signed:{ odc:360, fixed:260, tm:190, headhunt:90,  commission:70 },
-    deals:35, won:11, dealValue:1720, wonValue:700, open:16, openValue:860,
-    wonType:{ odc:280, fixed:170, tm:140, headhunt:70,  commission:40 },
+    deals:35, won:11, dealValue:2460, wonValue:1000, open:16, openValue:1230,
+    wonType:{ odc:400, fixed:240, tm:200, headhunt:100, commission:60 },
     lead:{ cold:[48,7], warm:[26,6], hot:[6,2] } },
   { name:'Xavier', initials:'XA', target:900, contracts:7, estimated:true, dealTarget:58, leadTarget:150,
     signed:{ odc:250, fixed:190, tm:140, headhunt:65,  commission:60 },
-    deals:27, won:7,  dealValue:1620, wonValue:470, open:14, openValue:820,
-    wonType:{ odc:180, fixed:120, tm:90,  headhunt:50,  commission:30 },
+    deals:27, won:7,  dealValue:2320, wonValue:670, open:14, openValue:1170,
+    wonType:{ odc:270, fixed:170, tm:130,  headhunt:60,  commission:40 },
     lead:{ cold:[43,8], warm:[25,5], hot:[5,2] } },
 ];
 
@@ -1143,23 +1181,51 @@ const WON_MIX      = TYPES.map(t => wonTypeTotal(t.key));
 
 /* ---------------- currency ----------------
    Source figures are thousands of USD; every displayed amount goes through
-   money() so one switch reframes the whole page. VND is reported in millions —
-   the convention Vietnamese finance teams already read, and the only way the
-   table cells stay legible at ~26,000 VND to the dollar. Rates are indicative
-   prototype figures, not a live feed. */
+   money() so one switch reframes the whole page. VND is held in full đồng
+   (scale 1) but, because the figures reach the tens/hundreds of billions,
+   money() abbreviates them to tỉ / triệu for display and keeps the exact amount
+   in a hover tooltip. Rates are indicative prototype figures, not a live feed. */
 const CURRENCIES = [
   { code:'USD', symbol:'$',  rate:1,     scale:1,   scaleLabel:'',         scaleShort:'' },
   { code:'EUR', symbol:'€',  rate:0.92,  scale:1,   scaleLabel:'',         scaleShort:'' },
   { code:'JPY', symbol:'¥',  rate:157,   scale:1,   scaleLabel:'',         scaleShort:'' },
-  { code:'VND', symbol:'₫',  rate:26100, scale:1e6, scaleLabel:'millions', scaleShort:'m' },
+  { code:'VND', symbol:'₫',  rate:26100, scale:1,   scaleLabel:'',         scaleShort:'' },
 ];
 let CUR = CURRENCIES[0];
 
 /* thousands-of-USD -> the magnitude actually printed in the active currency */
 const conv = k => k * 1000 * CUR.rate / CUR.scale;
-const money = k => Math.round(conv(k)).toLocaleString('en-US');               // 1450 -> "1,450,000"
+const moneyFull = k => Math.round(conv(k)).toLocaleString('en-US');           // exact, every digit
+
+/* VND runs into the tens/hundreds of billions, where a full 12-digit figure
+   overflows the KPI tiles and scorecards. In VND the face value is abbreviated
+   to tỉ / triệu and the exact amount moves to a hover tooltip (moneyHTML for
+   templates, moneyTitle for the title text). Other currencies stay short
+   enough to print in full, so they pass straight through. */
+const compactVND = k => {
+  const v = conv(k);                                                          // full đồng
+  const t = n => n.toLocaleString('en-US', { maximumFractionDigits: n >= 100 ? 0 : 1 });
+  if (v >= 1e9) return t(v / 1e9) + ' tỉ';
+  if (v >= 1e6) return t(v / 1e6) + ' tr';
+  return Math.round(v).toLocaleString('en-US');
+};
+const money      = k => CUR.code === 'VND' ? compactVND(k) : moneyFull(k);
+const moneyTitle = k => `${moneyFull(k)} ${curUnit()}`;                       // exact, for tooltips
+/* value for innerHTML templates: in VND the abbreviated figure carries a title
+   with the exact amount; other currencies need no tooltip so they pass through */
+const moneyHTML  = k => CUR.code === 'VND'
+  ? `<span class="amt" data-tip="${moneyTitle(k)}">${money(k)}</span>`
+  : money(k);
+/* element-ref helper: sets the compact text and the exact-amount tooltip */
+const setMoney   = (id, k) => {
+  const el = document.getElementById(id);
+  el.textContent = money(k);
+  if (CUR.code === 'VND') el.setAttribute('data-tip', moneyTitle(k));
+  else el.removeAttribute('data-tip');
+};
 const moneyComp = k => {                                                      // axis ticks
   const v = conv(k);
+  if (v >= 1e9)  return (v / 1e9).toFixed(2).replace(/\.?0+$/,'') + 'B';
   if (v >= 1e6)  return (v / 1e6).toFixed(2).replace(/\.?0+$/,'') + 'M';
   if (v >= 1e4)  return Math.round(v / 1000) + 'K';
   if (v >= 1000) return (v / 1000).toFixed(1) + 'K';
@@ -1190,10 +1256,10 @@ function kpiBand(att){
    RENDER — Overall
    ================================================================== */
 function renderOverall(){
-  document.getElementById('ovTotal').innerHTML     = money(GRAND) + `<span class="unit">${curUnitShort()}</span>`;
+  document.getElementById('ovTotal').innerHTML     = moneyHTML(GRAND) + `<span class="unit">${curUnitShort()}</span>`;
   document.getElementById('ovContracts').textContent = CONTRACTS;
-  document.getElementById('ovAvg').textContent     = money(GRAND / CONTRACTS);
-  document.getElementById('ovTarget').textContent  = money(TARGET);
+  setMoney('ovAvg', GRAND / CONTRACTS);
+  setMoney('ovTarget', TARGET);
   document.getElementById('ovAttain').textContent  = pct(GRAND, TARGET);
 
   /* Panel 1 — type breakdown meters, direct-labelled */
@@ -1201,7 +1267,7 @@ function renderOverall(){
     const v = typeTotal(t.key), share = v / GRAND * 100;
     return `<div class="bd-row">
       <div class="bd-name"><span class="swatch" style="background:${t.color}"></span>${t.name}</div>
-      <div class="bd-val">${money(v)}<span class="pct">${share.toFixed(1)}%</span></div>
+      <div class="bd-val">${moneyHTML(v)}<span class="pct">${share.toFixed(1)}%</span></div>
       <div class="bd-track"><div class="bd-fill" style="width:${share}%;background:${t.color}"></div></div>
     </div>`;
   }).join('');
@@ -1214,8 +1280,8 @@ function renderOverall(){
     return `<tr>
       <td><div class="person-cell"><span class="av">${m.initials}</span>
         <span class="nm">${m.name}${m.estimated ? ' <span class="est-note">(est.)</span>' : ''}</span></div></td>
-      <td class="num">${money(total)}</td>
-      ${TYPES.map(t => `<td class="num">${money(m.signed[t.key])}</td>`).join('')}
+      <td class="num">${moneyHTML(total)}</td>
+      ${TYPES.map(t => `<td class="num">${moneyHTML(m.signed[t.key])}</td>`).join('')}
       <td class="num"><div class="meter">
         <span class="track"><span class="fill ${fill}" style="width:${Math.min(att,100)}%"></span></span>
         <span class="pct">${att.toFixed(1)}%</span></div></td>
@@ -1225,8 +1291,8 @@ function renderOverall(){
   }).join('');
   tbl.querySelector('tfoot').innerHTML = `<tr>
     <td>Team total</td>
-    <td class="num">${money(GRAND)}</td>
-    ${TYPES.map(t => `<td class="num">${money(typeTotal(t.key))}</td>`).join('')}
+    <td class="num">${moneyHTML(GRAND)}</td>
+    ${TYPES.map(t => `<td class="num">${moneyHTML(typeTotal(t.key))}</td>`).join('')}
     <td class="num">${pct(GRAND, TARGET)}</td>
     <td class="num">${DEALS}</td>
     <td class="num">${WON}</td>
@@ -1236,12 +1302,12 @@ function renderOverall(){
   const pt = document.getElementById('ovPeriodTable');
   pt.querySelector('tbody').innerHTML = MONTHS.map((mo, i) => {
     const row = TYPES.map(t => MONTHLY[t.key][i]);
-    return `<tr><td>${mo} 2026</td>${row.map(v => `<td class="num">${money(v)}</td>`).join('')}
-      <td class="num">${money(row.reduce((a,b) => a+b, 0))}</td></tr>`;
+    return `<tr><td>${mo} 2026</td>${row.map(v => `<td class="num">${moneyHTML(v)}</td>`).join('')}
+      <td class="num">${moneyHTML(row.reduce((a,b) => a+b, 0))}</td></tr>`;
   }).join('');
   pt.querySelector('tfoot').innerHTML = `<tr><td>Total</td>
-    ${TYPES.map(t => `<td class="num">${money(typeTotal(t.key))}</td>`).join('')}
-    <td class="num">${money(GRAND)}</td></tr>`;
+    ${TYPES.map(t => `<td class="num">${moneyHTML(typeTotal(t.key))}</td>`).join('')}
+    <td class="num">${moneyHTML(GRAND)}</td></tr>`;
 
   legend('ovPeriodLegend', TYPES);
 }
@@ -1315,12 +1381,9 @@ function renderDeal(){
   document.getElementById('dlOpenDeals').textContent  = OPEN;
   /* money is now the headline of each throughput card, with the deal count
      carried on the caption line beneath it */
-  document.getElementById('dlTotalValue').innerHTML =
-    money(DEAL_VALUE) + `<span class="unit">${curUnitShort()}</span>`;
-  document.getElementById('dlWonValue').innerHTML =
-    money(WON_VALUE) + `<span class="unit">${curUnitShort()}</span>`;
-  document.getElementById('dlOpenValue').innerHTML =
-    money(OPEN_VALUE) + `<span class="unit">${curUnitShort()}</span>`;
+  setMoney('dlTotalValue', DEAL_VALUE);
+  setMoney('dlWonValue',   WON_VALUE);
+  setMoney('dlOpenValue',  OPEN_VALUE);
 
   /* Panel 3 — one scorecard per member */
   document.getElementById('dlMemberCards').innerHTML = MEMBERS.map(m => {
@@ -1335,7 +1398,7 @@ function renderDeal(){
 
       <div class="mcard-stats">
         <div class="cell">
-          <span class="v hero v-won">${money(m.wonValue)} <span class="of">/ ${money(m.dealValue)}</span></span>
+          <span class="v hero v-won">${moneyHTML(m.wonValue)} <span class="of">/ ${moneyHTML(m.dealValue)}</span></span>
           <span class="cap">Won / total value</span>
         </div>
         <div class="cell">
@@ -1343,11 +1406,11 @@ function renderDeal(){
           <span class="cap">Conversion rate</span>
         </div>
         <div class="cell">
-          <span class="v v-progress">${money(m.openValue)} <span class="of">(${m.open})</span></span>
+          <span class="v v-progress">${moneyHTML(m.openValue)} <span class="of">(${m.open})</span></span>
           <span class="cap">In pipeline value</span>
         </div>
         <div class="cell">
-          <span class="v">${money(m.dealValue / m.deals)}</span>
+          <span class="v">${moneyHTML(m.dealValue / m.deals)}</span>
           <span class="cap">Avg deal size</span>
         </div>
       </div>
@@ -1367,8 +1430,14 @@ function renderDeal(){
      Won value is the deal figure (WON_VALUE), the same one panel 01 prints. */
   const steve = MEMBERS.find(m => m.name === 'Steve');
   const kai   = MEMBERS.find(m => m.name === 'Kai');
-  document.getElementById('insAvgDeal').textContent  = `${money(steve.dealValue / steve.deals)} ${curUnit()}`;
-  document.getElementById('insWonValue').textContent = `${money(WON_VALUE)} ${curUnit()}`;
+  const setProseMoney = (id, k) => {
+    const el = document.getElementById(id);
+    el.textContent = `${money(k)} ${curUnit()}`;
+    if (CUR.code === 'VND') el.setAttribute('data-tip', moneyTitle(k));
+    else el.removeAttribute('data-tip');
+  };
+  setProseMoney('insAvgDeal', steve.dealValue / steve.deals);
+  setProseMoney('insWonValue', WON_VALUE);
   document.getElementById('insWonShare').textContent = pct(WON_VALUE, DEAL_VALUE);
   document.getElementById('insKaiKpi').textContent   =
     `${(kai.deals / kai.dealTarget * 100).toFixed(1)}% of his ${kai.dealTarget}-deal KPI`;
@@ -1376,12 +1445,11 @@ function renderDeal(){
   /* Panel-01 donut legend — a small table: swatch + name on the left, the won
      value and its share right-aligned in their own columns. Carries the numbers
      the ring no longer labels, in the active currency. */
-  document.getElementById('dlMixUnit').textContent = curUnitShort();
   document.getElementById('dlMixLegend').innerHTML = TYPES.map((t, i) => {
     const v = WON_MIX[i];
     return `<div class="lg-row">
       <span class="lg-name"><span class="dot" style="background:${t.color}"></span>${t.name}</span>
-      <span class="lg-val">${money(v)}</span>
+      <span class="lg-val">${moneyHTML(v)}</span>
       <span class="lg-pct">${pct(v, WON_VALUE)}</span>
     </div>`;
   }).join('');
@@ -1778,8 +1846,8 @@ function buildOverallCharts(){
         legend:{ display:false },
         tooltip:{ ...TOOLTIP,
           callbacks:{
-            label: c => ` ${c.dataset.label}: ${money(c.parsed.y)} ${curUnit()}`,
-            footer: items => `Total: ${money(items.reduce((s,i) => s + i.parsed.y, 0))} ${curUnit()}`,
+            label: c => ` ${c.dataset.label}: ${moneyFull(c.parsed.y)} ${curUnit()}`,
+            footer: items => `Total: ${moneyFull(items.reduce((s,i) => s + i.parsed.y, 0))} ${curUnit()}`,
           },
           footerFont:{ weight:'600', size:12.5 }, footerColor:'#fff',
         },
@@ -1811,7 +1879,7 @@ function buildOverallCharts(){
       layout:{ padding:{ right:96 } },
       plugins:{
         legend:{ display:false },
-        tooltip:{ ...TOOLTIP, callbacks:{ label: c => ` ${money(c.parsed.x)} ${curUnit()}` } },
+        tooltip:{ ...TOOLTIP, callbacks:{ label: c => ` ${moneyFull(c.parsed.x)} ${curUnit()}` } },
       },
       scales:{
         x:{ beginAtZero:true, grid:GRID, border:{ display:false },
@@ -1825,17 +1893,17 @@ function buildOverallCharts(){
 }
 
 function buildLeadupCharts(){
-  /* Reply amount — one stacked bar per member, laid horizontally: members run
-     down the vertical axis, replies along the horizontal. Each bar splits into
-     cold / warm / hot with its count in the band and the member total at the
-     end. */
+  /* Contacted lead amount — one stacked bar per member, laid horizontally:
+     members run down the vertical axis, contacted leads along the horizontal.
+     Each bar splits into cold / warm / hot with its count in the band and the
+     member total at the end. */
   charts.leadAmt = new Chart(document.getElementById('chartLeadAmt'), {
     type:'bar',
     data:{
       labels: MEMBERS.map(m => m.name),
       datasets: TEMPS.map(x => ({
         label: x.name,
-        data: MEMBERS.map(m => m.lead[x.key][1]),
+        data: MEMBERS.map(m => m.lead[x.key][0]),
         backgroundColor: x.color,
         maxBarThickness:48,
       })),
@@ -1847,7 +1915,7 @@ function buildLeadupCharts(){
         legend:{ display:false },
         tooltip:{ ...TOOLTIP,
           callbacks:{
-            label: c => ` ${c.dataset.label}: ${c.parsed.x} replies`,
+            label: c => ` ${c.dataset.label}: ${c.parsed.x} contacted`,
           },
         },
       },
@@ -1934,8 +2002,8 @@ function buildDealCharts(){
         legend:{ display:false },
         tooltip:{ ...TOOLTIP,
           callbacks:{
-            label: c => ` ${c.label}: ${money(c.parsed)} ${curUnit()} · ${pct(c.parsed, WON_VALUE)}`,
-            footer: () => `Total won: ${money(WON_VALUE)} ${curUnit()}`,
+            label: c => ` ${c.label}: ${moneyFull(c.parsed)} ${curUnit()} · ${pct(c.parsed, WON_VALUE)}`,
+            footer: () => `Total won: ${moneyFull(WON_VALUE)} ${curUnit()}`,
           },
           footerFont:{ weight:'600', size:12.5 }, footerColor:'#fff',
         },
@@ -2017,7 +2085,7 @@ function buildDealCharts(){
         legend:{ display:false },
         tooltip:{ ...TOOLTIP,
           callbacks:{
-            label: c => ` ${money(c.parsed.y)} ${curUnit()} in pipeline`,
+            label: c => ` ${moneyFull(c.parsed.y)} ${curUnit()} in pipeline`,
             footer: items => {
               const m = MEMBERS[items[0].dataIndex];
               return `${m.open} open deals · ${pct(m.open, m.deals)} of ${m.deals} created`;
@@ -2125,6 +2193,40 @@ function applyCurrency(){
 currencySelect.addEventListener('change', e => {
   CUR = CURRENCIES.find(c => c.code === e.target.value) || CURRENCIES[0];
   applyCurrency();
+});
+
+/* ==================================================================
+   AMOUNT TOOLTIP
+   Abbreviated figures (VND tỉ / triệu) carry the exact amount in a
+   data-tip attribute. A single delegated tooltip serves every one of
+   them — including cards and tables re-rendered on a currency switch —
+   and shows immediately, unlike the native title with its long delay.
+   ================================================================== */
+const amtTip = document.createElement('div');
+amtTip.id = 'amtTip';
+document.body.appendChild(amtTip);
+
+function placeTip(x, y){
+  const pad = 14, r = amtTip.getBoundingClientRect();
+  let left = x + pad, top = y + pad;
+  if (left + r.width  > window.innerWidth  - 8) left = x - pad - r.width;
+  if (top  + r.height > window.innerHeight - 8) top  = y - pad - r.height;
+  amtTip.style.left = Math.max(8, left) + 'px';
+  amtTip.style.top  = Math.max(8, top)  + 'px';
+}
+
+document.addEventListener('pointerover', e => {
+  const t = e.target.closest('[data-tip]');
+  if (!t) return;
+  amtTip.textContent = t.getAttribute('data-tip');
+  amtTip.classList.add('show');
+  placeTip(e.clientX, e.clientY);
+});
+document.addEventListener('pointermove', e => {
+  if (amtTip.classList.contains('show')) placeTip(e.clientX, e.clientY);
+});
+document.addEventListener('pointerout', e => {
+  if (e.target.closest('[data-tip]')) amtTip.classList.remove('show');
 });
 
 /* ==================================================================
