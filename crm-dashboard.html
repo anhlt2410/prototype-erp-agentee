@@ -1269,7 +1269,7 @@ function renderLeadup(){
     return `<article class="mcard ${band.cls}">
       <div class="mcard-head">
         <span class="av">${m.initials}</span>
-        <span class="nm">${m.name}${m.estimated ? ' <span class="est-note">(est.)</span>' : ''}</span>
+        <span class="nm">${m.name}</span>
       </div>
 
       <div class="mcard-hero">
@@ -1330,7 +1330,7 @@ function renderDeal(){
     return `<article class="mcard ${band.cls}">
       <div class="mcard-head">
         <span class="av">${m.initials}</span>
-        <span class="nm">${m.name}${m.estimated ? ' <span class="est-note">(est.)</span>' : ''}</span>
+        <span class="nm">${m.name}</span>
       </div>
 
       <div class="mcard-stats">
@@ -1387,7 +1387,7 @@ function renderDeal(){
   }).join('');
   legend('dlCountLegend', [
     { name:'Won',          color:C('success') },
-    { name:'Open or lost', color:C('series-1-soft') },
+    { name:'Others',       color:C('series-1-soft') },
   ]);
   legend('dlOpenLegend', [
     { name:'Pipeline value', color:C('warning') },
@@ -1957,7 +1957,7 @@ function buildDealCharts(){
         { label:'Won', data: MEMBERS.map(m => m.won),
           backgroundColor:C('success'), maxBarThickness:44,
           borderColor:SURFACE, borderWidth:{ top:2 } },
-        { label:'Open or lost', data: MEMBERS.map(m => m.deals - m.won),
+        { label:'Others', data: MEMBERS.map(m => m.deals - m.won),
           backgroundColor:C('series-1-soft'), maxBarThickness:44,
           borderRadius:{ topLeft:4, topRight:4 } },
       ],
