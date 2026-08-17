@@ -432,14 +432,19 @@ tfoot td.num{text-align:right;font-family:var(--font-mono);font-variant-numeric:
    column: conversion rate then avg deal size. */
 /* the single divider under the name (mcard-head's border-bottom) already
    separates head from content, so this block carries none of its own */
-.mcard-stats{display:grid;grid-template-columns:1fr 1fr;gap:14px 12px;padding-top:8px;margin-bottom:8px}
+.mcard-stats{display:grid;grid-template-columns:1.7fr 1fr;gap:14px 12px;padding-top:8px;margin-bottom:8px}
 .mcard-stats .cell{display:flex;flex-direction:column;gap:1px;min-width:0}
+/* right column (conversion rate, avg deal size) reads right-aligned so its
+   figures sit against the card edge rather than mid-cell */
+.mcard-stats .cell:nth-child(even){align-items:flex-end;text-align:right}
 /* the left column carries the longest figures (won / total, pipeline value); a
    big amount here would print past its track and overlap the right column, so
    the value wraps at its space — the secondary "/ total" or "(count)" drops to
    its own line instead of colliding */
 .mcard-stats .v{font-size:15px;font-weight:700;letter-spacing:-.01em;line-height:1.25;font-variant-numeric:tabular-nums;white-space:normal;overflow-wrap:break-word}
-.mcard-stats .v.hero{font-size:18px}
+/* the won/total figure stays on one line even when both amounts reach the
+   millions — the wider left column gives it the room to do so */
+.mcard-stats .v.hero{font-size:18px;white-space:nowrap}
 .mcard-stats .v.v-won{color:#047857}
 .mcard-stats .v.v-progress{color:#B45309}
 .mcard-stats .v .of{font-size:.62em;font-weight:600;color:var(--text-muted)}
