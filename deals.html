@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deals · CRM — Twendee Work ERP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Tokens mirror crm-dashboard.html so the deal list reads as the same product. */
+:root{
+  --primary:#007BA7; --primary-hover:#006490; --primary-active:#004f72;
+  --primary-50:#e8f4f8; --primary-100:#c5e4ef;
+  --success:#10B981; --success-50:#ECFDF5;
+  --warning:#F59E0B; --warning-50:#FFFBEB;
+  --danger:#EF4444;  --danger-50:#FEF2F2;
+  --cta:#007BA7; --cta-50:rgba(0,123,167,0.08); --cta-shadow:rgba(0,123,167,0.28);
+  --surface:#FFFFFF; --bg:#e8f4f8;
+  --text:#111827; --text-secondary:#374151; --text-muted:#6B7280;
+  --border:#E2E8F0; --border-strong:#CBD5E1; --divider:#F1F5F9;
+  --font-sans:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s8:64px;
+  --r-sm:6px; --r-md:8px; --r-lg:12px; --r-full:9999px;
+  --shadow-md:0 1px 3px rgba(17,24,39,0.06),0 1px 2px rgba(17,24,39,0.04);
+  --shadow-lg:0 4px 12px rgba(17,24,39,0.08),0 2px 4px rgba(17,24,39,0.04);
+  --ease:cubic-bezier(0.4,0,0.2,1);
+  --won:#2C8C5A; --won-50:#ECFDF5; --open:#C4801F; --open-50:#FFFBEB; --lost:#9CA3AF; --lost-50:#F3F4F6;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--font-sans);font-size:14px;line-height:1.5;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+a{color:inherit;text-decoration:none}
+svg{display:block}
+
+.topbar{height:60px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--s4);padding:0 var(--s5);position:sticky;top:0;z-index:100}
+.brand{display:flex;align-items:center;gap:var(--s3);font-weight:800;font-size:16px}
+.brand .mark{width:32px;height:32px;border-radius:var(--r-md);background:var(--primary);color:#fff;display:grid;place-items:center;font-size:14px}
+.spacer{flex:1}
+
+.main{padding:var(--s5) var(--s6) var(--s8);max-width:1280px;margin:0 auto;width:100%}
+@media(max-width:640px){ .main{padding:var(--s4)} }
+
+.crumb{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-muted);margin-bottom:var(--s3);flex-wrap:wrap}
+.crumb a:hover{color:var(--primary-active)}
+.crumb .sep{opacity:.5}
+.crumb .here{color:var(--text);font-weight:600}
+
+.head-row{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s4);flex-wrap:wrap;margin-bottom:var(--s4)}
+h1{font-size:23px;font-weight:800;letter-spacing:-.02em}
+.head-row .sub{font-size:13px;color:var(--text-muted);margin-top:2px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:36px;padding:0 var(--s4);border-radius:var(--r-md);font-weight:600;font-size:13.5px;border:1px solid transparent;transition:all 160ms var(--ease);white-space:nowrap}
+.btn svg{width:15px;height:15px}
+.btn-secondary{background:var(--surface);color:var(--text);border-color:var(--primary-100);font-weight:500}
+.btn-secondary:hover{background:var(--primary-50);border-color:var(--primary);color:var(--primary-active)}
+
+/* Context banner — spells out where the reader came from and what they are looking at. */
+.context{display:flex;align-items:flex-start;gap:12px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--primary);border-radius:var(--r-lg);padding:14px var(--s5);box-shadow:var(--shadow-md);margin-bottom:var(--s4)}
+.context .ico{width:34px;height:34px;border-radius:var(--r-md);background:var(--primary-50);color:var(--primary-active);display:grid;place-items:center;flex-shrink:0}
+.context .ico svg{width:18px;height:18px}
+.context .lbl{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);font-weight:700}
+.context .ttl{font-size:15px;font-weight:700;margin-top:1px}
+.context p{font-size:12.5px;color:var(--text-muted);margin-top:3px}
+
+/* Filter chip row — the applied filters, echoing the chart's aggregation. */
+.filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:var(--s4)}
+.filters .flabel{font-size:12.5px;color:var(--text-muted);font-weight:600;margin-right:2px}
+.chip{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 10px 0 12px;border-radius:var(--r-full);font-size:12.5px;font-weight:600;background:var(--primary-50);color:var(--primary-active);border:1px solid var(--primary-100)}
+.chip .x{width:16px;height:16px;border-radius:50%;display:grid;place-items:center;color:var(--primary);opacity:.7}
+.chip .x:hover{opacity:1;background:#fff}
+.chip .x svg{width:11px;height:11px}
+.chip.ghost{background:transparent;color:var(--text-muted);border:1px dashed var(--border-strong);font-weight:500}
+
+/* Summary stat strip */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s3);margin-bottom:var(--s4)}
+@media(max-width:720px){ .stats{grid-template-columns:repeat(2,1fr)} }
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:12px var(--s4);box-shadow:var(--shadow-md)}
+.stat .k{font-size:11.5px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.stat .v{font-size:20px;font-weight:800;margin-top:3px;letter-spacing:-.01em}
+.stat .v.won{color:var(--won)} .stat .v.open{color:var(--open)}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow-md);overflow:hidden}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);padding:13px var(--s5);border-bottom:1px solid var(--divider)}
+.card-head h3{font-size:14.5px;font-weight:700}
+.card-head .count{font-size:12.5px;color:var(--text-muted)}
+
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:760px}
+th,td{text-align:left;padding:11px var(--s5);border-bottom:1px solid var(--divider);white-space:nowrap}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);font-weight:700;background:#fafcfd;position:sticky;top:0}
+th.num,td.num{text-align:right}
+tbody tr:hover{background:var(--primary-50)}
+tbody tr:last-child td{border-bottom:none}
+.deal-name{font-weight:600;color:var(--text)}
+.company{color:var(--text-muted);font-size:12.5px}
+.owner{display:inline-flex;align-items:center;gap:7px}
+.owner .av{width:24px;height:24px;border-radius:50%;background:var(--primary-100);color:var(--primary-active);display:grid;place-items:center;font-size:9.5px;font-weight:700;flex-shrink:0}
+.money{font-variant-numeric:tabular-nums;font-weight:600}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:var(--r-full);font-size:11.5px;font-weight:700}
+.badge::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
+.badge.won{background:var(--won-50);color:var(--won)}
+.badge.open{background:var(--open-50);color:var(--open)}
+.badge.lost{background:var(--lost-50);color:var(--lost)}
+.pill-type{display:inline-block;padding:2px 8px;border-radius:var(--r-sm);font-size:11.5px;font-weight:600;background:var(--divider);color:var(--text-secondary)}
+.empty{padding:var(--s8) var(--s5);text-align:center;color:var(--text-muted)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+  <symbol id="i-briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></symbol>
+</svg>
+
+<header class="topbar">
+  <div class="brand"><span class="mark">TW</span> Twendee Work ERP</div>
+  <div class="spacer"></div>
+  <a class="btn btn-secondary" href="crm-dashboard.html#deal"><svg><use href="#i-back"/></svg> Back to Sales dashboard</a>
+</header>
+
+<main class="main">
+  <nav class="crumb">
+    <a href="crm-dashboard.html">Dashboard</a><span class="sep">›</span>
+    <a href="crm-dashboard.html#deal">CRM</a><span class="sep">›</span>
+    <a href="crm-dashboard.html#deal">Sales</a><span class="sep">›</span>
+    <span class="here">Deals</span>
+  </nav>
+
+  <div class="head-row">
+    <div>
+      <h1>Deals</h1>
+      <div class="sub">The underlying records behind the chart you clicked.</div>
+    </div>
+    <a class="btn btn-secondary" href="crm-dashboard.html#deal"><svg><use href="#i-back"/></svg> Back to chart</a>
+  </div>
+
+  <div class="context">
+    <span class="ico"><svg><use href="#i-briefcase"/></svg></span>
+    <div>
+      <div class="lbl">Opened from chart</div>
+      <div class="ttl" id="ctxTitle">Sales dashboard</div>
+      <p id="ctxDesc">Showing the deals aggregated into this chart. Adjust the filters to narrow the list.</p>
+    </div>
+  </div>
+
+  <div class="filters" id="filters">
+    <span class="flabel">Filters</span>
+    <!-- chips injected -->
+  </div>
+
+  <div class="stats" id="stats"><!-- injected --></div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>Deal list</h3>
+      <span class="count" id="rowCount">—</span>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Deal</th>
+            <th>Owner</th>
+            <th>Contract type</th>
+            <th>Stage</th>
+            <th class="num">Value</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody id="rows"><!-- injected --></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<script>
+/* ------------------------------------------------------------------
+   Mock deal data — owners & contract types mirror the Sales dashboard
+   so the list is a plausible drill-down of the same figures. Values
+   are in thousands of USD. This is a flow mock: the filters echo the
+   chart the reader came from, and (for stage) actually narrow the list.
+   ------------------------------------------------------------------ */
+const OWNERS = [
+  { name:'Sophie', initials:'SO' }, { name:'Chloe', initials:'CH' },
+  { name:'Steve',  initials:'ST' }, { name:'Kai',   initials:'KA' },
+  { name:'Evelyn', initials:'EV' }, { name:'Erik',  initials:'ER' },
+  { name:'Cris',   initials:'CR' }, { name:'Xavier',initials:'XA' },
+];
+const TYPES = [
+  { key:'odc', name:'ODC' }, { key:'fixed', name:'Fixed Price' },
+  { key:'tm', name:'T&M' }, { key:'headhunt', name:'Headhunt' },
+  { key:'commission', name:'Commission Sales' },
+];
+const COMPANIES = ['Nimbus Labs','Halcyon Retail','Ironwood Bank','Meridian Health','Pinecrest Media',
+  'Cobalt Logistics','Aster Robotics','Vireo Foods','Lumen Studios','Orchard Systems','Basalt Energy',
+  'Fable Interactive','Kestrel Air','Solace Telecom','Marrow Biotech','Tinder Box Games','Northwind Auto',
+  'Cedar & Vine','Quill Publishing','Beacon Insurance','Drift Mobility','Sundial Fintech','Anchor Marine',
+  'Verdant Agtech','Ember Ceramics','Onyx Security','Pallas Aerospace','Zephyr Wearables','Cinder Coffee',
+  'Willow Education','Trove Antiques','Argon Cloud','Petrichor Cosmetics','Harborline Freight','Gale Sportswear','Lattice HR'];
+const STAGES = { won:'Won', open:'Open', lost:'Lost' };
+const MO = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug'];
+
+/* deterministic pseudo-random so the list is stable across reloads */
+let seed = 7;
+const rnd = () => (seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
+const pick = a => a[Math.floor(rnd() * a.length)];
+
+const DEALS = [];
+for (let i = 0; i < 44; i++){
+  const owner = pick(OWNERS);
+  const type  = pick(TYPES);
+  const r = rnd();
+  const stage = r < 0.28 ? 'won' : r < 0.80 ? 'open' : 'lost';
+  const value = Math.round((40 + rnd() * 160)) * (type.key === 'headhunt' ? 0.6 : 1);
+  DEALS.push({
+    id: 'D-' + (1200 + i),
+    company: pick(COMPANIES),
+    project: pick(['platform rebuild','mobile app','data migration','support retainer','staff aug','redesign','integration','analytics suite','MVP build','managed team']),
+    owner, type, stage,
+    value: Math.round(value),
+    created: pick(MO) + ' ' + (1 + Math.floor(rnd() * 27)) + ', 2026',
+  });
+}
+
+/* ------------------------------------------------------------------ */
+const qs = new URLSearchParams(location.search);
+const P = { stage: qs.get('stage'), by: qs.get('by'), metric: qs.get('metric'),
+            owner: qs.get('owner'), type: qs.get('type'), src: qs.get('src') };
+
+/* context banner */
+if (P.src){
+  document.getElementById('ctxTitle').textContent = P.src;
+  const bits = [];
+  if (P.stage === 'won')  bits.push('won deals');
+  else if (P.stage === 'open') bits.push('deals still in the pipeline');
+  else bits.push('all deals in the period');
+  if (P.by === 'owner')   bits.push('broken down by owner');
+  if (P.by === 'contract')bits.push('broken down by contract type');
+  document.getElementById('ctxDesc').textContent =
+    'These are the ' + bits.join(', ') + ' that roll up into the “' + P.src + '” chart on the Sales dashboard.';
+}
+
+/* filter chips — a chip per applied dimension; removing one reloads without it */
+function chip(label, param){
+  const url = new URL(location.href);
+  url.searchParams.delete(param);
+  return `<span class="chip">${label}<a class="x" href="${url.pathname}${url.search}" title="Remove filter"><svg><use href="#i-x"/></svg></a></span>`;
+}
+const fEl = document.getElementById('filters');
+let chips = '';
+if (P.stage) chips += chip('Stage: ' + (STAGES[P.stage] || P.stage), 'stage');
+if (P.owner) chips += chip('Owner: ' + P.owner, 'owner');
+if (P.type)  chips += chip('Type: ' + (TYPES.find(t=>t.key===P.type)?.name || P.type), 'type');
+if (P.by)    chips += `<span class="chip ghost">Grouped by ${P.by === 'owner' ? 'owner' : 'contract type'}</span>`;
+if (!chips)  chips = `<span class="chip ghost">No filters — all deals</span>`;
+fEl.insertAdjacentHTML('beforeend', chips);
+
+/* apply the meaningful filters (stage / owner / type) to the row set */
+let rows = DEALS.filter(d =>
+  (!P.stage || d.stage === P.stage) &&
+  (!P.owner || d.owner.name === P.owner) &&
+  (!P.type  || d.type.key === P.type)
+);
+rows.sort((a,b) => b.value - a.value);
+
+/* summary strip */
+const money = v => '$' + (v * 1000).toLocaleString('en-US');
+const sum = k => rows.reduce((s,d) => s + (k ? (d.stage === k ? d.value : 0) : d.value), 0);
+document.getElementById('stats').innerHTML = `
+  <div class="stat"><div class="k">Deals</div><div class="v">${rows.length}</div></div>
+  <div class="stat"><div class="k">Total value</div><div class="v">${money(sum())}</div></div>
+  <div class="stat"><div class="k">Won value</div><div class="v won">${money(sum('won'))}</div></div>
+  <div class="stat"><div class="k">Pipeline value</div><div class="v open">${money(sum('open'))}</div></div>`;
+
+/* table */
+document.getElementById('rowCount').textContent = rows.length + ' deal' + (rows.length === 1 ? '' : 's');
+const body = document.getElementById('rows');
+if (!rows.length){
+  body.innerHTML = `<tr><td colspan="6"><div class="empty">No deals match these filters.</div></td></tr>`;
+} else {
+  body.innerHTML = rows.map(d => `
+    <tr>
+      <td><div class="deal-name">${d.company} — ${d.project}</div><div class="company">${d.id}</div></td>
+      <td><span class="owner"><span class="av">${d.owner.initials}</span>${d.owner.name}</span></td>
+      <td><span class="pill-type">${d.type.name}</span></td>
+      <td><span class="badge ${d.stage}">${STAGES[d.stage]}</span></td>
+      <td class="num money">${money(d.value)}</td>
+      <td>${d.created}</td>
+    </tr>`).join('');
+}
+</script>
+</body>
+</html>

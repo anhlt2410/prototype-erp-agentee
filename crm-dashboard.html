@@ -226,6 +226,13 @@ body.embed .topbar{display:none}
 .card-head h3{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
 .card-head h3 svg{width:17px;height:17px;color:var(--primary)}
 .card-head .sub{font-size:12px;color:var(--text-muted);font-weight:400}
+/* Drill-down affordance on every data card/panel — an icon-only button that
+   opens the deal list filtered to exactly the rows this card aggregates.
+   Icon only; the "View detail" label rides in on the shared data-tip tooltip.
+   In a card head it is pushed right by space-between; in a panel head it sits
+   inside .panel-head-actions (margin-left:auto). */
+.detail-btn{width:28px;height:28px;padding:0;gap:0;flex-shrink:0}
+.detail-btn svg{width:14px;height:14px;margin:0}
 .card-body{padding:var(--s5)}
 @media(max-width:640px){ .card-head{padding:var(--s3) var(--s4)} .card-body{padding:var(--s4)} }
 
@@ -270,8 +277,14 @@ body.embed .topbar{display:none}
    wide un-wrapping money figure would push the column (and the page) out to */
 @media(max-width:900px){ .deal-split{grid-template-columns:minmax(0,1fr)} }
 .kpi-stack{display:flex;flex-direction:column;gap:var(--s3);min-width:0}
-.kpi-stack .kpi-card{flex:1;display:grid;grid-template-columns:1fr auto;align-items:center;
+.kpi-stack .kpi-card{flex:1;display:grid;grid-template-columns:1fr auto auto;align-items:center;
   column-gap:var(--s4);row-gap:2px;padding:10px var(--s4)}
+/* explicit placement so the drill icon owns the right edge across both rows,
+   holding its spot no matter how the responsive padding overrides shift things */
+.kpi-stack .kpi-card > .kpi-label{grid-area:1 / 1}
+.kpi-stack .kpi-card > .kpi-value{grid-area:1 / 2}
+.kpi-stack .kpi-card > .kpi-sub{grid-area:2 / 1}
+.kpi-stack .kpi-card > .kpi-drill{grid-area:1 / 3 / 3 / 4;align-self:center;justify-self:end;column-gap:0}
 .kpi-stack .kpi-label{margin-bottom:0;font-size:12.5px}
 .kpi-stack .kpi-value{font-size:20px;text-align:right}
 .kpi-stack .kpi-value .unit{font-size:11px;margin-left:4px}
@@ -406,6 +419,7 @@ tfoot td.num{text-align:right;font-family:var(--font-mono);font-variant-numeric:
 .mcard-head .av{width:26px;height:26px;border-radius:50%;background:var(--primary-100);color:var(--primary-active);display:grid;place-items:center;font-size:10.5px;font-weight:700;flex-shrink:0}
 .mcard-head .nm{font-weight:700;font-size:14px;white-space:nowrap}
 .mcard-head .rate{margin-left:auto;font-size:11.5px;padding:2px 8px}
+.mcard-head .mcard-drill{margin-left:auto}
 
 /* conversion rate — the headline figure, with its own part-to-whole bar */
 .mcard-hero{display:flex;align-items:baseline;gap:8px;margin-bottom:-4px}
@@ -466,6 +480,31 @@ tfoot td.num{text-align:right;font-family:var(--font-mono);font-variant-numeric:
 .mcard-kpi.lo{background:var(--danger-50);border-color:#FECACA}
 .mcard-kpi.lo .pct{color:var(--danger)}
 .mcard-kpi.lo .fill{background:var(--danger)}
+
+/* Grouped KPI block (Sales scorecards) — a flat two-row meter list, no tinted
+   boxes to crowd each other. Each row: a colour dot + label + fraction, a chip
+   on the right saying how far the target still is, then a slim bar. Colour rides
+   only on the dot, chip and fill; the band label ("… to go") keeps the status
+   off colour alone. */
+.mcard-kpis{margin-top:auto;display:flex;flex-direction:column;gap:11px;padding-top:9px;border-top:1px solid var(--divider)}
+.kpi-row .top{display:flex;align-items:center;gap:7px;margin-bottom:6px}
+.kpi-row .dot{width:8px;height:8px;border-radius:3px;flex-shrink:0;background:var(--success)}
+.kpi-row .lbl{font-size:11.5px;font-weight:700;color:var(--text-secondary);white-space:nowrap}
+.kpi-row .frac{font-family:var(--font-mono);font-size:11px;font-weight:600;color:var(--text-muted);margin-left:1px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.kpi-row .chip{margin-left:auto;font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;color:#047857;background:var(--success-50);border-radius:var(--r-full);padding:2px 8px;white-space:nowrap;flex-shrink:0}
+.kpi-row .track{display:block;height:7px;border-radius:var(--r-full);background:rgba(17,24,39,.08);overflow:hidden}
+.kpi-row .fill{display:block;height:100%;border-radius:var(--r-full);background:var(--success);transition:width .5s var(--ease)}
+/* attainment band — green ≥80%, amber ≥50%, red below; tints dot, chip and fill */
+.kpi-row.mid .dot,.kpi-row.mid .fill{background:var(--warning)}
+.kpi-row.mid .chip{color:#B45309;background:var(--warning-50)}
+.kpi-row.lo  .dot,.kpi-row.lo  .fill{background:var(--danger)}
+.kpi-row.lo  .chip{color:var(--danger);background:var(--danger-50)}
+/* narrow cards (mobile / 2-up) — the fraction can drop below the label so the
+   chip never collides with it; the chip stays pinned right */
+@media(max-width:560px){
+  .kpi-row .top{flex-wrap:wrap}
+  .kpi-row .frac{margin-left:15px;order:3;flex-basis:100%}
+}
 .mcard.mid{border-color:#FCD34D}
 .mcard.lo{border-color:#FCA5A5}
 /* temperature ledger inside a scorecard — the three rows the leadup table used
@@ -492,6 +531,8 @@ body.screen-deal .page-header{margin-bottom:var(--s3)}
 #sec-deal .panel-head > div{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 #sec-deal .panel-title{font-size:15.5px}
 #sec-deal .kpi-grid,#sec-deal .chart-duo{gap:var(--s3)}
+/* Per-member breakdown: In pipeline value runs full-width on the row below the duo */
+#sec-deal .chart-duo + .card{margin-top:var(--s3)}
 #sec-deal .kpi-card{padding:10px var(--s4) 11px}
 #sec-deal .kpi-label{margin-bottom:3px}
 #sec-deal .kpi-value{font-size:21px}
@@ -531,7 +572,8 @@ body.screen-deal .page-header{margin-bottom:var(--s3)}
   #sec-deal .mcard-stats{gap:11px 12px;padding-top:6px}
   #sec-deal .mcard-stats .v{font-size:14px}
   #sec-deal .mcard-stats .v.hero{font-size:17px}
-  #sec-deal .mcard-kpi{padding:6px 9px 7px}
+  #sec-deal .mcard-kpis{gap:9px;padding-top:7px}
+  #sec-deal .kpi-row .top{margin-bottom:5px}
   #sec-deal .chart-wrap.short{height:clamp(220px,28vh,340px)}
 }
 /* Very short viewport — the last pixels come off the panel heads and the
@@ -635,6 +677,7 @@ body.screen-leadup .page-header{margin-bottom:var(--s3)}
   <symbol id="i-table" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></symbol>
   <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></symbol>
   <symbol id="i-award" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></symbol>
+  <symbol id="i-arrow-up-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></symbol>
 </svg>
 
 <div class="app">
@@ -966,16 +1009,19 @@ body.screen-leadup .page-header{margin-bottom:var(--s3)}
               <div class="kpi-label"><svg><use href="#i-briefcase"/></svg> Total deal value</div>
               <div class="kpi-value" id="dlTotalValue">—</div>
               <div class="kpi-sub"><b id="dlTotalDeals">—</b> deals</div>
+              <a class="btn btn-secondary btn-sm detail-btn kpi-drill" href="deals.html?src=Total%20deal%20value" data-tip="View detail" aria-label="View detail"><svg><use href="#i-arrow-up-right"/></svg></a>
             </div>
             <div class="kpi-card is-won">
               <div class="kpi-label"><svg><use href="#i-award"/></svg> Won value</div>
               <div class="kpi-value v-won" id="dlWonValue">—</div>
               <div class="kpi-sub"><b id="dlWonDeals">—</b> deals won · <b id="dlWinRate">—</b></div>
+              <a class="btn btn-secondary btn-sm detail-btn kpi-drill" href="deals.html?stage=won&amp;src=Won%20value" data-tip="View detail" aria-label="View detail"><svg><use href="#i-arrow-up-right"/></svg></a>
             </div>
             <div class="kpi-card is-progress">
               <div class="kpi-label"><svg><use href="#i-dollar"/></svg> In pipeline value</div>
               <div class="kpi-value v-progress" id="dlOpenValue">—</div>
               <div class="kpi-sub"><b id="dlOpenDeals">—</b> deals</div>
+              <a class="btn btn-secondary btn-sm detail-btn kpi-drill" href="deals.html?stage=open&amp;src=In%20pipeline%20value" data-tip="View detail" aria-label="View detail"><svg><use href="#i-arrow-up-right"/></svg></a>
             </div>
           </div>
           <!-- no card head: the panel head above already names the split, and
@@ -983,6 +1029,9 @@ body.screen-leadup .page-header{margin-bottom:var(--s3)}
           <div class="card">
             <div class="card-head">
               <h3>Won value by contract type</h3>
+              <a class="btn btn-secondary btn-sm detail-btn" href="deals.html?stage=won&amp;by=contract&amp;src=Won%20value%20by%20contract%20type" data-tip="View detail" aria-label="View detail">
+                <svg><use href="#i-arrow-up-right"/></svg>
+              </a>
             </div>
             <div class="card-body donut-body">
               <div class="chart-wrap donut">
@@ -1017,7 +1066,10 @@ body.screen-leadup .page-header{margin-bottom:var(--s3)}
         <div class="chart-duo">
           <div class="card">
             <div class="card-head">
-              <h3><svg><use href="#i-briefcase"/></svg> Deals created &amp; won</h3>
+              <h3><svg><use href="#i-briefcase"/></svg> Number of Deals</h3>
+              <a class="btn btn-secondary btn-sm detail-btn" href="deals.html?by=owner&amp;metric=count&amp;src=Number%20of%20deals%20by%20member" data-tip="View detail" aria-label="View detail">
+                <svg><use href="#i-arrow-up-right"/></svg>
+              </a>
               <!-- <span class="sub">count · % = conversion rate</span> -->
             </div>
             <div class="card-body">
@@ -1032,17 +1084,38 @@ body.screen-leadup .page-header{margin-bottom:var(--s3)}
           </div>
           <div class="card">
             <div class="card-head">
-              <h3><svg><use href="#i-briefcase"/></svg> In pipeline value</h3>
-              <!-- <span class="sub">value</span> -->
+              <h3><svg><use href="#i-briefcase"/></svg> Deal value</h3>
+              <a class="btn btn-secondary btn-sm detail-btn" href="deals.html?by=owner&amp;metric=value&amp;src=Deal%20value%20by%20member" data-tip="View detail" aria-label="View detail">
+                <svg><use href="#i-arrow-up-right"/></svg>
+              </a>
+              <!-- <span class="sub">value · % = win rate by value</span> -->
             </div>
             <div class="card-body">
-              <div class="legend" id="dlOpenLegend"><!-- injected --></div>
+              <div class="legend" id="dlValueLegend"><!-- injected --></div>
               <div class="chart-scroll">
               <div class="chart-wrap short">
-                <canvas id="chartDealOpen" role="img"
-                  aria-label="Column chart of the value still in each member's pipeline, excluding won and lost deals. Bars are amber and labelled with the pipeline value."></canvas>
+                <canvas id="chartDealValue" role="img"
+                  aria-label="Stacked column chart of deal value per member, split into won value (green) and remaining deal value, with the win rate by value labelled inside the won segment."></canvas>
               </div>
               </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <h3><svg><use href="#i-briefcase"/></svg> In pipeline value</h3>
+            <a class="btn btn-secondary btn-sm detail-btn" href="deals.html?stage=open&amp;by=owner&amp;src=In%20pipeline%20value" data-tip="View detail" aria-label="View detail">
+              <svg><use href="#i-arrow-up-right"/></svg>
+            </a>
+            <!-- <span class="sub">value</span> -->
+          </div>
+          <div class="card-body">
+            <div class="legend" id="dlOpenLegend"><!-- injected --></div>
+            <div class="chart-scroll">
+            <div class="chart-wrap short">
+              <canvas id="chartDealOpen" role="img"
+                aria-label="Column chart of the value still in each member's pipeline, excluding won and lost deals. Bars are amber and labelled with the pipeline value."></canvas>
+            </div>
             </div>
           </div>
         </div>
@@ -1237,6 +1310,9 @@ const moneyComp = k => {                                                      //
   return String(Math.round(v));
 };
 const axisTick  = v => CUR.symbol + (v === 0 ? '0' : moneyComp(v));
+/* compact money for the tight KPI fraction — $1.27M, ₫33.1 tỉ — so a large
+   revenue figure never overruns the row (VND already abbreviates to tỉ/tr) */
+const moneyKpi  = k => CUR.code === 'VND' ? compactVND(k) : CUR.symbol + moneyComp(k);
 /* "USD" / "VND (millions)" — the caption that keeps a scaled figure honest.
    Short form for the unit chip riding alongside a big number, where the full
    caption would wrap the figure onto two lines. */
@@ -1395,10 +1471,17 @@ function renderDeal(){
     const winRate  = m.won / m.deals * 100;
     const attain   = m.deals / m.dealTarget * 100;
     const band     = kpiBand(attain);
+    /* revenue KPI — won value measured against the member's revenue target,
+       banded the same way the deal-count KPI is */
+    const revAttain = m.wonValue / m.target * 100;
+    const revBand   = kpiBand(revAttain);
+    /* the "to-go" chip: how far the target still is, or the overshoot once met */
+    const toGo = a => a < 100 ? `${(100 - a).toFixed(1)}% to go` : `+${(a - 100).toFixed(1)}%`;
     return `<article class="mcard ${band.cls}">
       <div class="mcard-head">
         <span class="av">${m.initials}</span>
         <span class="nm">${m.name}</span>
+        <a class="btn btn-secondary btn-sm detail-btn mcard-drill" href="deals.html?owner=${encodeURIComponent(m.name)}&amp;src=${encodeURIComponent(m.name + ' — deal metrics')}" data-tip="View detail" aria-label="View detail"><svg><use href="#i-arrow-up-right"/></svg></a>
       </div>
 
       <div class="mcard-stats">
@@ -1420,12 +1503,25 @@ function renderDeal(){
         </div>
       </div>
 
-      <div class="mcard-kpi ${band.cls}">
-        <div class="top">
-          <span class="lbl">Deal KPI<span class="frac">${m.deals} / ${m.dealTarget}</span></span>
-          <span class="pct">${attain.toFixed(1)}%</span>
+      <div class="mcard-kpis">
+        <div class="kpi-row ${band.cls}">
+          <div class="top">
+            <span class="dot"></span>
+            <span class="lbl">Deal KPI</span>
+            <span class="frac">${m.deals} / ${m.dealTarget}</span>
+            <span class="chip">${toGo(attain)}</span>
+          </div>
+          <span class="track"><span class="fill" style="width:${Math.min(attain,100).toFixed(1)}%"></span></span>
         </div>
-        <span class="track"><span class="fill" style="width:${Math.min(attain,100).toFixed(1)}%"></span></span>
+        <div class="kpi-row ${revBand.cls}">
+          <div class="top">
+            <span class="dot"></span>
+            <span class="lbl">Revenue KPI</span>
+            <span class="frac">${moneyKpi(m.wonValue)} / ${moneyKpi(m.target)}</span>
+            <span class="chip">${toGo(revAttain)}</span>
+          </div>
+          <span class="track"><span class="fill" style="width:${Math.min(revAttain,100).toFixed(1)}%"></span></span>
+        </div>
       </div>
     </article>`;
   }).join('');
@@ -1461,6 +1557,10 @@ function renderDeal(){
   legend('dlCountLegend', [
     { name:'Won',          color:C('success') },
     { name:'Others',       color:C('series-1-soft') },
+  ]);
+  legend('dlValueLegend', [
+    { name:'Won value',    color:C('success') },
+    { name:'Others value', color:C('series-1-soft') },
   ]);
   legend('dlOpenLegend', [
     { name:'Pipeline value', color:C('warning') },
@@ -2065,6 +2165,53 @@ function buildDealCharts(){
     plugins:[ segmentLabels({
       datasetIndex:0,
       format: i => pct(MEMBERS[i].won, MEMBERS[i].deals),
+    }) ],
+  });
+
+  /* Deal value mirror of the count chart — won value is a part of total deal
+     value, so this is the same part-to-whole stack measured in money. The won
+     segment carries the green won-status colour; the remainder is the soft step. */
+  charts.dealValue = new Chart(document.getElementById('chartDealValue'), {
+    type:'bar',
+    data:{
+      labels: MEMBERS.map(m => m.name),
+      datasets:[
+        { label:'Won value', data: MEMBERS.map(m => m.wonValue),
+          backgroundColor:C('success'), maxBarThickness:44,
+          borderColor:SURFACE, borderWidth:{ top:2 } },
+        { label:'Others value', data: MEMBERS.map(m => m.dealValue - m.wonValue),
+          backgroundColor:C('series-1-soft'), maxBarThickness:44,
+          borderRadius:{ topLeft:4, topRight:4 } },
+      ],
+    },
+    options:{
+      responsive:true,
+      layout:{ padding:{ top:22 } },
+      interaction:{ mode:'index', intersect:false },
+      plugins:{
+        legend:{ display:false },
+        tooltip:{ ...TOOLTIP,
+          callbacks:{
+            label: c => ` ${c.dataset.label}: ${moneyFull(c.parsed.y)} ${curUnit()}`,
+            footer: items => {
+              const m = MEMBERS[items[0].dataIndex];
+              return `Total: ${moneyFull(m.dealValue)} ${curUnit()} · won ${pct(m.wonValue, m.dealValue)}`;
+            },
+          },
+          footerFont:{ weight:'600', size:12.5 }, footerColor:'#fff',
+        },
+      },
+      scales:{
+        x:{ stacked:true, grid:NO_GRID, border:{ color:C('axis') },
+            ticks:{ font:{ size:13, weight:'600' }, color:C('text-secondary') } },
+        y:{ stacked:true, beginAtZero:true, grid:GRID, border:{ display:false },
+            ticks:{ callback: axisTick } },
+      },
+    },
+    /* win rate by value written into the won segment, dataset 0 of the stack */
+    plugins:[ segmentLabels({
+      datasetIndex:0,
+      format: i => pct(MEMBERS[i].wonValue, MEMBERS[i].dealValue),
     }) ],
   });
 
