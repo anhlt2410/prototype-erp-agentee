@@ -2045,6 +2045,121 @@
     .pf-card .grid.cols-2 { grid-template-columns: 1fr; }
     .pf-tabs a { padding: 7px 12px; font-size: 12px; }
   }
+
+  /* ============ VMP: CONTRACTOR / ALLOCATION ============ */
+  .badge-contractor { background: #EEF2FF; color: #4F46E5; }
+  .badge-ft { background: var(--success-50); color: var(--success); }
+  .badge-pt { background: var(--warning-50); color: var(--warning); }
+
+  /* Contractor setup block inside Add panel (revealed when type=Contractor) */
+  .contractor-setup {
+    border: 1px dashed var(--border-strong);
+    border-radius: 12px;
+    padding: var(--s4);
+    background: var(--surface-muted, #F8FAFC);
+    margin-top: var(--s2);
+  }
+  .contractor-setup .cs-head {
+    display: flex; align-items: center; gap: 8px;
+    font-weight: 700; font-size: 13px; margin-bottom: 4px;
+  }
+  .contractor-setup .cs-head svg { width: 15px; height: 15px; color: var(--primary); }
+  .contractor-setup .cs-sub { font-size: 12px; color: var(--text-muted); margin-bottom: var(--s3); }
+
+  .account-note {
+    display: flex; gap: 8px; align-items: flex-start;
+    background: #EEF2FF; border: 1px solid #C7D2FE; border-radius: 10px;
+    padding: 10px 12px; font-size: 12.5px; color: #3730A3; margin-bottom: var(--s3);
+  }
+  .account-note svg { width: 16px; height: 16px; flex: 0 0 auto; margin-top: 1px; }
+
+  /* Allocation repeater rows */
+  .alloc-list { display: flex; flex-direction: column; gap: var(--s3); }
+  .alloc-row {
+    border: 1px solid var(--divider); border-radius: 10px;
+    padding: var(--s3); background: var(--surface, #fff); position: relative;
+  }
+  .alloc-row .alloc-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  .alloc-row .alloc-grid .full { grid-column: 1 / -1; }
+  .alloc-row .alloc-remove {
+    position: absolute; top: 8px; right: 8px;
+    background: none; border: none; cursor: pointer; color: var(--text-muted);
+    width: 24px; height: 24px; border-radius: 6px; display: grid; place-items: center;
+  }
+  .alloc-row .alloc-remove:hover { background: var(--danger-50); color: var(--danger); }
+  .alloc-row .alloc-remove svg { width: 14px; height: 14px; }
+  .alloc-mode-toggle { display: flex; gap: 8px; }
+  .alloc-mode-toggle label {
+    flex: 1; border: 1px solid var(--divider); border-radius: 8px; padding: 7px 10px;
+    text-align: center; font-size: 12.5px; font-weight: 600; cursor: pointer; position: relative;
+  }
+  .alloc-mode-toggle input { position: absolute; opacity: 0; }
+  .alloc-mode-toggle label:has(input:checked) {
+    border-color: var(--primary); background: #EFF6FF; color: var(--primary);
+  }
+  .alloc-pt-min { margin-top: 10px; }
+  .btn-add-alloc {
+    margin-top: var(--s3); width: 100%; justify-content: center;
+    border-style: dashed;
+  }
+
+  /* Attachments upload dropzone */
+  .upload-dropzone {
+    border: 2px dashed var(--border-strong); border-radius: 12px;
+    padding: 28px 20px; text-align: center; cursor: pointer;
+    color: var(--text-muted); transition: border-color .15s, background .15s;
+  }
+  .upload-dropzone:hover { border-color: var(--primary); background: #F8FAFC; }
+  .upload-dropzone svg { width: 26px; height: 26px; color: var(--primary); margin-bottom: 8px; }
+  .upload-dropzone .ud-title { font-weight: 600; font-size: 14px; color: var(--text); }
+  .upload-dropzone .ud-sub { font-size: 12.5px; margin-top: 4px; }
+
+  /* Employee-detail tabbed panel (wider) */
+  #panel-view, #panel-add { width: 940px; }
+  .emp-tabs {
+    display: flex; gap: 2px; flex-wrap: wrap;
+    background: var(--surface-muted, #F1F5F9); border-radius: 999px; padding: 5px;
+    margin-bottom: var(--s5);
+  }
+  .emp-tab {
+    border: none; background: transparent; cursor: pointer;
+    padding: 9px 18px; border-radius: 999px;
+    font-size: 13.5px; font-weight: 600; color: var(--text-muted);
+    font-family: inherit; transition: background .15s, color .15s;
+  }
+  .emp-tab:hover { color: var(--text); }
+  .emp-tab.active { background: var(--primary); color: #fff; }
+  .emp-pane { display: none; }
+  .emp-pane.active { display: block; }
+  .emp-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px;
+  }
+  .emp-grid .full { grid-column: 1 / -1; }
+  .emp-f label {
+    display: block; font-size: 12.5px; color: var(--text-muted);
+    font-weight: 500; margin-bottom: 6px;
+  }
+  .emp-f .box {
+    background: var(--surface-muted, #F8FAFC); border: 1px solid var(--divider);
+    border-radius: 10px; padding: 11px 14px; font-size: 14px; color: var(--text);
+    min-height: 42px; display: flex; align-items: center; gap: 8px;
+  }
+  .emp-f .box.empty { color: var(--text-muted); font-style: italic; }
+  @media (max-width: 640px) { .emp-grid { grid-template-columns: 1fr; } }
+
+  /* Allocation cards in View panel */
+  .alloc-view-list { display: flex; flex-direction: column; gap: 10px; }
+  .alloc-view-card {
+    border: 1px solid var(--divider); border-radius: 10px; padding: 12px 14px;
+  }
+  .alloc-view-card .avc-top {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px;
+  }
+  .alloc-view-card .avc-proj { font-weight: 600; font-size: 13.5px; }
+  .alloc-view-card .avc-meta { font-size: 12px; color: var(--text-muted); display: flex; gap: 10px; flex-wrap: wrap; }
+  .alloc-view-card .avc-meta b { color: var(--text); font-weight: 600; }
 </style>
 </head>
 <body>
@@ -2372,10 +2487,11 @@
     <!-- Toolbar / tabs / filters -->
     <div class="toolbar">
       <div class="tabs" role="tablist">
-        <button class="tab active" role="tab"><span data-i18n="tab.all">All</span> <span class="tab-count">248</span></button>
-        <button class="tab" role="tab"><span data-i18n="tab.active">Active</span> <span class="tab-count">231</span></button>
-        <button class="tab" role="tab"><span data-i18n="tab.onLeave">On Leave</span> <span class="tab-count">14</span></button>
-        <button class="tab" role="tab"><span data-i18n="tab.inactive">Inactive</span> <span class="tab-count">3</span></button>
+        <button class="tab active" role="tab" onclick="setEmployeeTab('all', this)"><span data-i18n="tab.all">All</span> <span class="tab-count">248</span></button>
+        <button class="tab" role="tab" onclick="setEmployeeTab('active', this)"><span data-i18n="tab.active">Active</span> <span class="tab-count">231</span></button>
+        <button class="tab" role="tab" onclick="setEmployeeTab('leave', this)"><span data-i18n="tab.onLeave">On Leave</span> <span class="tab-count">14</span></button>
+        <button class="tab" role="tab" onclick="setEmployeeTab('inactive', this)"><span data-i18n="tab.inactive">Inactive</span> <span class="tab-count">3</span></button>
+        <button class="tab" role="tab" onclick="setEmployeeTab('contractor', this)"><span data-i18n="tab.contractors">Contractors</span> <span class="tab-count">3</span></button>
       </div>
 
       <div class="toolbar-spacer"></div>
@@ -2404,6 +2520,7 @@
             <th data-i18n="th.id">ID</th>
             <th data-i18n="th.department">Department</th>
             <th data-i18n="th.role">Role</th>
+            <th data-i18n="th.type">Type</th>
             <th data-i18n="th.location">Location</th>
             <th data-i18n="th.status">Status</th>
             <th class="sortable"><span class="th-inner"><span data-i18n="th.joined">Joined</span> <svg><use href="#i-chevron-down"/></svg></span></th>
@@ -2600,7 +2717,7 @@
           <div class="gallery-card-title">Panels & Dialogs</div>
           <div class="gallery-row">
             <button class="btn btn-secondary btn-sm" onclick="openPanel('panel-add')">Add employee form</button>
-            <button class="btn btn-secondary btn-sm" onclick="openPanel('panel-view')">View employee</button>
+            <button class="btn btn-secondary btn-sm" onclick="openEmployeeView('CTV-0207')">View employee</button>
             <button class="btn btn-secondary btn-sm" onclick="openModal('modal-delete')">Confirm delete</button>
           </div>
         </div>
@@ -3015,91 +3132,192 @@
       <button class="panel-close" onclick="closePanel('panel-add')" aria-label="Close"><svg><use href="#i-x"/></svg></button>
     </div>
     <div class="panel-body">
-      <div class="form-grid">
-        <div class="field">
-          <label class="label"><span data-i18n="field.firstname">First name</span> <span class="required">*</span></label>
-          <input class="input" type="text" placeholder="Sarah" data-i18n-placeholder="field.firstname.ph">
-        </div>
-        <div class="field">
-          <label class="label"><span data-i18n="field.lastname">Last name</span> <span class="required">*</span></label>
-          <input class="input" type="text" placeholder="Chen" data-i18n-placeholder="field.lastname.ph">
-        </div>
-        <div class="field full">
-          <label class="label"><span data-i18n="field.workemail">Work email</span> <span class="required">*</span></label>
-          <div class="input-group">
-            <svg class="input-icon"><use href="#i-mail"/></svg>
-            <input class="input" type="email" placeholder="sarah.chen@acme.com">
+      <div class="emp-tabs" role="tablist">
+        <button class="emp-tab active" role="tab" onclick="switchEmpTab(this,'basic')" data-i18n="etab.basic">Basic Information</button>
+        <button class="emp-tab" role="tab" onclick="switchEmpTab(this,'profile')" data-i18n="etab.profile">Profile Information</button>
+        <button class="emp-tab" role="tab" onclick="switchEmpTab(this,'contract')" data-i18n="etab.contract">Contract</button>
+        <button class="emp-tab" role="tab" onclick="switchEmpTab(this,'insurance')" data-i18n="etab.insurance">Insurance</button>
+        <button class="emp-tab" role="tab" onclick="switchEmpTab(this,'attach')" data-i18n="etab.attach">Attachments</button>
+        <button class="emp-tab" role="tab" onclick="switchEmpTab(this,'projects')" data-i18n="etab.projects">Projects</button>
+      </div>
+
+      <!-- Tab: Basic Information -->
+      <div class="emp-pane active" data-emp-pane="basic">
+        <div class="form-grid">
+          <div class="field">
+            <label class="label"><span data-i18n="field.username">Username</span> <span class="required">*</span></label>
+            <input class="input" type="text" placeholder="ellie@twendeesoft.com">
+          </div>
+          <div class="field">
+            <label class="label"><span data-i18n="field.workemail">Email</span> <span class="required">*</span></label>
+            <input class="input" type="email" placeholder="ellie@twendeesoft.com">
+          </div>
+          <div class="field">
+            <label class="label"><span data-i18n="field.lastname">Last name</span> <span class="required">*</span></label>
+            <input class="input" type="text" placeholder="Đỗ" data-i18n-placeholder="field.lastname.ph">
+          </div>
+          <div class="field">
+            <label class="label"><span data-i18n="field.firstname">First name</span> <span class="required">*</span></label>
+            <input class="input" type="text" placeholder="Thị Thu Thảo" data-i18n-placeholder="field.firstname.ph">
+          </div>
+          <div class="field">
+            <label class="label" data-i18n="field.phone">Phone</label>
+            <input class="input" type="tel" placeholder="0362962835">
           </div>
         </div>
-        <div class="field">
-          <label class="label" data-i18n="field.phone">Phone</label>
-          <div class="input-group">
-            <svg class="input-icon"><use href="#i-phone"/></svg>
-            <input class="input" type="tel" placeholder="+1 (555) 000-0000">
+      </div>
+
+      <!-- Tab: Profile Information -->
+      <div class="emp-pane" data-emp-pane="profile">
+        <div class="form-grid">
+          <div class="field">
+            <label class="label"><span data-i18n="field.jobtitle">Job title</span> <span class="required">*</span></label>
+            <input class="input" type="text" placeholder="Senior Engineer" data-i18n-placeholder="field.jobtitle.ph">
           </div>
-        </div>
-        <div class="field">
-          <label class="label"><span data-i18n="field.startdate">Start date</span> <span class="required">*</span></label>
-          <div class="input-group">
-            <svg class="input-icon"><use href="#i-calendar"/></svg>
+          <div class="field">
+            <label class="label"><span data-i18n="field.department">Department</span> <span class="required">*</span></label>
+            <select class="select">
+              <option>Engineering</option><option>Design</option><option>Marketing</option>
+              <option>Sales</option><option>Operations</option><option>Finance</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="label" data-i18n="field.location">Location</label>
+            <input class="input" type="text" placeholder="Ha Noi">
+          </div>
+          <div class="field">
+            <label class="label"><span data-i18n="field.startdate">Start date</span> <span class="required">*</span></label>
             <input class="input" type="date" min="2000-01-01">
           </div>
-          <span class="field-help" data-i18n="field.startdate.help">Cannot be set before year 2000</span>
-        </div>
-        <div class="field">
-          <label class="label"><span data-i18n="field.department">Department</span> <span class="required">*</span></label>
-          <select class="select">
-            <option>Engineering</option>
-            <option>Design</option>
-            <option>Marketing</option>
-            <option>Sales</option>
-            <option>Operations</option>
-            <option>Finance</option>
-          </select>
-        </div>
-        <div class="field">
-          <label class="label"><span data-i18n="field.jobtitle">Job title</span> <span class="required">*</span></label>
-          <input class="input" type="text" placeholder="Senior Engineer" data-i18n-placeholder="field.jobtitle.ph">
-        </div>
-        <div class="field full">
-          <label class="label" data-i18n="field.emptype">Employment type</label>
-          <div class="radio-group">
-            <label class="radio-card">
-              <input type="radio" name="add-type" checked>
-              <div class="rc-title" data-i18n="rc.fulltime.title">Full-time</div>
-              <div class="rc-desc" data-i18n="rc.fulltime.desc">40 hrs/week</div>
-            </label>
-            <label class="radio-card">
-              <input type="radio" name="add-type">
-              <div class="rc-title" data-i18n="rc.parttime.title">Part-time</div>
-              <div class="rc-desc" data-i18n="rc.parttime.desc">20 hrs/week</div>
-            </label>
-            <label class="radio-card">
-              <input type="radio" name="add-type">
-              <div class="rc-title" data-i18n="rc.contract.title">Contract</div>
-              <div class="rc-desc" data-i18n="rc.contract.desc">Project-based</div>
-            </label>
-          </div>
-        </div>
-        <div class="field full">
-          <label class="label" style="justify-content:space-between"><span data-i18n="field.notes">Notes</span> <span class="label-hint" data-i18n="field.notes.hint">— optional</span><span id="notes-count" style="font-size:11px;color:var(--text-muted);font-weight:400">0 / 500</span></label>
-          <textarea id="notes-textarea" class="textarea" maxlength="500" placeholder="Add any context, onboarding instructions, or context about this hire…" data-i18n-placeholder="field.notes.ph" oninput="document.getElementById('notes-count').textContent=this.value.length+' / 500'"></textarea>
-        </div>
-        <div class="field full">
-          <div class="toggle-row" style="border-top: 1px solid var(--divider); padding-top: var(--s4);">
-            <div>
-              <div class="toggle-label" data-i18n="toggle.onboarding.label">Send onboarding email</div>
-              <div class="toggle-desc" data-i18n="toggle.onboarding.desc">Includes welcome packet, day-one checklist, and IT account setup.</div>
+          <div class="field full">
+            <label class="label" data-i18n="field.emptype">Employment type</label>
+            <div class="radio-group">
+              <label class="radio-card">
+                <input type="radio" name="add-type" value="fulltime" checked onchange="onEmpTypeChange()">
+                <div class="rc-title" data-i18n="rc.fulltime.title">Full-time</div>
+                <div class="rc-desc" data-i18n="rc.fulltime.desc">40 hrs/week</div>
+              </label>
+              <label class="radio-card">
+                <input type="radio" name="add-type" value="parttime" onchange="onEmpTypeChange()">
+                <div class="rc-title" data-i18n="rc.parttime.title">Part-time</div>
+                <div class="rc-desc" data-i18n="rc.parttime.desc">20 hrs/week</div>
+              </label>
+              <label class="radio-card">
+                <input type="radio" name="add-type" value="contractor" onchange="onEmpTypeChange()">
+                <div class="rc-title" data-i18n="rc.contractor.title">Contractor</div>
+                <div class="rc-desc" data-i18n="rc.contractor.desc">Freelance / CTV</div>
+              </label>
             </div>
-            <input type="checkbox" class="toggle" checked>
+          </div>
+          <div class="field full">
+            <label class="label" style="justify-content:space-between"><span data-i18n="field.notes">Notes</span> <span class="label-hint" data-i18n="field.notes.hint">— optional</span><span id="notes-count" style="font-size:11px;color:var(--text-muted);font-weight:400">0 / 500</span></label>
+            <textarea id="notes-textarea" class="textarea" maxlength="500" placeholder="Add any context, onboarding instructions, or context about this hire…" data-i18n-placeholder="field.notes.ph" oninput="document.getElementById('notes-count').textContent=this.value.length+' / 500'"></textarea>
           </div>
         </div>
+      </div>
+
+      <!-- Tab: Contract -->
+      <div class="emp-pane" data-emp-pane="contract">
+        <div class="form-grid">
+          <div class="field">
+            <label class="label" data-i18n="field.contracttype">Contract type</label>
+            <select class="select">
+              <option>Labor contract</option>
+              <option>Freelance / Service agreement</option>
+              <option>Probation</option>
+              <option>Internship</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="label" data-i18n="field.effectivedate">Effective date</label>
+            <input class="input" type="date">
+          </div>
+          <div class="field">
+            <label class="label" data-i18n="field.expirydate">Expiry date</label>
+            <input class="input" type="date">
+          </div>
+          <div class="field"></div>
+          <div class="field full">
+            <div class="toggle-row" style="border-bottom: 1px solid var(--divider); padding-bottom: var(--s3);">
+              <div>
+                <div class="toggle-label" data-i18n="field.renewalreminder">Renewal reminder</div>
+                <div class="toggle-desc" data-i18n="field.renewalreminder.desc">Email + in-app reminders to HRM &amp; PM before the contract expires.</div>
+              </div>
+              <input type="checkbox" class="toggle" checked>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label" data-i18n="field.daysbefore">Days before expiry</label>
+            <input class="input" type="number" min="1" max="180" value="30">
+          </div>
+          <div class="field">
+            <label class="label" data-i18n="field.repeatinterval">Repeat every</label>
+            <select class="select">
+              <option>1 day</option><option selected>7 days</option><option>14 days</option><option>30 days</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Insurance -->
+      <div class="emp-pane" data-emp-pane="insurance">
+        <div class="account-note" id="insurance-note" hidden>
+          <svg><use href="#i-info"/></svg>
+          <div data-i18n="insurance.ctvnote">Contractors are engaged under a service agreement — company social/health insurance usually does not apply.</div>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label class="label" data-i18n="field.socialins">Social insurance no.</label>
+            <input class="input" type="text" placeholder="VN-0000000-SI">
+          </div>
+          <div class="field">
+            <label class="label" data-i18n="field.healthins">Health insurance no.</label>
+            <input class="input" type="text" placeholder="VN-0000000-HI">
+          </div>
+          <div class="field">
+            <label class="label" data-i18n="field.insprovider">Provider</label>
+            <input class="input" type="text" placeholder="Vietnam Social Security">
+          </div>
+          <div class="field">
+            <label class="label" data-i18n="field.coveragesince">Coverage since</label>
+            <input class="input" type="date">
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Attachments -->
+      <div class="emp-pane" data-emp-pane="attach">
+        <div class="upload-dropzone" onclick="showToast('info','Upload','File picker would open here.')">
+          <svg><use href="#i-upload"/></svg>
+          <div class="ud-title" data-i18n="attach.drop">Click to upload or drag &amp; drop</div>
+          <div class="ud-sub" data-i18n="attach.hint">Contract, ID card, NDA… — PDF, JPG, PNG up to 10 MB</div>
+        </div>
+        <div class="alloc-view-list" style="margin-top: var(--s4)">
+          <div class="alloc-view-card" style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+            <div style="display:flex;align-items:center;gap:10px;"><svg style="width:18px;height:18px;color:var(--primary)"><use href="#i-file"/></svg><div><div class="avc-proj">Service_Agreement_signed.pdf</div><div class="avc-meta">412 KB</div></div></div>
+            <button class="btn btn-secondary btn-sm" onclick="showToast('warning','Removed','Attachment removed (mock).')"><svg><use href="#i-trash"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Projects (allocations & work mode) -->
+      <div class="emp-pane" data-emp-pane="projects">
+        <div class="account-note" id="contractor-account-note" hidden>
+          <svg><use href="#i-info"/></svg>
+          <div>On save, a role-scoped <b>Personal</b> (self-service) account is auto-generated and an invite is emailed. The contractor can only access logwork, leave, reports &amp; timesheet.</div>
+        </div>
+        <label class="label" style="margin-bottom: var(--s2)" data-i18n="field.allocations">Project allocations &amp; work mode</label>
+        <div class="cs-sub" style="margin-bottom: var(--s3)" data-i18n="field.allocations.desc">Assign this person to one or more projects. Hours are validated per project, independently.</div>
+        <div class="alloc-list" id="alloc-list"><!-- rows injected --></div>
+        <button type="button" class="btn btn-secondary btn-add-alloc" onclick="addAllocRow()">
+          <svg><use href="#i-plus"/></svg> <span data-i18n="btn.addalloc">Add project allocation</span>
+        </button>
       </div>
     </div>
     <div class="panel-footer">
       <button class="btn btn-ghost" onclick="closePanel('panel-add')" data-i18n="btn.cancel">Cancel</button>
       <button class="btn btn-secondary" onclick="closePanel('panel-add'); showToast('success', t('toast.draft.title'), t('toast.draft.msg'))" data-i18n="btn.savedraft">Save as draft</button>
-      <button class="btn btn-primary" onclick="closePanel('panel-add'); showToast('success', t('toast.added.title'), t('toast.added.msg'))" data-i18n="btn.addemployee">Add Employee</button>
+      <button class="btn btn-primary" onclick="closePanel('panel-add'); showToast('success', t('toast.added.title'), t('toast.added.msg'))"><svg><use href="#i-check"/></svg> <span data-i18n="btn.saveemployee">Save Employee</span></button>
     </div>
   </div>
 
@@ -3108,60 +3326,13 @@
 <div class="right-panel" id="panel-view" role="dialog" aria-labelledby="view-panel-title">
     <div class="panel-header">
       <div>
-        <div class="panel-title" id="view-panel-title" data-i18n="panel.view.title">Employee Profile</div>
-        <div class="panel-subtitle" data-i18n="panel.view.subtitle">EMP-0142 · Last updated 2 days ago</div>
+        <div class="panel-title" id="view-panel-title" data-i18n="panel.view.title">Employee Details</div>
+        <div class="panel-subtitle" id="view-panel-subtitle">EMP-0142 · Last updated 2 days ago</div>
       </div>
       <button class="panel-close" onclick="closePanel('panel-view')" aria-label="Close"><svg><use href="#i-x"/></svg></button>
     </div>
-    <div class="panel-body">
-      <div class="profile-header">
-        <div class="profile-avatar">SC</div>
-        <div style="flex:1">
-          <div class="profile-name">Sarah Chen</div>
-          <div class="profile-role" data-i18n="profile.role">Senior Software Engineer · Engineering</div>
-          <div style="margin-top: var(--s2); display: flex; gap: var(--s2);">
-            <span class="badge badge-success" data-i18n="status.active">Active</span>
-            <span class="tag" data-i18n="rc.fulltime.title">Full-time</span>
-            <span class="tag" data-i18n="tag.remote">Remote</span>
-          </div>
-        </div>
-        <button class="btn btn-secondary btn-sm" onclick="closePanel('panel-view'); openPanel('panel-add')"><svg><use href="#i-edit"/></svg><span data-i18n="btn.edit"> Edit</span></button>
-      </div>
-
-      <div class="detail-grid">
-        <div class="detail-item">
-          <div class="detail-label" data-i18n="detail.email">Email</div>
-          <div class="detail-value">sarah.chen@acme.com</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-label" data-i18n="detail.phone">Phone</div>
-          <div class="detail-value">+1 (415) 555-0142</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-label" data-i18n="detail.manager">Manager</div>
-          <div class="detail-value">David Park</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-label" data-i18n="detail.location">Location</div>
-          <div class="detail-value">San Francisco, CA</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-label" data-i18n="detail.startdate">Start date</div>
-          <div class="detail-value" data-i18n="detail.startdate.val">March 14, 2022</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-label" data-i18n="detail.tenure">Tenure</div>
-          <div class="detail-value" data-i18n="detail.tenure.val">4 years, 2 months</div>
-        </div>
-      </div>
-
-      <div style="margin-top: var(--s5); padding-top: var(--s5); border-top: 1px solid var(--divider);">
-        <div class="gallery-card-title" style="margin-bottom: var(--s3)" data-i18n="section.onboarding">Onboarding</div>
-        <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-muted); margin-bottom: 6px;">
-          <span data-i18n="progress.steps">5 of 7 steps complete</span><span>72%</span>
-        </div>
-        <div class="progress"><div class="progress-bar" style="width:72%"></div></div>
-      </div>
+    <div class="panel-body" id="view-panel-body">
+      <!-- Filled by openEmployeeView() -->
     </div>
     <div class="panel-footer">
       <button class="btn btn-ghost" onclick="closePanel('panel-view')" data-i18n="btn.close">Close</button>
@@ -3218,11 +3389,11 @@
       // KPI
       'kpi.totalEmployees': ' Total Employees', 'kpi.active': ' Active', 'kpi.onLeave': ' On Leave', 'kpi.openRoles': ' Open Roles', 'kpi.newRoles': ' 8 new',
       // Tabs
-      'tab.all': 'All', 'tab.active': 'Active', 'tab.onLeave': 'On Leave', 'tab.inactive': 'Inactive',
+      'tab.all': 'All', 'tab.active': 'Active', 'tab.onLeave': 'On Leave', 'tab.inactive': 'Inactive', 'tab.contractors': 'Contractors',
       // Toolbar
       'filter.search': 'Search employees…', 'filter.department': 'Department:', 'filter.all': 'All', 'filter.filters': ' Filters',
       // Table headers
-      'th.employee': 'Employee', 'th.id': 'ID', 'th.department': 'Department', 'th.role': 'Role', 'th.location': 'Location', 'th.status': 'Status', 'th.joined': 'Joined', 'th.actions': 'Actions',
+      'th.employee': 'Employee', 'th.id': 'ID', 'th.department': 'Department', 'th.role': 'Role', 'th.type': 'Type', 'th.location': 'Location', 'th.status': 'Status', 'th.joined': 'Joined', 'th.actions': 'Actions',
       // Pagination
       'pagination.showing': 'Showing', 'pagination.of': 'of', 'pagination.employees': 'employees', 'pagination.goto': 'Go to', 'pagination.of31': 'of 31',
       // Status
@@ -3233,11 +3404,21 @@
       'field.workemail': 'Work email', 'field.phone': 'Phone', 'field.startdate': 'Start date', 'field.startdate.help': 'Cannot be set before year 2000',
       'field.department': 'Department', 'field.jobtitle': 'Job title', 'field.jobtitle.ph': 'Senior Engineer',
       'field.emptype': 'Employment type', 'field.notes': 'Notes', 'field.notes.hint': '— optional', 'field.notes.ph': 'Add any context, onboarding instructions, or context about this hire…',
-      'rc.fulltime.title': 'Full-time', 'rc.fulltime.desc': '40 hrs/week', 'rc.parttime.title': 'Part-time', 'rc.parttime.desc': '20 hrs/week', 'rc.contract.title': 'Contract', 'rc.contract.desc': 'Project-based',
+      'rc.fulltime.title': 'Full-time', 'rc.fulltime.desc': '40 hrs/week', 'rc.parttime.title': 'Part-time', 'rc.parttime.desc': '20 hrs/week', 'rc.contract.title': 'Contract', 'rc.contract.desc': 'Project-based', 'rc.contractor.title': 'Contractor', 'rc.contractor.desc': 'Freelance / CTV',
       'toggle.onboarding.label': 'Send onboarding email', 'toggle.onboarding.desc': 'Includes welcome packet, day-one checklist, and IT account setup.',
-      'btn.cancel': 'Cancel', 'btn.savedraft': 'Save as draft', 'btn.addemployee': 'Add Employee',
+      'btn.cancel': 'Cancel', 'btn.savedraft': 'Save as draft', 'btn.addemployee': 'Add Employee', 'btn.saveemployee': 'Save Employee', 'btn.addalloc': 'Add project allocation',
+      // Employee-detail tabs + fields
+      'etab.basic': 'Basic Information', 'etab.profile': 'Profile Information', 'etab.contract': 'Contract', 'etab.insurance': 'Insurance', 'etab.attach': 'Attachments', 'etab.projects': 'Projects',
+      'field.username': 'Username', 'field.location': 'Location',
+      'field.contracttype': 'Contract type', 'field.effectivedate': 'Effective date', 'field.expirydate': 'Expiry date',
+      'field.renewalreminder': 'Renewal reminder', 'field.renewalreminder.desc': 'Email + in-app reminders to HRM & PM before the contract expires.',
+      'field.daysbefore': 'Days before expiry', 'field.repeatinterval': 'Repeat every',
+      'field.socialins': 'Social insurance no.', 'field.healthins': 'Health insurance no.', 'field.insprovider': 'Provider', 'field.coveragesince': 'Coverage since',
+      'insurance.ctvnote': 'Contractors are engaged under a service agreement — company social/health insurance usually does not apply.',
+      'attach.drop': 'Click to upload or drag & drop', 'attach.hint': 'Contract, ID card, NDA… — PDF, JPG, PNG up to 10 MB',
+      'field.allocations': 'Project allocations & work mode', 'field.allocations.desc': 'Assign this person to one or more projects. Hours are validated per project, independently.',
       // View panel
-      'panel.view.title': 'Employee Profile', 'panel.view.subtitle': 'EMP-0142 · Last updated 2 days ago',
+      'panel.view.title': 'Employee Details', 'panel.view.subtitle': 'EMP-0142 · Last updated 2 days ago',
       'profile.role': 'Senior Software Engineer · Engineering',
       'tag.remote': 'Remote', 'btn.edit': ' Edit',
       'detail.email': 'Email', 'detail.phone': 'Phone', 'detail.manager': 'Manager', 'detail.location': 'Location',
@@ -3280,11 +3461,11 @@
       // KPI
       'kpi.totalEmployees': ' Tổng số nhân viên', 'kpi.active': ' Đang làm việc', 'kpi.onLeave': ' Đang nghỉ phép', 'kpi.openRoles': ' Vị trí tuyển dụng', 'kpi.newRoles': ' 8 mới',
       // Tabs
-      'tab.all': 'Tất cả', 'tab.active': 'Đang làm', 'tab.onLeave': 'Nghỉ phép', 'tab.inactive': 'Nghỉ việc',
+      'tab.all': 'Tất cả', 'tab.active': 'Đang làm', 'tab.onLeave': 'Nghỉ phép', 'tab.inactive': 'Nghỉ việc', 'tab.contractors': 'CTV / Freelancer',
       // Toolbar
       'filter.search': 'Tìm kiếm nhân viên…', 'filter.department': 'Phòng ban:', 'filter.all': 'Tất cả', 'filter.filters': ' Bộ lọc',
       // Table headers
-      'th.employee': 'Nhân viên', 'th.id': 'Mã NV', 'th.department': 'Phòng ban', 'th.role': 'Chức vụ', 'th.location': 'Địa điểm', 'th.status': 'Trạng thái', 'th.joined': 'Ngày vào', 'th.actions': 'Thao tác',
+      'th.employee': 'Nhân viên', 'th.id': 'Mã NV', 'th.department': 'Phòng ban', 'th.role': 'Chức vụ', 'th.type': 'Loại', 'th.location': 'Địa điểm', 'th.status': 'Trạng thái', 'th.joined': 'Ngày vào', 'th.actions': 'Thao tác',
       // Pagination
       'pagination.showing': 'Hiển thị', 'pagination.of': 'trong', 'pagination.employees': 'nhân viên', 'pagination.goto': 'Đến trang', 'pagination.of31': '/ 31',
       // Status
@@ -3295,11 +3476,21 @@
       'field.workemail': 'Email công ty', 'field.phone': 'Điện thoại', 'field.startdate': 'Ngày bắt đầu', 'field.startdate.help': 'Không thể đặt trước năm 2000',
       'field.department': 'Phòng ban', 'field.jobtitle': 'Chức vụ', 'field.jobtitle.ph': 'Kỹ sư cao cấp',
       'field.emptype': 'Loại hợp đồng', 'field.notes': 'Ghi chú', 'field.notes.hint': '— tùy chọn', 'field.notes.ph': 'Thêm ghi chú, hướng dẫn nhận việc hoặc thông tin về nhân viên mới…',
-      'rc.fulltime.title': 'Toàn thời gian', 'rc.fulltime.desc': '40 giờ/tuần', 'rc.parttime.title': 'Bán thời gian', 'rc.parttime.desc': '20 giờ/tuần', 'rc.contract.title': 'Hợp đồng', 'rc.contract.desc': 'Theo dự án',
+      'rc.fulltime.title': 'Toàn thời gian', 'rc.fulltime.desc': '40 giờ/tuần', 'rc.parttime.title': 'Bán thời gian', 'rc.parttime.desc': '20 giờ/tuần', 'rc.contract.title': 'Hợp đồng', 'rc.contract.desc': 'Theo dự án', 'rc.contractor.title': 'Cộng tác viên', 'rc.contractor.desc': 'Freelance / CTV',
       'toggle.onboarding.label': 'Gửi email hướng dẫn', 'toggle.onboarding.desc': 'Bao gồm bộ tài liệu chào mừng, danh sách ngày đầu tiên và thiết lập tài khoản IT.',
-      'btn.cancel': 'Hủy', 'btn.savedraft': 'Lưu nháp', 'btn.addemployee': 'Thêm nhân viên',
+      'btn.cancel': 'Hủy', 'btn.savedraft': 'Lưu nháp', 'btn.addemployee': 'Thêm nhân viên', 'btn.saveemployee': 'Lưu nhân viên', 'btn.addalloc': 'Thêm phân bổ dự án',
+      // Employee-detail tabs + fields
+      'etab.basic': 'Thông tin cơ bản', 'etab.profile': 'Thông tin hồ sơ', 'etab.contract': 'Hợp đồng', 'etab.insurance': 'Bảo hiểm', 'etab.attach': 'Tệp đính kèm', 'etab.projects': 'Dự án',
+      'field.username': 'Tên đăng nhập', 'field.location': 'Địa điểm',
+      'field.contracttype': 'Loại hợp đồng', 'field.effectivedate': 'Ngày hiệu lực', 'field.expirydate': 'Ngày hết hạn',
+      'field.renewalreminder': 'Nhắc gia hạn', 'field.renewalreminder.desc': 'Gửi email + thông báo in-app cho HRM & PM trước khi hợp đồng hết hạn.',
+      'field.daysbefore': 'Số ngày trước hạn', 'field.repeatinterval': 'Lặp lại mỗi',
+      'field.socialins': 'Số BHXH', 'field.healthins': 'Số BHYT', 'field.insprovider': 'Đơn vị', 'field.coveragesince': 'Tham gia từ',
+      'insurance.ctvnote': 'CTV làm việc theo thỏa thuận dịch vụ — thường không áp dụng BHXH/BHYT của công ty.',
+      'attach.drop': 'Nhấn để tải lên hoặc kéo & thả', 'attach.hint': 'Hợp đồng, CMND/CCCD, NDA… — PDF, JPG, PNG tối đa 10 MB',
+      'field.allocations': 'Phân bổ dự án & chế độ làm việc', 'field.allocations.desc': 'Gán người này vào một hoặc nhiều dự án. Giờ công được validate độc lập theo từng dự án.',
       // View panel
-      'panel.view.title': 'Hồ sơ nhân viên', 'panel.view.subtitle': 'EMP-0142 · Cập nhật lần cuối 2 ngày trước',
+      'panel.view.title': 'Chi tiết nhân viên', 'panel.view.subtitle': 'EMP-0142 · Cập nhật lần cuối 2 ngày trước',
       'profile.role': 'Kỹ sư phần mềm cao cấp · Kỹ thuật',
       'tag.remote': 'Từ xa', 'btn.edit': ' Chỉnh sửa',
       'detail.email': 'Email', 'detail.phone': 'Điện thoại', 'detail.manager': 'Quản lý', 'detail.location': 'Địa điểm',
@@ -3377,20 +3568,42 @@
 
   // ============ EMPLOYEE DATA ============
   const employees = [
-    { id: 'EMP-0142', name: 'Sarah Chen',     email: 'sarah.chen@acme.com',     dept: 'Engineering', role: 'Senior Engineer',  loc: 'San Francisco', status: 'active',  joined: 'Mar 14, 2022', color: '#8B5CF6', initials: 'SC' },
-    { id: 'EMP-0138', name: 'Marcus Johnson', email: 'm.johnson@acme.com',      dept: 'Design',      role: 'Lead Designer',    loc: 'New York',     status: 'active',  joined: 'Jan 09, 2022', color: '#3B82F6', initials: 'MJ' },
-    { id: 'EMP-0156', name: 'Priya Patel',    email: 'priya.p@acme.com',        dept: 'Marketing',   role: 'Marketing Manager',loc: 'London',       status: 'leave',   joined: 'Jul 22, 2022', color: '#16A34A', initials: 'PP' },
-    { id: 'EMP-0089', name: 'David Park',     email: 'd.park@acme.com',         dept: 'Engineering', role: 'Engineering Lead', loc: 'Seoul',        status: 'active',  joined: 'Feb 03, 2021', color: '#D97706', initials: 'DP' },
-    { id: 'EMP-0201', name: 'Emma Williams',  email: 'emma.w@acme.com',         dept: 'Sales',       role: 'Account Executive',loc: 'Austin',       status: 'active',  joined: 'Sep 18, 2023', color: '#DC2626', initials: 'EW' },
-    { id: 'EMP-0177', name: 'Liam O\'Brien',  email: 'liam.o@acme.com',         dept: 'Operations',  role: 'Ops Coordinator',  loc: 'Dublin',       status: 'active',  joined: 'May 02, 2023', color: '#00AADD', initials: 'LO' },
-    { id: 'EMP-0034', name: 'Yuki Tanaka',    email: 'y.tanaka@acme.com',       dept: 'Finance',     role: 'Senior Accountant',loc: 'Tokyo',        status: 'inactive',joined: 'Aug 11, 2020', color: '#7C3AED', initials: 'YT' },
-    { id: 'EMP-0162', name: 'Ana García',     email: 'ana.g@acme.com',          dept: 'Engineering', role: 'Backend Engineer', loc: 'Madrid',       status: 'active',  joined: 'Apr 27, 2022', color: '#007BA7', initials: 'AG' }
+    { id: 'EMP-0142', name: 'Sarah Chen',     email: 'sarah.chen@acme.com',     dept: 'Engineering', role: 'Senior Engineer',  loc: 'San Francisco', status: 'active',  joined: 'Mar 14, 2022', color: '#8B5CF6', initials: 'SC', type: 'fulltime' },
+    { id: 'EMP-0138', name: 'Marcus Johnson', email: 'm.johnson@acme.com',      dept: 'Design',      role: 'Lead Designer',    loc: 'New York',     status: 'active',  joined: 'Jan 09, 2022', color: '#3B82F6', initials: 'MJ', type: 'fulltime' },
+    { id: 'EMP-0156', name: 'Priya Patel',    email: 'priya.p@acme.com',        dept: 'Marketing',   role: 'Marketing Manager',loc: 'London',       status: 'leave',   joined: 'Jul 22, 2022', color: '#16A34A', initials: 'PP', type: 'parttime' },
+    { id: 'EMP-0089', name: 'David Park',     email: 'd.park@acme.com',         dept: 'Engineering', role: 'Engineering Lead', loc: 'Seoul',        status: 'active',  joined: 'Feb 03, 2021', color: '#D97706', initials: 'DP', type: 'fulltime' },
+    { id: 'CTV-0207', name: 'Nguyen Van Minh', email: 'minh.nv@freelance.dev',  dept: 'Engineering', role: 'Freelance Backend',loc: 'Ha Noi',       status: 'active',  joined: 'Jun 03, 2025', color: '#4F46E5', initials: 'NM', type: 'contractor',
+      account: { username: 'minh.nv', scope: 'Personal (self-service)', invited: 'Jun 03, 2025', state: 'Active' },
+      allocations: [
+        { project: 'Apollo Mobile App', role: 'Backend Developer', from: 'Jun 03, 2025', to: 'Dec 31, 2025', mode: 'FT', ptMin: null },
+        { project: 'Zeus Internal Tools', role: 'API Engineer',     from: 'Aug 01, 2025', to: 'Nov 30, 2025', mode: 'PT', ptMin: 15 }
+      ] },
+    { id: 'EMP-0201', name: 'Emma Williams',  email: 'emma.w@acme.com',         dept: 'Sales',       role: 'Account Executive',loc: 'Austin',       status: 'active',  joined: 'Sep 18, 2023', color: '#DC2626', initials: 'EW', type: 'fulltime' },
+    { id: 'CTV-0212', name: 'Tran Thi Lan',   email: 'lan.tt@freelance.dev',    dept: 'Design',      role: 'Freelance UI/UX',  loc: 'Da Nang',      status: 'active',  joined: 'Jul 21, 2025', color: '#DB2777', initials: 'TL', type: 'contractor',
+      account: { username: 'lan.tt', scope: 'Personal (self-service)', invited: 'Jul 21, 2025', state: 'Active' },
+      allocations: [
+        { project: 'Apollo Mobile App', role: 'UI Designer', from: 'Jul 21, 2025', to: 'Oct 31, 2025', mode: 'PT', ptMin: 20 }
+      ] },
+    { id: 'EMP-0177', name: 'Liam O\'Brien',  email: 'liam.o@acme.com',         dept: 'Operations',  role: 'Ops Coordinator',  loc: 'Dublin',       status: 'active',  joined: 'May 02, 2023', color: '#00AADD', initials: 'LO', type: 'fulltime' },
+    { id: 'EMP-0034', name: 'Yuki Tanaka',    email: 'y.tanaka@acme.com',       dept: 'Finance',     role: 'Senior Accountant',loc: 'Tokyo',        status: 'inactive',joined: 'Aug 11, 2020', color: '#7C3AED', initials: 'YT', type: 'fulltime' },
+    { id: 'CTV-0219', name: 'Pham Duc Anh',   email: 'anh.pd@freelance.dev',    dept: 'Engineering', role: 'Freelance QA',     loc: 'HCMC',         status: 'active',  joined: 'Sep 01, 2025', color: '#0891B2', initials: 'PA', type: 'contractor',
+      account: { username: 'anh.pd', scope: 'Personal (self-service)', invited: 'Sep 01, 2025', state: 'Invited' },
+      allocations: [
+        { project: 'Zeus Internal Tools', role: 'QA Engineer', from: 'Sep 01, 2025', to: 'Dec 31, 2025', mode: 'FT', ptMin: null }
+      ] },
+    { id: 'EMP-0162', name: 'Ana García',     email: 'ana.g@acme.com',          dept: 'Engineering', role: 'Backend Engineer', loc: 'Madrid',       status: 'active',  joined: 'Apr 27, 2022', color: '#007BA7', initials: 'AG', type: 'fulltime' }
   ];
 
   const statusMap = {
     active: { label: 'Active', cls: 'badge-success' },
     leave: { label: 'On Leave', cls: 'badge-warning' },
     inactive: { label: 'Inactive', cls: 'badge-neutral' }
+  };
+
+  const typeMap = {
+    fulltime:   { label: 'Full-time',  cls: 'badge-neutral' },
+    parttime:   { label: 'Part-time',  cls: 'badge-neutral' },
+    contractor: { label: 'Contractor', cls: 'badge-contractor' }
   };
 
   // ============ RENDER TABLE ============
@@ -3401,20 +3614,34 @@
     renderEmployees();
   }
 
+  let currentTab = 'all'; // all | active | leave | inactive | contractor
+
+  function setEmployeeTab(tab, el) {
+    currentTab = tab;
+    document.querySelectorAll('#view-employees .toolbar .tab').forEach(t => t.classList.remove('active'));
+    if (el) el.classList.add('active');
+    renderEmployees();
+  }
+
   function renderEmployees() {
     const tbody = document.getElementById('employee-tbody');
-    const filtered = employees.filter(e =>
-      !currentFilter ||
-      e.name.toLowerCase().includes(currentFilter) ||
-      e.email.toLowerCase().includes(currentFilter) ||
-      e.dept.toLowerCase().includes(currentFilter) ||
-      e.role.toLowerCase().includes(currentFilter) ||
-      e.loc.toLowerCase().includes(currentFilter) ||
-      e.id.toLowerCase().includes(currentFilter)
-    );
+    const filtered = employees.filter(e => {
+      const matchTab =
+        currentTab === 'all' ? true :
+        currentTab === 'contractor' ? e.type === 'contractor' :
+        e.status === currentTab;
+      const matchSearch = !currentFilter ||
+        e.name.toLowerCase().includes(currentFilter) ||
+        e.email.toLowerCase().includes(currentFilter) ||
+        e.dept.toLowerCase().includes(currentFilter) ||
+        e.role.toLowerCase().includes(currentFilter) ||
+        e.loc.toLowerCase().includes(currentFilter) ||
+        e.id.toLowerCase().includes(currentFilter);
+      return matchTab && matchSearch;
+    });
 
     if (filtered.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:var(--s7) var(--s4);color:var(--text-muted);">
+      tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:var(--s7) var(--s4);color:var(--text-muted);">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto var(--s3);display:block;opacity:0.4"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <div style="font-weight:600;color:var(--text-secondary);margin-bottom:4px">${t('empty.nofound')}</div>
         <div style="font-size:13px">${t('empty.noresults')} "<strong>${currentFilter}</strong>" — <button onclick="document.getElementById('table-search').value='';filterEmployees('');" style="color:var(--cta);font-size:13px;cursor:pointer;text-decoration:underline;background:none;border:none;padding:0">${t('empty.clear')}</button></div>
@@ -3422,7 +3649,9 @@
       return;
     }
 
-    tbody.innerHTML = filtered.map((e, i) => `
+    tbody.innerHTML = filtered.map((e) => {
+      const tm = typeMap[e.type] || typeMap.fulltime;
+      return `
       <tr>
         <td>
           <div class="cell-user">
@@ -3436,18 +3665,19 @@
         <td class="cell-mono">${e.id}</td>
         <td>${e.dept}</td>
         <td class="cell-muted">${e.role}</td>
+        <td><span class="badge ${tm.cls}">${tm.label}</span></td>
         <td class="cell-muted">${e.loc}</td>
         <td><span class="badge ${statusMap[e.status].cls}">${statusMap[e.status].label}</span></td>
         <td class="cell-muted">${e.joined}</td>
         <td>
           <div class="row-actions">
-            <button class="icon-btn" title="View" onclick="openPanel('panel-view')"><svg><use href="#i-eye"/></svg></button>
+            <button class="icon-btn" title="View" onclick="openEmployeeView('${e.id}')"><svg><use href="#i-eye"/></svg></button>
             <button class="icon-btn" title="Edit" onclick="openPanel('panel-add')"><svg><use href="#i-edit"/></svg></button>
             <button class="icon-btn" title="Delete" onclick="openModal('modal-delete')"><svg><use href="#i-trash"/></svg></button>
           </div>
         </td>
       </tr>
-    `).join('');
+    `;}).join('');
   }
 
   // ============ TABS ============
@@ -3463,6 +3693,18 @@
     document.getElementById(id).classList.add('open');
     document.getElementById(id + '-overlay').classList.add('open');
     document.body.style.overflow = 'hidden';
+    if (id === 'panel-add') {
+      // Reset to first tab
+      const panel = document.getElementById(id);
+      const tabs = panel.querySelectorAll('.emp-tab');
+      const panes = panel.querySelectorAll('.emp-pane');
+      tabs.forEach((tb, i) => tb.classList.toggle('active', i === 0));
+      panes.forEach((p, i) => p.classList.toggle('active', i === 0));
+      // Seed one allocation row + sync type-dependent notes
+      const list = document.getElementById('alloc-list');
+      if (list && list.children.length === 0) addAllocRow();
+      onEmpTypeChange();
+    }
   }
   function closePanel(id) {
     document.getElementById(id).classList.remove('open');
@@ -3476,7 +3718,217 @@
       panel.querySelectorAll('input[type=checkbox]').forEach(el => el.checked = true);
       const counter = document.getElementById('notes-count');
       if (counter) counter.textContent = '0 / 500';
+      // Reset VMP allocations
+      const list = document.getElementById('alloc-list');
+      if (list) list.innerHTML = '';
     }
+  }
+
+  // ============ VMP: DYNAMIC EMPLOYEE VIEW PANEL ============
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+  function splitName(name) {
+    const parts = String(name || '').trim().split(/\s+/);
+    if (parts.length === 1) return { last: parts[0], first: '' };
+    return { last: parts[0], first: parts.slice(1).join(' ') };
+  }
+  function fld(label, value, opts) {
+    opts = opts || {};
+    const empty = value == null || value === '';
+    const cls = 'box' + (empty ? ' empty' : '') + (opts.mono ? ' mono' : '');
+    const v = empty ? (opts.placeholder || '—') : value;
+    return `<div class="emp-f${opts.full ? ' full' : ''}"><label>${esc(label)}</label><div class="${cls}">${opts.raw ? v : esc(v)}</div></div>`;
+  }
+
+  function openEmployeeView(id) {
+    const e = employees.find(x => x.id === id) || employees[0];
+    const tm = typeMap[e.type] || typeMap.fulltime;
+    const sm = statusMap[e.status];
+    const isCtv = e.type === 'contractor';
+    const nm = splitName(e.name);
+    const allocs = e.allocations || [];
+
+    const sub = document.getElementById('view-panel-subtitle');
+    if (sub) sub.textContent = `${e.id} · ${isCtv ? 'Contractor' : 'Employee'} · ${e.dept}`;
+
+    // --- Tab: Basic Information ---
+    const paneBasic = `<div class="emp-grid">
+      ${fld('Username', e.email)}
+      ${fld('Email', e.email)}
+      ${fld('Last Name', nm.last)}
+      ${fld('First Name', nm.first)}
+      ${fld('Phone', e.phone || '', { placeholder: 'Not provided' })}
+    </div>`;
+
+    // --- Tab: Profile Information ---
+    const paneProfile = `<div class="emp-grid">
+      ${fld('Job title', e.role)}
+      ${fld('Department', e.dept)}
+      ${fld('Location', e.loc)}
+      ${fld('Employment type', `<span class="badge ${tm.cls}">${tm.label}</span>`, { raw: true })}
+      ${fld('Status', `<span class="badge ${sm.cls}">${sm.label}</span>`, { raw: true })}
+      ${fld(isCtv ? 'Onboarded' : 'Start date', e.joined)}
+    </div>`;
+
+    // --- Tab: Contract ---
+    const contractEnd = isCtv && allocs.length ? allocs.map(a => a.to).sort().slice(-1)[0] : 'Indefinite';
+    const paneContract = `<div class="emp-grid">
+      ${fld('Contract type', isCtv ? 'Freelance / Service agreement' : 'Labor contract')}
+      ${fld('Effective date', e.joined)}
+      ${fld('Expiry date', contractEnd)}
+      ${fld('Renewal reminder', isCtv ? '30 days before · repeat every 7 days' : '—')}
+      <div class="emp-f full"><label>Note</label><div class="box empty">Reminder emails go to HRM & PM until the contract status changes.</div></div>
+    </div>`;
+
+    // --- Tab: Insurance ---
+    const paneInsurance = isCtv
+      ? `<div class="account-note"><svg><use href="#i-info"/></svg><div>Contractors are engaged under a service agreement — company social/health insurance does not apply.</div></div>`
+      : `<div class="emp-grid">
+          ${fld('Social insurance no.', 'VN-' + e.id.replace(/\D/g, '') + '-SI')}
+          ${fld('Health insurance no.', 'VN-' + e.id.replace(/\D/g, '') + '-HI')}
+          ${fld('Provider', 'Vietnam Social Security')}
+          ${fld('Coverage since', e.joined)}
+        </div>`;
+
+    // --- Tab: Attachments ---
+    const files = isCtv
+      ? [{ n: 'Service_Agreement_signed.pdf', s: '412 KB' }, { n: 'NDA.pdf', s: '188 KB' }, { n: 'ID_card.jpg', s: '1.1 MB' }]
+      : [{ n: 'Labor_Contract.pdf', s: '520 KB' }, { n: 'ID_card.jpg', s: '1.0 MB' }];
+    const paneAttach = `<div class="alloc-view-list">
+      ${files.map(f => `<div class="alloc-view-card" style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+        <div style="display:flex;align-items:center;gap:10px;min-width:0;">
+          <svg style="width:18px;height:18px;color:var(--primary);flex:0 0 auto"><use href="#i-file"/></svg>
+          <div style="min-width:0"><div class="avc-proj" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(f.n)}</div><div class="avc-meta">${f.s}</div></div>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="showToast('info','Download','${esc(f.n)} would download here.')"><svg><use href="#i-download"/></svg></button>
+      </div>`).join('')}
+    </div>`;
+
+    // --- Tab: Projects (allocations & work mode) ---
+    const paneProjects = `
+      <div class="gallery-card-title" style="margin-bottom: var(--s3)">Project allocations &amp; work mode <span class="badge badge-neutral">${allocs.length}</span></div>
+      <div class="account-note" style="background:#F0FDF4; border-color:#BBF7D0; color:#166534;">
+        <svg><use href="#i-info"/></svg>
+        <div>One person can join multiple projects at once. Hours are validated <b>per project</b> and never across projects.</div>
+      </div>
+      ${allocs.length ? `<div class="alloc-view-list">
+        ${allocs.map(a => `
+          <div class="alloc-view-card">
+            <div class="avc-top">
+              <div class="avc-proj">${esc(a.project)}</div>
+              <span class="badge ${a.mode === 'FT' ? 'badge-ft' : 'badge-pt'}">${a.mode === 'FT' ? 'Full-time · 8h/day' : 'Part-time · max 8h/day'}</span>
+            </div>
+            <div class="avc-meta">
+              <span>Role: <b>${esc(a.role)}</b></span>
+              <span>Period: <b>${esc(a.from)} → ${esc(a.to)}</b></span>
+              ${a.mode === 'PT' && a.ptMin ? `<span>Min: <b>${a.ptMin}h/week</b> (KPI)</span>` : ''}
+            </div>
+          </div>`).join('')}
+      </div>` : `<div class="emp-f"><div class="box empty">No project allocations yet.</div></div>`}`;
+
+    const tabs = [
+      { key: 'basic',    label: 'Basic Information',   pane: paneBasic },
+      { key: 'profile',  label: 'Profile Information', pane: paneProfile },
+      { key: 'contract', label: 'Contract',           pane: paneContract },
+      { key: 'insurance',label: 'Insurance',          pane: paneInsurance },
+      { key: 'attach',   label: 'Attachments',        pane: paneAttach },
+      { key: 'projects', label: 'Projects',           pane: paneProjects }
+    ];
+
+    const html = `
+      <div class="emp-tabs" role="tablist">
+        ${tabs.map((t, i) => `<button class="emp-tab${i === 0 ? ' active' : ''}" role="tab" onclick="switchEmpTab(this, '${t.key}')">${esc(t.label)}</button>`).join('')}
+      </div>
+      ${tabs.map((t, i) => `<div class="emp-pane${i === 0 ? ' active' : ''}" data-emp-pane="${t.key}">${t.pane}</div>`).join('')}`;
+
+    document.getElementById('view-panel-body').innerHTML = html;
+    openPanel('panel-view');
+  }
+
+  function switchEmpTab(btn, key) {
+    const body = btn.closest('.panel-body') || document.getElementById('view-panel-body');
+    body.querySelectorAll('.emp-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    body.querySelectorAll('.emp-pane').forEach(p => p.classList.toggle('active', p.getAttribute('data-emp-pane') === key));
+  }
+
+  // ============ VMP: ADD-PANEL CONTRACTOR SETUP + ALLOCATION REPEATER ============
+  const PROJECT_OPTIONS = ['Apollo Mobile App', 'Zeus Internal Tools', 'Orion Data Platform', 'Helios CRM', 'Nova Website'];
+  let allocSeq = 0;
+
+  function onEmpTypeChange() {
+    const type = (document.querySelector('input[name="add-type"]:checked') || {}).value;
+    const isCtv = type === 'contractor';
+    const accNote = document.getElementById('contractor-account-note');
+    if (accNote) accNote.hidden = !isCtv;
+    const insNote = document.getElementById('insurance-note');
+    if (insNote) insNote.hidden = !isCtv;
+    // Ensure at least one allocation row exists
+    const list = document.getElementById('alloc-list');
+    if (list && list.children.length === 0) addAllocRow();
+  }
+
+  function addAllocRow() {
+    const list = document.getElementById('alloc-list');
+    if (!list) return;
+    const rid = 'alloc-' + (++allocSeq);
+    const opts = PROJECT_OPTIONS.map(p => `<option>${p}</option>`).join('');
+    const row = document.createElement('div');
+    row.className = 'alloc-row';
+    row.id = rid;
+    row.innerHTML = `
+      <button type="button" class="alloc-remove" title="Remove" onclick="removeAllocRow('${rid}')"><svg><use href="#i-x"/></svg></button>
+      <div class="alloc-grid">
+        <div class="field full">
+          <label class="label">Project</label>
+          <select class="select">${opts}</select>
+        </div>
+        <div class="field">
+          <label class="label">Role on project</label>
+          <input class="input" type="text" placeholder="Backend Developer">
+        </div>
+        <div class="field">
+          <label class="label">Work mode</label>
+          <div class="alloc-mode-toggle">
+            <label><input type="radio" name="${rid}-mode" value="FT" checked onchange="onAllocModeChange('${rid}')"> Full-time</label>
+            <label><input type="radio" name="${rid}-mode" value="PT" onchange="onAllocModeChange('${rid}')"> Part-time</label>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Start date</label>
+          <input class="input" type="date">
+        </div>
+        <div class="field">
+          <label class="label">End date</label>
+          <input class="input" type="date">
+        </div>
+        <div class="field full alloc-pt-min" id="${rid}-ptmin" hidden>
+          <label class="label">Min hours / week <span class="label-hint">— PT KPI, not enforced</span></label>
+          <input class="input" type="number" min="1" max="40" placeholder="e.g. 20">
+        </div>
+      </div>
+      <div style="font-size:11.5px; color:var(--text-muted); margin-top:8px;">
+        <span id="${rid}-hint">Full-time · requires 8h/day. Hours validated on this project only.</span>
+      </div>`;
+    list.appendChild(row);
+  }
+
+  function removeAllocRow(rid) {
+    const row = document.getElementById(rid);
+    if (row) row.remove();
+    const list = document.getElementById('alloc-list');
+    if (list && list.children.length === 0) addAllocRow(); // keep at least one
+  }
+
+  function onAllocModeChange(rid) {
+    const mode = (document.querySelector(`input[name="${rid}-mode"]:checked`) || {}).value;
+    const ptMin = document.getElementById(rid + '-ptmin');
+    const hint = document.getElementById(rid + '-hint');
+    const isPT = mode === 'PT';
+    if (ptMin) ptMin.hidden = !isPT;
+    if (hint) hint.textContent = isPT
+      ? 'Part-time · hard cap 8h/day. Min hours/week is an optional KPI (not blocking).'
+      : 'Full-time · requires 8h/day. Hours validated on this project only.';
   }
 
   // ============ VIEW SWITCHING (Employees ↔ My Profile) ============
