@@ -2160,6 +2160,97 @@
   .alloc-view-card .avc-proj { font-weight: 600; font-size: 13.5px; }
   .alloc-view-card .avc-meta { font-size: 12px; color: var(--text-muted); display: flex; gap: 10px; flex-wrap: wrap; }
   .alloc-view-card .avc-meta b { color: var(--text); font-weight: 600; }
+
+  /* ============ PERSONAL MODULE (native views) ============ */
+  .badge-ft { background: var(--success-50); color: var(--success); }
+  .badge-pt { background: var(--warning-50); color: var(--warning); }
+  .badge-draft { background: var(--divider); color: var(--text-secondary); }
+  .badge-submitted { background: var(--primary-50); color: var(--primary); }
+  .badge-approved { background: var(--success-50); color: var(--success); }
+  .badge-rejected { background: var(--danger-50); color: var(--danger); }
+
+  .lw-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: var(--s4); align-items: start; }
+  .lw-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s3); }
+  .lw-mode-hint { font-size: 12px; color: var(--text-muted); margin-top: 6px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+  .lw-slot { display: grid; grid-template-columns: 1fr 1fr auto auto; gap: 10px; align-items: end; margin-bottom: 10px; }
+  .lw-slot .shrs { font-size: 13px; font-weight: 600; color: var(--primary); min-width: 50px; text-align: right; padding-bottom: 10px; }
+  .lw-slot .srm { background: none; border: none; cursor: pointer; color: var(--text-muted); width: 34px; height: 40px; display: grid; place-items: center; border-radius: 8px; }
+  .lw-slot .srm:hover { background: var(--danger-50); color: var(--danger); }
+  .lw-slot .srm svg { width: 16px; height: 16px; }
+  .lw-slot label { font-size: 11.5px; color: var(--text-muted); display: block; margin-bottom: 5px; }
+
+  .lw-total { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-radius: var(--r-md); border: 1px dashed var(--border-strong); margin: 8px 0 4px; }
+  .lw-total .tl { font-size: 13px; color: var(--text-muted); }
+  .lw-total .tv { font-size: 26px; font-weight: 800; font-family: var(--font-display); }
+  .lw-total.state-ok { border-color: var(--success); background: var(--success-50); }
+  .lw-total.state-warn { border-color: var(--warning); background: var(--warning-50); }
+  .lw-total.state-err { border-color: var(--danger); background: var(--danger-50); }
+  .lw-valmsg { font-size: 12.5px; margin-top: 4px; min-height: 16px; }
+  .lw-valmsg.ok { color: var(--success); }
+  .lw-valmsg.warn { color: #92400e; }
+  .lw-valmsg.err { color: var(--danger); }
+
+  .lw-ocr { border: 2px dashed var(--border-strong); border-radius: var(--r-md); padding: 18px; text-align: center; color: var(--text-muted); cursor: pointer; }
+  .lw-ocr:hover { border-color: #4F46E5; background: #fafaff; }
+  .lw-ocr svg { width: 22px; height: 22px; color: #4F46E5; margin-bottom: 6px; }
+  .lw-thumb { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; margin-top: 10px; font-size: 13px; }
+  .lw-thumb .tp { width: 40px; height: 40px; border-radius: 8px; background: linear-gradient(135deg,#e0e7ff,#cffafe); display: grid; place-items: center; color: #4F46E5; flex: 0 0 auto; }
+  .lw-thumb .rm { margin-left: auto; background: none; border: none; cursor: pointer; color: var(--text-muted); }
+  .lw-ainote { font-size: 12px; color: #4F46E5; background: #EEF2FF; border: 1px solid #C7D2FE; border-radius: 8px; padding: 8px 11px; margin-top: 8px; display: flex; gap: 7px; align-items: flex-start; }
+  .lw-ainote svg { width: 15px; height: 15px; flex: 0 0 auto; margin-top: 1px; }
+  .btn-ai { background: linear-gradient(135deg,#4F46E5,#00AADD); color: #fff; border: none; }
+  .btn-ai:hover { filter: brightness(1.05); }
+  .btn-ai:disabled { opacity: .6; cursor: progress; }
+
+  .lw-review { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border: 1px solid var(--border-strong); border-radius: var(--r-md); margin: 14px 0; }
+  .lw-review input { margin-top: 2px; width: 17px; height: 17px; accent-color: var(--primary); flex: 0 0 auto; }
+  .lw-review label { font-size: 13px; }
+
+  .lw-item { border: 1px solid var(--border); border-radius: var(--r-md); padding: 12px 14px; margin-bottom: 10px; }
+  .lw-item .li-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .lw-item .li-proj { font-weight: 600; font-size: 13.5px; }
+  .lw-item .li-meta { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+  .lw-item .li-desc { font-size: 12.5px; color: var(--text-secondary); margin-top: 8px; line-height: 1.5; white-space: pre-line; }
+  .lw-empty { text-align: center; color: var(--text-muted); font-size: 13px; padding: 20px; }
+
+  /* Personal dashboard project rows */
+  .pdash-proj { border: 1px solid var(--border); border-radius: var(--r-md); padding: 14px; margin-bottom: 12px; }
+  .pdash-proj:last-child { margin-bottom: 0; }
+  .pdash-proj .pp-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .pdash-proj .pp-name { font-weight: 700; font-size: 14.5px; }
+  .pdash-proj .pp-role { font-size: 12.5px; color: var(--text-muted); margin-top: 2px; }
+  .pdash-proj .pp-bar-lbl { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-muted); margin: 10px 0 5px; }
+  .pdash-proj .pp-bar { height: 7px; background: var(--divider); border-radius: 4px; overflow: hidden; }
+  .pdash-proj .pp-bar > i { display: block; height: 100%; background: var(--primary); border-radius: 4px; }
+  .pdash-proj .pp-bar.ok > i { background: var(--success); }
+  .pdash-proj .pp-bar.warn > i { background: var(--warning); }
+  .pdash-proj .pp-acts { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+
+  .lw-stub { text-align: center; padding: 48px 20px; color: var(--text-muted); }
+  .lw-stub svg { width: 38px; height: 38px; color: var(--border-strong); margin-bottom: 10px; }
+  .lw-stub h3 { font-size: 16px; color: var(--text-secondary); margin-bottom: 6px; }
+
+  /* Monthly timesheet (Personal) */
+  .ts-proj { border: 1px solid var(--border); border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--shadow-sm); margin-bottom: var(--s4); overflow: hidden; }
+  .ts-proj .ts-head { display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-bottom: 1px solid var(--divider); flex-wrap: wrap; }
+  .ts-proj .ts-name { font-weight: 700; font-size: 15px; }
+  .ts-proj .ts-head .spacer { flex: 1; }
+  .ts-sum { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--divider); }
+  .ts-sum .cell { background: var(--surface); padding: 12px 16px; }
+  .ts-sum .k { font-size: 11.5px; color: var(--text-muted); }
+  .ts-sum .v { font-size: 18px; font-weight: 800; font-family: var(--font-display); margin-top: 3px; }
+  .ts-days { padding: 12px 18px; }
+  .ts-days table { width: 100%; border-collapse: collapse; }
+  .ts-days th, .ts-days td { text-align: left; padding: 7px 8px; font-size: 12.5px; border-bottom: 1px solid var(--divider); }
+  .ts-days th { color: var(--text-muted); font-weight: 600; }
+  .ts-foot { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-top: 1px solid var(--divider); background: #fafbfc; flex-wrap: wrap; }
+  .ts-foot .note { font-size: 12.5px; color: var(--text-muted); }
+  .ts-foot .note.blocked { color: var(--danger); }
+  .ts-foot .spacer { flex: 1; }
+  @media (max-width: 640px) { .ts-sum { grid-template-columns: 1fr 1fr; } }
+
+  @media (max-width: 900px) { .lw-grid { grid-template-columns: 1fr; } .lw-row2 { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -2197,6 +2288,10 @@
     <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></symbol>
     <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
     <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2 2M15.7 15.7l2 2M17.7 6.3l-2 2M8.3 15.7l-2 2"/></symbol>
+    <symbol id="i-check-sq" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></symbol>
     <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></symbol>
     <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></symbol>
     <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></symbol>
@@ -2228,6 +2323,44 @@
         </div>
         <div class="rail-subitem" onclick="selectSubItem(this,'dashboard','Business Development'); showView('dashbd')">
           <svg><use href="#i-send"/></svg><span data-i18n="nav.dash.bizdev"> Business Development</span>
+        </div>
+      </div>
+
+      <div class="rail-item" data-flyout="flyout-personal">
+        <svg><use href="#i-clock"/></svg>
+        <span class="rail-label" data-i18n="nav.personal">Personal</span>
+      </div>
+      <div class="rail-submenu">
+        <div class="rail-subgroup" data-i18n="nav.personal.self">Self-service (Contractor)</div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'personal','Dashboard'); showPersonal('dash')">
+          <svg><use href="#i-dashboard"/></svg><span data-i18n="nav.personal.dashboard"> Dashboard</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'personal','Log Work'); showPersonal('logwork')">
+          <svg><use href="#i-clock"/></svg><span data-i18n="nav.personal.logwork"> Log Work</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'personal','Leave'); showPersonal('leave')">
+          <svg><use href="#i-calendar"/></svg><span data-i18n="nav.personal.leave"> Leave</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'personal','Progress Reports'); showPersonal('reports')">
+          <svg><use href="#i-file"/></svg><span data-i18n="nav.personal.reports"> Progress Reports</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'personal','Monthly Timesheet'); showPersonal('timesheet')">
+          <svg><use href="#i-check"/></svg><span data-i18n="nav.personal.timesheet"> Monthly Timesheet</span>
+        </div>
+      </div>
+
+      <div class="rail-item" data-flyout="flyout-approvals">
+        <svg><use href="#i-check-sq"/></svg>
+        <span class="rail-label" data-i18n="nav.approvals">Approvals</span>
+      </div>
+      <div class="rail-submenu">
+        <div class="rail-subgroup" data-i18n="nav.approvals.vmp">Contractor (VMP)</div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'approvals','Approve Logwork'); showView('approve-logwork')">
+          <svg><use href="#i-clock"/></svg><span data-i18n="nav.approvals.logwork"> Approve Logwork</span>
+          <span class="rail-subitem-badge" id="rail-logwork-badge">3</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'approvals','Timesheet Confirmation'); showView('timesheet-confirm')">
+          <svg><use href="#i-check-sq"/></svg><span data-i18n="nav.approvals.timesheet"> Timesheet Confirmation</span>
         </div>
       </div>
 
@@ -2777,6 +2910,7 @@
       <iframe class="embed-frame" src="event-tracking.html?embed=1" title="Event Tracking" loading="lazy"></iframe>
     </div>
 
+
     <!-- ============ VIEW: MY PROFILE ============ -->
     <div id="view-profile" class="view" hidden>
 
@@ -2881,6 +3015,341 @@
 
     </div><!-- /view-profile -->
 
+    <!-- ============ VIEW: PERSONAL · DASHBOARD (native, self-service) ============ -->
+    <div id="view-personal-dash" class="view" hidden>
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Personal · Dashboard</h1>
+          <p class="page-subtitle">Contractor self-service overview — projects, hours and quick actions.</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-primary" onclick="showPersonal('logwork')"><svg><use href="#i-clock"/></svg><span> Log work</span></button>
+        </div>
+      </div>
+
+      <div class="pf-scope">
+        <!-- IDENTITY BAND -->
+        <div class="id-band">
+          <div class="ava" style="background:#4F46E5;color:#fff;display:grid;place-items:center;font-weight:800;font-family:var(--font-display);font-size:24px">NM</div>
+          <div class="id-meta">
+            <div class="pf-name">Nguyen Van Minh <small>· Contractor</small></div>
+            <div class="pf-sub">minh.nv@freelance.dev <span class="pf-code">· CTV-0207</span></div>
+            <div class="pf-chips">
+              <span class="pf-pill">Contractor</span><span class="pf-pill">2 projects</span><span class="pf-pill">Personal access</span>
+            </div>
+          </div>
+          <div class="hero-stats">
+            <div class="tile" title="Hours logged this week"><div class="k">Week hours</div><div class="v">28<small>/40h</small></div><div class="bar"><i style="width:70%"></i></div></div>
+            <div class="tile" title="Awaiting PM approval"><div class="k">Pending</div><div class="v">2</div></div>
+            <div class="tile" title="Active projects"><div class="k">Projects</div><div class="v">2</div></div>
+            <div class="tile" title="Reports due"><div class="k">Reports due</div><div class="v">1</div></div>
+          </div>
+        </div>
+
+        <!-- Reminder -->
+        <div class="alert alert-warning" style="margin-bottom:var(--s4)">
+          <svg class="alert-icon"><use href="#i-alert"/></svg>
+          <div class="alert-content">
+            <div class="alert-title">Chưa log giờ hôm nay cho Zeus Internal Tools</div>
+            <div class="alert-text">Bạn đang ở chế độ Part-time cho dự án này — hãy log trước 23:59. <a style="color:var(--cta);cursor:pointer;font-weight:600" onclick="startPersonalLog('Zeus Internal Tools')">Log ngay →</a></div>
+          </div>
+        </div>
+
+        <div class="pf-cols">
+          <div class="pf-col">
+            <div class="pf-card">
+              <div class="head"><span class="ic"><svg><use href="#i-dashboard"/></svg></span><h3>My projects</h3></div>
+              <div class="body" id="pdash-projects"><!-- injected --></div>
+            </div>
+          </div>
+          <div class="pf-col">
+            <div class="pf-card">
+              <div class="head"><span class="ic"><svg><use href="#i-clock"/></svg></span><h3>Recent logwork</h3></div>
+              <div class="body" id="pdash-recent"><!-- injected --></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /view-personal-dash -->
+
+    <!-- ============ VIEW: PERSONAL · SMART LOGWORK (native) ============ -->
+    <div id="view-personal-logwork" class="view" hidden>
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Smart Logwork</h1>
+          <p class="page-subtitle">Nhập khung giờ theo dự án. Tổng giờ tự động tính và validate theo chế độ FT/PT.</p>
+        </div>
+      </div>
+
+      <div class="lw-grid">
+        <!-- Form -->
+        <div class="pf-card">
+          <div class="body">
+            <div class="lw-row2">
+              <div class="field" style="margin-bottom:15px">
+                <label class="label">Dự án <span class="required">*</span></label>
+                <select class="select" id="plw-project" onchange="plwProjectChange()"></select>
+                <div class="lw-mode-hint" id="plw-mode-hint"></div>
+              </div>
+              <div class="field" style="margin-bottom:15px">
+                <label class="label">Ngày làm việc <span class="required">*</span></label>
+                <input class="input" type="date" id="plw-date">
+              </div>
+            </div>
+
+            <label class="label" style="margin-bottom:8px">Khung giờ <span class="required">*</span></label>
+            <div id="plw-slot-list"></div>
+            <button class="btn btn-secondary btn-sm" onclick="plwAddSlot()"><svg><use href="#i-plus"/></svg> Thêm khung giờ</button>
+
+            <div class="lw-total" id="plw-total-box">
+              <div class="tl">Tổng giờ trong ngày</div>
+              <div class="tv" id="plw-total-val">0.0h</div>
+            </div>
+            <div class="lw-valmsg" id="plw-valmsg"></div>
+
+            <div class="field" style="margin-top:14px">
+              <label class="label">Ảnh minh chứng (code / chat / Jira) — tùy chọn</label>
+              <div class="lw-ocr" id="plw-ocr" onclick="plwAttach()">
+                <svg><use href="#i-image"/></svg>
+                <div>Nhấn để tải ảnh lên · AI sẽ OCR &amp; gợi ý mô tả</div>
+              </div>
+              <div id="plw-thumb"></div>
+            </div>
+
+            <div class="field">
+              <label class="label" style="justify-content:space-between">
+                <span>Mô tả công việc <span class="required">*</span></span>
+                <button class="btn btn-ai btn-sm" id="plw-ai-btn" onclick="plwRunOCR()"><svg><use href="#i-sparkles"/></svg> Auto-generate (AI OCR)</button>
+              </label>
+              <textarea class="textarea" id="plw-desc" placeholder="Mô tả công việc đã làm, hoặc tải ảnh và để AI tạo tóm tắt…" oninput="plwUpdateSubmit()"></textarea>
+              <div class="lw-ainote" id="plw-ainote" hidden><svg><use href="#i-sparkles"/></svg><div>Nội dung do AI tạo từ ảnh — <b>vui lòng đọc &amp; chỉnh sửa</b> trước khi gửi.</div></div>
+            </div>
+
+            <div class="lw-review">
+              <input type="checkbox" id="plw-review" onchange="plwUpdateSubmit()">
+              <label for="plw-review">Tôi đã xem lại nội dung (gồm tóm tắt AI nếu có) và xác nhận là chính xác. <span class="required">*</span></label>
+            </div>
+
+            <div style="display:flex;gap:10px;justify-content:flex-end">
+              <button class="btn btn-secondary" onclick="plwSubmit('Draft')">Lưu nháp</button>
+              <button class="btn btn-primary" id="plw-submit" onclick="plwSubmit('Submitted')" disabled><svg><use href="#i-send"/></svg> Gửi PM duyệt</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent -->
+        <div class="pf-card">
+          <div class="head"><span class="ic"><svg><use href="#i-clock"/></svg></span><h3>Logwork của tôi</h3></div>
+          <div class="body" id="plw-recent"></div>
+        </div>
+      </div>
+    </div><!-- /view-personal-logwork -->
+
+    <!-- ============ VIEW: PERSONAL · STUBS ============ -->
+    <div id="view-personal-leave" class="view" hidden>
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Personal · Leave</h1>
+          <p class="page-subtitle">Xin nghỉ / báo vắng theo dự án. FT sinh Leave giữ mốc 8h/ngày, PT ghi Absence.</p>
+        </div>
+      </div>
+
+      <div class="lw-grid">
+        <div class="pf-card"><div class="body">
+          <div class="lw-row2">
+            <div class="field" style="margin-bottom:15px">
+              <label class="label">Dự án <span class="required">*</span></label>
+              <select class="select" id="lv-project" onchange="lvProjectChange()"></select>
+              <div class="lw-mode-hint" id="lv-mode-hint"></div>
+            </div>
+            <div class="field" style="margin-bottom:15px">
+              <label class="label">Loại</label>
+              <input class="input" id="lv-type" readonly style="background:var(--divider)">
+            </div>
+          </div>
+
+          <div class="lw-row2">
+            <div class="field" style="margin-bottom:15px">
+              <label class="label">Từ ngày <span class="required">*</span></label>
+              <input class="input" type="date" id="lv-from" onchange="lvRecalc()">
+            </div>
+            <div class="field" style="margin-bottom:15px">
+              <label class="label">Đến ngày <span class="required">*</span></label>
+              <input class="input" type="date" id="lv-to" onchange="lvRecalc()">
+            </div>
+          </div>
+
+          <div class="lw-total" id="lv-total-box">
+            <div class="tl" id="lv-total-label">Số ngày vắng</div>
+            <div class="tv" id="lv-total-val">0</div>
+          </div>
+
+          <div class="field" style="margin-top:14px">
+            <label class="label">Lý do <span class="required">*</span></label>
+            <textarea class="textarea" id="lv-reason" placeholder="Lý do nghỉ / vắng…" oninput="lvUpdateSubmit()"></textarea>
+          </div>
+
+          <div class="lw-review" style="border-style:solid">
+            <input type="checkbox" id="lv-client" onchange="lvClientToggle()">
+            <label for="lv-client">Đã báo khách hàng về việc nghỉ/vắng này.</label>
+          </div>
+
+          <div class="field" id="lv-evidence-field" hidden>
+            <label class="label">Minh chứng đã báo khách <span class="required">*</span></label>
+            <div class="lw-ocr" id="lv-ocr" onclick="lvAttach()">
+              <svg><use href="#i-image"/></svg>
+              <div>Bắt buộc khi đã báo khách — tải ảnh/email xác nhận</div>
+            </div>
+            <div id="lv-thumb"></div>
+          </div>
+
+          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:6px">
+            <button class="btn btn-primary" id="lv-submit" onclick="lvSubmit()" disabled><svg><use href="#i-send"/></svg> Gửi PM duyệt</button>
+          </div>
+        </div></div>
+
+        <div class="pf-card">
+          <div class="head"><span class="ic"><svg><use href="#i-calendar"/></svg></span><h3>Đơn nghỉ / vắng của tôi</h3></div>
+          <div class="body" id="lv-recent"></div>
+        </div>
+      </div>
+    </div>
+    <div id="view-personal-reports" class="view" hidden>
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Personal · Progress Reports</h1>
+          <p class="page-subtitle">Báo cáo tiến độ định kỳ theo dự án (progress / blockers / plan).</p>
+        </div>
+      </div>
+
+      <div class="lw-grid">
+        <div class="pf-card"><div class="body">
+          <div class="lw-row2">
+            <div class="field" style="margin-bottom:15px">
+              <label class="label">Dự án <span class="required">*</span></label>
+              <select class="select" id="rp-project"></select>
+            </div>
+            <div class="field" style="margin-bottom:15px">
+              <label class="label">Kỳ báo cáo <span class="required">*</span></label>
+              <select class="select" id="rp-period">
+                <option>Tuần 38 (15–21/09/2026)</option>
+                <option>Tuần 37 (08–14/09/2026)</option>
+                <option>Tháng 09/2026</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field" style="margin-bottom:15px">
+            <label class="label" style="justify-content:space-between"><span>Tiến độ tổng thể</span><span id="rp-progress-val" style="font-weight:700;color:var(--primary)">70%</span></label>
+            <input type="range" id="rp-progress" min="0" max="100" value="70" step="5" style="width:100%" oninput="document.getElementById('rp-progress-val').textContent=this.value+'%'">
+          </div>
+
+          <div class="field" style="margin-bottom:15px">
+            <label class="label">Đã hoàn thành <span class="required">*</span></label>
+            <textarea class="textarea" id="rp-done" placeholder="Các hạng mục đã làm trong kỳ…" oninput="rpUpdateSubmit()"></textarea>
+          </div>
+          <div class="field" style="margin-bottom:15px">
+            <label class="label">Vướng mắc (blockers)</label>
+            <textarea class="textarea" id="rp-blockers" placeholder="Khó khăn / rủi ro cần hỗ trợ…"></textarea>
+          </div>
+          <div class="field" style="margin-bottom:15px">
+            <label class="label">Kế hoạch kỳ tới</label>
+            <textarea class="textarea" id="rp-plan" placeholder="Dự kiến làm gì kỳ tới…"></textarea>
+          </div>
+
+          <div class="lw-ainote" style="color:var(--text-muted);background:var(--divider);border-color:var(--border)">
+            <svg><use href="#i-info"/></svg><div>Báo cáo được lưu vào hồ sơ dự án, PM &amp; DM có thể xem. Không cần duyệt.</div>
+          </div>
+
+          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:10px">
+            <button class="btn btn-primary" id="rp-submit" onclick="rpSubmit()" disabled><svg><use href="#i-check"/></svg> Lưu báo cáo</button>
+          </div>
+        </div></div>
+
+        <div class="pf-card">
+          <div class="head"><span class="ic"><svg><use href="#i-file"/></svg></span><h3>Báo cáo đã nộp</h3></div>
+          <div class="body" id="rp-recent"></div>
+        </div>
+      </div>
+    </div>
+    <div id="view-personal-timesheet" class="view" hidden>
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Personal · Monthly Timesheet</h1>
+          <p class="page-subtitle">Review &amp; chốt timesheet theo từng dự án. Chỉ submit được khi mọi logwork trong tháng đã được PM duyệt.</p>
+        </div>
+        <div class="page-actions">
+          <select class="select" id="ts-month" style="width:auto" onchange="renderTimesheet()">
+            <option value="2026-09">Tháng 09/2026</option>
+            <option value="2026-08">Tháng 08/2026</option>
+          </select>
+        </div>
+      </div>
+      <section class="kpi-grid" id="ts-kpis"></section>
+      <div id="ts-body"></div>
+    </div>
+
+    <!-- ============ VIEW: APPROVE LOGWORK (PM) ============ -->
+    <div id="view-approve-logwork" class="view" hidden>
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Approve Logwork</h1>
+          <p class="page-subtitle">PM duyệt / từ chối giờ công của CTV theo dự án mình quản lý.</p>
+        </div>
+        <div class="page-actions">
+          <select class="select" id="al-project" style="width:auto" onchange="renderApproveLogwork()"></select>
+        </div>
+      </div>
+
+      <section class="kpi-grid" id="al-kpis"></section>
+
+      <div class="toolbar">
+        <div class="tabs" role="tablist" id="al-tabs">
+          <button class="tab active" onclick="alSetTab('Submitted',this)">Chờ duyệt <span class="tab-count" id="al-c-sub">0</span></button>
+          <button class="tab" onclick="alSetTab('Approved',this)">Đã duyệt <span class="tab-count" id="al-c-app">0</span></button>
+          <button class="tab" onclick="alSetTab('Rejected',this)">Từ chối <span class="tab-count" id="al-c-rej">0</span></button>
+          <button class="tab" onclick="alSetTab('all',this)">Tất cả</button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Contractor</th><th>Dự án</th><th>Ngày</th><th>Giờ</th><th>Chế độ</th><th>Mô tả</th><th>Trạng thái</th><th style="text-align:right">Thao tác</th>
+          </tr></thead>
+          <tbody id="al-tbody"></tbody>
+        </table>
+      </div>
+    </div><!-- /view-approve-logwork -->
+
+    <!-- ============ VIEW: TIMESHEET CONFIRMATION (HRM / Accounting) ============ -->
+    <div id="view-timesheet-confirm" class="view" hidden>
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Timesheet Confirmation</h1>
+          <p class="page-subtitle">HRM / Kế toán chốt bảng công tháng theo từng dự án. Người chưa nộp được bôi đỏ.</p>
+        </div>
+        <div class="page-actions">
+          <select class="select" id="tc-month" style="width:auto" onchange="renderTimesheetConfirm()">
+            <option value="2026-09">Tháng 09/2026</option>
+            <option value="2026-08">Tháng 08/2026</option>
+          </select>
+          <button class="btn btn-secondary" onclick="showToast('info','Export','Bảng công tháng sẽ được xuất Excel (mock).')"><svg><use href="#i-download"/></svg><span> Export Excel</span></button>
+        </div>
+      </div>
+
+      <section class="kpi-grid" id="tc-kpis"></section>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>Contractor</th><th>Dự án</th><th>Chế độ</th><th>Ngày công</th><th>FT (h)</th><th>PT (h)</th><th>OT (h)</th><th>Nghỉ</th><th>Tổng (h)</th><th>Trạng thái</th><th style="text-align:right">Thao tác</th>
+          </tr></thead>
+          <tbody id="tc-tbody"></tbody>
+        </table>
+      </div>
+    </div><!-- /view-timesheet-confirm -->
+
   </main>
 </div>
 
@@ -2903,6 +3372,44 @@
       <div class="flyout-item-inner">
         <svg><use href="#i-send"/></svg><span data-i18n="nav.dash.bizdev"> Business Development</span>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Personal flyout -->
+<div class="rail-flyout" id="flyout-personal">
+  <div class="flyout-header" data-i18n="nav.personal">Personal</div>
+  <div class="flyout-items">
+    <div class="flyout-subgroup" data-i18n="nav.personal.self">Self-service (Contractor)</div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'personal'); showPersonal('dash')">
+      <div class="flyout-item-inner"><svg><use href="#i-dashboard"/></svg><span data-i18n="nav.personal.dashboard"> Dashboard</span></div>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'personal'); showPersonal('logwork')">
+      <div class="flyout-item-inner"><svg><use href="#i-clock"/></svg><span data-i18n="nav.personal.logwork"> Log Work</span></div>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'personal'); showPersonal('leave')">
+      <div class="flyout-item-inner"><svg><use href="#i-calendar"/></svg><span data-i18n="nav.personal.leave"> Leave</span></div>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'personal'); showPersonal('reports')">
+      <div class="flyout-item-inner"><svg><use href="#i-file"/></svg><span data-i18n="nav.personal.reports"> Progress Reports</span></div>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'personal'); showPersonal('timesheet')">
+      <div class="flyout-item-inner"><svg><use href="#i-check"/></svg><span data-i18n="nav.personal.timesheet"> Monthly Timesheet</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Approvals flyout -->
+<div class="rail-flyout" id="flyout-approvals">
+  <div class="flyout-header" data-i18n="nav.approvals">Approvals</div>
+  <div class="flyout-items">
+    <div class="flyout-subgroup" data-i18n="nav.approvals.vmp">Contractor (VMP)</div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'approvals'); showView('approve-logwork')">
+      <div class="flyout-item-inner"><svg><use href="#i-clock"/></svg><span data-i18n="nav.approvals.logwork"> Approve Logwork</span></div>
+      <span class="flyout-badge">3</span>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'approvals'); showView('timesheet-confirm')">
+      <div class="flyout-item-inner"><svg><use href="#i-check-sq"/></svg><span data-i18n="nav.approvals.timesheet"> Timesheet Confirmation</span></div>
     </div>
   </div>
 </div>
@@ -3363,6 +3870,29 @@
   </div>
 </div>
 
+<!-- ============ REASON MODAL (reject / unlock) ============ -->
+<div class="modal-backdrop" id="modal-reason" onclick="if(event.target===this)closeModal('modal-reason')">
+  <div class="modal" role="dialog" style="max-width:460px">
+    <div class="modal-header">
+      <div style="display:flex; gap: var(--s3); align-items: flex-start;">
+        <div class="modal-icon warning"><svg><use href="#i-alert"/></svg></div>
+        <div>
+          <div class="modal-title" id="reason-title">Từ chối record?</div>
+          <div class="modal-subtitle" id="reason-sub">Nêu lý do để CTV chỉnh sửa và nộp lại.</div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-reason')" aria-label="Close"><svg><use href="#i-x"/></svg></button>
+    </div>
+    <div class="modal-body" style="padding-top: var(--s2)">
+      <textarea class="textarea" id="reason-text" placeholder="Nhập lý do…" style="width:100%;min-height:90px"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-reason')">Hủy</button>
+      <button class="btn btn-danger" id="reason-confirm">Xác nhận</button>
+    </div>
+  </div>
+</div>
+
 <!-- ============ TOASTS ============ -->
 <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
 
@@ -3373,6 +3903,8 @@
       // Nav
       'nav.dashboard': 'Dashboard', 'nav.dash.sales': 'Sales', 'nav.dash.bizdev': 'Business Development',
       'nav.workforce': 'Workforce', 'nav.employees': 'Employees', 'nav.departments': 'Departments', 'nav.timeoff': 'Time Off', 'nav.payroll': 'Payroll',
+      'nav.personal': 'Personal', 'nav.personal.self': 'Self-service (Contractor)', 'nav.personal.dashboard': ' Dashboard', 'nav.personal.logwork': ' Log Work', 'nav.personal.leave': ' Leave', 'nav.personal.reports': ' Progress Reports', 'nav.personal.timesheet': ' Monthly Timesheet',
+      'nav.approvals': 'Approvals', 'nav.approvals.vmp': 'Contractor (VMP)', 'nav.approvals.logwork': ' Approve Logwork', 'nav.approvals.timesheet': ' Timesheet Confirmation',
       'nav.operations': 'Operations', 'nav.inventory': 'Inventory', 'nav.invoices': 'Invoices', 'nav.suppliers': 'Suppliers', 'nav.purchaseorders': 'Purchase Orders',
       'nav.finance': 'Finance', 'nav.accounts': 'Accounts', 'nav.expenses': 'Expenses', 'nav.budget': 'Budget', 'nav.taxcompliance': 'Tax & Compliance',
       'nav.crm': 'CRM', 'nav.leads': 'Leads', 'nav.deals': 'Deals', 'nav.account': 'Account', 'nav.contacts': 'Contacts', 'nav.contracts': 'Contracts',
@@ -3445,6 +3977,8 @@
       // Nav
       'nav.dashboard': 'Bảng điều khiển', 'nav.dash.sales': 'Kinh doanh', 'nav.dash.bizdev': 'Phát triển kinh doanh',
       'nav.workforce': 'Nhân sự', 'nav.employees': 'Nhân viên', 'nav.departments': 'Phòng ban', 'nav.timeoff': 'Nghỉ phép', 'nav.payroll': 'Bảng lương',
+      'nav.personal': 'Cá nhân', 'nav.personal.self': 'Tự phục vụ (CTV)', 'nav.personal.dashboard': ' Dashboard', 'nav.personal.logwork': ' Log giờ công', 'nav.personal.leave': ' Xin nghỉ', 'nav.personal.reports': ' Báo cáo tiến độ', 'nav.personal.timesheet': ' Timesheet tháng',
+      'nav.approvals': 'Phê duyệt', 'nav.approvals.vmp': 'Cộng tác viên (VMP)', 'nav.approvals.logwork': ' Duyệt giờ công', 'nav.approvals.timesheet': ' Xác nhận Timesheet',
       'nav.operations': 'Vận hành', 'nav.inventory': 'Kho hàng', 'nav.invoices': 'Hóa đơn', 'nav.suppliers': 'Nhà cung cấp', 'nav.purchaseorders': 'Đơn đặt hàng',
       'nav.finance': 'Tài chính', 'nav.accounts': 'Tài khoản', 'nav.expenses': 'Chi phí', 'nav.budget': 'Ngân sách', 'nav.taxcompliance': 'Thuế & Tuân thủ',
       'nav.crm': 'CRM', 'nav.leads': 'Khách hàng tiềm năng', 'nav.deals': 'Cơ hội', 'nav.account': 'Khách hàng', 'nav.contacts': 'Liên hệ', 'nav.contracts': 'Hợp đồng',
@@ -3952,6 +4486,16 @@
     } else if (name === 'events') {
       if (bc) bc.innerHTML = `<span>CRM</span><svg width="14" height="14"><use href="#i-chevron-right"/></svg><span class="current">Event Tracking</span>`;
       document.title = 'Event Tracking — Twendee Work';
+    } else if (name.indexOf('personal-') === 0) {
+      const leaf = PERSONAL_LEAF[name.slice('personal-'.length)] || 'Dashboard';
+      if (bc) bc.innerHTML = `<span>Personal</span><svg width="14" height="14"><use href="#i-chevron-right"/></svg><span class="current">${leaf}</span>`;
+      document.title = 'Personal · ' + leaf + ' — Twendee Work';
+    } else if (name === 'approve-logwork' || name === 'timesheet-confirm') {
+      const leaf = name === 'approve-logwork' ? 'Approve Logwork' : 'Timesheet Confirmation';
+      if (bc) bc.innerHTML = `<span>Approvals</span><svg width="14" height="14"><use href="#i-chevron-right"/></svg><span class="current">${leaf}</span>`;
+      document.title = leaf + ' — Twendee Work';
+      if (name === 'approve-logwork') renderApproveLogwork();
+      if (name === 'timesheet-confirm') renderTimesheetConfirm();
     } else {
       const crumb = document.querySelector('.breadcrumb .current');
       if (crumb) crumb.textContent = name === 'profile' ? 'My Profile' : t('nav.employees');
@@ -3965,9 +4509,561 @@
     if (location.hash.slice(1) !== name) location.hash = name;
   }
 
+  // ============ PERSONAL MODULE (native views) ============
+  const PERSONAL_LEAF = { dash: 'Dashboard', logwork: 'Log Work', leave: 'Leave', reports: 'Progress Reports', timesheet: 'Monthly Timesheet' };
+  function showPersonal(sub) {
+    sub = sub || 'dash';
+    showView('personal-' + sub);
+    if (sub === 'dash') renderPersonalDashboard();
+    if (sub === 'logwork') plwInit();
+    if (sub === 'leave') lvInit();
+    if (sub === 'reports') rpInit();
+    if (sub === 'timesheet') renderTimesheet();
+  }
+
+  // ---- Personal mock data (current contractor: Nguyen Van Minh / CTV-0207) ----
+  const pAllocations = [
+    { project: 'Apollo Mobile App',   role: 'Backend Developer', mode: 'FT', ptMin: null, weekLogged: 16, weekTarget: 40 },
+    { project: 'Zeus Internal Tools', role: 'API Engineer',      mode: 'PT', ptMin: 15,   weekLogged: 12, weekTarget: 15 }
+  ];
+  const pAllocByProject = Object.fromEntries(pAllocations.map(a => [a.project, a]));
+  let pLogworks = [
+    { id: 1, project: 'Apollo Mobile App',   date: '2026-09-17', hours: 8,   status: 'Approved',  desc: 'Hoàn thiện API đăng nhập OAuth, viết unit test cho module auth.', ai: false },
+    { id: 2, project: 'Zeus Internal Tools', date: '2026-09-17', hours: 4,   status: 'Submitted', desc: 'Refactor endpoint báo cáo, tối ưu query tổng hợp.', ai: true },
+    { id: 3, project: 'Apollo Mobile App',   date: '2026-09-16', hours: 7.5, status: 'Submitted', desc: 'Tích hợp push notification, fix bug crash màn hình chi tiết.', ai: false },
+    { id: 4, project: 'Zeus Internal Tools', date: '2026-09-15', hours: 3,   status: 'Rejected',  desc: 'Cập nhật tài liệu API (PM yêu cầu bổ sung mô tả).', ai: false }
+  ];
+  let pLwSeq = 100, plwSlotSeq = 0, plwState = 'ok', plwAiGen = false, plwHasImg = false;
+  const pStatusBadge = { Draft:'badge-draft', Submitted:'badge-submitted', Approved:'badge-approved', Rejected:'badge-rejected' };
+  const pStatusLabel = { Draft:'Nháp', Submitted:'Chờ duyệt', Approved:'Đã duyệt', Rejected:'Bị từ chối' };
+  function pEsc(s){ return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  function pFmtDate(iso){ const d=new Date(iso+'T00:00'); return d.toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit',year:'numeric'}); }
+
+  function pLwItem(w){
+    return `<div class="lw-item">
+      <div class="li-top">
+        <div><div class="li-proj">${pEsc(w.project)}</div><div class="li-meta">${pFmtDate(w.date)} · ${w.hours}h${w.ai?' · ✨ AI':''}</div></div>
+        <span class="badge ${pStatusBadge[w.status]}">${pStatusLabel[w.status]}</span>
+      </div>
+      <div class="li-desc">${pEsc(w.desc)}</div>
+    </div>`;
+  }
+
+  function renderPersonalDashboard(){
+    const pg = document.getElementById('pdash-projects');
+    if (pg) pg.innerHTML = pAllocations.map(a=>{
+      const pct = Math.min(100, Math.round(a.weekLogged/a.weekTarget*100));
+      const st = a.mode==='PT' ? (pct>=100?'ok':'warn') : (pct>=100?'ok':'');
+      return `<div class="pdash-proj">
+        <div class="pp-top">
+          <div><div class="pp-name">${pEsc(a.project)}</div><div class="pp-role">${pEsc(a.role)}</div></div>
+          <span class="badge ${a.mode==='FT'?'badge-ft':'badge-pt'}">${a.mode==='FT'?'Full-time · 8h/ngày':'Part-time · ≤ 8h/ngày'}</span>
+        </div>
+        <div class="pp-bar-lbl"><span>${a.mode==='PT'&&a.ptMin?`Tối thiểu ${a.ptMin}h/tuần (KPI)`:'Giờ tuần này'}</span><span>${a.weekLogged}h / ${a.weekTarget}h</span></div>
+        <div class="pp-bar ${st}"><i style="width:${pct}%"></i></div>
+        <div class="pp-acts">
+          <button class="btn btn-primary btn-sm" onclick="startPersonalLog('${pEsc(a.project)}')"><svg><use href="#i-clock"/></svg> Log giờ</button>
+          <button class="btn btn-secondary btn-sm" onclick="showPersonal('leave')">Xin nghỉ</button>
+          <button class="btn btn-secondary btn-sm" onclick="showPersonal('reports')">Báo cáo</button>
+        </div>
+      </div>`;
+    }).join('');
+    const rc = document.getElementById('pdash-recent');
+    if (rc) rc.innerHTML = pLogworks.slice(0,4).map(pLwItem).join('') || '<div class="lw-empty">Chưa có logwork.</div>';
+  }
+
+  // ---- Smart Logwork ----
+  function plwInit(){
+    const sel = document.getElementById('plw-project');
+    if (!sel) return;
+    sel.innerHTML = pAllocations.map(a=>`<option value="${pEsc(a.project)}">${pEsc(a.project)}</option>`).join('');
+    const dt = document.getElementById('plw-date'); if (dt && !dt.value) dt.value = '2026-09-18';
+    plwResetSlots();
+    plwProjectChange();
+    plwRenderRecent();
+  }
+  function plwResetSlots(){
+    document.getElementById('plw-slot-list').innerHTML = '';
+    plwSlotSeq = 0;
+    plwAddSlot('09:00','12:00');
+    plwAddSlot('13:00','18:00');
+  }
+  function plwAddSlot(start,end){
+    const id = 'plwslot-'+(++plwSlotSeq);
+    const w = document.createElement('div');
+    w.className = 'lw-slot'; w.id = id;
+    w.innerHTML = `
+      <div><label>Bắt đầu</label><input class="input" type="time" value="${start||''}" oninput="plwRecalc()"></div>
+      <div><label>Kết thúc</label><input class="input" type="time" value="${end||''}" oninput="plwRecalc()"></div>
+      <div class="shrs" data-hrs>0.0h</div>
+      <button class="srm" title="Xóa" onclick="plwRemoveSlot('${id}')"><svg><use href="#i-x"/></svg></button>`;
+    document.getElementById('plw-slot-list').appendChild(w);
+    plwRecalc();
+  }
+  function plwRemoveSlot(id){
+    const el = document.getElementById(id); if (el) el.remove();
+    if (!document.querySelectorAll('#plw-slot-list .lw-slot').length) plwAddSlot();
+    plwRecalc();
+  }
+  function plwSlotHours(inputs){
+    const s=inputs[0].value, e=inputs[1].value; if(!s||!e) return 0;
+    const [sh,sm]=s.split(':').map(Number), [eh,em]=e.split(':').map(Number);
+    const mins=(eh*60+em)-(sh*60+sm); return mins>0?mins/60:0;
+  }
+  function plwRecalc(){
+    let total=0;
+    document.querySelectorAll('#plw-slot-list .lw-slot').forEach(sl=>{
+      const h=plwSlotHours(sl.querySelectorAll('input'));
+      sl.querySelector('[data-hrs]').textContent=h.toFixed(1)+'h'; total+=h;
+    });
+    document.getElementById('plw-total-val').textContent=total.toFixed(1)+'h';
+    plwValidate(total);
+    return total;
+  }
+  function plwCurrentAlloc(){ return pAllocByProject[document.getElementById('plw-project').value] || pAllocations[0]; }
+  function plwValidate(total){
+    const a=plwCurrentAlloc();
+    const box=document.getElementById('plw-total-box'), msg=document.getElementById('plw-valmsg');
+    box.classList.remove('state-ok','state-warn','state-err'); msg.className='lw-valmsg';
+    let state='ok', text='';
+    if (a.mode==='FT'){
+      if (total>8){ state='warn'; text='⚠️ Vượt 8h — phần dư có thể tính OT (cần PM xác nhận).'; }
+      else if (total===8){ state='ok'; text='✓ Đủ 8h theo yêu cầu Full-time.'; }
+      else if (total>0){ state='warn'; text=`⚠️ Thiếu ${(8-total).toFixed(1)}h so với mốc 8h/ngày (Full-time).`; }
+      else { state='warn'; text='Chưa nhập khung giờ.'; }
+    } else {
+      if (total>8){ state='err'; text='✕ Part-time tối đa 8h/ngày. Vui lòng giảm bớt.'; }
+      else if (total>0){ state='ok'; text=`✓ Hợp lệ (PT ≤ 8h/ngày). Tối thiểu ${a.ptMin}h/tuần là KPI, không bắt buộc theo ngày.`; }
+      else { state='warn'; text='Chưa nhập khung giờ.'; }
+    }
+    box.classList.add('state-'+state); msg.classList.add(state); msg.textContent=text;
+    plwState=state; plwUpdateSubmit();
+  }
+  function plwProjectChange(){
+    const a=plwCurrentAlloc();
+    document.getElementById('plw-mode-hint').innerHTML = a.mode==='FT'
+      ? `<span class="badge badge-ft">Full-time</span> Yêu cầu đủ 8h/ngày.`
+      : `<span class="badge badge-pt">Part-time</span> Tối đa 8h/ngày · tối thiểu ${a.ptMin}h/tuần (KPI).`;
+    plwRecalc();
+  }
+  function plwAttach(){
+    plwHasImg=true;
+    document.getElementById('plw-thumb').innerHTML =
+      `<div class="lw-thumb"><div class="tp"><svg><use href="#i-image"/></svg></div>
+        <div style="flex:1"><div style="font-weight:600">jira_board_2026-09-18.png</div><div style="color:var(--text-muted);font-size:12px">248 KB · sẵn sàng OCR</div></div>
+        <button class="rm" onclick="plwRemoveImg()"><svg style="width:16px;height:16px"><use href="#i-x"/></svg></button></div>`;
+    showToast('info','Đã đính kèm ảnh','Nhấn “Auto-generate (AI OCR)” để tạo mô tả.');
+  }
+  function plwRemoveImg(){ plwHasImg=false; document.getElementById('plw-thumb').innerHTML=''; }
+  function plwRunOCR(){
+    const btn=document.getElementById('plw-ai-btn'), desc=document.getElementById('plw-desc');
+    btn.disabled=true; const orig=btn.innerHTML; btn.innerHTML='<svg><use href="#i-sparkles"/></svg> Đang phân tích ảnh…';
+    setTimeout(()=>{
+      const a=plwCurrentAlloc();
+      desc.value = a.project.includes('Zeus')
+        ? '• Refactor service tổng hợp báo cáo, tách query nặng thành batch job.\n• Fix 3 ticket ZEUS-142/145/150 (lỗi phân trang & sai tổng giờ).\n• Review PR của team, cập nhật tài liệu API.'
+        : '• Hoàn thiện luồng đăng nhập OAuth (Google/Apple), thêm refresh token.\n• Viết unit test cho module auth (coverage 82%).\n• Fix bug crash màn hình chi tiết đơn hàng (APOLLO-88).';
+      document.getElementById('plw-ainote').hidden=false;
+      document.getElementById('plw-review').checked=false;
+      plwAiGen=true; btn.disabled=false; btn.innerHTML=orig; plwUpdateSubmit();
+      showToast('success','AI đã tạo tóm tắt','Hãy đọc lại & chỉnh sửa, rồi tích xác nhận trước khi gửi.');
+    },1200);
+  }
+  function plwUpdateSubmit(){
+    const desc=(document.getElementById('plw-desc').value||'').trim();
+    const reviewed=document.getElementById('plw-review').checked;
+    const total=parseFloat(document.getElementById('plw-total-val').textContent)||0;
+    document.getElementById('plw-submit').disabled = !(desc && reviewed && total>0 && plwState!=='err');
+  }
+  function startPersonalLog(project){
+    showPersonal('logwork');
+    const sel=document.getElementById('plw-project');
+    if (project && [...sel.options].some(o=>o.value===project)) sel.value=project;
+    plwProjectChange();
+  }
+  function plwSubmit(status){
+    const total=plwRecalc();
+    const desc=(document.getElementById('plw-desc').value||'').trim();
+    const project=document.getElementById('plw-project').value;
+    const date=document.getElementById('plw-date').value||'2026-09-18';
+    if (status==='Submitted'){
+      if (plwState==='err'){ showToast('danger','Không thể gửi','Tổng giờ vượt giới hạn của dự án Part-time.'); return; }
+      if (!desc){ showToast('warning','Thiếu mô tả','Vui lòng nhập hoặc tạo mô tả công việc.'); return; }
+      if (!document.getElementById('plw-review').checked){ showToast('warning','Chưa xác nhận','Vui lòng tích xác nhận đã review nội dung.'); return; }
+    }
+    pLogworks.unshift({ id:++pLwSeq, project, date, hours:+total.toFixed(1), status, desc:desc||'(chưa có mô tả)', ai:plwAiGen });
+    plwRenderRecent(); renderPersonalDashboard();
+    showToast(status==='Submitted'?'success':'info', status==='Submitted'?'Đã gửi PM duyệt':'Đã lưu nháp', `${project} · ${date} · ${total.toFixed(1)}h`);
+    plwResetSlots();
+    document.getElementById('plw-desc').value='';
+    document.getElementById('plw-ainote').hidden=true;
+    document.getElementById('plw-review').checked=false;
+    plwRemoveImg(); plwAiGen=false; plwUpdateSubmit();
+  }
+  function plwRenderRecent(){
+    const el=document.getElementById('plw-recent');
+    if (el) el.innerHTML = pLogworks.slice(0,6).map(pLwItem).join('') || '<div class="lw-empty">Chưa có logwork.</div>';
+  }
+
+  // ============ PERSONAL · LEAVE / ABSENCE ============
+  let pLeaves = [
+    { id:1, project:'Apollo Mobile App', type:'Leave',   from:'2026-09-10', to:'2026-09-10', days:1, reason:'Khám sức khỏe định kỳ.', client:true,  status:'Approved' },
+    { id:2, project:'Zeus Internal Tools', type:'Absence', from:'2026-09-05', to:'2026-09-05', days:1, reason:'Việc gia đình.', client:false, status:'Submitted' }
+  ];
+  let lvSeq=50, lvHasEvidence=false;
+  function lvInit(){
+    const sel=document.getElementById('lv-project');
+    if (!sel) return;
+    sel.innerHTML = pAllocations.map(a=>`<option value="${pEsc(a.project)}">${pEsc(a.project)}</option>`).join('');
+    document.getElementById('lv-reason').value='';
+    document.getElementById('lv-client').checked=false;
+    document.getElementById('lv-from').value=''; document.getElementById('lv-to').value='';
+    lvClientToggle(); lvProjectChange(); lvRecalc(); lvRenderRecent();
+  }
+  function lvCurrentAlloc(){ return pAllocByProject[document.getElementById('lv-project').value] || pAllocations[0]; }
+  function lvProjectChange(){
+    const a=lvCurrentAlloc(), isFT=a.mode==='FT';
+    document.getElementById('lv-type').value = isFT ? 'Leave (nghỉ có tính giờ vắng)' : 'Absence (báo vắng, không cộng giờ)';
+    document.getElementById('lv-mode-hint').innerHTML = isFT
+      ? `<span class="badge badge-ft">FT</span> Sinh Leave = số giờ vắng để giữ mốc 8h/ngày.`
+      : `<span class="badge badge-pt">PT</span> Ghi Absence, không cộng giờ, tạm dừng cảnh báo thiếu giờ.`;
+    lvRecalc();
+  }
+  function lvDays(){
+    const f=document.getElementById('lv-from').value, t=document.getElementById('lv-to').value;
+    if(!f||!t) return 0;
+    const d=(new Date(t)-new Date(f))/86400000+1; return d>0?d:0;
+  }
+  function lvRecalc(){
+    const a=lvCurrentAlloc(), days=lvDays();
+    const box=document.getElementById('lv-total-box'), lbl=document.getElementById('lv-total-label');
+    if (a.mode==='FT'){ lbl.textContent='Số giờ Leave sinh ra'; document.getElementById('lv-total-val').textContent=(days*8).toFixed(0)+'h'; }
+    else { lbl.textContent='Số ngày Absence'; document.getElementById('lv-total-val').textContent=days+' ngày'; }
+    box.classList.remove('state-ok','state-warn','state-err');
+    box.classList.add(days>0?'state-ok':'state-warn');
+    lvUpdateSubmit();
+  }
+  function lvClientToggle(){
+    const checked=document.getElementById('lv-client').checked;
+    document.getElementById('lv-evidence-field').hidden=!checked;
+    if(!checked){ lvHasEvidence=false; document.getElementById('lv-thumb').innerHTML=''; }
+    lvUpdateSubmit();
+  }
+  function lvAttach(){
+    lvHasEvidence=true;
+    document.getElementById('lv-thumb').innerHTML =
+      `<div class="lw-thumb"><div class="tp"><svg><use href="#i-image"/></svg></div>
+        <div style="flex:1"><div style="font-weight:600">client_email_confirmation.png</div><div style="color:var(--text-muted);font-size:12px">176 KB</div></div>
+        <button class="rm" onclick="lvRemoveEvidence()"><svg style="width:16px;height:16px"><use href="#i-x"/></svg></button></div>`;
+    lvUpdateSubmit();
+  }
+  function lvRemoveEvidence(){ lvHasEvidence=false; document.getElementById('lv-thumb').innerHTML=''; lvUpdateSubmit(); }
+  function lvUpdateSubmit(){
+    const reason=(document.getElementById('lv-reason').value||'').trim();
+    const days=lvDays();
+    const client=document.getElementById('lv-client').checked;
+    const ok = reason && days>0 && (!client || lvHasEvidence);
+    document.getElementById('lv-submit').disabled=!ok;
+  }
+  function lvSubmit(){
+    const a=lvCurrentAlloc();
+    const client=document.getElementById('lv-client').checked;
+    if (client && !lvHasEvidence){ showToast('warning','Thiếu minh chứng','Đã báo khách → bắt buộc upload minh chứng.'); return; }
+    pLeaves.unshift({ id:++lvSeq, project:a.project, type:a.mode==='FT'?'Leave':'Absence',
+      from:document.getElementById('lv-from').value, to:document.getElementById('lv-to').value, days:lvDays(),
+      reason:document.getElementById('lv-reason').value.trim(), client, status:'Submitted' });
+    lvRenderRecent();
+    showToast('success','Đã gửi PM duyệt', `${a.project} · ${a.mode==='FT'?'Leave':'Absence'} · ${lvDays()} ngày`);
+    document.getElementById('lv-reason').value=''; document.getElementById('lv-client').checked=false; lvClientToggle();
+    document.getElementById('lv-from').value=''; document.getElementById('lv-to').value=''; lvRecalc();
+  }
+  function lvRenderRecent(){
+    const el=document.getElementById('lv-recent'); if(!el) return;
+    el.innerHTML = pLeaves.length ? pLeaves.map(l=>`
+      <div class="lw-item">
+        <div class="li-top">
+          <div><div class="li-proj">${pEsc(l.project)} <span class="badge ${l.type==='Leave'?'badge-ft':'badge-pt'}" style="margin-left:4px">${l.type}</span></div>
+            <div class="li-meta">${pFmtDate(l.from)}${l.to&&l.to!==l.from?' → '+pFmtDate(l.to):''} · ${l.days} ngày${l.client?' · 📎 đã báo khách':''}</div></div>
+          <span class="badge ${pStatusBadge[l.status]}">${pStatusLabel[l.status]}</span>
+        </div>
+        <div class="li-desc">${pEsc(l.reason)}</div>
+      </div>`).join('') : '<div class="lw-empty">Chưa có đơn nào.</div>';
+  }
+
+  // ============ PERSONAL · PROGRESS REPORT ============
+  let pReports = [
+    { id:1, project:'Apollo Mobile App', period:'Tuần 37 (08–14/09/2026)', progress:60, done:'Hoàn thiện module auth, review PR team.', date:'2026-09-14' }
+  ];
+  let rpSeq=20;
+  function rpInit(){
+    const sel=document.getElementById('rp-project'); if(!sel) return;
+    sel.innerHTML = pAllocations.map(a=>`<option value="${pEsc(a.project)}">${pEsc(a.project)}</option>`).join('');
+    document.getElementById('rp-done').value='';
+    document.getElementById('rp-blockers').value='';
+    document.getElementById('rp-plan').value='';
+    rpUpdateSubmit(); rpRenderRecent();
+  }
+  function rpUpdateSubmit(){
+    const done=(document.getElementById('rp-done').value||'').trim();
+    document.getElementById('rp-submit').disabled = !done;
+  }
+  function rpSubmit(){
+    const el=id=>document.getElementById(id);
+    pReports.unshift({ id:++rpSeq, project:el('rp-project').value, period:el('rp-period').value,
+      progress:+el('rp-progress').value, done:el('rp-done').value.trim(),
+      blockers:el('rp-blockers').value.trim(), plan:el('rp-plan').value.trim(), date:'2026-09-18' });
+    rpRenderRecent();
+    showToast('success','Đã lưu báo cáo', `${el('rp-project').value} · ${el('rp-period').value}`);
+    el('rp-done').value=''; el('rp-blockers').value=''; el('rp-plan').value=''; rpUpdateSubmit();
+  }
+  function rpRenderRecent(){
+    const el=document.getElementById('rp-recent'); if(!el) return;
+    el.innerHTML = pReports.length ? pReports.map(r=>`
+      <div class="lw-item">
+        <div class="li-top">
+          <div><div class="li-proj">${pEsc(r.project)}</div><div class="li-meta">${pEsc(r.period)} · tiến độ ${r.progress}%</div></div>
+          <span class="badge badge-approved">Đã lưu</span>
+        </div>
+        <div class="pp-bar" style="margin:8px 0"><i style="display:block;height:7px;background:var(--primary);border-radius:4px;width:${r.progress}%"></i></div>
+        <div class="li-desc">${pEsc(r.done)}${r.blockers?`\n⚠ Blockers: ${pEsc(r.blockers)}`:''}${r.plan?`\n→ Kế hoạch: ${pEsc(r.plan)}`:''}</div>
+      </div>`).join('') : '<div class="lw-empty">Chưa có báo cáo.</div>';
+  }
+
+  // ============ PERSONAL · MONTHLY TIMESHEET ============
+  // status: Open | Locked (Pending HRM) | Confirmed | Rejected
+  const pMonthly = {
+    '2026-09': [
+      { project:'Apollo Mobile App', mode:'FT', status:'Open', records:[
+        { date:'2026-09-15', hours:8, status:'Approved' },
+        { date:'2026-09-16', hours:7.5, status:'Approved' },
+        { date:'2026-09-17', hours:8, status:'Approved' },
+        { date:'2026-09-18', hours:8, status:'Approved' }
+      ]},
+      { project:'Zeus Internal Tools', mode:'PT', status:'Open', records:[
+        { date:'2026-09-15', hours:3, status:'Rejected' },
+        { date:'2026-09-17', hours:4, status:'Approved' },
+        { date:'2026-09-18', hours:4, status:'Submitted' }
+      ]}
+    ],
+    '2026-08': [
+      { project:'Apollo Mobile App', mode:'FT', status:'Confirmed', records:[
+        { date:'2026-08-28', hours:8, status:'Approved' },
+        { date:'2026-08-29', hours:8, status:'Approved' }
+      ]}
+    ]
+  };
+
+  function renderTimesheet(){
+    const month = (document.getElementById('ts-month')||{}).value || '2026-09';
+    const list = pMonthly[month] || [];
+    // KPIs
+    const totalH = list.reduce((s,p)=>s+p.records.reduce((a,r)=>a+r.hours,0),0);
+    const submitted = list.filter(p=>p.status==='Locked'||p.status==='Confirmed').length;
+    const pendingRec = list.reduce((s,p)=>s+p.records.filter(r=>r.status!=='Approved').length,0);
+    document.getElementById('ts-kpis').innerHTML = `
+      ${alKpi('Dự án', list.length, 'i-dashboard')}
+      ${alKpi('Tổng giờ tháng', totalH.toFixed(1)+'h', 'i-clock')}
+      ${alKpi('Đã submit', submitted+'/'+list.length, 'i-check-sq')}
+      ${alKpi('Logwork chưa duyệt', pendingRec, 'i-alert')}`;
+
+    const body = document.getElementById('ts-body');
+    if (!list.length){ body.innerHTML = '<div class="lw-empty">Không có dữ liệu tháng này.</div>'; return; }
+    body.innerHTML = list.map((p,i)=>{
+      const total = p.records.reduce((a,r)=>a+r.hours,0);
+      const approvedH = p.records.filter(r=>r.status==='Approved').reduce((a,r)=>a+r.hours,0);
+      const notApproved = p.records.filter(r=>r.status!=='Approved').length;
+      const allApproved = notApproved===0;
+      return `<div class="ts-proj">
+        <div class="ts-head">
+          <div class="ts-name">${pEsc(p.project)}</div>
+          <span class="badge ${p.mode==='FT'?'badge-ft':'badge-pt'}">${p.mode}</span>
+          <div class="spacer"></div>
+          <span class="badge ${tsBadge[p.status]}">${tsLabel[p.status]}</span>
+        </div>
+        <div class="ts-sum">
+          <div class="cell"><div class="k">Ngày công</div><div class="v">${p.records.length}</div></div>
+          <div class="cell"><div class="k">Tổng giờ</div><div class="v">${total.toFixed(1)}h</div></div>
+          <div class="cell"><div class="k">Đã duyệt</div><div class="v">${approvedH.toFixed(1)}h</div></div>
+          <div class="cell"><div class="k">Chưa duyệt</div><div class="v" style="${notApproved?'color:var(--danger)':''}">${notApproved}</div></div>
+        </div>
+        <div class="ts-days">
+          <table><thead><tr><th>Ngày</th><th>Giờ</th><th>Trạng thái logwork</th></tr></thead><tbody>
+            ${p.records.map(r=>`<tr><td>${pFmtDate(r.date)}</td><td>${r.hours}h</td><td><span class="badge ${pStatusBadge[r.status]}">${pStatusLabel[r.status]}</span></td></tr>`).join('')}
+          </tbody></table>
+        </div>
+        <div class="ts-foot">
+          ${tsFootNote(p, allApproved, notApproved)}
+          <div class="spacer"></div>
+          ${tsFootAction(p, i, allApproved, month)}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function tsFootNote(p, allApproved, notApproved){
+    if (p.status==='Confirmed') return `<span class="note">✓ HRM đã chốt & export payroll.</span>`;
+    if (p.status==='Locked') return `<span class="note">🔒 Đã khóa — chờ HRM xác nhận.</span>`;
+    if (p.status==='Rejected') return `<span class="note blocked">✕ HRM từ chối: ${pEsc(p.reason||'—')}. Vui lòng chỉnh & nộp lại.</span>`;
+    if (!allApproved) return `<span class="note blocked">Còn ${notApproved} logwork chưa được PM duyệt — chưa thể submit.</span>`;
+    return `<span class="note">Mọi logwork đã được duyệt. Sẵn sàng submit.</span>`;
+  }
+  function tsFootAction(p, i, allApproved, month){
+    if (p.status==='Confirmed') return `<span class="cell-muted" style="font-size:12px">—</span>`;
+    if (p.status==='Locked') return `<button class="btn btn-secondary btn-sm" disabled>Đã submit</button>`;
+    if (p.status==='Rejected') return `<button class="btn btn-primary btn-sm" onclick="tsSubmit('${month}',${i})"><svg><use href="#i-send"/></svg> Nộp lại</button>`;
+    return `<button class="btn btn-primary btn-sm" onclick="tsSubmit('${month}',${i})" ${allApproved?'':'disabled'}><svg><use href="#i-send"/></svg> Submit tháng</button>`;
+  }
+  function tsSubmit(month, i){
+    const p = pMonthly[month][i];
+    const notApproved = p.records.filter(r=>r.status!=='Approved').length;
+    if (notApproved>0){ showToast('warning','Chưa thể submit',`Còn ${notApproved} logwork chưa được PM duyệt.`); return; }
+    p.status='Locked'; p.reason=null;
+    renderTimesheet();
+    showToast('success','Đã submit timesheet',`${p.project} · ${month} — chờ HRM xác nhận.`);
+  }
+
+  // ============ REASON MODAL (shared) ============
+  let _reasonCb = null;
+  function openReason(title, sub, cb){
+    document.getElementById('reason-title').textContent = title;
+    document.getElementById('reason-sub').textContent = sub;
+    document.getElementById('reason-text').value = '';
+    _reasonCb = cb;
+    openModal('modal-reason');
+    setTimeout(()=>document.getElementById('reason-text').focus(), 50);
+  }
+  document.getElementById('reason-confirm').addEventListener('click', () => {
+    const val = document.getElementById('reason-text').value.trim();
+    if (!val){ showToast('warning','Thiếu lý do','Vui lòng nhập lý do.'); return; }
+    closeModal('modal-reason');
+    if (_reasonCb) _reasonCb(val);
+    _reasonCb = null;
+  });
+
+  // ============ APPROVE LOGWORK (PM) ============
+  const adminLogworks = [
+    { id: 11, who:'Nguyen Van Minh', init:'NM', color:'#4F46E5', project:'Apollo Mobile App',   date:'2026-09-18', hours:8,   mode:'FT', status:'Submitted', desc:'Hoàn thiện API đăng nhập OAuth, viết unit test module auth.' },
+    { id: 12, who:'Nguyen Van Minh', init:'NM', color:'#4F46E5', project:'Zeus Internal Tools', date:'2026-09-18', hours:4,   mode:'PT', status:'Submitted', desc:'Refactor endpoint báo cáo, tối ưu query tổng hợp.' },
+    { id: 13, who:'Tran Thi Lan',    init:'TL', color:'#DB2777', project:'Apollo Mobile App',   date:'2026-09-18', hours:5,   mode:'PT', status:'Submitted', desc:'Thiết kế lại màn hình onboarding, xuất asset cho dev.' },
+    { id: 14, who:'Pham Duc Anh',    init:'PA', color:'#0891B2', project:'Zeus Internal Tools', date:'2026-09-17', hours:8,   mode:'FT', status:'Approved',  desc:'Viết test case regression, chạy suite QA nightly.' },
+    { id: 15, who:'Nguyen Van Minh', init:'NM', color:'#4F46E5', project:'Apollo Mobile App',   date:'2026-09-16', hours:7.5, mode:'FT', status:'Approved',  desc:'Tích hợp push notification, fix crash màn chi tiết.' },
+    { id: 16, who:'Tran Thi Lan',    init:'TL', color:'#DB2777', project:'Apollo Mobile App',   date:'2026-09-15', hours:3,   mode:'PT', status:'Rejected',  desc:'Chỉnh sửa icon set (thiếu mô tả).', reason:'Cần ghi rõ hạng mục & thời gian từng phần.' }
+  ];
+  let alTab = 'Submitted';
+  function alProjects(){ return ['all', ...Array.from(new Set(adminLogworks.map(w=>w.project)))]; }
+  function alSetTab(tab, el){ alTab = tab; document.querySelectorAll('#al-tabs .tab').forEach(t=>t.classList.remove('active')); if(el) el.classList.add('active'); renderApproveLogwork(); }
+
+  function renderApproveLogwork(){
+    // project filter options
+    const sel = document.getElementById('al-project');
+    if (sel && !sel.dataset.init){ sel.innerHTML = alProjects().map(p=>`<option value="${pEsc(p)}">${p==='all'?'Tất cả dự án':pEsc(p)}</option>`).join(''); sel.dataset.init='1'; }
+    const proj = sel ? sel.value : 'all';
+
+    const counts = { Submitted:0, Approved:0, Rejected:0 };
+    adminLogworks.forEach(w=>{ if(counts[w.status]!=null) counts[w.status]++; });
+    document.getElementById('al-c-sub').textContent = counts.Submitted;
+    document.getElementById('al-c-app').textContent = counts.Approved;
+    document.getElementById('al-c-rej').textContent = counts.Rejected;
+    const badge = document.getElementById('rail-logwork-badge'); if (badge) badge.textContent = counts.Submitted;
+
+    // KPIs
+    const pendHours = adminLogworks.filter(w=>w.status==='Submitted').reduce((s,w)=>s+w.hours,0);
+    document.getElementById('al-kpis').innerHTML = `
+      ${alKpi('Chờ duyệt', counts.Submitted, 'i-clock')}
+      ${alKpi('Đã duyệt', counts.Approved, 'i-check')}
+      ${alKpi('Từ chối', counts.Rejected, 'i-x')}
+      ${alKpi('Giờ chờ duyệt', pendHours.toFixed(1)+'h', 'i-dollar')}`;
+
+    const rows = adminLogworks.filter(w => (alTab==='all'||w.status===alTab) && (proj==='all'||w.project===proj));
+    const tb = document.getElementById('al-tbody');
+    tb.innerHTML = rows.length ? rows.map(w=>`
+      <tr>
+        <td><div class="cell-user"><div class="avatar" style="background:${w.color};width:30px;height:30px;font-size:11px">${w.init}</div><div><div class="info-name">${pEsc(w.who)}</div></div></div></td>
+        <td>${pEsc(w.project)}</td>
+        <td class="cell-muted">${pFmtDate(w.date)}</td>
+        <td><b>${w.hours}h</b></td>
+        <td><span class="badge ${w.mode==='FT'?'badge-ft':'badge-pt'}">${w.mode}</span></td>
+        <td class="cell-muted" style="max-width:280px">${pEsc(w.desc)}${w.reason?`<div style="color:var(--danger);font-size:12px;margin-top:4px">✕ ${pEsc(w.reason)}</div>`:''}</td>
+        <td><span class="badge ${pStatusBadge[w.status]}">${pStatusLabel[w.status]}</span></td>
+        <td style="text-align:right">${alActions(w)}</td>
+      </tr>`).join('') :
+      `<tr><td colspan="8" style="text-align:center;padding:var(--s6);color:var(--text-muted)">Không có record nào.</td></tr>`;
+  }
+  function alKpi(label,val,icon){
+    return `<div class="kpi-card"><div class="kpi-card-text"><div class="kpi-label"><svg><use href="#${icon}"/></svg><span> ${label}</span></div><div class="kpi-value">${val}</div></div></div>`;
+  }
+  function alActions(w){
+    if (w.status==='Submitted') return `
+      <div class="row-actions" style="justify-content:flex-end">
+        <button class="btn btn-primary btn-sm" onclick="alApprove(${w.id})"><svg><use href="#i-check"/></svg> Duyệt</button>
+        <button class="btn btn-secondary btn-sm" onclick="alReject(${w.id})">Từ chối</button>
+      </div>`;
+    if (w.status==='Rejected') return `<span class="cell-muted" style="font-size:12px">Chờ CTV sửa & nộp lại</span>`;
+    return `<span class="cell-muted" style="font-size:12px">—</span>`;
+  }
+  function alApprove(id){ const w=adminLogworks.find(x=>x.id===id); if(!w) return; w.status='Approved'; w.reason=null; renderApproveLogwork(); showToast('success','Đã duyệt',`${w.who} · ${w.project} · ${w.hours}h`); }
+  function alReject(id){ const w=adminLogworks.find(x=>x.id===id); if(!w) return;
+    openReason('Từ chối logwork?', `${w.who} · ${w.project} · ${pFmtDate(w.date)}`, (reason)=>{ w.status='Rejected'; w.reason=reason; renderApproveLogwork(); showToast('warning','Đã từ chối','CTV sẽ nhận thông báo để chỉnh sửa.'); }); }
+
+  // ============ TIMESHEET CONFIRMATION (HRM / Accounting) ============
+  let timesheets = [
+    { who:'Nguyen Van Minh', init:'NM', color:'#4F46E5', project:'Apollo Mobile App',   mode:'FT', days:20, ft:160, pt:0,  ot:6, leave:'1 ngày', status:'Locked' },
+    { who:'Nguyen Van Minh', init:'NM', color:'#4F46E5', project:'Zeus Internal Tools', mode:'PT', days:14, ft:0,   pt:58, ot:0, leave:'—',      status:'Locked' },
+    { who:'Tran Thi Lan',    init:'TL', color:'#DB2777', project:'Apollo Mobile App',   mode:'PT', days:16, ft:0,   pt:64, ot:0, leave:'—',      status:'Confirmed' },
+    { who:'Pham Duc Anh',    init:'PA', color:'#0891B2', project:'Zeus Internal Tools', mode:'FT', days:0,  ft:0,   pt:0,  ot:0, leave:'—',      status:'NotSubmitted' }
+  ];
+  const tsBadge = { Open:'badge-draft', Locked:'badge-submitted', Confirmed:'badge-approved', Rejected:'badge-rejected', NotSubmitted:'badge-rejected' };
+  const tsLabel = { Open:'Đang mở', Locked:'Chờ xác nhận', Confirmed:'Đã chốt', Rejected:'Bị từ chối', NotSubmitted:'Chưa nộp' };
+
+  function renderTimesheetConfirm(){
+    const submitted = timesheets.filter(t=>t.status!=='NotSubmitted').length;
+    const notSub = timesheets.filter(t=>t.status==='NotSubmitted').length;
+    const confirmed = timesheets.filter(t=>t.status==='Confirmed').length;
+    const totalH = timesheets.reduce((s,t)=>s+t.ft+t.pt+t.ot,0);
+    document.getElementById('tc-kpis').innerHTML = `
+      ${alKpi('Đã nộp', submitted, 'i-check')}
+      ${alKpi('Chưa nộp', notSub, 'i-alert')}
+      ${alKpi('Đã chốt', confirmed, 'i-check-sq')}
+      ${alKpi('Tổng giờ', totalH.toFixed(0)+'h', 'i-clock')}`;
+
+    document.getElementById('tc-tbody').innerHTML = timesheets.map((t,i)=>{
+      const notSub = t.status==='NotSubmitted';
+      const total = t.ft+t.pt+t.ot;
+      return `<tr style="${notSub?'background:var(--danger-50)':''}">
+        <td><div class="cell-user"><div class="avatar" style="background:${t.color};width:30px;height:30px;font-size:11px">${t.init}</div><div><div class="info-name" style="${notSub?'color:var(--danger)':''}">${pEsc(t.who)}</div></div></div></td>
+        <td>${pEsc(t.project)}</td>
+        <td><span class="badge ${t.mode==='FT'?'badge-ft':'badge-pt'}">${t.mode}</span></td>
+        <td>${notSub?'—':t.days}</td>
+        <td>${t.ft||'—'}</td>
+        <td>${t.pt||'—'}</td>
+        <td>${t.ot||'—'}</td>
+        <td class="cell-muted">${t.leave}</td>
+        <td><b>${notSub?'—':total+'h'}</b></td>
+        <td><span class="badge ${tsBadge[t.status]}">${tsLabel[t.status]}</span></td>
+        <td style="text-align:right">${tcActions(t,i)}</td>
+      </tr>`;
+    }).join('');
+  }
+  function tcActions(t,i){
+    if (t.status==='Locked') return `
+      <div class="row-actions" style="justify-content:flex-end">
+        <button class="btn btn-primary btn-sm" onclick="tcConfirm(${i})"><svg><use href="#i-check"/></svg> Chốt</button>
+        <button class="btn btn-secondary btn-sm" onclick="tcReject(${i})">Từ chối</button>
+      </div>`;
+    if (t.status==='NotSubmitted') return `<button class="btn btn-secondary btn-sm" onclick="tcRemind(${i})"><svg><use href="#i-bell"/></svg> Nhắc nộp</button>`;
+    if (t.status==='Confirmed') return `<span class="cell-muted" style="font-size:12px">✓ Đã export</span>`;
+    return `<span class="cell-muted" style="font-size:12px">—</span>`;
+  }
+  function tcConfirm(i){ const t=timesheets[i]; t.status='Confirmed'; renderTimesheetConfirm(); showToast('success','Đã chốt timesheet',`${t.who} · ${t.project} — sẵn sàng export payroll.`); }
+  function tcReject(i){ const t=timesheets[i];
+    openReason('Từ chối timesheet?', `${t.who} · ${t.project}`, (reason)=>{ t.status='Open'; renderTimesheetConfirm(); showToast('warning','Đã mở khóa','Timesheet trả về CTV để chỉnh & nộp lại. Lý do: '+reason); }); }
+  function tcRemind(i){ const t=timesheets[i]; showToast('info','Đã nhắc nộp',`Nhắc ${t.who} nộp timesheet dự án ${t.project}.`); }
+
   // ============ HASH ROUTING — one URL per feature ============
-  // #employees · #dashsales · #dashbd · #crmdash · #account · #events · #profile
-  const ROUTE_VIEWS = ['employees', 'dashsales', 'dashbd', 'crmdash', 'account', 'events', 'profile'];
+  // #employees · #dashsales · #dashbd · #crmdash · #account · #events · #profile · #personal-*
+  const ROUTE_VIEWS = ['employees', 'dashsales', 'dashbd', 'crmdash', 'account', 'events', 'profile',
+    'personal-dash', 'personal-logwork', 'personal-leave', 'personal-reports', 'personal-timesheet',
+    'approve-logwork', 'timesheet-confirm'];
   function applyRoute() {
     let name = location.hash.slice(1);
     if (!ROUTE_VIEWS.includes(name)) name = 'employees';
@@ -3990,6 +5086,24 @@
     } else if (name === 'events') {
       const el = document.querySelector('.rail-subitem[onclick*="\'crm\',\'Event Tracking\'"]');
       if (el) selectSubItem(el, 'crm', 'Event Tracking');
+    } else if (name.indexOf('personal-') === 0) {
+      const leafMap = { 'personal-dash': 'Dashboard', 'personal-logwork': 'Log Work', 'personal-leave': 'Leave', 'personal-reports': 'Progress Reports', 'personal-timesheet': 'Monthly Timesheet' };
+      const el = document.querySelector(`.rail-subitem[onclick*="'personal','${leafMap[name]}'"]`);
+      if (el) selectSubItem(el, 'personal', leafMap[name]);
+      const sub = name.slice('personal-'.length);
+      if (sub === 'dash') renderPersonalDashboard();
+      if (sub === 'logwork') plwInit();
+      if (sub === 'leave') lvInit();
+      if (sub === 'reports') rpInit();
+      if (sub === 'timesheet') renderTimesheet();
+      showView(name);
+      return;
+    } else if (name === 'approve-logwork') {
+      const el = document.querySelector('.rail-subitem[onclick*="\'approvals\',\'Approve Logwork\'"]');
+      if (el) selectSubItem(el, 'approvals', 'Approve Logwork');
+    } else if (name === 'timesheet-confirm') {
+      const el = document.querySelector('.rail-subitem[onclick*="\'approvals\',\'Timesheet Confirmation\'"]');
+      if (el) selectSubItem(el, 'approvals', 'Timesheet Confirmation');
     }
     showView(name);
   }

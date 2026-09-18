@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Twendee Work · Personal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Be+Vietnam+Pro:wght@0,400;0,600;0,700;0,800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #007BA7; --primary-hover: #006490; --primary-50: #e8f4f8; --primary-100: #c5e4ef;
+    --accent: #00AADD;
+    --success: #10B981; --success-50: #ECFDF5;
+    --warning: #F59E0B; --warning-50: #FFFBEB;
+    --danger: #EF4444; --danger-50: #FEF2F2;
+    --indigo: #4F46E5; --indigo-50: #EEF2FF;
+    --surface: #FFFFFF; --bg: #eef5f8;
+    --text: #111827; --text-secondary: #374151; --text-muted: #6B7280;
+    --border: #E2E8F0; --border-strong: #CBD5E1; --divider: #F1F5F9;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-display: 'Be Vietnam Pro', Georgia, serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+    --r-md: 10px; --r-lg: 14px; --r-xl: 18px; --r-full: 9999px;
+    --shadow-sm: 0 1px 2px rgba(17,24,39,.05);
+    --shadow-md: 0 2px 8px rgba(17,24,39,.06);
+    --shadow-lg: 0 10px 30px rgba(17,24,39,.10);
+    --sidebar-w: 240px; --topbar-h: 60px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); color: var(--text); background: var(--bg); -webkit-font-smoothing: antialiased; }
+  svg { width: 18px; height: 18px; }
+  a { color: inherit; text-decoration: none; }
+
+  /* ===== App shell ===== */
+  .app { display: grid; grid-template-columns: var(--sidebar-w) 1fr; grid-template-rows: var(--topbar-h) 1fr;
+    grid-template-areas: "side top" "side main"; min-height: 100vh; }
+
+  /* Sidebar */
+  .side { grid-area: side; background: var(--primary); color: #fff; display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; }
+  .side-brand { display: flex; align-items: center; gap: 10px; padding: 16px 18px; border-bottom: 1px solid rgba(255,255,255,.12); }
+  .side-brand .mark { width: 32px; height: 32px; border-radius: 9px; background: rgba(255,255,255,.18); display: grid; place-items: center; font-weight: 800; font-family: var(--font-display); }
+  .side-brand .bt { font-weight: 700; font-size: 15px; line-height: 1.1; }
+  .side-brand .bs { font-size: 11px; opacity: .7; }
+  .side-nav { padding: 12px 10px; display: flex; flex-direction: column; gap: 2px; }
+  .nav-item { display: flex; align-items: center; gap: 11px; padding: 10px 12px; border-radius: 10px; color: rgba(255,255,255,.82);
+    font-size: 14px; font-weight: 500; cursor: pointer; transition: background .15s, color .15s; }
+  .nav-item:hover { background: rgba(255,255,255,.09); color: #fff; }
+  .nav-item.active { background: rgba(255,255,255,.17); color: #fff; font-weight: 600; }
+  .nav-item .badge-mini { margin-left: auto; background: var(--warning); color: #fff; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: var(--r-full); }
+  .side-foot { margin-top: auto; padding: 14px; border-top: 1px solid rgba(255,255,255,.12); font-size: 11.5px; opacity: .7; }
+
+  /* Topbar */
+  .top { grid-area: top; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; padding: 0 20px; position: sticky; top: 0; z-index: 30; }
+  .top .burger { display: none; background: none; border: none; cursor: pointer; color: var(--text); padding: 6px; }
+  .top .crumb { font-size: 14px; color: var(--text-muted); }
+  .top .crumb b { color: var(--text); font-weight: 600; }
+  .top-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+  .icon-btn { position: relative; background: none; border: 1px solid var(--border); border-radius: 10px; width: 38px; height: 38px; display: grid; place-items: center; cursor: pointer; color: var(--text-secondary); }
+  .icon-btn:hover { background: var(--divider); }
+  .icon-btn .dot { position: absolute; top: 8px; right: 9px; width: 7px; height: 7px; border-radius: 50%; background: var(--danger); border: 2px solid #fff; }
+  .user-chip { display: flex; align-items: center; gap: 9px; padding: 5px 10px 5px 5px; border: 1px solid var(--border); border-radius: var(--r-full); cursor: pointer; }
+  .user-chip:hover { background: var(--divider); }
+  .avatar { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-weight: 700; font-size: 12px; }
+  .user-chip .nm { font-size: 13px; font-weight: 600; }
+  .user-chip .rl { font-size: 11px; color: var(--text-muted); }
+
+  /* Main */
+  .main { grid-area: main; padding: 24px; max-width: 1160px; width: 100%; }
+  .view { display: none; }
+  .view.active { display: block; animation: fade .2s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+  .page-h { margin-bottom: 20px; }
+  .page-h h1 { font-family: var(--font-display); font-size: 24px; font-weight: 800; letter-spacing: -.02em; }
+  .page-h p { color: var(--text-muted); font-size: 14px; margin-top: 4px; }
+
+  /* Cards / badges */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); }
+  .card-pad { padding: 18px; }
+  .badge { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: var(--r-full); }
+  .badge-ft { background: var(--success-50); color: var(--success); }
+  .badge-pt { background: var(--warning-50); color: var(--warning); }
+  .badge-draft { background: var(--divider); color: var(--text-secondary); }
+  .badge-submitted { background: var(--primary-50); color: var(--primary); }
+  .badge-approved { background: var(--success-50); color: var(--success); }
+  .badge-rejected { background: var(--danger-50); color: var(--danger); }
+
+  /* Buttons */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; font-family: inherit; font-size: 13.5px; font-weight: 600;
+    padding: 9px 15px; border-radius: 10px; border: 1px solid transparent; cursor: pointer; transition: background .15s, box-shadow .15s, transform .05s; }
+  .btn:active { transform: translateY(1px); }
+  .btn svg { width: 16px; height: 16px; }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: var(--primary-hover); }
+  .btn-primary:disabled { background: var(--border-strong); cursor: not-allowed; }
+  .btn-secondary { background: var(--surface); color: var(--text-secondary); border-color: var(--border-strong); }
+  .btn-secondary:hover { background: var(--divider); }
+  .btn-ghost { background: transparent; color: var(--primary); }
+  .btn-ghost:hover { background: var(--primary-50); }
+  .btn-sm { padding: 6px 11px; font-size: 12.5px; }
+  .btn-ai { background: linear-gradient(135deg,#4F46E5,#00AADD); color: #fff; }
+  .btn-ai:hover { filter: brightness(1.05); }
+  .btn-ai:disabled { opacity: .6; cursor: progress; }
+
+  /* KPI */
+  .kpi-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 22px; }
+  .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 16px; box-shadow: var(--shadow-sm); }
+  .kpi .lbl { font-size: 12.5px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+  .kpi .lbl svg { width: 15px; height: 15px; color: var(--primary); }
+  .kpi .val { font-size: 26px; font-weight: 800; margin-top: 8px; font-family: var(--font-display); }
+  .kpi .val small { font-size: 14px; font-weight: 600; color: var(--text-muted); }
+
+  /* Hero greeting */
+  .hero { background: linear-gradient(120deg,#007BA7,#00AADD); color: #fff; border-radius: var(--r-xl); padding: 22px 24px; margin-bottom: 22px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .hero h2 { font-family: var(--font-display); font-size: 22px; font-weight: 800; }
+  .hero p { opacity: .9; font-size: 13.5px; margin-top: 4px; }
+  .hero .htoday { text-align: right; }
+  .hero .htoday .big { font-size: 30px; font-weight: 800; font-family: var(--font-display); }
+  .hero .htoday .sub { font-size: 12.5px; opacity: .9; }
+
+  /* Section titles */
+  .sec-title { font-size: 15px; font-weight: 700; margin: 0 0 12px; display: flex; align-items: center; gap: 8px; }
+  .sec-title .count { background: var(--divider); color: var(--text-secondary); font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: var(--r-full); }
+
+  /* Project cards */
+  .proj-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin-bottom: 24px; }
+  .proj { border: 1px solid var(--border); border-radius: var(--r-lg); background: var(--surface); padding: 18px; box-shadow: var(--shadow-sm); }
+  .proj .ptop { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .proj .pname { font-weight: 700; font-size: 15.5px; }
+  .proj .prole { font-size: 12.5px; color: var(--text-muted); margin-top: 2px; }
+  .proj .pmeta { font-size: 12px; color: var(--text-muted); margin-top: 10px; }
+  .proj .pbar-wrap { margin-top: 12px; }
+  .proj .pbar-lbl { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-muted); margin-bottom: 5px; }
+  .pbar { height: 7px; background: var(--divider); border-radius: 4px; overflow: hidden; }
+  .pbar > div { height: 100%; background: var(--primary); border-radius: 4px; }
+  .pbar.ok > div { background: var(--success); }
+  .pbar.warn > div { background: var(--warning); }
+  .proj .pacts { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+
+  /* Alert */
+  .alert { display: flex; gap: 10px; align-items: flex-start; border-radius: var(--r-md); padding: 12px 14px; font-size: 13px; margin-bottom: 18px; }
+  .alert svg { width: 18px; height: 18px; flex: 0 0 auto; margin-top: 1px; }
+  .alert-warn { background: var(--warning-50); color: #92400e; border: 1px solid #FDE68A; }
+  .alert-info { background: var(--primary-50); color: #075985; border: 1px solid var(--primary-100); }
+
+  /* Logwork layout */
+  .lw-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 18px; align-items: start; }
+  .field { margin-bottom: 15px; }
+  .field > label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+  .field .req { color: var(--danger); }
+  .input, .select, .textarea { width: 100%; font: inherit; font-size: 14px; color: var(--text); background: var(--surface);
+    border: 1px solid var(--border-strong); border-radius: 10px; padding: 10px 12px; }
+  .input:focus, .select:focus, .textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-50); }
+  .textarea { resize: vertical; min-height: 96px; }
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .mode-hint { font-size: 12px; color: var(--text-muted); margin-top: 6px; display: flex; align-items: center; gap: 6px; }
+
+  /* Time slots */
+  .slot { display: grid; grid-template-columns: 1fr 1fr auto auto; gap: 10px; align-items: end; margin-bottom: 10px; }
+  .slot .shrs { font-size: 13px; font-weight: 600; color: var(--primary); min-width: 52px; text-align: right; padding-bottom: 10px; }
+  .slot .srm { background: none; border: none; cursor: pointer; color: var(--text-muted); width: 34px; height: 40px; display: grid; place-items: center; border-radius: 8px; }
+  .slot .srm:hover { background: var(--danger-50); color: var(--danger); }
+  .slot .srm svg { width: 16px; height: 16px; }
+
+  .total-box { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-radius: var(--r-md); border: 1px dashed var(--border-strong); margin: 6px 0 4px; }
+  .total-box .tl { font-size: 13px; color: var(--text-muted); }
+  .total-box .tv { font-size: 26px; font-weight: 800; font-family: var(--font-display); }
+  .total-box.state-ok { border-color: var(--success); background: var(--success-50); }
+  .total-box.state-warn { border-color: var(--warning); background: var(--warning-50); }
+  .total-box.state-err { border-color: var(--danger); background: var(--danger-50); }
+  .val-msg { font-size: 12.5px; margin-top: 4px; min-height: 16px; }
+  .val-msg.ok { color: var(--success); }
+  .val-msg.warn { color: #92400e; }
+  .val-msg.err { color: var(--danger); }
+
+  /* OCR dropzone */
+  .ocr-zone { border: 2px dashed var(--border-strong); border-radius: var(--r-md); padding: 18px; text-align: center; color: var(--text-muted); cursor: pointer; }
+  .ocr-zone:hover { border-color: var(--indigo); background: #fafaff; }
+  .ocr-zone svg { width: 22px; height: 22px; color: var(--indigo); margin-bottom: 6px; }
+  .ocr-thumb { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; margin-top: 10px; font-size: 13px; }
+  .ocr-thumb .tp { width: 40px; height: 40px; border-radius: 8px; background: linear-gradient(135deg,#e0e7ff,#cffafe); display: grid; place-items: center; color: var(--indigo); flex: 0 0 auto; }
+  .ai-note { font-size: 12px; color: var(--indigo); background: var(--indigo-50); border: 1px solid #C7D2FE; border-radius: 8px; padding: 8px 11px; margin-top: 8px; display: flex; gap: 7px; align-items: flex-start; }
+  .ai-note svg { width: 15px; height: 15px; flex: 0 0 auto; margin-top: 1px; }
+
+  .review-row { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border: 1px solid var(--border-strong); border-radius: var(--r-md); margin: 14px 0; background: var(--surface); }
+  .review-row input { margin-top: 2px; width: 17px; height: 17px; accent-color: var(--primary); flex: 0 0 auto; }
+  .review-row label { font-size: 13px; }
+  .review-row .rq { color: var(--danger); }
+
+  .lw-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+  /* Recent list */
+  .lw-item { border: 1px solid var(--border); border-radius: var(--r-md); padding: 12px 14px; margin-bottom: 10px; }
+  .lw-item .li-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .lw-item .li-proj { font-weight: 600; font-size: 13.5px; }
+  .lw-item .li-meta { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+  .lw-item .li-desc { font-size: 12.5px; color: var(--text-secondary); margin-top: 8px; line-height: 1.5; }
+  .lw-empty { text-align: center; color: var(--text-muted); font-size: 13px; padding: 24px; }
+
+  /* Stub */
+  .stub { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+  .stub svg { width: 40px; height: 40px; color: var(--border-strong); margin-bottom: 12px; }
+  .stub h3 { font-size: 17px; color: var(--text-secondary); margin-bottom: 6px; }
+
+  /* Toast */
+  .toasts { position: fixed; top: 18px; right: 18px; z-index: 100; display: flex; flex-direction: column; gap: 10px; }
+  .toast { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--primary); border-radius: 10px; box-shadow: var(--shadow-lg);
+    padding: 12px 15px; min-width: 260px; max-width: 340px; animation: slidein .25s ease; }
+  .toast.success { border-left-color: var(--success); }
+  .toast.warning { border-left-color: var(--warning); }
+  .toast.danger { border-left-color: var(--danger); }
+  .toast .tt { font-weight: 700; font-size: 13.5px; }
+  .toast .tm { font-size: 12.5px; color: var(--text-muted); margin-top: 2px; }
+  @keyframes slidein { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: none; } }
+
+  /* Back to ERP link */
+  .back-erp { position: fixed; left: 14px; bottom: 12px; font-size: 11.5px; color: rgba(255,255,255,.75); z-index: 40; }
+  .back-erp:hover { color: #fff; text-decoration: underline; }
+
+  /* Embedded in ERP (?embed=1) — hide own chrome */
+  body.embed .side, body.embed .top, body.embed .back-erp { display: none !important; }
+  body.embed .app { grid-template-columns: 1fr; grid-template-rows: 1fr; grid-template-areas: "main"; min-height: auto; }
+  body.embed .main { padding: 20px; max-width: 100%; }
+  body.embed { background: var(--surface); }
+
+  /* Mobile */
+  .scrim { display: none; }
+  @media (max-width: 900px) { .lw-grid { grid-template-columns: 1fr; } .kpi-row { grid-template-columns: repeat(2,1fr); } .proj-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 720px) {
+    .app { grid-template-columns: 1fr; grid-template-areas: "top" "main"; }
+    .side { position: fixed; left: 0; top: 0; width: 260px; z-index: 60; transform: translateX(-100%); transition: transform .25s ease; }
+    .side.open { transform: none; }
+    .top .burger { display: grid; place-items: center; }
+    .scrim.open { display: block; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 50; }
+    .main { padding: 16px; }
+    .hero .htoday { text-align: left; }
+    .back-erp { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Icons sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></symbol>
+  <symbol id="i-check-sq" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+  <symbol id="i-sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2 2M15.7 15.7l2 2M17.7 6.3l-2 2M8.3 15.7l-2 2"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></symbol>
+  <symbol id="i-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></symbol>
+</defs></svg>
+
+<div class="scrim" id="scrim" onclick="toggleSide(false)"></div>
+
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="side" id="side">
+    <div class="side-brand">
+      <div class="mark">T</div>
+      <div><div class="bt">Twendee Work</div><div class="bs">Personal · Self-service</div></div>
+    </div>
+    <nav class="side-nav">
+      <div class="nav-item active" data-view="dash" onclick="go('dash')"><svg><use href="#i-dashboard"/></svg> Dashboard</div>
+      <div class="nav-item" data-view="logwork" onclick="go('logwork')"><svg><use href="#i-clock"/></svg> Log Work</div>
+      <div class="nav-item" data-view="leave" onclick="go('leave')"><svg><use href="#i-calendar"/></svg> Leave</div>
+      <div class="nav-item" data-view="reports" onclick="go('reports')"><svg><use href="#i-file"/></svg> Progress Reports</div>
+      <div class="nav-item" data-view="timesheet" onclick="go('timesheet')"><svg><use href="#i-check-sq"/></svg> Monthly Timesheet <span class="badge-mini">1</span></div>
+    </nav>
+    <div class="side-foot">Logged in as a Contractor.<br>You only see your own data.</div>
+  </aside>
+
+  <!-- Topbar -->
+  <header class="top">
+    <button class="burger" onclick="toggleSide(true)" aria-label="Menu"><svg><use href="#i-menu"/></svg></button>
+    <div class="crumb"><b id="crumb">Dashboard</b></div>
+    <div class="top-actions">
+      <button class="icon-btn" onclick="toast('info','Notifications','2 logwork records awaiting PM approval.')" aria-label="Notifications"><svg><use href="#i-bell"/></svg><span class="dot"></span></button>
+      <div class="user-chip">
+        <div class="avatar" style="background:#4F46E5">NM</div>
+        <div><div class="nm">Nguyen Van Minh</div><div class="rl">Contractor · CTV-0207</div></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- ===== DASHBOARD ===== -->
+    <section class="view active" id="view-dash">
+      <div class="hero">
+        <div>
+          <h2 id="greeting">Chào buổi sáng, Minh 👋</h2>
+          <p>Đây là tổng quan tuần này của bạn. Nhớ log giờ công mỗi ngày để PM duyệt kịp cuối tháng.</p>
+        </div>
+        <div class="htoday">
+          <div class="big" id="hero-week">28<span style="font-size:16px">h</span></div>
+          <div class="sub">đã log tuần này</div>
+        </div>
+      </div>
+
+      <div class="alert alert-warn">
+        <svg><use href="#i-alert"/></svg>
+        <div><b>Chưa log giờ hôm nay cho Zeus Internal Tools.</b> Bạn đang ở chế độ Part-time cho dự án này — hãy log trước 23:59.
+          <a class="btn btn-ghost btn-sm" style="margin-left:6px" onclick="startLog('Zeus Internal Tools')">Log ngay →</a></div>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi"><div class="lbl"><svg><use href="#i-clock"/></svg> Giờ tuần này</div><div class="val">28<small> / 40h</small></div></div>
+        <div class="kpi"><div class="lbl"><svg><use href="#i-send"/></svg> Chờ PM duyệt</div><div class="val">2</div></div>
+        <div class="kpi"><div class="lbl"><svg><use href="#i-dashboard"/></svg> Dự án đang tham gia</div><div class="val">2</div></div>
+        <div class="kpi"><div class="lbl"><svg><use href="#i-file"/></svg> Báo cáo đến hạn</div><div class="val">1</div></div>
+      </div>
+
+      <h3 class="sec-title">Dự án của tôi <span class="count" id="proj-count">2</span></h3>
+      <div class="proj-grid" id="proj-grid"><!-- injected --></div>
+
+      <h3 class="sec-title">Logwork gần đây</h3>
+      <div class="card card-pad" id="dash-recent"><!-- injected --></div>
+    </section>
+
+    <!-- ===== SMART LOGWORK ===== -->
+    <section class="view" id="view-logwork">
+      <div class="page-h">
+        <h1>Smart Logwork</h1>
+        <p>Nhập khung giờ làm việc theo dự án. Tổng giờ tự động tính và validate theo chế độ FT/PT của dự án.</p>
+      </div>
+
+      <div class="lw-grid">
+        <!-- Form -->
+        <div class="card card-pad">
+          <div class="row-2">
+            <div class="field">
+              <label>Dự án <span class="req">*</span></label>
+              <select class="select" id="lw-project" onchange="onProjectChange()"></select>
+              <div class="mode-hint" id="lw-mode-hint"></div>
+            </div>
+            <div class="field">
+              <label>Ngày làm việc <span class="req">*</span></label>
+              <input class="input" type="date" id="lw-date">
+            </div>
+          </div>
+
+          <label style="font-size:13px;font-weight:600;display:block;margin-bottom:8px">Khung giờ <span class="req">*</span></label>
+          <div id="slot-list"></div>
+          <button class="btn btn-secondary btn-sm" onclick="addSlot()"><svg><use href="#i-plus"/></svg> Thêm khung giờ</button>
+
+          <div class="total-box" id="total-box">
+            <div class="tl">Tổng giờ trong ngày</div>
+            <div class="tv" id="total-val">0.0h</div>
+          </div>
+          <div class="val-msg" id="val-msg"></div>
+
+          <div class="field" style="margin-top:14px">
+            <label>Ảnh minh chứng (code / chat / Jira) — tùy chọn</label>
+            <div class="ocr-zone" id="ocr-zone" onclick="mockAttach()">
+              <svg><use href="#i-image"/></svg>
+              <div>Nhấn để tải ảnh lên · AI sẽ OCR &amp; gợi ý mô tả</div>
+            </div>
+            <div id="ocr-thumb-wrap"></div>
+          </div>
+
+          <div class="field">
+            <label style="display:flex;align-items:center;justify-content:space-between">
+              <span>Mô tả công việc <span class="req">*</span></span>
+              <button class="btn btn-ai btn-sm" id="ai-btn" onclick="runOCR()"><svg><use href="#i-sparkles"/></svg> Auto-generate (AI OCR)</button>
+            </label>
+            <textarea class="textarea" id="lw-desc" placeholder="Mô tả công việc đã làm, hoặc tải ảnh và để AI tạo tóm tắt…" oninput="onDescInput()"></textarea>
+            <div class="ai-note" id="ai-note" hidden><svg><use href="#i-sparkles"/></svg><div>Nội dung do AI tạo từ ảnh — <b>vui lòng đọc & chỉnh sửa</b> trước khi gửi.</div></div>
+          </div>
+
+          <div class="review-row">
+            <input type="checkbox" id="lw-review" onchange="updateSubmitState()">
+            <label for="lw-review">Tôi đã xem lại nội dung (bao gồm tóm tắt AI nếu có) và xác nhận là chính xác. <span class="rq">*</span></label>
+          </div>
+
+          <div class="lw-actions">
+            <button class="btn btn-secondary" onclick="submitLog('Draft')">Lưu nháp</button>
+            <button class="btn btn-primary" id="lw-submit" onclick="submitLog('Submitted')" disabled><svg><use href="#i-send"/></svg> Gửi PM duyệt</button>
+          </div>
+        </div>
+
+        <!-- Recent -->
+        <div class="card card-pad">
+          <h3 class="sec-title">Logwork của tôi</h3>
+          <div id="lw-recent"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== STUBS ===== -->
+    <section class="view" id="view-leave"><div class="stub"><svg><use href="#i-calendar"/></svg><h3>Xin nghỉ / Báo vắng</h3><p>Sẽ dựng ở phase sau (FT sinh Leave, PT ghi Absence, checkbox “Đã báo khách hàng” + upload minh chứng).</p></div></section>
+    <section class="view" id="view-reports"><div class="stub"><svg><use href="#i-file"/></svg><h3>Progress Reports</h3><p>Form báo cáo tiến độ định kỳ (progress / blockers / plan) — phase sau.</p></div></section>
+    <section class="view" id="view-timesheet"><div class="stub"><svg><use href="#i-check-sq"/></svg><h3>Monthly Timesheet</h3><p>Review &amp; chốt timesheet theo từng dự án cuối tháng — phase sau.</p></div></section>
+
+  </main>
+</div>
+
+<a class="back-erp" href="erp.html">← ERP (admin view)</a>
+<div class="toasts" id="toasts"></div>
+
+<script>
+  // ============ MOCK DATA ============
+  const me = { name: 'Nguyen Van Minh', id: 'CTV-0207' };
+  const allocations = [
+    { project: 'Apollo Mobile App',   role: 'Backend Developer', mode: 'FT', ptMin: null, weekLogged: 16, weekTarget: 40 },
+    { project: 'Zeus Internal Tools', role: 'API Engineer',      mode: 'PT', ptMin: 15,   weekLogged: 12, weekTarget: 15 }
+  ];
+  const allocByProject = Object.fromEntries(allocations.map(a => [a.project, a]));
+
+  let logworks = [
+    { id: 1, project: 'Apollo Mobile App',   date: '2026-09-17', hours: 8,   status: 'Approved',  desc: 'Hoàn thiện API đăng nhập OAuth, viết unit test cho module auth.', ai: false },
+    { id: 2, project: 'Zeus Internal Tools', date: '2026-09-17', hours: 4,   status: 'Submitted', desc: 'Refactor endpoint báo cáo, tối ưu query tổng hợp.', ai: true },
+    { id: 3, project: 'Apollo Mobile App',   date: '2026-09-16', hours: 7.5, status: 'Submitted', desc: 'Tích hợp push notification, fix bug crash màn hình chi tiết.', ai: false },
+    { id: 4, project: 'Zeus Internal Tools', date: '2026-09-15', hours: 3,   status: 'Rejected',  desc: 'Cập nhật tài liệu API (thiếu mô tả — PM yêu cầu bổ sung).', ai: false }
+  ];
+  let lwSeq = 100;
+
+  const statusBadge = { Draft: 'badge-draft', Submitted: 'badge-submitted', Approved: 'badge-approved', Rejected: 'badge-rejected' };
+  const statusLabel = { Draft: 'Nháp', Submitted: 'Chờ duyệt', Approved: 'Đã duyệt', Rejected: 'Bị từ chối' };
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  function fmtDate(iso){ const d=new Date(iso+'T00:00'); return d.toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit',year:'numeric'}); }
+
+  // ============ NAV ============
+  function go(view){
+    document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active', v.id==='view-'+view));
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active', n.dataset.view===view));
+    const labels={dash:'Dashboard',logwork:'Log Work',leave:'Leave',reports:'Progress Reports',timesheet:'Monthly Timesheet'};
+    document.getElementById('crumb').textContent = labels[view]||'';
+    toggleSide(false);
+    window.scrollTo(0,0);
+  }
+  function toggleSide(open){
+    document.getElementById('side').classList.toggle('open', open);
+    document.getElementById('scrim').classList.toggle('open', open);
+  }
+
+  // ============ DASHBOARD ============
+  function renderDashboard(){
+    document.getElementById('proj-grid').innerHTML = allocations.map(a=>{
+      const pct = Math.min(100, Math.round(a.weekLogged/a.weekTarget*100));
+      const state = a.mode==='PT' ? (pct>=100?'ok':'warn') : (pct>=100?'ok':'');
+      return `<div class="proj">
+        <div class="ptop">
+          <div><div class="pname">${esc(a.project)}</div><div class="prole">${esc(a.role)}</div></div>
+          <span class="badge ${a.mode==='FT'?'badge-ft':'badge-pt'}">${a.mode==='FT'?'Full-time · 8h/ngày':'Part-time · tối đa 8h/ngày'}</span>
+        </div>
+        <div class="pmeta">${a.mode==='PT'&&a.ptMin?`Tối thiểu ${a.ptMin}h/tuần (KPI)`:'Yêu cầu đủ 8h mỗi ngày làm việc'}</div>
+        <div class="pbar-wrap">
+          <div class="pbar-lbl"><span>Giờ tuần này</span><span>${a.weekLogged}h / ${a.weekTarget}h</span></div>
+          <div class="pbar ${state}"><div style="width:${pct}%"></div></div>
+        </div>
+        <div class="pacts">
+          <button class="btn btn-primary btn-sm" onclick="startLog('${esc(a.project)}')"><svg><use href="#i-clock"/></svg> Log giờ</button>
+          <button class="btn btn-secondary btn-sm" onclick="go('leave')">Xin nghỉ</button>
+          <button class="btn btn-secondary btn-sm" onclick="go('reports')">Báo cáo</button>
+        </div>
+      </div>`;
+    }).join('');
+    document.getElementById('proj-count').textContent = allocations.length;
+
+    const recent = logworks.slice(0,3);
+    document.getElementById('dash-recent').innerHTML = recent.length ? recent.map(lwItemHTML).join('') :
+      `<div class="lw-empty">Chưa có logwork nào.</div>`;
+  }
+
+  function lwItemHTML(w){
+    return `<div class="lw-item">
+      <div class="li-top">
+        <div><div class="li-proj">${esc(w.project)}</div><div class="li-meta">${fmtDate(w.date)} · ${w.hours}h${w.ai?' · ✨ AI':''}</div></div>
+        <span class="badge ${statusBadge[w.status]}">${statusLabel[w.status]}</span>
+      </div>
+      <div class="li-desc">${esc(w.desc)}</div>
+    </div>`;
+  }
+
+  // ============ SMART LOGWORK ============
+  let slotSeq = 0;
+
+  function initLogwork(){
+    const sel = document.getElementById('lw-project');
+    sel.innerHTML = allocations.map(a=>`<option value="${esc(a.project)}">${esc(a.project)}</option>`).join('');
+    document.getElementById('lw-date').value = '2026-09-18';
+    resetSlots();
+    onProjectChange();
+    renderRecent();
+  }
+
+  function resetSlots(){
+    document.getElementById('slot-list').innerHTML = '';
+    slotSeq = 0;
+    addSlot('09:00','12:00');
+    addSlot('13:00','18:00');
+  }
+
+  function addSlot(start, end){
+    const id = 'slot-'+(++slotSeq);
+    const wrap = document.createElement('div');
+    wrap.className = 'slot'; wrap.id = id;
+    wrap.innerHTML = `
+      <div><label style="font-size:11.5px;color:var(--text-muted);display:block;margin-bottom:5px">Bắt đầu</label>
+        <input class="input" type="time" value="${start||''}" oninput="recalc()"></div>
+      <div><label style="font-size:11.5px;color:var(--text-muted);display:block;margin-bottom:5px">Kết thúc</label>
+        <input class="input" type="time" value="${end||''}" oninput="recalc()"></div>
+      <div class="shrs" data-hrs>0.0h</div>
+      <button class="srm" title="Xóa" onclick="removeSlot('${id}')"><svg><use href="#i-x"/></svg></button>`;
+    document.getElementById('slot-list').appendChild(wrap);
+    recalc();
+  }
+  function removeSlot(id){
+    const el = document.getElementById(id);
+    if (el) el.remove();
+    if (!document.querySelectorAll('#slot-list .slot').length) addSlot();
+    recalc();
+  }
+
+  function slotHours(inputs){
+    const s = inputs[0].value, e = inputs[1].value;
+    if(!s||!e) return 0;
+    const [sh,sm]=s.split(':').map(Number), [eh,em]=e.split(':').map(Number);
+    let mins=(eh*60+em)-(sh*60+sm);
+    return mins>0 ? mins/60 : 0;
+  }
+
+  function recalc(){
+    let total = 0;
+    document.querySelectorAll('#slot-list .slot').forEach(sl=>{
+      const inputs = sl.querySelectorAll('input');
+      const h = slotHours(inputs);
+      sl.querySelector('[data-hrs]').textContent = h.toFixed(1)+'h';
+      total += h;
+    });
+    document.getElementById('total-val').textContent = total.toFixed(1)+'h';
+    validate(total);
+    return total;
+  }
+
+  function currentAlloc(){ return allocByProject[document.getElementById('lw-project').value] || allocations[0]; }
+
+  function validate(total){
+    const a = currentAlloc();
+    const box = document.getElementById('total-box');
+    const msg = document.getElementById('val-msg');
+    box.classList.remove('state-ok','state-warn','state-err');
+    msg.className = 'val-msg';
+    let state = 'ok', text = '';
+    if (a.mode === 'FT'){
+      if (total > 8){ state='warn'; text='⚠️ Vượt 8h — phần dư có thể tính OT (cần PM xác nhận).'; }
+      else if (total === 8){ state='ok'; text='✓ Đủ 8h theo yêu cầu Full-time.'; }
+      else if (total > 0){ state='warn'; text=`⚠️ Thiếu ${(8-total).toFixed(1)}h so với mốc 8h/ngày (Full-time).`; }
+      else { state='warn'; text='Chưa nhập khung giờ.'; }
+    } else { // PT
+      if (total > 8){ state='err'; text='✕ Part-time giới hạn tối đa 8h/ngày. Vui lòng giảm bớt.'; }
+      else if (total > 0){ state='ok'; text=`✓ Hợp lệ (Part-time ≤ 8h/ngày). Tối thiểu ${a.ptMin}h/tuần là KPI, không bắt buộc theo ngày.`; }
+      else { state='warn'; text='Chưa nhập khung giờ.'; }
+    }
+    box.classList.add('state-'+state);
+    msg.classList.add(state);
+    msg.textContent = text;
+    window._lwState = state;
+    updateSubmitState();
+  }
+
+  function onProjectChange(){
+    const a = currentAlloc();
+    const hint = document.getElementById('lw-mode-hint');
+    hint.innerHTML = a.mode==='FT'
+      ? `<span class="badge badge-ft">Full-time</span> Yêu cầu đủ 8h/ngày.`
+      : `<span class="badge badge-pt">Part-time</span> Tối đa 8h/ngày · tối thiểu ${a.ptMin}h/tuần (KPI).`;
+    recalc();
+  }
+
+  // ---- AI OCR mock ----
+  let hasAttachment = false;
+  function mockAttach(){
+    hasAttachment = true;
+    document.getElementById('ocr-thumb-wrap').innerHTML =
+      `<div class="ocr-thumb"><div class="tp"><svg><use href="#i-image"/></svg></div>
+        <div style="flex:1"><div style="font-weight:600">jira_board_2026-09-18.png</div><div style="color:var(--text-muted);font-size:12px">248 KB · sẵn sàng OCR</div></div>
+        <button class="srm" onclick="removeAttach()"><svg><use href="#i-x"/></svg></button></div>`;
+    toast('info','Đã đính kèm ảnh','Nhấn “Auto-generate (AI OCR)” để tạo mô tả.');
+  }
+  function removeAttach(){ hasAttachment=false; document.getElementById('ocr-thumb-wrap').innerHTML=''; }
+
+  function runOCR(){
+    const btn = document.getElementById('ai-btn');
+    const desc = document.getElementById('lw-desc');
+    btn.disabled = true;
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<svg><use href="#i-sparkles"/></svg> Đang phân tích ảnh…';
+    setTimeout(()=>{
+      const a = currentAlloc();
+      const summary = a.project.includes('Zeus')
+        ? '• Refactor service tổng hợp báo cáo, tách query nặng thành batch job.\n• Fix 3 ticket ZEUS-142/145/150 (lỗi phân trang & sai tổng giờ).\n• Review PR của team, cập nhật tài liệu API.'
+        : '• Hoàn thiện luồng đăng nhập OAuth (Google/Apple), thêm refresh token.\n• Viết unit test cho module auth (coverage 82%).\n• Fix bug crash ở màn hình chi tiết đơn hàng (APOLLO-88).';
+      desc.value = summary;
+      document.getElementById('ai-note').hidden = false;
+      // AI output requires review → uncheck review to force re-confirm
+      document.getElementById('lw-review').checked = false;
+      window._aiGenerated = true;
+      btn.disabled = false;
+      btn.innerHTML = orig;
+      updateSubmitState();
+      toast('success','AI đã tạo tóm tắt','Hãy đọc lại & chỉnh sửa, rồi tích xác nhận trước khi gửi.');
+    }, 1200);
+  }
+  function onDescInput(){ /* editing keeps ai flag but still needs review */ updateSubmitState(); }
+
+  function updateSubmitState(){
+    const desc = document.getElementById('lw-desc').value.trim();
+    const reviewed = document.getElementById('lw-review').checked;
+    const total = parseFloat(document.getElementById('total-val').textContent) || 0;
+    const ok = desc.length>0 && reviewed && total>0 && window._lwState!=='err';
+    document.getElementById('lw-submit').disabled = !ok;
+  }
+
+  function startLog(project){
+    go('logwork');
+    const sel = document.getElementById('lw-project');
+    if (project && [...sel.options].some(o=>o.value===project)) sel.value = project;
+    onProjectChange();
+  }
+
+  function submitLog(status){
+    const total = recalc();
+    const desc = document.getElementById('lw-desc').value.trim();
+    const project = document.getElementById('lw-project').value;
+    const date = document.getElementById('lw-date').value || '2026-09-18';
+    if (status==='Submitted'){
+      if (window._lwState==='err'){ toast('danger','Không thể gửi','Tổng giờ vượt giới hạn của dự án Part-time.'); return; }
+      if (!desc){ toast('warning','Thiếu mô tả','Vui lòng nhập hoặc tạo mô tả công việc.'); return; }
+      if (!document.getElementById('lw-review').checked){ toast('warning','Chưa xác nhận','Vui lòng tích xác nhận đã review nội dung.'); return; }
+    }
+    logworks.unshift({ id: ++lwSeq, project, date, hours: +total.toFixed(1), status, desc: desc||'(chưa có mô tả)', ai: !!window._aiGenerated });
+    renderRecent(); renderDashboard();
+    toast(status==='Submitted'?'success':'info', status==='Submitted'?'Đã gửi PM duyệt':'Đã lưu nháp',
+      `${project} · ${date} · ${total.toFixed(1)}h`);
+    // reset for next entry
+    resetSlots();
+    document.getElementById('lw-desc').value='';
+    document.getElementById('ai-note').hidden=true;
+    document.getElementById('lw-review').checked=false;
+    removeAttach();
+    window._aiGenerated=false;
+    updateSubmitState();
+  }
+
+  function renderRecent(){
+    const list = logworks.slice(0,6);
+    document.getElementById('lw-recent').innerHTML = list.length ? list.map(lwItemHTML).join('') :
+      `<div class="lw-empty">Chưa có logwork nào.</div>`;
+  }
+
+  // ============ TOAST ============
+  function toast(type,title,msg){
+    const box = document.getElementById('toasts');
+    const el = document.createElement('div');
+    el.className = 'toast '+type;
+    el.innerHTML = `<div class="tt">${esc(title)}</div><div class="tm">${esc(msg)}</div>`;
+    box.appendChild(el);
+    setTimeout(()=>{ el.style.opacity='0'; el.style.transform='translateX(20px)'; el.style.transition='.25s'; setTimeout(()=>el.remove(),260); }, 3200);
+  }
+
+  // ============ EMBED MODE (inside ERP) ============
+  const params = new URLSearchParams(location.search);
+  if (params.get('embed') === '1') document.body.classList.add('embed');
+  function applyHash(){ const h = location.hash.slice(1); if (h) go(h); }
+  window.addEventListener('hashchange', applyHash);
+
+  // ============ INIT ============
+  renderDashboard();
+  initLogwork();
+  applyHash();
+</script>
+</body>
+</html>
