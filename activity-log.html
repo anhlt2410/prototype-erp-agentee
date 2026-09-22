@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nhật ký hoạt động · CRM — Twendee Work ERP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============ DESIGN TOKENS (Cerulean ERP theme — shared with CRM Dashboard) ============ */
+:root{
+  --primary:#007BA7; --primary-hover:#006490; --primary-active:#004f72;
+  --primary-50:#e8f4f8; --primary-100:#c5e4ef;
+  --accent:#00AADD; --accent-50:#e8f4f8; --accent-100:#a0d8ef;
+  --grad:#007BA7; --grad-hover:#006490;
+
+  --success:#10B981; --success-50:#ECFDF5; --success-100:#D1FAE5;
+  --warning:#F59E0B; --warning-50:#FFFBEB; --warning-100:#FEF3C7;
+  --danger:#EF4444;  --danger-50:#FEF2F2;  --danger-100:#FEE2E2;
+  --info:#0EA5E9;    --info-50:#E0F2FE;    --info-100:#BAE6FD;
+  --violet:#7E57C2;  --violet-50:#F3EEFB;
+
+  --cta:#007BA7; --cta-hover:#006490; --cta-active:#004f72;
+  --cta-50:rgba(0,123,167,0.08); --cta-shadow:rgba(0,123,167,0.28);
+
+  --surface:#FFFFFF; --bg:#e8f4f8;
+  --text:#111827; --text-secondary:#374151; --text-muted:#6B7280; --text-disabled:#9CA3AF;
+  --border:#E2E8F0; --border-strong:#CBD5E1; --divider:#F1F5F9;
+
+  --font-sans:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-display:var(--font-sans);
+  --font-mono:var(--font-sans);
+
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:64px;
+  --r-sm:6px; --r-md:8px; --r-lg:12px; --r-xl:16px; --r-full:9999px;
+
+  --shadow-sm:0 1px 2px rgba(17,24,39,0.04);
+  --shadow-md:0 1px 3px rgba(17,24,39,0.06),0 1px 2px rgba(17,24,39,0.04);
+  --shadow-lg:0 4px 12px rgba(17,24,39,0.08),0 2px 4px rgba(17,24,39,0.04);
+  --shadow-xl:0 20px 48px rgba(17,24,39,0.18),0 8px 20px rgba(17,24,39,0.10);
+
+  --ease:cubic-bezier(0.4,0,0.2,1); --t-fast:150ms; --t-base:200ms;
+  --topbar-h:60px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:var(--font-sans); font-size:14px; line-height:1.5;
+  color:var(--text); background:var(--bg);
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+svg{display:block}
+
+/* ============ SHELL ============ */
+.app{min-height:100vh;display:flex;flex-direction:column}
+.topbar{height:var(--topbar-h);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--s4);padding:0 var(--s5);position:sticky;top:0;z-index:100}
+.topbar-brand{display:flex;align-items:center;gap:var(--s3);font-weight:800;font-family:var(--font-display);font-size:16px}
+.topbar-brand .mark{width:32px;height:32px;border-radius:var(--r-md);background:var(--grad);color:#fff;display:grid;place-items:center;font-size:14px}
+.topbar-spacer{flex:1}
+body.embed .topbar{display:none}
+
+.main{flex:1;padding:var(--s6) var(--s6) var(--s8);max-width:1360px;margin:0 auto;width:100%}
+@media(max-width:640px){ .main{padding:var(--s4)} }
+
+/* ============ PAGE HEADER ============ */
+.page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s4);margin-bottom:var(--s5);flex-wrap:wrap}
+.page-title{font-family:var(--font-display);font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1.15}
+.page-sub{color:var(--text-muted);font-size:14px;margin-top:4px}
+
+/* ============ BUTTONS ============ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s2);height:38px;padding:0 var(--s4);border-radius:var(--r-md);font-weight:600;font-size:14px;transition:all 180ms var(--ease);white-space:nowrap;border:1px solid transparent;letter-spacing:.01em}
+.btn svg{width:16px;height:16px}
+.btn:focus-visible{outline:none;box-shadow:0 0 0 3px var(--cta-50),0 0 0 1px var(--cta)}
+.btn-primary{background:var(--grad);color:#fff;box-shadow:0 2px 8px var(--cta-shadow)}
+.btn-primary:hover{background:var(--grad-hover);box-shadow:0 4px 14px var(--cta-shadow);transform:translateY(-1px)}
+.btn-secondary{background:var(--surface);color:var(--text);border-color:var(--primary-100);font-weight:500}
+.btn-secondary:hover{background:var(--primary-50);border-color:var(--primary);color:var(--primary-active)}
+.btn:disabled{opacity:.45;pointer-events:none;box-shadow:none}
+.btn-sm{height:32px;padding:0 var(--s3);font-size:13px}
+.btn-sm svg{width:14px;height:14px}
+.btn-ghost{background:transparent;color:var(--text-secondary)}
+.btn-ghost:hover{background:var(--primary-50);color:var(--primary-active)}
+
+/* ============ SELECT FIELD ============ */
+.field-select{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--primary-100);border-radius:var(--r-md);background:var(--surface);font-size:13.5px;font-weight:600;color:var(--text-secondary)}
+.field-select svg{width:15px;height:15px;color:var(--primary);flex-shrink:0}
+.field-select select{border:none;outline:none;background:none;font-weight:600;font-size:13.5px;color:var(--text);cursor:pointer;font-family:inherit;min-width:0}
+.field-select:focus-within{border-color:var(--primary);box-shadow:0 0 0 3px var(--cta-50)}
+
+/* ============ CALENDAR CARD ============ */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow-sm)}
+.cal-toolbar{display:flex;align-items:center;gap:var(--s3);padding:var(--s4) var(--s5);border-bottom:1px solid var(--divider);flex-wrap:wrap}
+.cal-monthnav{display:flex;align-items:center;gap:var(--s2)}
+.cal-monthnav .navbtn{display:grid;place-items:center;width:32px;height:32px;border-radius:var(--r-md);color:var(--text-secondary);border:1px solid transparent;transition:all var(--t-fast) var(--ease)}
+.cal-monthnav .navbtn:hover{background:var(--primary-50);color:var(--primary);border-color:var(--primary-100)}
+.cal-monthnav .navbtn svg{width:16px;height:16px}
+.cal-monthlabel{font-family:var(--font-display);font-size:16px;font-weight:700;min-width:150px;text-align:center;text-transform:capitalize}
+
+.seg{display:inline-flex;background:var(--primary-50);border:1px solid var(--primary-100);border-radius:var(--r-md);padding:3px;gap:3px}
+.seg button{padding:5px 16px;border-radius:6px;font-size:13px;font-weight:600;color:var(--text-secondary);transition:all var(--t-fast) var(--ease)}
+.seg button[aria-pressed="true"]{background:var(--grad);color:#fff;box-shadow:0 1px 3px var(--cta-shadow)}
+
+.toolbar-spacer{flex:1}
+.today-btn{height:32px;padding:0 var(--s3);border:1px solid var(--primary-100);border-radius:var(--r-md);background:var(--surface);font-size:13px;font-weight:600;color:var(--primary-active)}
+.today-btn:hover{background:var(--primary-50);border-color:var(--primary)}
+
+/* ---- grid: week ---- */
+.grid-head{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--divider)}
+.grid-head .dow{text-align:center;font-size:12px;font-weight:600;color:var(--text-muted);padding:10px 0}
+.grid-head .dow.weekend{color:var(--text-disabled)}
+
+.week-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+.week-grid .day{min-width:0;min-height:220px;border-right:1px solid var(--divider);padding:10px;cursor:pointer;transition:background var(--t-fast) var(--ease);position:relative}
+.week-grid .day:last-child{border-right:none}
+.week-grid .day:hover{background:var(--primary-50)}
+.week-grid .day.sel{box-shadow:0 0 0 2px var(--primary) inset;background:var(--primary-50);border-radius:var(--r-md)}
+.week-grid .day.weekend{background:#fafcfd}
+.week-grid .day.weekend:hover{background:var(--primary-50)}
+
+.day-num{font-size:14px;font-weight:700;color:var(--text-secondary);width:28px;height:28px;display:grid;place-items:center;border-radius:var(--r-full);margin-bottom:8px}
+.day.today .day-num{background:var(--grad);color:#fff}
+.day.muted .day-num{color:var(--text-disabled)}
+
+.chip{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:500;padding:4px 7px;border-radius:6px;margin-bottom:4px;cursor:pointer;line-height:1.3;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;transition:filter var(--t-fast) var(--ease)}
+.chip:hover{filter:brightness(.96)}
+.chip svg{width:13px;height:13px;flex-shrink:0}
+.chip .chip-time{font-weight:700;font-variant-numeric:tabular-nums}
+.chip .chip-title{overflow:hidden;text-overflow:ellipsis;min-width:0}
+/* upcoming = cerulean, overdue/past-todo = danger, done = muted green */
+.chip.up{background:var(--info-50);color:#075985}
+.chip.up svg{color:var(--info)}
+.chip.over{background:var(--danger-50);color:#b91c1c}
+.chip.over svg{color:var(--danger)}
+.chip.done{background:var(--success-50);color:#047857}
+.chip.done svg{color:var(--success)}
+.chip-more{font-size:11.5px;font-weight:600;color:var(--primary);padding:2px 4px;cursor:pointer}
+.chip-more:hover{text-decoration:underline}
+
+/* ---- grid: month ---- */
+.month-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));grid-auto-rows:1fr}
+.month-grid .day{min-width:0;min-height:118px;border-right:1px solid var(--divider);border-bottom:1px solid var(--divider);padding:8px;cursor:pointer;transition:background var(--t-fast) var(--ease)}
+.month-grid .day:nth-child(7n){border-right:none}
+.month-grid .day:hover{background:var(--primary-50)}
+.month-grid .day.sel{box-shadow:0 0 0 2px var(--primary) inset;background:var(--primary-50)}
+.month-grid .day.muted{background:#fafcfd}
+.month-grid .chip{font-size:11px;padding:3px 6px}
+.month-grid .day-num{width:24px;height:24px;font-size:13px;margin-bottom:5px}
+
+/* ============ DAY DETAIL LIST ============ */
+.day-list{margin-top:var(--s5)}
+.day-list-head{font-family:var(--font-display);font-size:18px;font-weight:700;margin-bottom:var(--s4);text-transform:capitalize}
+.act-cards{display:flex;flex-direction:column;gap:var(--s3)}
+.act-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow-sm);padding:var(--s4) var(--s5);cursor:pointer;transition:all var(--t-fast) var(--ease);border-left:4px solid var(--border-strong)}
+.act-card:hover{border-color:var(--primary-100);box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.act-card.left-up{border-left-color:var(--info)}
+.act-card.left-over{border-left-color:var(--danger)}
+.act-card.left-done{border-left-color:var(--success)}
+.act-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.act-title{font-size:15.5px;font-weight:700;letter-spacing:-.01em;margin-bottom:8px}
+.act-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;color:var(--text-muted);font-size:13px}
+.act-meta .m{display:inline-flex;align-items:center;gap:6px}
+.act-meta .m svg{width:14px;height:14px;color:var(--text-disabled)}
+.act-meta .m .who{color:var(--text-secondary);font-weight:600}
+
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:var(--r-full);border:1px solid transparent}
+.tag svg{width:13px;height:13px}
+.tag.todo{background:var(--warning-50);color:#b45309;border-color:var(--warning-100)}
+.tag.done{background:var(--success-50);color:#047857;border-color:var(--success-100)}
+.tag.overdue{background:var(--danger-50);color:#b91c1c;border-color:var(--danger-100)}
+.tag.type-online{background:var(--success-50);color:#047857;border-color:var(--success-100)}
+.tag.type-offline{background:var(--violet-50);color:#5b3a9e;border-color:#e2d5f5}
+.tag.type-call{background:var(--info-50);color:#075985;border-color:var(--info-100)}
+.tag.type-email{background:var(--primary-50);color:var(--primary-active);border-color:var(--primary-100)}
+.tag.type-task{background:#f1f5f9;color:#475569;border-color:#e2e8f0}
+
+.empty{padding:var(--s7) var(--s5);text-align:center;color:var(--text-muted)}
+.empty svg{width:40px;height:40px;color:var(--text-disabled);margin:0 auto var(--s3)}
+
+/* ============ AVATAR ============ */
+.avatar{width:32px;height:32px;border-radius:var(--r-full);display:grid;place-items:center;color:#fff;font-size:12px;font-weight:700;flex-shrink:0}
+.avatar.lg{width:40px;height:40px;font-size:14px}
+.avatar.sm{width:24px;height:24px;font-size:10px}
+
+/* ============ DETAIL PANEL (slide-in from right) ============ */
+.scrim{position:fixed;inset:0;background:rgba(15,23,42,.42);opacity:0;visibility:hidden;transition:opacity var(--t-base) var(--ease),visibility var(--t-base);z-index:200}
+.scrim.open{opacity:1;visibility:visible}
+
+.panel-drawer{position:fixed;top:0;right:0;height:100%;width:460px;max-width:92vw;background:var(--surface);box-shadow:var(--shadow-xl);transform:translateX(100%);transition:transform var(--t-base) var(--ease);z-index:210;display:flex;flex-direction:column}
+.panel-drawer.open{transform:translateX(0)}
+.drawer-head{display:flex;align-items:flex-start;gap:var(--s3);padding:var(--s5);border-bottom:1px solid var(--divider)}
+.drawer-head .dh-text{flex:1;min-width:0}
+.drawer-head h2{font-family:var(--font-display);font-size:18px;font-weight:700;letter-spacing:-.01em;line-height:1.3}
+.drawer-close{display:grid;place-items:center;width:34px;height:34px;border-radius:var(--r-md);color:var(--text-secondary);flex-shrink:0}
+.drawer-close:hover{background:var(--danger-50);color:var(--danger)}
+.drawer-close svg{width:18px;height:18px}
+.drawer-body{flex:1;overflow-y:auto;padding:var(--s5)}
+.drawer-foot{padding:var(--s4) var(--s5);border-top:1px solid var(--divider);display:flex;gap:var(--s2);justify-content:flex-end}
+
+.detail-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:var(--s5)}
+.detail-row{display:flex;gap:var(--s4);padding:12px 0;border-bottom:1px solid var(--divider)}
+.detail-row:last-of-type{border-bottom:none}
+.detail-row .dr-label{width:120px;flex-shrink:0;color:var(--text-muted);font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px}
+.detail-row .dr-label svg{width:15px;height:15px;color:var(--primary)}
+.detail-row .dr-value{flex:1;font-size:14px;color:var(--text);font-weight:500}
+.detail-row .dr-value a{color:var(--primary);font-weight:600;text-decoration:underline}
+.dr-people{display:flex;flex-direction:column;gap:8px}
+.dr-person{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:500}
+.dr-desc{font-size:14px;line-height:1.6;color:var(--text-secondary)}
+.dr-section-label{font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin:var(--s5) 0 var(--s3)}
+
+/* ============ REPORT DRAWER (wide) ============ */
+.report-drawer{position:fixed;top:0;right:0;height:100%;width:1200px;max-width:98vw;background:var(--bg);box-shadow:var(--shadow-xl);transform:translateX(100%);transition:transform var(--t-base) var(--ease);z-index:210;display:flex;flex-direction:column}
+.report-drawer.open{transform:translateX(0)}
+.report-head{display:flex;align-items:center;gap:var(--s4);padding:var(--s4) var(--s5);border-bottom:1px solid var(--border);background:var(--surface);flex-wrap:wrap}
+.report-head h2{font-family:var(--font-display);font-size:18px;font-weight:800;letter-spacing:-.01em;display:flex;align-items:center;gap:10px}
+.report-head h2 svg{width:20px;height:20px;color:var(--primary)}
+.report-head-actions{margin-left:auto;display:flex;align-items:center;gap:var(--s2);flex-wrap:wrap}
+
+.report-body{flex:1;overflow:hidden;display:grid;grid-template-columns:300px 1fr;gap:0}
+@media(max-width:820px){ .report-body{grid-template-columns:1fr;overflow-y:auto} }
+
+/* left: member list */
+.member-col{border-right:1px solid var(--border);background:var(--surface);overflow-y:auto;display:flex;flex-direction:column}
+.member-col-head{padding:var(--s4) var(--s4) var(--s3);border-bottom:1px solid var(--divider);position:sticky;top:0;background:var(--surface);z-index:2}
+.member-col-head .mch-title{font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px}
+.member-search{display:flex;align-items:center;gap:8px;height:34px;padding:0 10px;border:1px solid var(--border);border-radius:var(--r-md);background:var(--bg)}
+.member-search svg{width:15px;height:15px;color:var(--text-muted)}
+.member-search input{border:none;background:none;outline:none;flex:1;font-size:13px}
+.member-list{padding:var(--s2);flex:1}
+.member-row{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-md);cursor:pointer;transition:background var(--t-fast) var(--ease);margin-bottom:2px}
+.member-row:hover{background:var(--primary-50)}
+.member-row.active{background:var(--primary-50);box-shadow:0 0 0 1px var(--primary-100) inset}
+.member-row .chk{width:18px;height:18px;border:2px solid var(--border-strong);border-radius:5px;flex-shrink:0;display:grid;place-items:center;transition:all var(--t-fast) var(--ease)}
+.member-row .chk svg{width:12px;height:12px;color:#fff;opacity:0}
+.member-row.checked .chk{background:var(--grad);border-color:var(--primary)}
+.member-row.checked .chk svg{opacity:1}
+.member-row .m-name{flex:1;min-width:0;font-size:13.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.member-row .m-count{font-size:12px;font-weight:700;color:var(--primary-active);background:var(--primary-50);border:1px solid var(--primary-100);border-radius:var(--r-full);padding:2px 9px;flex-shrink:0}
+.member-row.all-row{font-weight:700}
+.member-row.all-row .m-name{font-weight:700}
+.member-divider{height:1px;background:var(--divider);margin:6px 4px}
+
+/* right: activities of selected members */
+.detail-col{overflow-y:auto;padding:var(--s5);display:flex;flex-direction:column}
+/* margin-auto centers vertically, yet collapses (so nothing clips) when the
+   content is taller than the frame and the column must scroll */
+.report-content{margin:auto 0;width:100%}
+.report-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s3);margin-bottom:var(--s5)}
+@media(max-width:1100px){ .report-summary{grid-template-columns:repeat(2,1fr)} }
+.sum-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--s4);box-shadow:var(--shadow-sm)}
+.sum-label{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text-muted);font-weight:500;margin-bottom:6px;white-space:nowrap}
+.sum-label svg{width:15px;height:15px;color:var(--primary)}
+.sum-value{font-size:24px;font-weight:800;letter-spacing:-.02em}
+.sum-value .unit{font-size:12px;font-weight:600;color:var(--text-muted);margin-left:4px}
+
+.report-list-head{font-size:14px;font-weight:700;margin-bottom:var(--s3);display:flex;align-items:center;justify-content:space-between;gap:var(--s3)}
+.report-act{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);box-shadow:var(--shadow-sm);padding:7px 12px;margin-bottom:6px;display:flex;align-items:center;gap:var(--s3)}
+.report-act .ra-when{width:150px;flex-shrink:0;font-size:12px;color:var(--text-muted);font-weight:600;font-variant-numeric:tabular-nums}
+.report-act .ra-when b{color:var(--text);font-size:12.5px}
+.report-act .ra-main{flex:1;min-width:0;display:flex;align-items:center;gap:10px}
+.report-act .ra-title{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1}
+.report-act .ra-sub{font-size:11.5px;color:var(--text-muted);display:flex;align-items:center;gap:8px;flex-shrink:0;white-space:nowrap}
+
+/* pagination */
+.pager{display:flex;align-items:center;justify-content:flex-end;gap:6px;margin-top:var(--s3)}
+.pager .pg-info{margin-right:auto;font-size:12.5px;color:var(--text-muted);font-weight:500}
+.pager button{min-width:30px;height:30px;padding:0 9px;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface);font-size:13px;font-weight:600;color:var(--text-secondary);transition:all var(--t-fast) var(--ease)}
+.pager button:hover:not(:disabled){background:var(--primary-50);border-color:var(--primary-100);color:var(--primary-active)}
+.pager button[aria-current="true"]{background:var(--grad);color:#fff;border-color:var(--primary)}
+.pager button:disabled{opacity:.4;pointer-events:none}
+
+/* ============ PERIOD PICKER (ported from CRM Dashboard) ============ */
+.period-picker{position:relative}
+.period-trigger{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--primary-100);border-radius:var(--r-md);background:var(--surface);font-size:13px;font-weight:600;color:var(--primary-active);white-space:nowrap;transition:border-color var(--t-fast) var(--ease)}
+.period-trigger svg{width:15px;height:15px;color:var(--primary);flex-shrink:0}
+.period-trigger .pt-caret{width:14px;height:14px;color:var(--text-muted);transition:transform var(--t-fast) var(--ease)}
+.period-trigger[aria-expanded="true"]{border-color:var(--primary);background:var(--primary-50)}
+.period-trigger[aria-expanded="true"] .pt-caret{transform:rotate(180deg)}
+.period-trigger:hover{border-color:var(--primary)}
+.period-trigger:focus-visible{outline:none;box-shadow:0 0 0 3px var(--cta-50),0 0 0 1px var(--cta)}
+.period-trigger .pt-mode{color:var(--text-muted);font-weight:500}
+.period-trigger .pt-mode::after{content:'·';margin-left:8px;color:var(--border-strong)}
+
+.period-pop{position:absolute;top:calc(100% + 6px);right:0;z-index:260;width:max-content;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow-lg)}
+.period-pop[hidden]{display:none}
+.pop-body{display:flex;align-items:stretch}
+.mode-list{display:flex;flex-direction:column;gap:2px;padding:var(--s3);border-right:1px solid var(--divider);min-width:132px}
+.mode-list button{text-align:left;padding:8px 11px;border-radius:var(--r-md);font-size:13px;font-weight:600;color:var(--text-secondary);white-space:nowrap;transition:all var(--t-fast) var(--ease)}
+.mode-list button:hover{background:var(--primary-50);color:var(--primary-active)}
+.mode-list button[aria-checked="true"]{background:var(--grad);color:#fff}
+.mode-list button:focus-visible{outline:none;box-shadow:0 0 0 3px var(--cta-50),0 0 0 1px var(--cta)}
+
+.cal{padding:var(--s3);width:280px}
+.cal-head{display:flex;align-items:center;justify-content:space-between;gap:var(--s2);margin-bottom:var(--s2)}
+.cal-title{font-size:13.5px;font-weight:700;font-family:var(--font-display)}
+.cal-nav{display:grid;place-items:center;width:28px;height:28px;border-radius:var(--r-md);color:var(--text-secondary);transition:all var(--t-fast) var(--ease)}
+.cal-nav svg{width:15px;height:15px}
+.cal-nav:hover{background:var(--primary-50);color:var(--primary)}
+.cal-nav:focus-visible{outline:none;box-shadow:0 0 0 3px var(--cta-50),0 0 0 1px var(--cta)}
+.cal-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;margin-bottom:2px}
+.cal-dow[hidden]{display:none}
+.cal-dow span{text-align:center;font-size:11px;font-weight:600;color:var(--text-muted);padding:4px 0}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px}
+.cal-grid.months{grid-template-columns:repeat(3,1fr);gap:var(--s2)}
+.cal-grid.years{grid-template-columns:repeat(3,1fr);gap:var(--s2)}
+.cal-grid.quarters{grid-template-columns:repeat(2,1fr);gap:var(--s2)}
+.cal-hint{margin-top:var(--s2);font-size:11.5px;color:var(--text-muted);line-height:1.35}
+.cal-cell{position:relative;height:34px;display:grid;place-items:center;font-size:12.5px;font-weight:600;color:var(--text-secondary);border-radius:var(--r-sm);transition:background var(--t-fast) var(--ease),color var(--t-fast) var(--ease)}
+.cal-cell.muted{color:var(--text-disabled);font-weight:500}
+.cal-cell.today::after{content:'';position:absolute;bottom:4px;width:4px;height:4px;border-radius:50%;background:var(--primary)}
+.cal-cell:hover{background:var(--primary-50);color:var(--primary-active)}
+.cal-cell:focus-visible{outline:none;box-shadow:0 0 0 2px var(--cta) inset}
+.cal-cell.wk{background:var(--primary-50);color:var(--primary-active);border-radius:0}
+.cal-cell.sel-wk,.cal-cell.sel-wk:hover{background:var(--grad);color:#fff;border-radius:0}
+.cal-cell.sel-wk.today::after{background:#fff}
+.cal-cell.wk-start{border-top-left-radius:var(--r-sm);border-bottom-left-radius:var(--r-sm)}
+.cal-cell.wk-end{border-top-right-radius:var(--r-sm);border-bottom-right-radius:var(--r-sm)}
+.cal-cell.in-range{background:var(--primary-50);color:var(--primary-active);border-radius:0}
+.cal-cell.range-start{border-top-left-radius:var(--r-sm);border-bottom-left-radius:var(--r-sm)}
+.cal-cell.range-end{border-top-right-radius:var(--r-sm);border-bottom-right-radius:var(--r-sm)}
+.cal-cell.sel,.cal-cell.sel:hover{background:var(--grad);color:#fff;border-radius:var(--r-sm);box-shadow:0 1px 4px var(--cta-shadow)}
+.cal-cell.sel.today::after{background:#fff}
+.cal-grid.months .cal-cell,.cal-grid.years .cal-cell{height:38px;border-radius:var(--r-md)}
+.cal-grid.years .cal-cell{font-variant-numeric:tabular-nums}
+.cal-grid.quarters .cal-cell{height:52px;border-radius:var(--r-md);align-content:center;gap:2px}
+.cal-grid.quarters .q-months{font-size:11px;font-weight:500;color:var(--text-muted)}
+.cal-grid.quarters .cal-cell:hover .q-months{color:var(--primary-active)}
+.cal-grid.quarters .cal-cell.sel .q-months,.cal-grid.quarters .cal-cell.sel:hover .q-months{color:rgba(255,255,255,.82)}
+.pop-foot{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);padding:var(--s3);border-top:1px solid var(--divider);background:var(--primary-50);border-radius:0 0 var(--r-lg) var(--r-lg)}
+.pop-preview{font-size:12.5px;font-weight:600;color:var(--primary-active)}
+.pop-preview .qualifier{color:var(--text-muted);font-weight:500}
+.pop-preview.pending{color:var(--text-muted);font-weight:500}
+.pop-actions{display:flex;gap:var(--s2);flex-shrink:0}
+
+@media(max-width:640px){
+  .page-head{flex-direction:column}
+  .cal-toolbar{gap:var(--s2)}
+  .week-grid,.grid-head{grid-template-columns:repeat(7,1fr)}
+  .week-grid .day{min-height:150px;padding:6px}
+  .period-pop{right:auto;left:0}
+  .pop-body{flex-direction:column}
+  .mode-list{flex-direction:row;flex-wrap:wrap;border-right:none;border-bottom:1px solid var(--divider);min-width:0}
+  .cal{width:auto}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ ICON SPRITE ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></symbol>
+  <symbol id="i-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></symbol>
+  <symbol id="i-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></symbol>
+  <symbol id="i-users-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></symbol>
+  <symbol id="i-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="i-map-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></symbol>
+  <symbol id="i-align-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+  <symbol id="i-bar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+  <symbol id="i-inbox" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></symbol>
+  <symbol id="i-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></symbol>
+</svg>
+
+<div class="app">
+  <header class="topbar">
+    <div class="topbar-brand"><span class="mark">T</span> Twendee Work</div>
+    <div class="topbar-spacer"></div>
+  </header>
+
+  <main class="main">
+    <div class="page-head">
+      <div>
+        <h1 class="page-title">Nhật ký hoạt động</h1>
+        <div class="page-sub">Lên lịch và theo dõi các hoạt động chăm sóc khách hàng</div>
+      </div>
+      <div style="display:flex;gap:var(--s2);flex-wrap:wrap;align-items:center">
+        <button class="btn btn-secondary" id="reportBtn"><svg><use href="#i-bar"/></svg> Báo cáo</button>
+        <button class="btn btn-primary"><svg><use href="#i-plus"/></svg> Tạo hoạt động</button>
+      </div>
+    </div>
+
+    <!-- ============ CALENDAR ============ -->
+    <div class="card">
+      <div class="cal-toolbar">
+        <div class="cal-monthnav">
+          <button class="navbtn" id="prevBtn" aria-label="Trước"><svg><use href="#i-chevron-left"/></svg></button>
+          <div class="cal-monthlabel" id="monthLabel">tháng 9 năm 2026</div>
+          <button class="navbtn" id="nextBtn" aria-label="Sau"><svg><use href="#i-chevron-right"/></svg></button>
+        </div>
+        <button class="today-btn" id="todayBtn">Hôm nay</button>
+        <div class="seg" role="tablist" aria-label="Chế độ xem">
+          <button id="viewWeek" aria-pressed="true">Tuần</button>
+          <button id="viewMonth" aria-pressed="false">Tháng</button>
+        </div>
+        <div class="toolbar-spacer"></div>
+        <label class="field-select">
+          <svg><use href="#i-filter"/></svg>
+          <select id="ownerFilter" aria-label="Lọc theo người phụ trách">
+            <option value="all">Tất cả</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="grid-head" id="gridHead"></div>
+      <div id="calBody"></div>
+    </div>
+
+    <!-- ============ DAY DETAIL LIST ============ -->
+    <div class="day-list">
+      <h2 class="day-list-head" id="dayListHead">Hoạt động</h2>
+      <div class="act-cards" id="dayListBody"></div>
+    </div>
+
+    <p style="text-align:center;color:var(--text-muted);font-size:13px;margin-top:var(--s7)">
+      Twendee Work · CRM — Nhật ký hoạt động (dữ liệu mẫu)
+    </p>
+  </main>
+</div>
+
+<!-- ============ DETAIL DRAWER ============ -->
+<div class="scrim" id="detailScrim"></div>
+<aside class="panel-drawer" id="detailDrawer" role="dialog" aria-modal="true" aria-label="Chi tiết hoạt động">
+  <div class="drawer-head">
+    <div class="dh-text">
+      <div class="detail-tags" id="ddTags" style="margin-bottom:8px"></div>
+      <h2 id="ddTitle">—</h2>
+    </div>
+    <button class="drawer-close" id="detailClose" aria-label="Đóng"><svg><use href="#i-x"/></svg></button>
+  </div>
+  <div class="drawer-body" id="ddBody"></div>
+  <div class="drawer-foot">
+    <button class="btn btn-secondary btn-sm" id="detailClose2">Đóng</button>
+    <button class="btn btn-primary btn-sm"><svg><use href="#i-check"/></svg> Chỉnh sửa</button>
+  </div>
+</aside>
+
+<!-- ============ REPORT DRAWER ============ -->
+<div class="scrim" id="reportScrim"></div>
+<aside class="report-drawer" id="reportDrawer" role="dialog" aria-modal="true" aria-label="Báo cáo hoạt động">
+  <div class="report-head">
+    <h2><svg><use href="#i-bar"/></svg> Báo cáo hoạt động</h2>
+    <div class="report-head-actions">
+      <!-- period picker (ported from Sales Dashboard) -->
+      <div class="period-picker">
+        <button type="button" class="period-trigger" id="periodTrigger" aria-haspopup="dialog" aria-expanded="false" aria-controls="periodPop">
+          <svg><use href="#i-calendar"/></svg>
+          <span class="pt-mode" id="ptMode">Tháng</span>
+          <span class="pt-range" id="ptRange">—</span>
+          <svg class="pt-caret"><use href="#i-chevron-down"/></svg>
+        </button>
+        <div class="period-pop" id="periodPop" role="dialog" aria-label="Chọn khoảng thời gian" hidden>
+          <div class="pop-body">
+            <div class="mode-list" role="radiogroup" aria-label="Loại khoảng thời gian">
+              <button type="button" role="radio" aria-checked="false" data-mode="day">Ngày</button>
+              <button type="button" role="radio" aria-checked="false" data-mode="week">Tuần</button>
+              <button type="button" role="radio" aria-checked="true"  data-mode="month">Tháng</button>
+              <button type="button" role="radio" aria-checked="false" data-mode="quarter">Quý</button>
+              <button type="button" role="radio" aria-checked="false" data-mode="year">Năm</button>
+              <button type="button" role="radio" aria-checked="false" data-mode="custom">Tùy chỉnh</button>
+            </div>
+            <div class="cal">
+              <div class="cal-head">
+                <button type="button" class="cal-nav" id="calPrev" aria-label="Trước"><svg><use href="#i-chevron-left"/></svg></button>
+                <div class="cal-title" id="calTitle" aria-live="polite"></div>
+                <button type="button" class="cal-nav" id="calNext" aria-label="Sau"><svg><use href="#i-chevron-right"/></svg></button>
+              </div>
+              <div class="cal-dow" id="calDow" aria-hidden="true"></div>
+              <div class="cal-grid" id="calGrid"></div>
+              <p class="cal-hint" id="calHint"></p>
+            </div>
+          </div>
+          <div class="pop-foot">
+            <span class="pop-preview" id="popPreview" aria-live="polite">—</span>
+            <span class="pop-actions">
+              <button type="button" class="btn btn-secondary btn-sm" id="popCancel">Hủy</button>
+              <button type="button" class="btn btn-primary btn-sm" id="popApply">Áp dụng</button>
+            </span>
+          </div>
+        </div>
+      </div>
+      <button class="drawer-close" id="reportClose" aria-label="Đóng"><svg><use href="#i-x"/></svg></button>
+    </div>
+  </div>
+
+  <div class="report-body">
+    <!-- left: member list -->
+    <div class="member-col">
+      <div class="member-col-head">
+        <div class="mch-title">Thành viên</div>
+        <div class="member-search">
+          <svg><use href="#i-search"/></svg>
+          <input type="text" id="memberSearch" placeholder="Tìm thành viên…">
+        </div>
+      </div>
+      <div class="member-list" id="memberList"></div>
+    </div>
+
+    <!-- right: activities of selected members -->
+    <div class="detail-col" id="reportDetail"></div>
+  </div>
+</aside>
+
+<script>
+/* Embedded inside the ERP shell (iframe, ?embed=1): drop our own topbar. */
+if (new URLSearchParams(location.search).has('embed') || window.self !== window.top){
+  document.body.classList.add('embed');
+}
+
+/* ==================================================================
+   DATA MODEL
+   ================================================================== */
+const MEMBERS = [
+  { id:'an',   name:'Nguyễn Văn An',   color:'#007BA7' },
+  { id:'binh', name:'Trần Thị Bình',   color:'#C4801F' },
+  { id:'cuong',name:'Lê Hoàng Cường',  color:'#AF3A4C' },
+  { id:'dung', name:'Phạm Thu Dung',   color:'#7E57C2' },
+  { id:'duc',  name:'Vũ Minh Đức',     color:'#2C8C5A' },
+  { id:'ha',   name:'Đỗ Thị Hà',       color:'#0EA5E9' },
+];
+const memberById = id => MEMBERS.find(m => m.id === id);
+const initials = name => { const p = name.trim().split(/\s+/); return (p[p.length-2]?.[0]||'') + (p[p.length-1]?.[0]||''); };
+
+const TYPES = {
+  online:  { label:'Họp online',      icon:'i-video',     tag:'type-online'  },
+  offline: { label:'Họp trực tiếp',   icon:'i-users-icon',tag:'type-offline' },
+  call:    { label:'Gọi điện',        icon:'i-phone',     tag:'type-call'    },
+  email:   { label:'Email',           icon:'i-mail',      tag:'type-email'   },
+  task:    { label:'Công việc',       icon:'i-clipboard', tag:'type-task'    },
+};
+const isMeeting = t => t === 'online' || t === 'offline';
+
+/* today, per environment date */
+const NOW = new Date(2026, 8, 22, 10, 30);      // 22 Sep 2026, 10:30
+
+/* ---- generate a realistic activity set across Sep 2026 ---- */
+let _uid = 0;
+function A(dateStr, time, dur, title, type, status, assignee, account, participants, opts={}){
+  return { id:'act'+(++_uid), date:dateStr, time, dur, title, type, status, assignee, account,
+           participants: participants || [assignee],
+           location: opts.location, link: opts.link, desc: opts.desc, deal: opts.deal };
+}
+const D = (m,d) => `2026-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+const MEET_LINK = 'https://meet.twendee.com/room/crm-'+Math.random().toString(36).slice(2,8);
+
+const ACTIVITIES = [
+  /* ---- Week of Mon 21 Sep (visible week in the mock) ---- */
+  A(D(9,21),'09:30',30,'[Twendee - Agentee] Daily meeting','online','todo','an','Twendee', ['an','binh','cuong','dung'], {link:MEET_LINK, desc:'Cập nhật tiến độ hằng ngày cho dự án Agentee, đồng bộ blocker và kế hoạch trong ngày.'}),
+  A(D(9,21),'14:30',60,'[Twendee - ERP] HR Upgrade Discussion','online','todo','binh','Twendee', ['binh','duc','ha'], {link:MEET_LINK, desc:'Thảo luận yêu cầu nâng cấp phân hệ nhân sự cho bản ERP mới, chốt scope giai đoạn 1.'}),
+  A(D(9,21),'11:00',45,'Gọi khảo sát nhu cầu — Công ty Minh Long','call','done','cuong','Minh Long JSC', ['cuong'], {desc:'Nắm nhu cầu triển khai CRM cho đội sales 20 người.'}),
+  A(D(9,21),'16:00',30,'Gửi báo giá gói Enterprise','email','done','dung','Sao Việt Group', ['dung'], {deal:'Sao Việt — Enterprise', desc:'Gửi báo giá và bảng so sánh gói cho khách.'}),
+
+  A(D(9,22),'09:15',30,'[Twendee - Agentee] Daily meeting','online','todo','an','Twendee', ['an','binh','cuong','dung'], {link:MEET_LINK, desc:'Standup hằng ngày của đội Agentee.'}),
+  A(D(9,22),'10:30',60,'Demo sản phẩm cho khách','online','todo','binh','FPT Retail', ['binh','ha'], {link:MEET_LINK, deal:'FPT Retail — CRM Pilot', desc:'Demo luồng quản lý deal và activity log cho khách hàng tiềm năng.'}),
+  A(D(9,22),'15:00',45,'Họp nội bộ chốt hợp đồng','offline','todo','cuong','ABC Corp', ['cuong','an'], {location:'Phòng họp Lotus, tầng 12', deal:'ABC Corp — Annual', desc:'Rà soát điều khoản trước khi ký hợp đồng năm.'}),
+
+  A(D(9,23),'09:15',30,'[Twendee - Agentee] Daily meeting','online','todo','an','Twendee', ['an','binh','cuong','dung'], {link:MEET_LINK}),
+  A(D(9,23),'13:30',60,'Tư vấn giải pháp — Nam Phong','online','todo','dung','Nam Phong Ltd', ['dung','duc'], {link:MEET_LINK, deal:'Nam Phong — Starter', desc:'Tư vấn lộ trình chuyển đổi số cho doanh nghiệp SME.'}),
+  A(D(9,23),'16:30',30,'Gọi chăm sóc khách hàng cũ','call','todo','ha','Đại Dương Co', ['ha']),
+
+  A(D(9,24),'09:15',30,'[Twendee - Agentee] Daily meeting','online','todo','an','Twendee', ['an','binh','cuong','dung'], {link:MEET_LINK}),
+  A(D(9,24),'11:00',90,'Workshop onboarding khách hàng','offline','todo','binh','Sao Việt Group', ['binh','cuong','ha'], {location:'Văn phòng KH — Q1, TP.HCM', deal:'Sao Việt — Enterprise', desc:'Hướng dẫn đội sales của khách sử dụng hệ thống CRM.'}),
+  A(D(9,24),'15:30',45,'[Twendee - ERP] Sprint review','online','todo','duc','Twendee', ['duc','an','binh'], {link:MEET_LINK}),
+
+  A(D(9,25),'09:15',30,'[Twendee - Agentee] Daily meeting','online','todo','an','Twendee', ['an','binh','cuong','dung'], {link:MEET_LINK}),
+  A(D(9,25),'14:00',60,'Đàm phán giá — ABC Corp','online','todo','cuong','ABC Corp', ['cuong','dung'], {link:MEET_LINK, deal:'ABC Corp — Annual'}),
+  A(D(9,25),'17:00',30,'Gửi hợp đồng để ký','email','todo','dung','Sao Việt Group', ['dung'], {deal:'Sao Việt — Enterprise'}),
+
+  /* ---- earlier in Sep (for the monthly + report views) ---- */
+  A(D(9,14),'09:15',30,'[Twendee - Agentee] Daily meeting','online','done','an','Twendee', ['an','binh','cuong'], {link:MEET_LINK}),
+  A(D(9,15),'10:00',60,'Họp kick-off dự án','online','done','binh','FPT Retail', ['binh','an','ha'], {link:MEET_LINK, deal:'FPT Retail — CRM Pilot'}),
+  A(D(9,15),'14:00',45,'Gọi tư vấn — Minh Long','call','done','cuong','Minh Long JSC', ['cuong']),
+  A(D(9,16),'09:15',30,'[Twendee - Agentee] Daily meeting','online','done','an','Twendee', ['an','dung']),
+  A(D(9,16),'15:00',60,'Demo cho phòng ban khách','online','done','ha','Đại Dương Co', ['ha','binh'], {link:MEET_LINK}),
+  A(D(9,17),'11:00',30,'Gửi tài liệu kỹ thuật','email','done','duc','Nam Phong Ltd', ['duc']),
+  A(D(9,17),'16:00',45,'Họp review nội bộ','offline','done','an','Twendee', ['an','binh','cuong','dung','duc'], {location:'Phòng họp Lotus'}),
+  A(D(9,18),'10:30',60,'Đàm phán hợp đồng','online','done','dung','Sao Việt Group', ['dung','cuong'], {link:MEET_LINK, deal:'Sao Việt — Enterprise'}),
+  A(D(9,9),'09:00',60,'Họp chiến lược quý','offline','done','binh','Twendee', ['binh','an','cuong','dung','duc','ha'], {location:'Phòng họp lớn'}),
+  A(D(9,10),'14:00',45,'Gọi khách hàng tiềm năng','call','done','ha','Tân Á Group', ['ha']),
+  A(D(9,11),'10:00',60,'Demo giải pháp','online','done','cuong','ABC Corp', ['cuong','dung'], {link:MEET_LINK, deal:'ABC Corp — Annual'}),
+
+  /* ---- next week (upcoming) ---- */
+  A(D(9,28),'09:15',30,'[Twendee - Agentee] Daily meeting','online','todo','an','Twendee', ['an','binh','cuong','dung'], {link:MEET_LINK}),
+  A(D(9,29),'10:00',60,'Họp tổng kết tháng','offline','todo','binh','Twendee', ['binh','an','cuong','dung','duc','ha'], {location:'Phòng họp Lotus'}),
+  A(D(9,30),'14:00',45,'Ký hợp đồng — ABC Corp','offline','todo','cuong','ABC Corp', ['cuong','an'], {location:'Văn phòng KH', deal:'ABC Corp — Annual'}),
+];
+
+/* derive overdue flag */
+function statusOf(a){
+  if (a.status === 'done') return 'done';
+  const dt = new Date(a.date + 'T' + a.time + ':00');
+  return dt < NOW ? 'overdue' : 'todo';
+}
+
+/* ==================================================================
+   HELPERS
+   ================================================================== */
+const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const addDays = (d,n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
+const weekStart = d => addDays(d, -((d.getDay()+6)%7));   // Monday start
+const sameDay = (a,b) => iso(a) === iso(b);
+const MONTHS_VI = ['tháng 1','tháng 2','tháng 3','tháng 4','tháng 5','tháng 6','tháng 7','tháng 8','tháng 9','tháng 10','tháng 11','tháng 12'];
+const DOW_VI = ['T2','T3','T4','T5','T6','T7','CN'];
+const DOW_FULL_VI = ['Chủ Nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'];
+function fmtTime(t){
+  let [h,m] = t.split(':').map(Number);
+  const ap = h < 12 ? 'am' : 'pm';
+  let hh = h % 12; if (hh === 0) hh = 12;
+  return `${String(hh).padStart(2,'0')}:${String(m).padStart(2,'0')}${ap}`;
+}
+function fmtDayHead(d){
+  return `${DOW_FULL_VI[d.getDay()]}, ${d.getDate()} ${MONTHS_VI[d.getMonth()]}, ${d.getFullYear()}`;
+}
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+/* ==================================================================
+   STATE + FILTER
+   ================================================================== */
+let viewMode = 'week';                    // 'week' | 'month'
+let cursor = new Date(2026, 8, 21);       // anchor date for the visible period
+let selectedDay = new Date(2026, 8, 21);  // day whose list shows below
+let ownerFilter = 'all';
+
+function activitiesOn(dateStr){
+  return ACTIVITIES
+    .filter(a => a.date === dateStr && (ownerFilter === 'all' || a.assignee === ownerFilter))
+    .sort((x,y) => x.time.localeCompare(y.time));
+}
+
+/* populate owner filter */
+(function(){
+  const sel = document.getElementById('ownerFilter');
+  MEMBERS.forEach(m => {
+    const o = document.createElement('option'); o.value = m.id; o.textContent = m.name; sel.appendChild(o);
+  });
+  sel.addEventListener('change', () => { ownerFilter = sel.value; render(); });
+})();
+
+/* ==================================================================
+   RENDER — CALENDAR
+   ================================================================== */
+const gridHead = document.getElementById('gridHead');
+const calBody  = document.getElementById('calBody');
+const monthLabel = document.getElementById('monthLabel');
+
+function chipHTML(a){
+  const st = statusOf(a);
+  const cls = st === 'done' ? 'done' : st === 'overdue' ? 'over' : 'up';
+  const icon = TYPES[a.type].icon;
+  return `<div class="chip ${cls}" data-id="${a.id}" title="${esc(fmtTime(a.time)+' '+a.title)}">
+    <svg><use href="#${icon}"/></svg>
+    <span class="chip-time">${fmtTime(a.time)}</span>
+    <span class="chip-title">${esc(a.title)}</span>
+  </div>`;
+}
+
+function dayCellHTML(d, {muted=false, maxChips=4}={}){
+  const ds = iso(d);
+  const acts = activitiesOn(ds);
+  const isToday = sameDay(d, NOW);
+  const isSel = sameDay(d, selectedDay);
+  const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+  let chips = acts.slice(0, maxChips).map(chipHTML).join('');
+  if (acts.length > maxChips) chips += `<div class="chip-more" data-day="${ds}">+${acts.length - maxChips} hoạt động khác</div>`;
+  return `<div class="day${isToday?' today':''}${isSel?' sel':''}${muted?' muted':''}${isWeekend?' weekend':''}" data-day="${ds}">
+    <div class="day-num">${d.getDate()}</div>
+    ${chips}
+  </div>`;
+}
+
+function renderWeek(){
+  const start = weekStart(cursor);
+  gridHead.innerHTML = DOW_VI.map((n,i) =>
+    `<div class="dow${i>=5?' weekend':''}">${n}</div>`).join('');
+  let cells = '';
+  for (let i=0;i<7;i++) cells += dayCellHTML(addDays(start, i), {maxChips:5});
+  calBody.className = '';
+  calBody.innerHTML = `<div class="week-grid">${cells}</div>`;
+  // label: month of the week's Thursday (representative)
+  const rep = addDays(start, 3);
+  monthLabel.textContent = `${MONTHS_VI[rep.getMonth()]} năm ${rep.getFullYear()}`;
+}
+
+function renderMonth(){
+  gridHead.innerHTML = DOW_VI.map((n,i) =>
+    `<div class="dow${i>=5?' weekend':''}">${n}</div>`).join('');
+  const first = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
+  const gridStart = weekStart(first);
+  let cells = '';
+  for (let i=0;i<42;i++){
+    const d = addDays(gridStart, i);
+    cells += dayCellHTML(d, {muted: d.getMonth() !== cursor.getMonth(), maxChips:2});
+  }
+  calBody.innerHTML = `<div class="month-grid">${cells}</div>`;
+  monthLabel.textContent = `${MONTHS_VI[cursor.getMonth()]} năm ${cursor.getFullYear()}`;
+}
+
+function renderCalendar(){
+  if (viewMode === 'week') renderWeek(); else renderMonth();
+}
+
+/* ==================================================================
+   RENDER — DAY LIST
+   ================================================================== */
+const dayListHead = document.getElementById('dayListHead');
+const dayListBody = document.getElementById('dayListBody');
+
+function tagFor(st){
+  if (st === 'done')    return `<span class="tag done"><svg><use href="#i-check"/></svg>Hoàn thành</span>`;
+  if (st === 'overdue') return `<span class="tag overdue"><svg><use href="#i-alert"/></svg>Quá hạn</span>`;
+  return `<span class="tag todo"><svg><use href="#i-clock"/></svg>Cần làm</span>`;
+}
+function typeTag(type){
+  const t = TYPES[type];
+  return `<span class="tag ${t.tag}"><svg><use href="#${t.icon}"/></svg>${t.label}</span>`;
+}
+
+function renderDayList(){
+  dayListHead.textContent = `Hoạt động ngày ${fmtDayHead(selectedDay)}`;
+  const acts = activitiesOn(iso(selectedDay));
+  if (!acts.length){
+    dayListBody.innerHTML = `<div class="empty">
+      <svg><use href="#i-inbox"/></svg>
+      <div>Không có hoạt động nào trong ngày này.</div>
+    </div>`;
+    return;
+  }
+  dayListBody.innerHTML = acts.map(a => {
+    const st = statusOf(a);
+    const leftCls = st === 'done' ? 'left-done' : st === 'overdue' ? 'left-over' : 'left-up';
+    const m = memberById(a.assignee);
+    const statusTag = st === 'todo' ? tagFor('todo')
+      : st === 'overdue' ? tagFor('todo') + tagFor('overdue')
+      : tagFor('done');
+    return `<div class="act-card ${leftCls}" data-id="${a.id}">
+      <div class="act-tags">${statusTag}${typeTag(a.type)}</div>
+      <div class="act-title">${esc(a.title)}</div>
+      <div class="act-meta">
+        <span class="m"><svg><use href="#i-clock"/></svg>${a.time}:00 ${a.date.split('-').reverse().join('/')}</span>
+        <span class="m"><svg><use href="#i-user"/></svg><span class="who">${esc(m.name)}</span></span>
+        <span class="m"><svg><use href="#i-briefcase"/></svg>${esc(a.account)}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function render(){ renderCalendar(); renderDayList(); }
+
+/* ==================================================================
+   INTERACTIONS — calendar + list
+   ================================================================== */
+calBody.addEventListener('click', e => {
+  const chip = e.target.closest('.chip');
+  if (chip){ e.stopPropagation(); openDetail(chip.dataset.id); return; }
+  const more = e.target.closest('.chip-more');
+  if (more){ selectedDay = new Date(more.dataset.day+'T00:00:00'); render();
+             document.querySelector('.day-list').scrollIntoView({behavior:'smooth',block:'start'}); return; }
+  const day = e.target.closest('.day');
+  if (day){ selectedDay = new Date(day.dataset.day+'T00:00:00'); render(); }
+});
+dayListBody.addEventListener('click', e => {
+  const card = e.target.closest('.act-card');
+  if (card) openDetail(card.dataset.id);
+});
+
+document.getElementById('prevBtn').addEventListener('click', () => {
+  cursor = viewMode === 'week' ? addDays(cursor, -7) : new Date(cursor.getFullYear(), cursor.getMonth()-1, 1);
+  renderCalendar();
+});
+document.getElementById('nextBtn').addEventListener('click', () => {
+  cursor = viewMode === 'week' ? addDays(cursor, 7) : new Date(cursor.getFullYear(), cursor.getMonth()+1, 1);
+  renderCalendar();
+});
+document.getElementById('todayBtn').addEventListener('click', () => {
+  cursor = new Date(NOW); selectedDay = new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate()); render();
+});
+document.getElementById('viewWeek').addEventListener('click', () => setView('week'));
+document.getElementById('viewMonth').addEventListener('click', () => setView('month'));
+function setView(v){
+  viewMode = v;
+  document.getElementById('viewWeek').setAttribute('aria-pressed', v==='week');
+  document.getElementById('viewMonth').setAttribute('aria-pressed', v==='month');
+  renderCalendar();
+}
+
+/* ==================================================================
+   DETAIL DRAWER
+   ================================================================== */
+const detailScrim = document.getElementById('detailScrim');
+const detailDrawer = document.getElementById('detailDrawer');
+function openDetail(id){
+  const a = ACTIVITIES.find(x => x.id === id);
+  if (!a) return;
+  const st = statusOf(a);
+  const m = memberById(a.assignee);
+  document.getElementById('ddTitle').textContent = a.title;
+  const statusTag = st === 'overdue' ? tagFor('todo') + tagFor('overdue') : tagFor(st);
+  document.getElementById('ddTags').innerHTML = statusTag + typeTag(a.type);
+
+  const dObj = new Date(a.date+'T00:00:00');
+  const endMin = (+a.time.split(':')[0])*60 + (+a.time.split(':')[1]) + a.dur;
+  const endH = String(Math.floor(endMin/60)).padStart(2,'0'), endM = String(endMin%60).padStart(2,'0');
+
+  let rows = '';
+  rows += drow('i-clock','Thời gian', `${fmtDayHead(dObj)}<br><b style="font-weight:700">${a.time} – ${endH}:${endM}</b> · ${a.dur} phút`);
+  rows += drow('i-user','Người phụ trách', `<span style="display:inline-flex;align-items:center;gap:8px"><span class="avatar sm" style="background:${m.color}">${initials(m.name)}</span>${esc(m.name)}</span>`);
+  rows += drow('i-briefcase','Khách hàng', esc(a.account));
+  if (a.deal) rows += drow('i-briefcase','Deal liên quan', esc(a.deal));
+  if (a.link) rows += drow('i-video','Link họp', `<a href="${esc(a.link)}" target="_blank" rel="noopener">${esc(a.link)}</a>`);
+  if (a.location) rows += drow('i-map-pin','Địa điểm', esc(a.location));
+
+  let people = a.participants.map(pid => {
+    const p = memberById(pid);
+    return `<div class="dr-person"><span class="avatar sm" style="background:${p.color}">${initials(p.name)}</span>${esc(p.name)}</div>`;
+  }).join('');
+
+  let body = rows;
+  body += `<div class="dr-section-label">Người tham gia (${a.participants.length})</div><div class="dr-people">${people}</div>`;
+  if (a.desc) body += `<div class="dr-section-label">Ghi chú</div><div class="dr-desc">${esc(a.desc)}</div>`;
+  document.getElementById('ddBody').innerHTML = body;
+
+  detailScrim.classList.add('open');
+  detailDrawer.classList.add('open');
+}
+function drow(icon,label,valueHTML){
+  return `<div class="detail-row">
+    <div class="dr-label"><svg><use href="#${icon}"/></svg>${label}</div>
+    <div class="dr-value">${valueHTML}</div>
+  </div>`;
+}
+function closeDetail(){ detailScrim.classList.remove('open'); detailDrawer.classList.remove('open'); }
+document.getElementById('detailClose').addEventListener('click', closeDetail);
+document.getElementById('detailClose2').addEventListener('click', closeDetail);
+detailScrim.addEventListener('click', closeDetail);
+
+/* ==================================================================
+   REPORT DRAWER
+   ================================================================== */
+const reportScrim = document.getElementById('reportScrim');
+const reportDrawer = document.getElementById('reportDrawer');
+const memberListEl = document.getElementById('memberList');
+const reportDetail = document.getElementById('reportDetail');
+
+let selectedMembers = new Set(MEMBERS.map(m => m.id));   // default: all
+let memberQuery = '';
+
+document.getElementById('reportBtn').addEventListener('click', openReport);
+document.getElementById('reportClose').addEventListener('click', closeReport);
+reportScrim.addEventListener('click', closeReport);
+document.getElementById('memberSearch').addEventListener('input', e => { memberQuery = e.target.value.toLowerCase().trim(); renderMemberList(); });
+
+function openReport(){ reportScrim.classList.add('open'); reportDrawer.classList.add('open'); renderReport(); }
+function closeReport(){ reportScrim.classList.remove('open'); reportDrawer.classList.remove('open'); }
+
+/* activities within the applied period (period picker below sets `appliedRange`) */
+function reportActivities(){
+  const { from, to } = appliedRange();
+  return ACTIVITIES.filter(a => {
+    const d = new Date(a.date+'T00:00:00');
+    return d >= from && d <= to;
+  });
+}
+function meetingCount(memberId, acts){
+  return acts.filter(a => isMeeting(a.type) && a.participants.includes(memberId)).length;
+}
+
+function renderMemberList(){
+  const acts = reportActivities();
+  const allChecked = selectedMembers.size === MEMBERS.length;
+  const someChecked = selectedMembers.size > 0;
+  let html = `<div class="member-row all-row ${allChecked?'checked':''}" data-all="1">
+      <span class="chk"><svg><use href="#i-check"/></svg></span>
+      <span class="m-name">Tất cả thành viên</span>
+      <span class="m-count">${acts.filter(a=>isMeeting(a.type)).length}</span>
+    </div><div class="member-divider"></div>`;
+  MEMBERS.filter(m => !memberQuery || m.name.toLowerCase().includes(memberQuery)).forEach(m => {
+    const checked = selectedMembers.has(m.id);
+    const active = selectedMembers.size === 1 && checked;
+    html += `<div class="member-row ${checked?'checked':''} ${active?'active':''}" data-member="${m.id}">
+      <span class="chk"><svg><use href="#i-check"/></svg></span>
+      <span class="avatar sm" style="background:${m.color}">${initials(m.name)}</span>
+      <span class="m-name">${esc(m.name)}</span>
+      <span class="m-count">${meetingCount(m.id, acts)}</span>
+    </div>`;
+  });
+  memberListEl.innerHTML = html;
+}
+
+memberListEl.addEventListener('click', e => {
+  const row = e.target.closest('.member-row');
+  if (!row) return;
+  if (row.dataset.all){
+    if (selectedMembers.size === MEMBERS.length) selectedMembers.clear();
+    else selectedMembers = new Set(MEMBERS.map(m => m.id));
+  } else {
+    const id = row.dataset.member;
+    if (selectedMembers.has(id)) selectedMembers.delete(id);
+    else selectedMembers.add(id);
+  }
+  renderReport();
+});
+
+const REPORT_PAGE_SIZE = 10;
+let reportPage = 1;
+
+/* selection or period changed → reset to first page */
+function renderReport(){ reportPage = 1; renderMemberList(); renderReportBody(); }
+
+function renderReportBody(){
+  const acts = reportActivities();
+
+  /* meetings involving any selected member */
+  const meetings = acts.filter(a => isMeeting(a.type) && a.participants.some(p => selectedMembers.has(p)));
+  const online  = meetings.filter(a => a.type === 'online').length;
+  const offline = meetings.filter(a => a.type === 'offline').length;
+  const done    = meetings.filter(a => statusOf(a) === 'done').length;
+
+  /* summary tiles */
+  let html = `<div class="report-summary">
+    <div class="sum-card"><div class="sum-label"><svg><use href="#i-video"/></svg>Tổng số cuộc họp</div><div class="sum-value">${meetings.length}</div></div>
+    <div class="sum-card"><div class="sum-label"><svg><use href="#i-video"/></svg>Họp online</div><div class="sum-value">${online}</div></div>
+    <div class="sum-card"><div class="sum-label"><svg><use href="#i-users-icon"/></svg>Họp trực tiếp</div><div class="sum-value">${offline}</div></div>
+    <div class="sum-card"><div class="sum-label"><svg><use href="#i-check"/></svg>Đã hoàn thành</div><div class="sum-value">${done}</div></div>
+  </div>`;
+
+  /* activity list — paginated, page size 8 */
+  const list = meetings.slice().sort((a,b) => (a.date+a.time).localeCompare(b.date+b.time));
+  const pageCount = Math.max(1, Math.ceil(list.length / REPORT_PAGE_SIZE));
+  if (reportPage > pageCount) reportPage = pageCount;
+  const start = (reportPage - 1) * REPORT_PAGE_SIZE;
+  const pageItems = list.slice(start, start + REPORT_PAGE_SIZE);
+
+  html += `<div class="report-list-head"><span>Danh sách cuộc họp (${list.length})</span></div>`;
+  if (!list.length){
+    html += `<div class="empty"><svg><use href="#i-inbox"/></svg><div>Không có cuộc họp nào phù hợp bộ lọc.</div></div>`;
+  } else {
+    html += pageItems.map(a => {
+      const m = memberById(a.assignee);
+      const dObj = new Date(a.date+'T00:00:00');
+      return `<div class="report-act">
+        <div class="ra-when"><b>${a.date.split('-').reverse().slice(0,2).join('/')}</b> · ${DOW_FULL_VI[dObj.getDay()]} · ${a.time}</div>
+        <div class="ra-main">
+          <div class="ra-title">${esc(a.title)}</div>
+          <div class="ra-sub">${typeTagMini(a.type)} <span><svg style="width:12px;height:12px;display:inline;vertical-align:-2px"><use href="#i-user"/></svg> ${esc(m.name)}</span></div>
+        </div>
+      </div>`;
+    }).join('');
+
+    /* pager */
+    if (pageCount > 1){
+      let btns = '';
+      for (let p = 1; p <= pageCount; p++)
+        btns += `<button data-pg="${p}" ${p===reportPage?'aria-current="true"':''}>${p}</button>`;
+      html += `<div class="pager">
+        <span class="pg-info">${start+1}–${Math.min(start+REPORT_PAGE_SIZE, list.length)} / ${list.length}</span>
+        <button data-pg="prev" ${reportPage===1?'disabled':''} aria-label="Trang trước">‹</button>
+        ${btns}
+        <button data-pg="next" ${reportPage===pageCount?'disabled':''} aria-label="Trang sau">›</button>
+      </div>`;
+    }
+  }
+
+  reportDetail.innerHTML = `<div class="report-content">${html}</div>`;
+}
+
+/* pager clicks — change page without resetting selection */
+reportDetail.addEventListener('click', e => {
+  const btn = e.target.closest('.pager button');
+  if (!btn) return;
+  const pg = btn.dataset.pg;
+  if (pg === 'prev') reportPage--;
+  else if (pg === 'next') reportPage++;
+  else reportPage = +pg;
+  renderReportBody();
+});
+function typeTagMini(type){
+  const t = TYPES[type];
+  return `<span class="tag ${t.tag}" style="padding:1px 8px;font-size:11px"><svg><use href="#${t.icon}"/></svg>${t.label}</span>`;
+}
+
+/* ==================================================================
+   PERIOD PICKER (ported from CRM Sales Dashboard, localized to VI)
+   ================================================================== */
+const MONTH_NAMES_VI = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6','Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
+const MONTH_SHORT_VI = ['Th1','Th2','Th3','Th4','Th5','Th6','Th7','Th8','Th9','Th10','Th11','Th12'];
+const DOW_PICK = ['T2','T3','T4','T5','T6','T7','CN'];
+const DEFAULT_YEAR = 2026;
+
+const pfmtDate = d => `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
+function isoWeekNumber(d){
+  const t = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  t.setDate(t.getDate()+3-((t.getDay()+6)%7));
+  const firstThu = new Date(t.getFullYear(),0,4);
+  firstThu.setDate(firstThu.getDate()+3-((firstThu.getDay()+6)%7));
+  return 1 + Math.round((t-firstThu)/604800000);
+}
+
+const seed = new Date(2026, 8, 15);
+const defaultState = () => ({
+  mode:'month', day:new Date(seed), week:weekStart(seed),
+  month:{ y:DEFAULT_YEAR, m:seed.getMonth() },
+  quarter:{ y:DEFAULT_YEAR, q:Math.floor(seed.getMonth()/3) },
+  year:DEFAULT_YEAR,
+  custom:{ from:new Date(DEFAULT_YEAR,8,1), to:new Date(DEFAULT_YEAR,8,30) },
+});
+const cloneS = s => ({ ...s, day:new Date(s.day), week:new Date(s.week),
+  month:{...s.month}, quarter:{...s.quarter},
+  custom:{ from:s.custom.from && new Date(s.custom.from), to:s.custom.to && new Date(s.custom.to) } });
+
+let pApplied = defaultState();
+let pDraft = cloneS(pApplied);
+let pView = { y:seed.getFullYear(), m:seed.getMonth() };
+let pHover = null;
+
+const pop = document.getElementById('periodPop');
+const trigger = document.getElementById('periodTrigger');
+const calGrid = document.getElementById('calGrid');
+const calDow = document.getElementById('calDow');
+const calTitle = document.getElementById('calTitle');
+const calHint = document.getElementById('calHint');
+
+function resolve(s){
+  if (s.mode==='day')   return { from:s.day, to:s.day };
+  if (s.mode==='week')  return { from:s.week, to:addDays(s.week,6), qualifier:`Tuần ${isoWeekNumber(s.week)}` };
+  if (s.mode==='month') return { from:new Date(s.month.y,s.month.m,1), to:new Date(s.month.y,s.month.m+1,0) };
+  if (s.mode==='quarter'){ const m0=s.quarter.q*3; return { from:new Date(s.quarter.y,m0,1), to:new Date(s.quarter.y,m0+3,0), qualifier:`Q${s.quarter.q+1} ${s.quarter.y}` }; }
+  if (s.mode==='year')  return { from:new Date(s.year,0,1), to:new Date(s.year,11,31) };
+  const { from,to } = s.custom;
+  if (!from||!to) return { from,to,incomplete:true };
+  return { from,to };
+}
+/* report reads the applied range through these */
+function appliedRange(){ const r = resolve(pApplied); const to = new Date(r.to); to.setHours(23,59,59); return { from:r.from, to }; }
+function spanText(r){ if (r.incomplete) return null; return sameDay(r.from,r.to) ? pfmtDate(r.from) : `${pfmtDate(r.from)} → ${pfmtDate(r.to)}`; }
+function spanHTML(r){ const s = spanText(r); return r.qualifier ? `<span class="qualifier">${r.qualifier} ·</span> ${s}` : s; }
+function appliedRangeText(){ return spanText(resolve(pApplied)) || '—'; }
+
+const MODE_LABEL = { day:'Ngày', week:'Tuần', month:'Tháng', quarter:'Quý', year:'Năm', custom:'Tùy chỉnh' };
+const HINTS = {
+  day:'Chọn ngày để thống kê.',
+  week:'Di chuột lên một ngày để xem tuần (T2–CN), rồi bấm để chọn.',
+  month:'Chọn một tháng; khoảng thời gian gồm cả tháng.',
+  quarter:'Chọn một quý; khoảng thời gian gồm ba tháng của quý.',
+  year:'Chọn một năm; khoảng từ 1/1 đến 31/12.',
+  custom:'Bấm ngày bắt đầu, rồi bấm ngày kết thúc.',
+};
+const GRID_CLASS = { month:' months', quarter:' quarters', year:' years' };
+
+function renderCalendarP(){
+  const mode = pDraft.mode;
+  calHint.textContent = HINTS[mode];
+  calDow.hidden = mode in GRID_CLASS;
+  calGrid.className = 'cal-grid' + (GRID_CLASS[mode]||'');
+  if (mode==='month'){ renderMonthGrid(); return; }
+  if (mode==='quarter'){ renderQuarterGrid(); return; }
+  if (mode==='year'){ renderYearGrid(); return; }
+  renderDayGrid();
+}
+function renderDayGrid(){
+  calTitle.textContent = `${MONTH_NAMES_VI[pView.m]} ${pView.y}`;
+  calDow.innerHTML = DOW_PICK.map(d => `<span>${d}</span>`).join('');
+  const first = weekStart(new Date(pView.y, pView.m, 1));
+  const cells = [];
+  for (let i=0;i<42;i++){
+    const d = addDays(first,i);
+    const muted = d.getMonth() !== pView.m;
+    cells.push(`<button type="button" class="cal-cell${muted?' muted':''}${sameDay(d,NOW)?' today':''}" data-date="${iso(d)}" data-week="${iso(weekStart(d))}">${d.getDate()}</button>`);
+  }
+  calGrid.innerHTML = cells.join('');
+  paintDayGrid();
+}
+function paintDayGrid(){
+  const cells = calGrid.querySelectorAll('.cal-cell');
+  const mode = pDraft.mode;
+  const selWeek = iso(pDraft.week);
+  const hoverWeek = pHover ? iso(weekStart(pHover)) : null;
+  let rFrom=null,rTo=null;
+  if (mode==='custom'){ rFrom=pDraft.custom.from; rTo=pDraft.custom.to || (rFrom && pHover && pHover>=rFrom ? pHover : null); }
+  cells.forEach(cell => {
+    const d = new Date(cell.dataset.date+'T00:00:00');
+    cell.className = 'cal-cell' + (d.getMonth()!==pView.m?' muted':'') + (sameDay(d,NOW)?' today':'');
+    if (mode==='day'){ if (sameDay(d,pDraft.day)) cell.classList.add('sel'); return; }
+    if (mode==='week'){
+      const wk = cell.dataset.week;
+      if (wk===selWeek) cell.classList.add('sel-wk');
+      else if (wk===hoverWeek) cell.classList.add('wk');
+      if (wk===selWeek || wk===hoverWeek){ if (d.getDay()===1) cell.classList.add('wk-start'); if (d.getDay()===0) cell.classList.add('wk-end'); }
+      return;
+    }
+    if (rFrom && rTo && d>rFrom && d<=rTo) cell.classList.add('in-range');
+    if (rFrom && sameDay(d,rFrom)) cell.classList.add('sel');
+    if (pDraft.custom.to && sameDay(d,pDraft.custom.to)) cell.classList.add('sel');
+    if (rFrom && rTo && !sameDay(rFrom,rTo)){ if (sameDay(d,rFrom)) cell.classList.add('range-start'); if (sameDay(d,rTo)) cell.classList.add('range-end'); }
+  });
+}
+function renderMonthGrid(){
+  calTitle.textContent = String(pView.y);
+  calGrid.innerHTML = MONTH_SHORT_VI.map((n,i) => {
+    const sel = pDraft.month.y===pView.y && pDraft.month.m===i;
+    return `<button type="button" class="cal-cell${sel?' sel':''}" data-month="${i}">${n}</button>`;
+  }).join('');
+}
+function renderQuarterGrid(){
+  calTitle.textContent = String(pView.y);
+  calGrid.innerHTML = Array.from({length:4},(_,q) => {
+    const sel = pDraft.quarter.y===pView.y && pDraft.quarter.q===q;
+    const span = `${MONTH_SHORT_VI[q*3]} – ${MONTH_SHORT_VI[q*3+2]}`;
+    return `<button type="button" class="cal-cell${sel?' sel':''}" data-quarter="${q}"><span>Q${q+1}</span><span class="q-months">${span}</span></button>`;
+  }).join('');
+}
+const yearBlockStart = y => y - ((y%12+12)%12);
+function renderYearGrid(){
+  const start = yearBlockStart(pView.y);
+  calTitle.textContent = `${start} – ${start+11}`;
+  calGrid.innerHTML = Array.from({length:12},(_,i) => {
+    const y = start+i;
+    return `<button type="button" class="cal-cell${pDraft.year===y?' sel':''}" data-year="${y}">${y}</button>`;
+  }).join('');
+}
+function syncModeList(){ pop.querySelectorAll('.mode-list button').forEach(b => b.setAttribute('aria-checked', b.dataset.mode===pDraft.mode)); }
+function syncPreview(){
+  const r = resolve(pDraft); const text = spanText(r);
+  const pv = document.getElementById('popPreview');
+  pv.classList.toggle('pending', !text);
+  pv.innerHTML = text ? spanHTML(r) : 'Chọn ngày kết thúc để hoàn tất';
+  document.getElementById('popApply').disabled = !text;
+}
+function renderPop(){ syncModeList(); renderCalendarP(); syncPreview(); }
+function openPop(){
+  pDraft = cloneS(pApplied); pHover = null;
+  const r = resolve(pApplied);
+  if (r.from){ pView = { y:r.from.getFullYear(), m:r.from.getMonth() }; }
+  pop.hidden = false; trigger.setAttribute('aria-expanded','true');
+  renderPop();
+  pop.querySelector('.mode-list button[aria-checked="true"]').focus();
+}
+function closePop({ focusTrigger=true }={}){ pop.hidden = true; trigger.setAttribute('aria-expanded','false'); if (focusTrigger) trigger.focus(); }
+function renderTrigger(){
+  const r = resolve(pApplied);
+  document.getElementById('ptMode').textContent = MODE_LABEL[pApplied.mode];
+  document.getElementById('ptRange').innerHTML = spanHTML(r);
+}
+trigger.addEventListener('click', () => pop.hidden ? openPop() : closePop());
+document.getElementById('popCancel').addEventListener('click', () => closePop());
+document.getElementById('popApply').addEventListener('click', () => {
+  pApplied = cloneS(pDraft); renderTrigger(); closePop(); renderReport();
+});
+pop.querySelector('.mode-list').addEventListener('click', e => {
+  const btn = e.target.closest('button[data-mode]'); if (!btn) return;
+  pDraft.mode = btn.dataset.mode; pHover = null;
+  const r = resolve(pDraft); if (r.from) pView = { y:r.from.getFullYear(), m:r.from.getMonth() };
+  renderPop();
+});
+function page(step){
+  if (pDraft.mode==='month'||pDraft.mode==='quarter'){ pView.y += step; }
+  else if (pDraft.mode==='year'){ pView.y = yearBlockStart(pView.y) + step*12; }
+  else { const d = new Date(pView.y, pView.m+step, 1); pView = { y:d.getFullYear(), m:d.getMonth() }; }
+  renderCalendarP();
+}
+document.getElementById('calPrev').addEventListener('click', () => page(-1));
+document.getElementById('calNext').addEventListener('click', () => page(1));
+calGrid.addEventListener('click', e => {
+  const cell = e.target.closest('.cal-cell'); if (!cell) return;
+  if (cell.dataset.month !== undefined){ pDraft.month = { y:pView.y, m:+cell.dataset.month }; renderPop(); return; }
+  if (cell.dataset.quarter !== undefined){ pDraft.quarter = { y:pView.y, q:+cell.dataset.quarter }; renderPop(); return; }
+  if (cell.dataset.year !== undefined){ pDraft.year = +cell.dataset.year; renderPop(); return; }
+  const d = new Date(cell.dataset.date+'T00:00:00');
+  if (d.getMonth() !== pView.m) pView = { y:d.getFullYear(), m:d.getMonth() };
+  if (pDraft.mode==='day') pDraft.day = d;
+  if (pDraft.mode==='week') pDraft.week = weekStart(d);
+  if (pDraft.mode==='custom'){
+    const { from,to } = pDraft.custom;
+    if (!from||to||d<from) pDraft.custom = { from:d, to:null };
+    else pDraft.custom = { from, to:d };
+  }
+  pHover = null; renderCalendarP(); syncPreview();
+});
+function setHover(cell){
+  const next = cell && cell.dataset.date ? new Date(cell.dataset.date+'T00:00:00') : null;
+  if (pDraft.mode!=='week' && pDraft.mode!=='custom') return;
+  if (next && pHover && sameDay(next,pHover)) return;
+  pHover = next; paintDayGrid();
+}
+calGrid.addEventListener('mouseover', e => setHover(e.target.closest('.cal-cell')));
+calGrid.addEventListener('focusin', e => setHover(e.target.closest('.cal-cell')));
+calGrid.addEventListener('mouseleave', () => setHover(null));
+document.addEventListener('pointerdown', e => {
+  if (pop.hidden) return;
+  if (!pop.contains(e.target) && !trigger.contains(e.target)) closePop({ focusTrigger:false });
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape'){
+    if (!pop.hidden){ e.stopPropagation(); closePop(); return; }
+    if (reportDrawer.classList.contains('open')){ closeReport(); return; }
+    if (detailDrawer.classList.contains('open')){ closeDetail(); return; }
+  }
+});
+renderTrigger();
+
+/* ==================================================================
+   INIT
+   ================================================================== */
+render();
+</script>
+</body>
+</html>

@@ -1444,6 +1444,9 @@
     flex-shrink: 0;
   }
   .panel-title { font-family: var(--font-display); font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+  /* Compact header: title only, less vertical space for content below */
+  .panel-header-compact { align-items: center; padding: var(--s3) var(--s5); }
+  .panel-header-compact .panel-title { font-size: 16px; }
   .panel-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
   .panel-close {
     width: 28px;
@@ -2149,6 +2152,145 @@
   .emp-f .box.empty { color: var(--text-muted); font-style: italic; }
   @media (max-width: 640px) { .emp-grid { grid-template-columns: 1fr; } }
 
+  /* ===== Single-page employee view (scroll-spy sections) ===== */
+  #view-panel-body { padding: 0; position: relative; scroll-behavior: smooth; }
+
+  /* Two-column layout: sticky vertical sidebar nav + content */
+  .emp-layout { display: flex; align-items: flex-start; }
+
+  .emp-nav {
+    position: sticky; top: 0; align-self: flex-start; z-index: 5;
+    flex: 0 0 200px; width: 200px; max-height: 100vh; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 2px;
+    padding: var(--s5) 12px;
+    background: var(--surface-muted, #F8FAFC); border-right: 1px solid var(--divider);
+  }
+  .emp-nav-btn {
+    display: flex; align-items: center; gap: 9px; width: 100%; text-align: left;
+    border: none; background: transparent; cursor: pointer;
+    padding: 9px 12px; border-radius: 9px;
+    font-size: 13px; font-weight: 600; color: var(--text-muted);
+    font-family: inherit; transition: background .15s, color .15s;
+  }
+  .emp-nav-btn svg { width: 16px; height: 16px; flex: 0 0 auto; }
+  .emp-nav-btn:hover { color: var(--text); background: var(--surface); }
+  .emp-nav-btn.active { background: var(--primary); color: #fff; }
+
+  .emp-doc { flex: 1 1 auto; min-width: 0; padding: var(--s5); }
+
+  @media (max-width: 768px) {
+    .emp-layout { flex-direction: column; }
+    .emp-nav {
+      flex: none; width: auto; max-height: none;
+      flex-direction: row; gap: 4px; flex-wrap: nowrap; overflow-x: auto;
+      border-right: none; border-bottom: 1px solid var(--divider);
+      padding: 10px var(--s5);
+    }
+    .emp-nav-btn { white-space: nowrap; }
+  }
+
+  /* Employee hero card */
+  .emp-hero {
+    display: flex; align-items: center; gap: 16px;
+    padding: 16px 18px; border: 1px solid var(--divider); border-radius: 14px;
+    background: var(--surface-muted, #F8FAFC); margin-bottom: var(--s5);
+  }
+  .emp-hero .eh-avatar {
+    width: 60px; height: 60px; border-radius: 50%; flex: 0 0 auto;
+    display: grid; place-items: center; color: #fff; font-weight: 700; font-size: 22px;
+    font-family: var(--font-display);
+  }
+  .emp-hero .eh-name { font-family: var(--font-display); font-size: 19px; font-weight: 700; }
+  .emp-hero .eh-role { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+  .emp-hero .eh-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+
+  /* Section + separator */
+  .emp-section { scroll-margin-top: 64px; padding-top: var(--s2); }
+  /* Highlighted divider between groups (matches CRM › Account screen) */
+  .emp-section + .emp-section {
+    margin-top: var(--s6); padding-top: var(--s6);
+    border-top: 1px solid var(--border-strong); position: relative;
+  }
+  .emp-section + .emp-section::before {
+    content: ''; position: absolute; top: -1px; left: 0;
+    width: 56px; height: 3px; border-radius: var(--r-full);
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+  }
+  .emp-sec-head { display: flex; align-items: center; gap: 10px; margin-bottom: var(--s4); }
+  .emp-sec-head .esh-icon {
+    width: 30px; height: 30px; border-radius: 9px; flex: 0 0 auto;
+    display: grid; place-items: center; background: var(--primary-50); color: var(--primary);
+  }
+  .emp-sec-head .esh-icon svg { width: 16px; height: 16px; }
+  .emp-sec-head h3 { font-family: var(--font-display); font-size: 16px; font-weight: 700; margin: 0; }
+
+  /* Sub-card grouping inside a section */
+  .emp-subcard { margin-bottom: var(--s4); }
+  .emp-subcard:last-child { margin-bottom: 0; }
+  .emp-subcard-title {
+    font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+    color: var(--text-muted); margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .emp-subcard-title::after { content: ''; flex: 1; height: 1px; background: var(--divider); }
+
+  /* Document / photo thumbnails */
+  .emp-docs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .emp-doc-thumb {
+    border: 1px solid var(--divider); border-radius: 10px; padding: 12px;
+    text-align: center; background: var(--surface-muted, #F8FAFC); cursor: pointer;
+    transition: border-color .15s;
+  }
+  .emp-doc-thumb:hover { border-color: var(--primary); }
+  .emp-doc-thumb .edt-ph {
+    height: 74px; border-radius: 8px; background: linear-gradient(135deg,#e0e7ff,#cffafe);
+    display: grid; place-items: center; color: #4F46E5; margin-bottom: 8px;
+  }
+  .emp-doc-thumb .edt-ph svg { width: 22px; height: 22px; }
+  .emp-doc-thumb .edt-label { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
+
+  /* Simple list rows (family, education, experience, certificates) */
+  .emp-list { display: flex; flex-direction: column; gap: 10px; }
+  .emp-list-item {
+    border: 1px solid var(--divider); border-radius: 10px; padding: 12px 14px;
+  }
+  .emp-list-item .eli-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .emp-list-item .eli-title { font-weight: 600; font-size: 13.5px; }
+  .emp-list-item .eli-meta { font-size: 12px; color: var(--text-muted); margin-top: 3px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .emp-list-item .eli-meta b { color: var(--text); font-weight: 600; }
+
+  /* Tables inside the employee view (contract list, insurance history…) */
+  .emp-tbl-wrap { border: 1px solid var(--divider); border-radius: 10px; overflow-x: auto; overflow-y: hidden; }
+  .emp-tbl { width: 100%; border-collapse: collapse; }
+  .emp-tbl th {
+    text-align: left; padding: 10px 14px; white-space: nowrap;
+    font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+    color: var(--text-muted); background: var(--primary-50);
+  }
+  .emp-tbl td {
+    padding: 11px 14px; border-top: 1px solid var(--divider); border-bottom: none;
+    font-size: 13px; color: var(--text); white-space: nowrap; vertical-align: middle;
+  }
+  .emp-tbl tbody tr:hover { background: #F0FDFF; }
+  .emp-tbl-empty { padding: 32px 16px; text-align: center; color: var(--text-muted); font-size: 13px; }
+  .emp-tbl .ic-act {
+    width: 30px; height: 30px; border-radius: 8px; border: none; background: transparent;
+    display: inline-grid; place-items: center; color: var(--text-muted); cursor: pointer;
+  }
+  .emp-tbl .ic-act:hover { background: var(--divider); color: var(--text); }
+  .emp-tbl .ic-act svg { width: 16px; height: 16px; }
+
+  /* Tech-stack chips */
+  .emp-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .emp-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border-radius: 999px;
+    font-size: 12.5px; font-weight: 600; color: var(--primary);
+    background: var(--primary-50); border: 1px solid var(--primary-100);
+  }
+
+  @media (max-width: 640px) { .emp-docs { grid-template-columns: repeat(2, 1fr); } }
+
   /* Allocation cards in View panel */
   .alloc-view-list { display: flex; flex-direction: column; gap: 10px; }
   .alloc-view-card {
@@ -2455,7 +2597,7 @@
         <div class="rail-subitem" onclick="selectSubItem(this,'crm','Deal')">
           <svg><use href="#i-dollar"/></svg><span data-i18n="nav.crm.deal"> Deal</span>
         </div>
-        <div class="rail-subitem" onclick="selectSubItem(this,'crm','Activity Log')">
+        <div class="rail-subitem" onclick="selectSubItem(this,'crm','Activity Log'); showView('activitylog')">
           <svg><use href="#i-calendar"/></svg><span data-i18n="nav.crm.activitylog"> Activity Log</span>
         </div>
 
@@ -2908,6 +3050,11 @@
     <!-- ============ VIEW: CRM EVENT TRACKING (embedded) ============ -->
     <div id="view-events" class="view view-embed" hidden>
       <iframe class="embed-frame" src="event-tracking.html?embed=1" title="Event Tracking" loading="lazy"></iframe>
+    </div>
+
+    <!-- ============ VIEW: CRM ACTIVITY LOG (embedded) ============ -->
+    <div id="view-activitylog" class="view view-embed" hidden>
+      <iframe class="embed-frame" src="activity-log.html?embed=1" title="Activity Log" loading="lazy"></iframe>
     </div>
 
 
@@ -3544,7 +3691,7 @@
         <svg><use href="#i-dollar"/></svg><span data-i18n="nav.crm.deal"> Deal</span>
       </div>
     </div>
-    <div class="flyout-item" onclick="selectFlyoutItem(this,'crm')">
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'crm'); showView('activitylog')">
       <div class="flyout-item-inner">
         <svg><use href="#i-calendar"/></svg><span data-i18n="nav.crm.activitylog"> Activity Log</span>
       </div>
@@ -3831,11 +3978,8 @@
 <!-- ============ VIEW EMPLOYEE PANEL ============ -->
 <div class="panel-overlay" id="panel-view-overlay" onclick="closePanel('panel-view')"></div>
 <div class="right-panel" id="panel-view" role="dialog" aria-labelledby="view-panel-title">
-    <div class="panel-header">
-      <div>
-        <div class="panel-title" id="view-panel-title" data-i18n="panel.view.title">Employee Details</div>
-        <div class="panel-subtitle" id="view-panel-subtitle">EMP-0142 · Last updated 2 days ago</div>
-      </div>
+    <div class="panel-header panel-header-compact">
+      <div class="panel-title" id="view-panel-title" data-i18n="panel.view.title">Employee Details</div>
       <button class="panel-close" onclick="closePanel('panel-view')" aria-label="Close"><svg><use href="#i-x"/></svg></button>
     </div>
     <div class="panel-body" id="view-panel-body">
@@ -3941,6 +4085,30 @@
       'btn.cancel': 'Cancel', 'btn.savedraft': 'Save as draft', 'btn.addemployee': 'Add Employee', 'btn.saveemployee': 'Save Employee', 'btn.addalloc': 'Add project allocation',
       // Employee-detail tabs + fields
       'etab.basic': 'Basic Information', 'etab.profile': 'Profile Information', 'etab.contract': 'Contract', 'etab.insurance': 'Insurance', 'etab.attach': 'Attachments', 'etab.projects': 'Projects',
+      // Employee detail — single-page view (ev.*)
+      'ev.nav.personal': 'Personal', 'ev.nav.work': 'Employment', 'ev.nav.docs': 'Documents & Bank', 'ev.nav.contacts': 'Contacts & Family', 'ev.nav.background': 'Education & Experience', 'ev.nav.contract': 'Contract & Insurance', 'ev.nav.projects': 'Projects', 'ev.nav.attach': 'Attachments',
+      'ev.sec.personal': 'Personal Profile', 'ev.sec.work': 'Employment', 'ev.sec.docs': 'Documents & Bank', 'ev.sec.contacts': 'Contacts & Family', 'ev.sec.background': 'Education & Experience', 'ev.sec.contract': 'Contract & Insurance', 'ev.sec.projects': 'Projects', 'ev.sec.attach': 'Attachments',
+      'ev.sub.account': 'Account & Contact', 'ev.sub.personal': 'Personal Information', 'ev.sub.addresses': 'Addresses', 'ev.sub.position': 'Position', 'ev.sub.vehicle': 'Vehicle', 'ev.sub.cccd': 'National ID (CCCD)', 'ev.sub.passport': 'Passport', 'ev.sub.bank': 'Bank Account', 'ev.sub.emergency': 'Emergency contact', 'ev.sub.family': 'Family members', 'ev.sub.education': 'Education', 'ev.sub.experience': 'Work experience', 'ev.sub.techstacks': 'Tech stacks', 'ev.sub.certs': 'Certificates', 'ev.sub.contract': 'Contract', 'ev.sub.insurance': 'Insurance',
+      'ev.f.username': 'Username', 'ev.f.email': 'Email', 'ev.f.phone': 'Phone', 'ev.f.emptype': 'Employee type', 'ev.f.empcode': 'Employee code', 'ev.f.tkcode': 'Timekeeping code',
+      'ev.f.lastname': 'Last name', 'ev.f.firstname': 'First name', 'ev.f.shortname': 'Short name', 'ev.f.dob': 'Date of birth', 'ev.f.gender': 'Gender', 'ev.f.nationality': 'Nationality', 'ev.f.ethnicity': 'Ethnicity', 'ev.f.religion': 'Religion', 'ev.f.marital': 'Marital status',
+      'ev.f.birthaddr': 'Birth registration address', 'ev.f.hometown': 'Hometown', 'ev.f.permaddr': 'Permanent address', 'ev.f.curraddr': 'Current address',
+      'ev.f.position': 'Position', 'ev.f.jobtitle': 'Job title', 'ev.f.department': 'Department', 'ev.f.manager': 'Direct manager', 'ev.f.startdate': 'Start date', 'ev.f.onboarded': 'Onboarded', 'ev.f.officialdate': 'Official contract date', 'ev.f.taxcode': 'Tax code',
+      'ev.f.plate': 'License plate', 'ev.f.vehicle': 'Vehicle',
+      'ev.f.cccdno': 'CCCD number', 'ev.f.issuedate': 'Issue date', 'ev.f.issueplace': 'Issue place', 'ev.f.passno': 'Passport number', 'ev.f.passtype': 'Passport type', 'ev.f.expirydate': 'Expiry date',
+      'ev.f.bankno': 'Account number', 'ev.f.bankholder': 'Account holder', 'ev.f.bankname': 'Bank', 'ev.f.branch': 'Branch',
+      'ev.f.fullname': 'Full name', 'ev.f.relationship': 'Relationship',
+      'ev.f.contracttype': 'Contract type', 'ev.f.effectivedate': 'Effective date', 'ev.f.renewalreminder': 'Renewal reminder', 'ev.f.note': 'Note', 'ev.f.socialins': 'Social insurance no.', 'ev.f.healthins': 'Health insurance no.', 'ev.f.provider': 'Provider', 'ev.f.coveragesince': 'Coverage since',
+      'ev.doc.cccdfront': 'CCCD — front', 'ev.doc.cccdback': 'CCCD — back', 'ev.doc.passport': 'Passport',
+      'ev.val.male': 'Male', 'ev.val.single': 'Single', 'ev.val.none': 'None', 'ev.val.kinh': 'Kinh', 'ev.val.vietnam': 'Vietnam', 'ev.val.mother': 'Mother', 'ev.val.father': 'Father', 'ev.val.ordinary': 'Ordinary (P)', 'ev.val.labor': 'Labor contract', 'ev.val.freelance': 'Freelance / Service agreement', 'ev.val.indefinite': 'Indefinite', 'ev.val.notprovided': 'Not provided', 'ev.val.na': '—',
+      'ev.meta.role': 'Role', 'ev.meta.period': 'Period', 'ev.meta.min': 'Min', 'ev.meta.kpi': 'KPI', 'ev.meta.year': 'Year', 'ev.meta.major': 'Major', 'ev.meta.degree': 'Degree', 'ev.meta.issued': 'Issued', 'ev.meta.validuntil': 'Valid until',
+      'ev.mode.ft': 'Full-time · 8h/day', 'ev.mode.pt': 'Part-time · max 8h/day',
+      'ev.ct.code': 'Contract code', 'ev.ct.status': 'Status', 'ev.ct.from': 'Effective from', 'ev.ct.to': 'Effective to', 'ev.ct.actions': 'Actions', 'ev.ct.active': 'Active', 'ev.ct.expired': 'Expired', 'ev.ct.typeindef': 'Indefinite', 'ev.ct.probation': 'Probation',
+      'ev.sub.insinfo': 'Insurance Information', 'ev.sub.inshistory': 'Insurance History', 'ev.sub.benefithistory': 'Benefit History',
+      'ev.f.insbookno': 'Insurance Book Number', 'ev.f.bookstatus': 'Book Status', 'ev.f.payingentity': 'Paying Entity', 'ev.f.healthprovider': 'Healthcare Provider', 'ev.val.bookactive': 'Active',
+      'ev.ih.from': 'From', 'ev.ih.entity': 'Paying Entity', 'ev.ih.level': 'Insurance Level', 'ev.ih.company': 'Company Paid', 'ev.ih.employee': 'Employee Paid', 'ev.ih.notes': 'Notes', 'ev.ih.empty': 'No insurance history data',
+      'ev.bh.type': 'Benefit Type', 'ev.bh.appdate': 'Application Receive Date', 'ev.bh.procdate': 'Procedure Complete Date', 'ev.bh.inspay': 'Insurance Payment Receive Date', 'ev.bh.benpay': 'Benefit Payment Date', 'ev.bh.amount': 'Amount', 'ev.bh.notes': 'Notes', 'ev.bh.empty': 'No benefit history data',
+      'ev.msg.renewal': '30 days before · repeat every 7 days', 'ev.msg.contractnote': 'Reminder emails go to HRM & PM until the contract status changes.', 'ev.msg.ctvins': 'Contractors are engaged under a service agreement — company social/health insurance does not apply.', 'ev.msg.projnote': 'One person can join multiple projects at once. Hours are validated per project and never across projects.', 'ev.msg.noproj': 'No project allocations yet.',
+      'ev.edu.school': 'Hanoi University of Science and Technology', 'ev.edu.major': 'Information Technology', 'ev.edu.degree': 'Engineer', 'ev.exp1': 'FPT Software — Software Engineer', 'ev.exp1.meta': 'Backend / Java', 'ev.exp2': 'VNG Corporation — Senior Engineer', 'ev.exp2.meta': 'Platform team', 'ev.cert1': 'AWS Certified Solutions Architect', 'ev.cert2': 'TOEIC 850',
       'field.username': 'Username', 'field.location': 'Location',
       'field.contracttype': 'Contract type', 'field.effectivedate': 'Effective date', 'field.expirydate': 'Expiry date',
       'field.renewalreminder': 'Renewal reminder', 'field.renewalreminder.desc': 'Email + in-app reminders to HRM & PM before the contract expires.',
@@ -4015,6 +4183,30 @@
       'btn.cancel': 'Hủy', 'btn.savedraft': 'Lưu nháp', 'btn.addemployee': 'Thêm nhân viên', 'btn.saveemployee': 'Lưu nhân viên', 'btn.addalloc': 'Thêm phân bổ dự án',
       // Employee-detail tabs + fields
       'etab.basic': 'Thông tin cơ bản', 'etab.profile': 'Thông tin hồ sơ', 'etab.contract': 'Hợp đồng', 'etab.insurance': 'Bảo hiểm', 'etab.attach': 'Tệp đính kèm', 'etab.projects': 'Dự án',
+      // Employee detail — single-page view (ev.*)
+      'ev.nav.personal': 'Cá nhân', 'ev.nav.work': 'Công việc', 'ev.nav.docs': 'Giấy tờ & Ngân hàng', 'ev.nav.contacts': 'Liên hệ & Gia đình', 'ev.nav.background': 'Học vấn & Kinh nghiệm', 'ev.nav.contract': 'Hợp đồng & Bảo hiểm', 'ev.nav.projects': 'Dự án', 'ev.nav.attach': 'Tài liệu',
+      'ev.sec.personal': 'Hồ sơ cá nhân', 'ev.sec.work': 'Công việc', 'ev.sec.docs': 'Giấy tờ & Ngân hàng', 'ev.sec.contacts': 'Liên hệ & Gia đình', 'ev.sec.background': 'Học vấn & Kinh nghiệm', 'ev.sec.contract': 'Hợp đồng & Bảo hiểm', 'ev.sec.projects': 'Dự án', 'ev.sec.attach': 'Tài liệu đính kèm',
+      'ev.sub.account': 'Tài khoản & liên hệ', 'ev.sub.personal': 'Thông tin cá nhân', 'ev.sub.addresses': 'Địa chỉ', 'ev.sub.position': 'Vị trí việc làm', 'ev.sub.vehicle': 'Phương tiện', 'ev.sub.cccd': 'Căn cước công dân (CCCD)', 'ev.sub.passport': 'Hộ chiếu', 'ev.sub.bank': 'Tài khoản ngân hàng', 'ev.sub.emergency': 'Liên hệ khẩn cấp', 'ev.sub.family': 'Thành viên gia đình', 'ev.sub.education': 'Lịch sử học tập', 'ev.sub.experience': 'Kinh nghiệm làm việc', 'ev.sub.techstacks': 'Công nghệ / Kỹ năng', 'ev.sub.certs': 'Chứng chỉ', 'ev.sub.contract': 'Hợp đồng', 'ev.sub.insurance': 'Bảo hiểm',
+      'ev.f.username': 'Tên đăng nhập', 'ev.f.email': 'Email', 'ev.f.phone': 'Số điện thoại', 'ev.f.emptype': 'Loại nhân viên', 'ev.f.empcode': 'Mã nhân viên', 'ev.f.tkcode': 'Mã chấm công',
+      'ev.f.lastname': 'Họ', 'ev.f.firstname': 'Tên', 'ev.f.shortname': 'Tên gọi ngắn', 'ev.f.dob': 'Ngày sinh', 'ev.f.gender': 'Giới tính', 'ev.f.nationality': 'Quốc tịch', 'ev.f.ethnicity': 'Dân tộc', 'ev.f.religion': 'Tôn giáo', 'ev.f.marital': 'Tình trạng hôn nhân',
+      'ev.f.birthaddr': 'Địa chỉ khai sinh', 'ev.f.hometown': 'Quê quán', 'ev.f.permaddr': 'Địa chỉ thường trú', 'ev.f.curraddr': 'Địa chỉ hiện tại',
+      'ev.f.position': 'Vị trí', 'ev.f.jobtitle': 'Chức danh', 'ev.f.department': 'Phòng ban', 'ev.f.manager': 'Quản lý trực tiếp', 'ev.f.startdate': 'Ngày vào làm', 'ev.f.onboarded': 'Ngày onboard', 'ev.f.officialdate': 'Ngày ký HĐ chính thức', 'ev.f.taxcode': 'Mã số thuế',
+      'ev.f.plate': 'Biển số xe', 'ev.f.vehicle': 'Thông tin xe',
+      'ev.f.cccdno': 'Số CCCD', 'ev.f.issuedate': 'Ngày cấp', 'ev.f.issueplace': 'Nơi cấp', 'ev.f.passno': 'Số hộ chiếu', 'ev.f.passtype': 'Loại hộ chiếu', 'ev.f.expirydate': 'Ngày hết hạn',
+      'ev.f.bankno': 'Số tài khoản', 'ev.f.bankholder': 'Tên chủ tài khoản', 'ev.f.bankname': 'Tên ngân hàng', 'ev.f.branch': 'Chi nhánh',
+      'ev.f.fullname': 'Họ và tên', 'ev.f.relationship': 'Mối quan hệ',
+      'ev.f.contracttype': 'Loại hợp đồng', 'ev.f.effectivedate': 'Ngày hiệu lực', 'ev.f.renewalreminder': 'Nhắc gia hạn', 'ev.f.note': 'Ghi chú', 'ev.f.socialins': 'Số BHXH', 'ev.f.healthins': 'Số BHYT', 'ev.f.provider': 'Đơn vị cung cấp', 'ev.f.coveragesince': 'Tham gia từ',
+      'ev.doc.cccdfront': 'CCCD — mặt trước', 'ev.doc.cccdback': 'CCCD — mặt sau', 'ev.doc.passport': 'Hộ chiếu',
+      'ev.val.male': 'Nam', 'ev.val.single': 'Độc thân', 'ev.val.none': 'Không', 'ev.val.kinh': 'Kinh', 'ev.val.vietnam': 'Việt Nam', 'ev.val.mother': 'Mẹ', 'ev.val.father': 'Bố', 'ev.val.ordinary': 'Phổ thông (P)', 'ev.val.labor': 'Hợp đồng lao động', 'ev.val.freelance': 'Freelance / Hợp đồng dịch vụ', 'ev.val.indefinite': 'Không thời hạn', 'ev.val.notprovided': 'Chưa cung cấp', 'ev.val.na': '—',
+      'ev.meta.role': 'Vai trò', 'ev.meta.period': 'Thời gian', 'ev.meta.min': 'Tối thiểu', 'ev.meta.kpi': 'KPI', 'ev.meta.year': 'Năm sinh', 'ev.meta.major': 'Chuyên ngành', 'ev.meta.degree': 'Bằng cấp', 'ev.meta.issued': 'Cấp năm', 'ev.meta.validuntil': 'Hiệu lực đến',
+      'ev.mode.ft': 'Toàn thời gian · 8h/ngày', 'ev.mode.pt': 'Bán thời gian · tối đa 8h/ngày',
+      'ev.ct.code': 'Mã hợp đồng', 'ev.ct.status': 'Trạng thái', 'ev.ct.from': 'Hiệu lực từ', 'ev.ct.to': 'Hiệu lực đến', 'ev.ct.actions': 'Thao tác', 'ev.ct.active': 'Đang hiệu lực', 'ev.ct.expired': 'Hết hiệu lực', 'ev.ct.typeindef': 'Không xác định thời hạn', 'ev.ct.probation': 'Thử việc',
+      'ev.sub.insinfo': 'Thông tin bảo hiểm', 'ev.sub.inshistory': 'Lịch sử bảo hiểm', 'ev.sub.benefithistory': 'Lịch sử quyền lợi',
+      'ev.f.insbookno': 'Số sổ bảo hiểm', 'ev.f.bookstatus': 'Trạng thái sổ', 'ev.f.payingentity': 'Đơn vị đóng', 'ev.f.healthprovider': 'Nơi khám chữa bệnh', 'ev.val.bookactive': 'Đang hoạt động',
+      'ev.ih.from': 'Từ ngày', 'ev.ih.entity': 'Đơn vị đóng', 'ev.ih.level': 'Mức đóng', 'ev.ih.company': 'Công ty đóng', 'ev.ih.employee': 'Nhân viên đóng', 'ev.ih.notes': 'Ghi chú', 'ev.ih.empty': 'Chưa có dữ liệu lịch sử bảo hiểm',
+      'ev.bh.type': 'Loại quyền lợi', 'ev.bh.appdate': 'Ngày nhận hồ sơ', 'ev.bh.procdate': 'Ngày hoàn tất thủ tục', 'ev.bh.inspay': 'Ngày nhận tiền bảo hiểm', 'ev.bh.benpay': 'Ngày chi trả quyền lợi', 'ev.bh.amount': 'Số tiền', 'ev.bh.notes': 'Ghi chú', 'ev.bh.empty': 'Chưa có dữ liệu quyền lợi',
+      'ev.msg.renewal': 'Trước 30 ngày · lặp lại mỗi 7 ngày', 'ev.msg.contractnote': 'Email nhắc gửi tới HRM & PM cho đến khi trạng thái hợp đồng thay đổi.', 'ev.msg.ctvins': 'Cộng tác viên làm việc theo hợp đồng dịch vụ — bảo hiểm xã hội/y tế của công ty không áp dụng.', 'ev.msg.projnote': 'Một người có thể tham gia nhiều dự án cùng lúc. Giờ công được kiểm tra theo từng dự án, không cộng gộp giữa các dự án.', 'ev.msg.noproj': 'Chưa có phân bổ dự án nào.',
+      'ev.edu.school': 'Đại học Bách khoa Hà Nội', 'ev.edu.major': 'Công nghệ thông tin', 'ev.edu.degree': 'Kỹ sư', 'ev.exp1': 'FPT Software — Kỹ sư phần mềm', 'ev.exp1.meta': 'Backend / Java', 'ev.exp2': 'VNG Corporation — Kỹ sư cao cấp', 'ev.exp2.meta': 'Nhóm Platform', 'ev.cert1': 'AWS Certified Solutions Architect', 'ev.cert2': 'TOEIC 850',
       'field.username': 'Tên đăng nhập', 'field.location': 'Địa điểm',
       'field.contracttype': 'Loại hợp đồng', 'field.effectivedate': 'Ngày hiệu lực', 'field.expirydate': 'Ngày hết hạn',
       'field.renewalreminder': 'Nhắc gia hạn', 'field.renewalreminder.desc': 'Gửi email + thông báo in-app cho HRM & PM trước khi hợp đồng hết hạn.',
@@ -4082,6 +4274,10 @@
     statusMap.leave.label  = t('status.leave');
     statusMap.inactive.label = t('status.inactive');
     renderEmployees();
+
+    // Rebuild the employee detail panel in the new language if it's open
+    const pv = document.getElementById('panel-view');
+    if (pv && pv.classList.contains('open') && currentEmpViewId) openEmployeeView(currentEmpViewId);
 
     // Update toggle button
     const btn = document.getElementById('lang-toggle');
@@ -4274,61 +4470,237 @@
     return `<div class="emp-f${opts.full ? ' full' : ''}"><label>${esc(label)}</label><div class="${cls}">${opts.raw ? v : esc(v)}</div></div>`;
   }
 
+  // Sub-card: a titled group of fields inside a section (fields already rendered via fld())
+  function subGrid(title, fields) {
+    return `<div class="emp-subcard">${title ? `<div class="emp-subcard-title">${esc(title)}</div>` : ''}<div class="emp-grid">${fields}</div></div>`;
+  }
+  // Sub-card wrapping arbitrary HTML (lists, doc thumbs…)
+  function subBlock(title, html) {
+    return `<div class="emp-subcard">${title ? `<div class="emp-subcard-title">${esc(title)}</div>` : ''}${html}</div>`;
+  }
+  // A section with a header + icon
+  function empSection(key, iconId, title, body) {
+    return `<section class="emp-section" id="emp-sec-${key}" data-sec="${key}">
+      <div class="emp-sec-head"><div class="esh-icon"><svg><use href="#${iconId}"/></svg></div><h3>${esc(title)}</h3></div>
+      ${body}</section>`;
+  }
+  // A single ID/passport photo placeholder thumbnail
+  function docThumb(label) {
+    return `<div class="emp-doc-thumb" onclick="showToast('info','Preview','${esc(label)} would open here.')"><div class="edt-ph"><svg><use href="#i-image"/></svg></div><div class="edt-label">${esc(label)}</div></div>`;
+  }
+  // A list-item card (family / education / experience / certificate)
+  function listItem(title, meta) {
+    return `<div class="emp-list-item"><div class="eli-top"><div class="eli-title">${esc(title)}</div></div>${meta ? `<div class="eli-meta">${meta}</div>` : ''}</div>`;
+  }
+
+  let currentEmpViewId = null;
+
   function openEmployeeView(id) {
     const e = employees.find(x => x.id === id) || employees[0];
+    currentEmpViewId = e.id;
     const tm = typeMap[e.type] || typeMap.fulltime;
     const sm = statusMap[e.status];
     const isCtv = e.type === 'contractor';
     const nm = splitName(e.name);
     const allocs = e.allocations || [];
+    const digits = e.id.replace(/\D/g, '');
+    const username = e.email.split('@')[0];
+    const NA = t('ev.val.na');
 
-    const sub = document.getElementById('view-panel-subtitle');
-    if (sub) sub.textContent = `${e.id} · ${isCtv ? 'Contractor' : 'Employee'} · ${e.dept}`;
-
-    // --- Tab: Basic Information ---
-    const paneBasic = `<div class="emp-grid">
-      ${fld('Username', e.email)}
-      ${fld('Email', e.email)}
-      ${fld('Last Name', nm.last)}
-      ${fld('First Name', nm.first)}
-      ${fld('Phone', e.phone || '', { placeholder: 'Not provided' })}
+    // Hero card
+    const hero = `<div class="emp-hero">
+      <div class="eh-avatar" style="background:${e.color}">${esc(e.initials)}</div>
+      <div style="min-width:0">
+        <div class="eh-name">${esc(e.name)}</div>
+        <div class="eh-role">${esc(e.role)} · ${esc(e.dept)}</div>
+        <div class="eh-badges">
+          <span class="badge ${tm.cls}">${tm.label}</span>
+          <span class="badge ${sm.cls}">${sm.label}</span>
+          <span class="badge badge-neutral">${esc(e.id)}</span>
+        </div>
+      </div>
     </div>`;
 
-    // --- Tab: Profile Information ---
-    const paneProfile = `<div class="emp-grid">
-      ${fld('Job title', e.role)}
-      ${fld('Department', e.dept)}
-      ${fld('Location', e.loc)}
-      ${fld('Employment type', `<span class="badge ${tm.cls}">${tm.label}</span>`, { raw: true })}
-      ${fld('Status', `<span class="badge ${sm.cls}">${sm.label}</span>`, { raw: true })}
-      ${fld(isCtv ? 'Onboarded' : 'Start date', e.joined)}
-    </div>`;
+    // 1) Personal profile
+    const secPersonal = empSection('personal', 'i-users', t('ev.sec.personal'),
+      subGrid(t('ev.sub.account'),
+        fld(t('ev.f.username'), username, { mono: true }) +
+        fld(t('ev.f.email'), e.email) +
+        fld(t('ev.f.phone'), e.phone || '', { placeholder: t('ev.val.notprovided') }) +
+        fld(t('ev.f.emptype'), `<span class="badge ${tm.cls}">${tm.label}</span>`, { raw: true }) +
+        fld(t('ev.f.empcode'), e.id, { mono: true }) +
+        fld(t('ev.f.tkcode'), 'TK-' + digits, { mono: true })
+      ) +
+      subGrid(t('ev.sub.personal'),
+        fld(t('ev.f.lastname'), nm.last) +
+        fld(t('ev.f.firstname'), nm.first) +
+        fld(t('ev.f.shortname'), nm.first || e.name) +
+        fld(t('ev.f.dob'), 'Mar 12, 1994') +
+        fld(t('ev.f.gender'), t('ev.val.male')) +
+        fld(t('ev.f.nationality'), t('ev.val.vietnam')) +
+        fld(t('ev.f.ethnicity'), t('ev.val.kinh')) +
+        fld(t('ev.f.religion'), t('ev.val.none')) +
+        fld(t('ev.f.marital'), t('ev.val.single'))
+      ) +
+      subGrid(t('ev.sub.addresses'),
+        fld(t('ev.f.birthaddr'), 'Ba Dinh, Ha Noi', { full: true }) +
+        fld(t('ev.f.hometown'), 'Nam Dinh', { full: true }) +
+        fld(t('ev.f.permaddr'), '25 Lang Ha, Dong Da, Ha Noi', { full: true }) +
+        fld(t('ev.f.curraddr'), e.loc, { full: true })
+      )
+    );
 
-    // --- Tab: Contract ---
-    const contractEnd = isCtv && allocs.length ? allocs.map(a => a.to).sort().slice(-1)[0] : 'Indefinite';
-    const paneContract = `<div class="emp-grid">
-      ${fld('Contract type', isCtv ? 'Freelance / Service agreement' : 'Labor contract')}
-      ${fld('Effective date', e.joined)}
-      ${fld('Expiry date', contractEnd)}
-      ${fld('Renewal reminder', isCtv ? '30 days before · repeat every 7 days' : '—')}
-      <div class="emp-f full"><label>Note</label><div class="box empty">Reminder emails go to HRM & PM until the contract status changes.</div></div>
-    </div>`;
+    // 2) Employment
+    const secWork = empSection('work', 'i-briefcase', t('ev.sec.work'),
+      subGrid(t('ev.sub.position'),
+        fld(t('ev.f.position'), e.role) +
+        fld(t('ev.f.jobtitle'), e.role) +
+        fld(t('ev.f.department'), e.dept) +
+        fld(t('ev.f.manager'), isCtv ? 'David Park' : 'Sarah Chen') +
+        fld(isCtv ? t('ev.f.onboarded') : t('ev.f.startdate'), e.joined) +
+        fld(t('ev.f.officialdate'), isCtv ? NA : e.joined) +
+        fld(t('ev.f.taxcode'), '8' + digits + '01', { mono: true })
+      ) +
+      subGrid(t('ev.sub.vehicle'),
+        fld(t('ev.f.plate'), '30K-123.45', { mono: true }) +
+        fld(t('ev.f.vehicle'), 'Honda SH 150i — black')
+      )
+    );
 
-    // --- Tab: Insurance ---
-    const paneInsurance = isCtv
-      ? `<div class="account-note"><svg><use href="#i-info"/></svg><div>Contractors are engaged under a service agreement — company social/health insurance does not apply.</div></div>`
-      : `<div class="emp-grid">
-          ${fld('Social insurance no.', 'VN-' + e.id.replace(/\D/g, '') + '-SI')}
-          ${fld('Health insurance no.', 'VN-' + e.id.replace(/\D/g, '') + '-HI')}
-          ${fld('Provider', 'Vietnam Social Security')}
-          ${fld('Coverage since', e.joined)}
-        </div>`;
+    // 3) Documents & Bank
+    const secDocs = empSection('docs', 'i-file', t('ev.sec.docs'),
+      subGrid(t('ev.sub.cccd'),
+        fld(t('ev.f.cccdno'), '0' + digits + '000123', { mono: true }) +
+        fld(t('ev.f.issuedate'), 'Aug 20, 2021') +
+        fld(t('ev.f.issueplace'), 'National ID Center, Ha Noi', { full: true })
+      ) +
+      subBlock('', `<div class="emp-docs">${docThumb(t('ev.doc.cccdfront'))}${docThumb(t('ev.doc.cccdback'))}${docThumb(t('ev.doc.passport'))}</div>`) +
+      subGrid(t('ev.sub.passport'),
+        fld(t('ev.f.passno'), 'C' + digits + '99', { mono: true }) +
+        fld(t('ev.f.passtype'), t('ev.val.ordinary')) +
+        fld(t('ev.f.issuedate'), 'Sep 05, 2022') +
+        fld(t('ev.f.issueplace'), 'Immigration Dept.') +
+        fld(t('ev.f.expirydate'), 'Sep 05, 2032')
+      ) +
+      subGrid(t('ev.sub.bank'),
+        fld(t('ev.f.bankno'), '19' + digits + '8888', { mono: true }) +
+        fld(t('ev.f.bankholder'), e.name) +
+        fld(t('ev.f.bankname'), 'Techcombank') +
+        fld(t('ev.f.branch'), 'Ha Noi HQ')
+      )
+    );
 
-    // --- Tab: Attachments ---
+    // 4) Contacts & Family
+    const secContacts = empSection('contacts', 'i-phone', t('ev.sec.contacts'),
+      subGrid(t('ev.sub.emergency'),
+        fld(t('ev.f.fullname'), 'Nguyen Thi Hoa') +
+        fld(t('ev.f.phone'), '0987 654 321') +
+        fld(t('ev.f.relationship'), t('ev.val.mother'))
+      ) +
+      subBlock(t('ev.sub.family'), `<div class="emp-list">
+        ${listItem('Nguyen Thi Hoa', `<span>${t('ev.f.relationship')}: <b>${t('ev.val.mother')}</b></span><span>${t('ev.meta.year')}: <b>1968</b></span>`)}
+        ${listItem('Nguyen Van Hung', `<span>${t('ev.f.relationship')}: <b>${t('ev.val.father')}</b></span><span>${t('ev.meta.year')}: <b>1965</b></span>`)}
+      </div>`)
+    );
+
+    // 5) Education & Experience
+    const secBackground = empSection('background', 'i-check-sq', t('ev.sec.background'),
+      subBlock(t('ev.sub.education'), `<div class="emp-list">
+        ${listItem(t('ev.edu.school'), `<span>${t('ev.meta.major')}: <b>${t('ev.edu.major')}</b></span><span>2012 – 2016</span><span>${t('ev.meta.degree')}: <b>${t('ev.edu.degree')}</b></span>`)}
+      </div>`) +
+      subBlock(t('ev.sub.experience'), `<div class="emp-list">
+        ${listItem(t('ev.exp1'), `<span>2016 – 2019</span><span>${t('ev.exp1.meta')}</span>`)}
+        ${listItem(t('ev.exp2'), `<span>2019 – 2022</span><span>${t('ev.exp2.meta')}</span>`)}
+      </div>`) +
+      subBlock(t('ev.sub.techstacks'), `<div class="emp-chips">
+        ${(e.dept === 'Design'
+          ? ['Figma', 'Adobe XD', 'Sketch', 'HTML/CSS', 'Design System']
+          : ['Java', 'Spring Boot', 'Node.js', 'PostgreSQL', 'Docker', 'AWS', 'React']
+        ).map(s => `<span class="emp-chip">${esc(s)}</span>`).join('')}
+      </div>`) +
+      subBlock(t('ev.sub.certs'), `<div class="emp-list">
+        ${listItem(t('ev.cert1'), `<span>${t('ev.meta.issued')}: <b>2021</b></span><span>${t('ev.meta.validuntil')}: <b>2024</b></span>`)}
+        ${listItem(t('ev.cert2'), `<span>${t('ev.meta.issued')}: <b>2020</b></span>`)}
+      </div>`)
+    );
+
+    // 6) Contract & Insurance
+    // --- Contract: a list of the employee's contracts ---
+    const contractEnd = isCtv && allocs.length ? allocs.map(a => a.to).sort().slice(-1)[0] : NA;
+    const contracts = isCtv
+      ? [{ code: 'TWD' + digits + '-01', type: t('ev.val.freelance'), status: 'active', from: e.joined, to: contractEnd }]
+      : [
+          { code: 'TWD' + digits + '-01', type: t('ev.ct.probation'),  status: 'expired', from: e.joined, to: e.joined },
+          { code: 'TWD' + digits + '-02', type: t('ev.ct.typeindef'), status: 'active',  from: e.joined, to: NA }
+        ];
+    const contractTable = `<div class="emp-tbl-wrap"><table class="emp-tbl">
+      <thead><tr>
+        <th>${t('ev.ct.code')}</th><th>${t('ev.f.contracttype')}</th><th>${t('ev.f.department')}</th><th>${t('ev.f.position')}</th><th>${t('ev.ct.status')}</th><th>${t('ev.ct.from')}</th><th>${t('ev.ct.to')}</th><th style="text-align:right">${t('ev.ct.actions')}</th>
+      </tr></thead>
+      <tbody>
+        ${contracts.map(c => `<tr>
+          <td><b>${esc(c.code)}</b></td>
+          <td><span class="badge badge-neutral">${esc(c.type)}</span></td>
+          <td>${esc(e.dept)}</td>
+          <td>${esc(e.role)}</td>
+          <td><span class="badge ${c.status === 'active' ? 'badge-success' : 'badge-neutral'}">${c.status === 'active' ? t('ev.ct.active') : t('ev.ct.expired')}</span></td>
+          <td>${esc(c.from)}</td>
+          <td>${esc(c.to)}</td>
+          <td style="text-align:right"><button class="ic-act" title="${esc(t('ev.ct.actions'))}" onclick="showToast('info','Contract','${esc(c.code)}')"><svg><use href="#i-eye"/></svg></button></td>
+        </tr>`).join('')}
+      </tbody>
+    </table></div>`;
+
+    // --- Insurance: book info + history tables ---
+    const insHistTable = `<div class="emp-tbl-wrap"><table class="emp-tbl">
+      <thead><tr><th>${t('ev.ih.from')}</th><th>${t('ev.ih.entity')}</th><th>${t('ev.ih.level')}</th><th>${t('ev.ih.company')}</th><th>${t('ev.ih.employee')}</th><th>${t('ev.ih.notes')}</th></tr></thead>
+      <tbody><tr><td colspan="6"><div class="emp-tbl-empty">${t('ev.ih.empty')}</div></td></tr></tbody>
+    </table></div>`;
+    const benefitTable = `<div class="emp-tbl-wrap"><table class="emp-tbl">
+      <thead><tr><th>${t('ev.bh.type')}</th><th>${t('ev.bh.appdate')}</th><th>${t('ev.bh.procdate')}</th><th>${t('ev.bh.inspay')}</th><th>${t('ev.bh.benpay')}</th><th>${t('ev.bh.amount')}</th><th>${t('ev.bh.notes')}</th></tr></thead>
+      <tbody><tr><td colspan="7"><div class="emp-tbl-empty">${t('ev.bh.empty')}</div></td></tr></tbody>
+    </table></div>`;
+
+    const secContract = empSection('contract', 'i-calendar', t('ev.sec.contract'),
+      subBlock(t('ev.sub.contract'), contractTable) +
+      subGrid(t('ev.sub.insinfo'),
+        fld(t('ev.f.insbookno'), digits + '2643', { mono: true }) +
+        fld(t('ev.f.bookstatus'), `<span class="badge badge-success">${t('ev.val.bookactive')}</span>`, { raw: true }) +
+        fld(t('ev.f.payingentity'), 'Công ty TNHH phần mềm Twendee') +
+        fld(t('ev.f.healthprovider'), '', { placeholder: NA })
+      ) +
+      subBlock(t('ev.sub.inshistory'), insHistTable) +
+      subBlock(t('ev.sub.benefithistory'), benefitTable)
+    );
+
+    // 7) Projects
+    const secProjects = empSection('projects', 'i-package', t('ev.sec.projects'),
+      `<div class="account-note" style="background:#F0FDF4; border-color:#BBF7D0; color:#166534;">
+        <svg><use href="#i-info"/></svg>
+        <div>${t('ev.msg.projnote')}</div>
+      </div>
+      ${allocs.length ? `<div class="alloc-view-list">
+        ${allocs.map(a => `
+          <div class="alloc-view-card">
+            <div class="avc-top">
+              <div class="avc-proj">${esc(a.project)}</div>
+              <span class="badge ${a.mode === 'FT' ? 'badge-ft' : 'badge-pt'}">${a.mode === 'FT' ? t('ev.mode.ft') : t('ev.mode.pt')}</span>
+            </div>
+            <div class="avc-meta">
+              <span>${t('ev.meta.role')}: <b>${esc(a.role)}</b></span>
+              <span>${t('ev.meta.period')}: <b>${esc(a.from)} → ${esc(a.to)}</b></span>
+              ${a.mode === 'PT' && a.ptMin ? `<span>${t('ev.meta.min')}: <b>${a.ptMin}h/week</b> (${t('ev.meta.kpi')})</span>` : ''}
+            </div>
+          </div>`).join('')}
+      </div>` : `<div class="emp-f"><div class="box empty">${t('ev.msg.noproj')}</div></div>`}`
+    );
+
+    // 8) Attachments
     const files = isCtv
       ? [{ n: 'Service_Agreement_signed.pdf', s: '412 KB' }, { n: 'NDA.pdf', s: '188 KB' }, { n: 'ID_card.jpg', s: '1.1 MB' }]
       : [{ n: 'Labor_Contract.pdf', s: '520 KB' }, { n: 'ID_card.jpg', s: '1.0 MB' }];
-    const paneAttach = `<div class="alloc-view-list">
+    const secAttach = empSection('attach', 'i-download', t('ev.sec.attach'),
+      `<div class="alloc-view-list">
       ${files.map(f => `<div class="alloc-view-card" style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
         <div style="display:flex;align-items:center;gap:10px;min-width:0;">
           <svg style="width:18px;height:18px;color:var(--primary);flex:0 0 auto"><use href="#i-file"/></svg>
@@ -4336,51 +4708,74 @@
         </div>
         <button class="btn btn-secondary btn-sm" onclick="showToast('info','Download','${esc(f.n)} would download here.')"><svg><use href="#i-download"/></svg></button>
       </div>`).join('')}
-    </div>`;
+    </div>`);
 
-    // --- Tab: Projects (allocations & work mode) ---
-    const paneProjects = `
-      <div class="gallery-card-title" style="margin-bottom: var(--s3)">Project allocations &amp; work mode <span class="badge badge-neutral">${allocs.length}</span></div>
-      <div class="account-note" style="background:#F0FDF4; border-color:#BBF7D0; color:#166534;">
-        <svg><use href="#i-info"/></svg>
-        <div>One person can join multiple projects at once. Hours are validated <b>per project</b> and never across projects.</div>
-      </div>
-      ${allocs.length ? `<div class="alloc-view-list">
-        ${allocs.map(a => `
-          <div class="alloc-view-card">
-            <div class="avc-top">
-              <div class="avc-proj">${esc(a.project)}</div>
-              <span class="badge ${a.mode === 'FT' ? 'badge-ft' : 'badge-pt'}">${a.mode === 'FT' ? 'Full-time · 8h/day' : 'Part-time · max 8h/day'}</span>
-            </div>
-            <div class="avc-meta">
-              <span>Role: <b>${esc(a.role)}</b></span>
-              <span>Period: <b>${esc(a.from)} → ${esc(a.to)}</b></span>
-              ${a.mode === 'PT' && a.ptMin ? `<span>Min: <b>${a.ptMin}h/week</b> (KPI)</span>` : ''}
-            </div>
-          </div>`).join('')}
-      </div>` : `<div class="emp-f"><div class="box empty">No project allocations yet.</div></div>`}`;
-
-    const tabs = [
-      { key: 'basic',    label: 'Basic Information',   pane: paneBasic },
-      { key: 'profile',  label: 'Profile Information', pane: paneProfile },
-      { key: 'contract', label: 'Contract',           pane: paneContract },
-      { key: 'insurance',label: 'Insurance',          pane: paneInsurance },
-      { key: 'attach',   label: 'Attachments',        pane: paneAttach },
-      { key: 'projects', label: 'Projects',           pane: paneProjects }
+    const navItems = [
+      { key: 'personal',   icon: 'i-users' },
+      { key: 'work',       icon: 'i-briefcase' },
+      { key: 'docs',       icon: 'i-file' },
+      { key: 'contacts',   icon: 'i-phone' },
+      { key: 'background', icon: 'i-check-sq' },
+      { key: 'contract',   icon: 'i-calendar' },
+      { key: 'projects',   icon: 'i-package' },
+      { key: 'attach',     icon: 'i-download' }
     ];
 
     const html = `
-      <div class="emp-tabs" role="tablist">
-        ${tabs.map((t, i) => `<button class="emp-tab${i === 0 ? ' active' : ''}" role="tab" onclick="switchEmpTab(this, '${t.key}')">${esc(t.label)}</button>`).join('')}
-      </div>
-      ${tabs.map((t, i) => `<div class="emp-pane${i === 0 ? ' active' : ''}" data-emp-pane="${t.key}">${t.pane}</div>`).join('')}`;
+      <div class="emp-layout">
+        <nav class="emp-nav" role="tablist">
+          ${navItems.map((n, i) => `<button class="emp-nav-btn${i === 0 ? ' active' : ''}" role="tab" data-sec-btn="${n.key}" onclick="empScrollTo('${n.key}')"><svg><use href="#${n.icon}"/></svg><span>${esc(t('ev.nav.' + n.key))}</span></button>`).join('')}
+        </nav>
+        <div class="emp-doc">
+          ${hero}
+          ${secPersonal}${secWork}${secDocs}${secContacts}${secBackground}${secContract}${secProjects}${secAttach}
+        </div>
+      </div>`;
 
-    document.getElementById('view-panel-body').innerHTML = html;
+    const bodyEl = document.getElementById('view-panel-body');
+    bodyEl.innerHTML = html;
+    bodyEl.onscroll = empScrollSpy;
     openPanel('panel-view');
+    // Reset scroll to top when (re)opening
+    bodyEl.scrollTop = 0;
   }
 
+  // Nav only sits ABOVE the content on narrow screens; on desktop it's a side column
+  function empNavOffset(bodyEl) {
+    const nav = bodyEl.querySelector('.emp-nav');
+    const isTop = window.matchMedia('(max-width: 768px)').matches;
+    return isTop && nav ? nav.offsetHeight : 0;
+  }
+
+  // Jump to a section from the nav
+  function empScrollTo(key) {
+    const bodyEl = document.getElementById('view-panel-body');
+    const sec = document.getElementById('emp-sec-' + key);
+    if (!bodyEl || !sec) return;
+    bodyEl.scrollTo({ top: sec.offsetTop - empNavOffset(bodyEl) - 12, behavior: 'smooth' });
+    empSetActiveNav(key);
+  }
+
+  function empSetActiveNav(key) {
+    document.querySelectorAll('#view-panel-body .emp-nav-btn')
+      .forEach(b => b.classList.toggle('active', b.getAttribute('data-sec-btn') === key));
+  }
+
+  // Highlight the nav button of the section currently in view
+  function empScrollSpy() {
+    const bodyEl = document.getElementById('view-panel-body');
+    if (!bodyEl) return;
+    const marker = bodyEl.scrollTop + empNavOffset(bodyEl) + 40;
+    const secs = bodyEl.querySelectorAll('.emp-section');
+    let current = secs.length ? secs[0].getAttribute('data-sec') : null;
+    secs.forEach(s => { if (s.offsetTop <= marker) current = s.getAttribute('data-sec'); });
+    if (current) empSetActiveNav(current);
+  }
+
+  // Back-compat: the Add panel still uses show/hide tabs
   function switchEmpTab(btn, key) {
-    const body = btn.closest('.panel-body') || document.getElementById('view-panel-body');
+    const body = btn.closest('.panel-body');
+    if (!body) return;
     body.querySelectorAll('.emp-tab').forEach(t => t.classList.remove('active'));
     btn.classList.add('active');
     body.querySelectorAll('.emp-pane').forEach(p => p.classList.toggle('active', p.getAttribute('data-emp-pane') === key));
@@ -4486,6 +4881,9 @@
     } else if (name === 'events') {
       if (bc) bc.innerHTML = `<span>CRM</span><svg width="14" height="14"><use href="#i-chevron-right"/></svg><span class="current">Event Tracking</span>`;
       document.title = 'Event Tracking — Twendee Work';
+    } else if (name === 'activitylog') {
+      if (bc) bc.innerHTML = `<span>CRM</span><svg width="14" height="14"><use href="#i-chevron-right"/></svg><span class="current">Activity Log</span>`;
+      document.title = 'Activity Log — Twendee Work';
     } else if (name.indexOf('personal-') === 0) {
       const leaf = PERSONAL_LEAF[name.slice('personal-'.length)] || 'Dashboard';
       if (bc) bc.innerHTML = `<span>Personal</span><svg width="14" height="14"><use href="#i-chevron-right"/></svg><span class="current">${leaf}</span>`;
@@ -4501,7 +4899,7 @@
       if (crumb) crumb.textContent = name === 'profile' ? 'My Profile' : t('nav.employees');
     }
     // Full-bleed the content area for embedded views (account, events)
-    document.querySelector('.main')?.classList.toggle('embed-active', name === 'account' || name === 'events' || name === 'crmdash' || name === 'dashsales' || name === 'dashbd');
+    document.querySelector('.main')?.classList.toggle('embed-active', name === 'account' || name === 'events' || name === 'activitylog' || name === 'crmdash' || name === 'dashsales' || name === 'dashbd');
     // Close mobile sidebar drawer if open, and scroll to top
     document.querySelector('.main')?.scrollTo(0, 0);
     if (typeof closeMobileSidebar === 'function') closeMobileSidebar();
@@ -5061,7 +5459,7 @@
 
   // ============ HASH ROUTING — one URL per feature ============
   // #employees · #dashsales · #dashbd · #crmdash · #account · #events · #profile · #personal-*
-  const ROUTE_VIEWS = ['employees', 'dashsales', 'dashbd', 'crmdash', 'account', 'events', 'profile',
+  const ROUTE_VIEWS = ['employees', 'dashsales', 'dashbd', 'crmdash', 'account', 'events', 'activitylog', 'profile',
     'personal-dash', 'personal-logwork', 'personal-leave', 'personal-reports', 'personal-timesheet',
     'approve-logwork', 'timesheet-confirm'];
   function applyRoute() {
@@ -5086,6 +5484,9 @@
     } else if (name === 'events') {
       const el = document.querySelector('.rail-subitem[onclick*="\'crm\',\'Event Tracking\'"]');
       if (el) selectSubItem(el, 'crm', 'Event Tracking');
+    } else if (name === 'activitylog') {
+      const el = document.querySelector('.rail-subitem[onclick*="\'crm\',\'Activity Log\'"]');
+      if (el) selectSubItem(el, 'crm', 'Activity Log');
     } else if (name.indexOf('personal-') === 0) {
       const leafMap = { 'personal-dash': 'Dashboard', 'personal-logwork': 'Log Work', 'personal-leave': 'Leave', 'personal-reports': 'Progress Reports', 'personal-timesheet': 'Monthly Timesheet' };
       const el = document.querySelector(`.rail-subitem[onclick*="'personal','${leafMap[name]}'"]`);
