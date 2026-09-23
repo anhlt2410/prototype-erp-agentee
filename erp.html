@@ -2136,6 +2136,94 @@
   .emp-tab.active { background: var(--primary); color: #fff; }
   .emp-pane { display: none; }
   .emp-pane.active { display: block; }
+  /* Type-dependent visibility + form section sub-headers (Add/Edit panel) */
+  .is-hidden { display: none !important; }
+  .form-subhead {
+    grid-column: 1 / -1;
+    font-size: 11.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+    color: var(--text-muted);
+    padding-bottom: 7px; margin-top: 6px;
+    border-bottom: 1px solid var(--divider);
+  }
+  .form-grid > .form-subhead:first-child { margin-top: 0; }
+
+  /* Add/Edit panel adopts the detail panel's two-column (nav + doc) layout */
+  #add-panel-body { padding: 0; position: relative; scroll-behavior: smooth; }
+  /* Avatar upload (hero) */
+  .avatar-upload { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; flex: 0 0 auto; }
+  .avatar-upload input[type=file] { display: none; }
+  .avatar-upload .eh-avatar.av-ph {
+    background: var(--surface); border: 2px dashed var(--border-strong); color: var(--text-muted);
+    background-size: cover; background-position: center; transition: border-color .15s, color .15s;
+  }
+  .avatar-upload .eh-avatar.av-ph svg { width: 22px; height: 22px; }
+  .avatar-upload:hover .eh-avatar.av-ph { border-color: var(--primary); color: var(--primary); }
+  .avatar-upload .eh-avatar.av-ph.has-img { border-style: solid; border-color: var(--primary); }
+  .avatar-upload .av-hint { font-size: 12px; color: var(--text); font-weight: 600; }
+  .avatar-upload .av-formats { font-size: 10.5px; color: var(--text-muted); font-weight: 500; letter-spacing: .1px; }
+  /* Hero layout: avatar (left) · divider · employee-type (right) */
+  .add-hero { align-items: stretch; gap: 20px; }
+  .add-hero .avatar-upload {
+    justify-content: center; padding-right: 20px;
+    border-right: 1px solid var(--divider);
+  }
+  /* Modern employee-type selector (card radios) */
+  .add-hero-type { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+  .add-hero-type .label { margin-bottom: 0; }
+  .type-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .type-card { position: relative; margin: 0; cursor: pointer; }
+  .type-card input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+  .type-card .tc-body {
+    display: flex; align-items: center; gap: 11px; height: 100%;
+    padding: 12px 13px; border-radius: 12px;
+    background: var(--surface); border: 1.5px solid var(--divider);
+    transition: border-color .15s, background .15s, box-shadow .15s;
+  }
+  .type-card .tc-icon {
+    flex: 0 0 auto; width: 36px; height: 36px; border-radius: 9px;
+    display: grid; place-items: center;
+    background: var(--surface-muted, #F1F5F9); color: var(--text-muted);
+    transition: background .15s, color .15s;
+  }
+  .type-card .tc-icon svg { width: 18px; height: 18px; }
+  .type-card .tc-text { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .type-card .tc-title { font-size: 13.5px; font-weight: 700; color: var(--text); line-height: 1.2; }
+  .type-card .tc-desc { font-size: 11px; color: var(--text-muted); line-height: 1.3; }
+  .type-card .tc-check {
+    flex: 0 0 auto; margin-left: auto; width: 18px; height: 18px; border-radius: 50%;
+    display: grid; place-items: center; background: var(--primary); color: #fff;
+    opacity: 0; transform: scale(.6); transition: opacity .15s, transform .15s;
+  }
+  .type-card .tc-check svg { width: 11px; height: 11px; }
+  .type-card:hover .tc-body { border-color: var(--border-strong); }
+  .type-card input:checked ~ .tc-body {
+    border-color: var(--primary); background: var(--primary-50, rgba(37,99,235,.06));
+    box-shadow: 0 0 0 1px var(--primary);
+  }
+  .type-card input:checked ~ .tc-body .tc-icon { background: var(--primary); color: #fff; }
+  .type-card input:checked ~ .tc-body .tc-check { opacity: 1; transform: scale(1); }
+  .type-card input:focus-visible ~ .tc-body { outline: 2px solid var(--primary); outline-offset: 2px; }
+  @media (max-width: 640px) {
+    .add-hero { flex-direction: column; align-items: stretch; }
+    .add-hero .avatar-upload { border-right: none; border-bottom: 1px solid var(--divider); padding-right: 0; padding-bottom: 16px; }
+    .type-cards { grid-template-columns: 1fr; }
+  }
+  /* CCCD photo upload (Documents section) */
+  .doc-upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .doc-upload { display: block; cursor: pointer; }
+  .doc-upload input[type=file] { display: none; }
+  .doc-upload .du-ph {
+    height: 120px; border: 2px dashed var(--border-strong); border-radius: 10px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+    color: var(--text-muted); background: var(--surface-muted, #F8FAFC);
+    background-size: cover; background-position: center; transition: border-color .15s, color .15s;
+  }
+  .doc-upload .du-ph svg { width: 26px; height: 26px; }
+  .doc-upload .du-ph span { font-size: 12px; font-weight: 600; }
+  .doc-upload:hover .du-ph { border-color: var(--primary); color: var(--primary); }
+  .doc-upload .du-ph.has-img { border-style: solid; border-color: var(--primary); }
+  .doc-upload .du-ph.has-img svg, .doc-upload .du-ph.has-img span { display: none; }
+  .doc-upload .du-label { font-size: 12px; color: var(--text-secondary); font-weight: 500; margin-top: 6px; text-align: center; }
   .emp-grid {
     display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px;
   }
@@ -2159,11 +2247,12 @@
   .emp-layout { display: flex; align-items: flex-start; }
 
   .emp-nav {
-    position: sticky; top: 0; align-self: flex-start; z-index: 5;
-    flex: 0 0 200px; width: 200px; max-height: 100vh; overflow-y: auto;
+    position: sticky; top: var(--s3); align-self: flex-start; z-index: 5;
+    flex: 0 0 190px; width: 190px; max-height: calc(100vh - var(--s3) * 2); overflow-y: auto;
     display: flex; flex-direction: column; gap: 2px;
-    padding: var(--s5) 12px;
-    background: var(--surface-muted, #F8FAFC); border-right: 1px solid var(--divider);
+    padding: 8px; margin: var(--s3) 0 var(--s3) var(--s3);
+    background: var(--surface-muted, #F8FAFC);
+    border: 1px solid var(--divider); border-radius: var(--r-xl);
   }
   .emp-nav-btn {
     display: flex; align-items: center; gap: 9px; width: 100%; text-align: left;
@@ -2176,15 +2265,15 @@
   .emp-nav-btn:hover { color: var(--text); background: var(--surface); }
   .emp-nav-btn.active { background: var(--primary); color: #fff; }
 
-  .emp-doc { flex: 1 1 auto; min-width: 0; padding: var(--s5); }
+  .emp-doc { flex: 1 1 auto; min-width: 0; padding: var(--s3) var(--s4) var(--s4); }
 
   @media (max-width: 768px) {
     .emp-layout { flex-direction: column; }
     .emp-nav {
       flex: none; width: auto; max-height: none;
       flex-direction: row; gap: 4px; flex-wrap: nowrap; overflow-x: auto;
-      border-right: none; border-bottom: 1px solid var(--divider);
-      padding: 10px var(--s5);
+      margin: var(--s3) var(--s4) 0;
+      padding: 8px;
     }
     .emp-nav-btn { white-space: nowrap; }
   }
@@ -3781,51 +3870,208 @@
     <div class="panel-header">
       <div>
         <div class="panel-title" id="add-panel-title" data-i18n="panel.add.title">Add Employee</div>
-        <div class="panel-subtitle" data-i18n="panel.add.subtitle">Create a new team member profile.</div>
       </div>
       <button class="panel-close" onclick="closePanel('panel-add')" aria-label="Close"><svg><use href="#i-x"/></svg></button>
     </div>
-    <div class="panel-body">
-      <div class="emp-tabs" role="tablist">
-        <button class="emp-tab active" role="tab" onclick="switchEmpTab(this,'basic')" data-i18n="etab.basic">Basic Information</button>
-        <button class="emp-tab" role="tab" onclick="switchEmpTab(this,'profile')" data-i18n="etab.profile">Profile Information</button>
-        <button class="emp-tab" role="tab" onclick="switchEmpTab(this,'contract')" data-i18n="etab.contract">Contract</button>
-        <button class="emp-tab" role="tab" onclick="switchEmpTab(this,'insurance')" data-i18n="etab.insurance">Insurance</button>
-        <button class="emp-tab" role="tab" onclick="switchEmpTab(this,'attach')" data-i18n="etab.attach">Attachments</button>
-        <button class="emp-tab" role="tab" onclick="switchEmpTab(this,'projects')" data-i18n="etab.projects">Projects</button>
-      </div>
+    <div class="panel-body" id="add-panel-body">
+      <div class="emp-layout">
+        <nav class="emp-nav" role="tablist">
+          <button class="emp-nav-btn active" role="tab" data-sec-btn="overview" onclick="addSecScrollTo('overview')"><svg><use href="#i-users"/></svg><span data-i18n="ev.nav.overview">Overview</span></button>
+          <button class="emp-nav-btn" role="tab" data-sec-btn="personal" onclick="addSecScrollTo('personal')"><svg><use href="#i-file"/></svg><span data-i18n="ev.nav.personal">Personal Info</span></button>
+          <button class="emp-nav-btn" role="tab" data-sec-btn="work" data-only="inhouse" onclick="addSecScrollTo('work')"><svg><use href="#i-briefcase"/></svg><span data-i18n="ev.nav.work">Employment</span></button>
+          <button class="emp-nav-btn" role="tab" data-sec-btn="projects" onclick="addSecScrollTo('projects')"><svg><use href="#i-package"/></svg><span data-i18n="ev.nav.projects">Projects</span></button>
+          <button class="emp-nav-btn" role="tab" data-sec-btn="bank" onclick="addSecScrollTo('bank')"><svg><use href="#i-dollar"/></svg><span data-i18n="ev.nav.bank">Bank Account</span></button>
+          <button class="emp-nav-btn" role="tab" data-sec-btn="contacts" onclick="addSecScrollTo('contacts')"><svg><use href="#i-phone"/></svg><span data-i18n="ev.nav.contacts">Emergency Contact</span></button>
+          <button class="emp-nav-btn" role="tab" data-sec-btn="background" onclick="addSecScrollTo('background')"><svg><use href="#i-check-sq"/></svg><span data-i18n="ev.nav.background">Education &amp; Experience</span></button>
+          <button class="emp-nav-btn" role="tab" data-sec-btn="contract" onclick="addSecScrollTo('contract')"><svg><use href="#i-calendar"/></svg><span data-i18n="ev.nav.contract">Contract</span></button>
+          <button class="emp-nav-btn" role="tab" data-sec-btn="insurance" data-only="inhouse" onclick="addSecScrollTo('insurance')"><svg><use href="#i-check"/></svg><span data-i18n="ev.nav.insurance">Insurance</span></button>
+          <button class="emp-nav-btn" role="tab" data-sec-btn="attach" onclick="addSecScrollTo('attach')"><svg><use href="#i-download"/></svg><span data-i18n="ev.nav.attach">Attachments</span></button>
+        </nav>
+        <div class="emp-doc">
 
-      <!-- Tab: Basic Information -->
-      <div class="emp-pane active" data-emp-pane="basic">
-        <div class="form-grid">
+          <!-- Hero: avatar upload (left) + employee-type selector (right) -->
+          <div class="emp-hero add-hero">
+            <label class="avatar-upload" title="Upload avatar">
+              <input type="file" accept="image/png,image/jpeg,image/webp" onchange="onAvatarPick(this)">
+              <div class="eh-avatar av-ph" id="add-avatar"><svg><use href="#i-image"/></svg></div>
+              <span class="av-hint" data-i18n="btn.avatar">Upload photo</span>
+              <span class="av-formats" data-i18n="hint.avatar.formats">JPG, PNG, WEBP · tối đa 2MB</span>
+            </label>
+            <div class="add-hero-type">
+              <label class="label"><span data-i18n="field.emptype">Employee type</span> <span class="required">*</span></label>
+              <div class="type-cards">
+                <label class="type-card">
+                  <input type="radio" name="add-type" value="inhouse" checked onchange="onEmpTypeChange()">
+                  <span class="tc-body">
+                    <span class="tc-icon"><svg><use href="#i-users"/></svg></span>
+                    <span class="tc-text">
+                      <span class="tc-title" data-i18n="rc.inhouse.title">In-house</span>
+                      <span class="tc-desc" data-i18n="rc.inhouse.desc">Company employee · full HR profile</span>
+                    </span>
+                    <span class="tc-check"><svg><use href="#i-check"/></svg></span>
+                  </span>
+                </label>
+                <label class="type-card">
+                  <input type="radio" name="add-type" value="contractor" onchange="onEmpTypeChange()">
+                  <span class="tc-body">
+                    <span class="tc-icon"><svg><use href="#i-briefcase"/></svg></span>
+                    <span class="tc-text">
+                      <span class="tc-title" data-i18n="rc.contractor.title">Contractor</span>
+                      <span class="tc-desc" data-i18n="rc.contractor.desc2">Freelance / CTV · service agreement</span>
+                    </span>
+                    <span class="tc-check"><svg><use href="#i-check"/></svg></span>
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Overview (Account & Contact) -->
+          <div class="emp-section" id="addsec-overview" data-sec="overview">
+            <div class="emp-sec-head"><div class="esh-icon"><svg><use href="#i-users"/></svg></div><h3 data-i18n="ev.sec.overview">Overview</h3></div>
+            <div class="form-grid">
+          <div class="form-subhead" data-i18n="ev.sub.account">Account &amp; Contact</div>
           <div class="field">
             <label class="label"><span data-i18n="field.username">Username</span> <span class="required">*</span></label>
-            <input class="input" type="text" placeholder="ellie@twendeesoft.com">
+            <input class="input" type="text" placeholder="minh.nv">
           </div>
           <div class="field">
             <label class="label"><span data-i18n="field.workemail">Email</span> <span class="required">*</span></label>
-            <input class="input" type="email" placeholder="ellie@twendeesoft.com">
-          </div>
-          <div class="field">
-            <label class="label"><span data-i18n="field.lastname">Last name</span> <span class="required">*</span></label>
-            <input class="input" type="text" placeholder="Đỗ" data-i18n-placeholder="field.lastname.ph">
-          </div>
-          <div class="field">
-            <label class="label"><span data-i18n="field.firstname">First name</span> <span class="required">*</span></label>
-            <input class="input" type="text" placeholder="Thị Thu Thảo" data-i18n-placeholder="field.firstname.ph">
+            <input class="input" type="email" placeholder="minh.nv@twendeesoft.com">
           </div>
           <div class="field">
             <label class="label" data-i18n="field.phone">Phone</label>
             <input class="input" type="tel" placeholder="0362962835">
           </div>
+          <div class="field">
+            <label class="label" data-i18n="ev.f.empcode">Employee code</label>
+            <input class="input" type="text" placeholder="EMP-0142" disabled data-i18n-placeholder="ph.autogen">
+          </div>
+          <div class="field" data-only="inhouse">
+            <label class="label" data-i18n="ev.f.tkcode">Timekeeping code</label>
+            <input class="input" type="text" placeholder="TK-0142" disabled data-i18n-placeholder="ph.autogen">
+          </div>
         </div>
       </div>
 
-      <!-- Tab: Profile Information -->
-      <div class="emp-pane" data-emp-pane="profile">
-        <div class="form-grid">
+      <!-- Section: Personal Information -->
+      <div class="emp-section" id="addsec-personal" data-sec="personal">
+            <div class="emp-sec-head"><div class="esh-icon"><svg><use href="#i-file"/></svg></div><h3 data-i18n="ev.sec.personal">Personal Information</h3></div>
+            <div class="form-grid">
+          <div class="form-subhead" data-i18n="ev.sub.personal">Personal Information</div>
           <div class="field">
-            <label class="label"><span data-i18n="field.jobtitle">Job title</span> <span class="required">*</span></label>
+            <label class="label"><span data-i18n="field.lastname">Last name</span> <span class="required">*</span></label>
+            <input class="input" type="text" placeholder="Nguyen" data-i18n-placeholder="field.lastname.ph">
+          </div>
+          <div class="field">
+            <label class="label"><span data-i18n="field.firstname">First name</span> <span class="required">*</span></label>
+            <input class="input" type="text" placeholder="Van Minh" data-i18n-placeholder="field.firstname.ph">
+          </div>
+          <div class="field">
+            <label class="label" data-i18n="ev.f.shortname">Short name</label>
+            <input class="input" type="text" placeholder="Minh">
+          </div>
+          <div class="field">
+            <label class="label" data-i18n="ev.f.dob">Date of birth</label>
+            <input class="input" type="date">
+          </div>
+          <div class="field">
+            <label class="label" data-i18n="ev.f.gender">Gender</label>
+            <select class="select">
+              <option data-i18n="ev.val.male">Male</option>
+              <option data-i18n="opt.female">Female</option>
+              <option data-i18n="opt.other">Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="label" data-i18n="ev.f.nationality">Nationality</label>
+            <input class="input" type="text" placeholder="Vietnam" data-i18n-placeholder="ev.val.vietnam">
+          </div>
+          <div class="field" data-only="inhouse">
+            <label class="label" data-i18n="ev.f.taxcode">Personal tax code</label>
+            <input class="input" type="text" placeholder="8123456701">
+          </div>
+
+          <div class="form-subhead" data-i18n="ev.sub.cccd">National ID (CCCD)</div>
+          <div class="field">
+            <label class="label" data-i18n="ev.f.cccdno">CCCD number</label>
+            <input class="input" type="text" placeholder="012345000123">
+          </div>
+          <div class="field">
+            <label class="label" data-i18n="ev.f.issuedate">Issue date</label>
+            <input class="input" type="date">
+          </div>
+          <div class="field full">
+            <label class="label" data-i18n="ev.f.issueplace">Issue place</label>
+            <input class="input" type="text" placeholder="National ID Center, Ha Noi">
+          </div>
+          <div class="field full">
+            <label class="label" data-i18n="doc.cccdphotos">CCCD photos</label>
+            <div class="doc-upload-grid">
+              <label class="doc-upload" title="Upload CCCD front">
+                <input type="file" accept="image/*" onchange="onDocPick(this,'cccd-front')">
+                <div class="du-ph" id="cccd-front"><svg><use href="#i-image"/></svg><span data-i18n="doc.upload">Click to upload</span></div>
+                <div class="du-label" data-i18n="ev.doc.cccdfront">CCCD — front</div>
+              </label>
+              <label class="doc-upload" title="Upload CCCD back">
+                <input type="file" accept="image/*" onchange="onDocPick(this,'cccd-back')">
+                <div class="du-ph" id="cccd-back"><svg><use href="#i-image"/></svg><span data-i18n="doc.upload">Click to upload</span></div>
+                <div class="du-label" data-i18n="ev.doc.cccdback">CCCD — back</div>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-subhead" style="justify-content:flex-start;gap:8px"><span data-i18n="ev.sub.passport">Passport</span> <span class="label-hint" style="font-weight:400" data-i18n="field.notes.hint">— optional</span></div>
+          <div class="field">
+            <label class="label" data-i18n="ev.f.passno">Passport number</label>
+            <input class="input" type="text" placeholder="C1234567">
+          </div>
+          <div class="field">
+            <label class="label" data-i18n="ev.f.passtype">Passport type</label>
+            <input class="input" type="text" placeholder="Ordinary (P)">
+          </div>
+          <div class="field">
+            <label class="label" data-i18n="ev.f.expirydate">Expiry date</label>
+            <input class="input" type="date">
+          </div>
+
+          <div class="form-subhead" data-i18n="ev.sub.addresses">Addresses</div>
+          <div class="field full">
+            <label class="label" data-i18n="ev.f.birthaddr">Birth registration address</label>
+            <input class="input" type="text" placeholder="Ba Dinh, Ha Noi">
+          </div>
+          <div class="field full">
+            <label class="label" data-i18n="ev.f.permaddr">Permanent address (household register)</label>
+            <input class="input" type="text" placeholder="25 Lang Ha, Dong Da, Ha Noi">
+          </div>
+          <div class="field full">
+            <label class="label" data-i18n="ev.f.curraddr">Current address (temporary residence)</label>
+            <input class="input" type="text" placeholder="Ha Noi">
+          </div>
+
+          <div class="form-subhead" data-only="inhouse" data-i18n="ev.sub.vehicle">Vehicle</div>
+          <div class="field" data-only="inhouse">
+            <label class="label" data-i18n="ev.f.plate">License plate</label>
+            <input class="input" type="text" placeholder="30K-123.45">
+          </div>
+          <div class="field" data-only="inhouse">
+            <label class="label" data-i18n="ev.f.vehicle">Vehicle</label>
+            <input class="input" type="text" placeholder="Honda SH 150i — black">
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Employment (in-house only) -->
+      <div class="emp-section" id="addsec-work" data-sec="work" data-only="inhouse">
+            <div class="emp-sec-head"><div class="esh-icon"><svg><use href="#i-briefcase"/></svg></div><h3 data-i18n="ev.sec.work">Employment</h3></div>
+        <div class="form-grid">
+          <div class="form-subhead" data-i18n="ev.sub.position">Position</div>
+          <div class="field">
+            <label class="label"><span data-i18n="ev.f.position">Position</span> <span class="required">*</span></label>
+            <input class="input" type="text" placeholder="Backend Developer">
+          </div>
+          <div class="field">
+            <label class="label" data-i18n="field.jobtitle">Job title</label>
             <input class="input" type="text" placeholder="Senior Engineer" data-i18n-placeholder="field.jobtitle.ph">
           </div>
           <div class="field">
@@ -3836,32 +4082,19 @@
             </select>
           </div>
           <div class="field">
-            <label class="label" data-i18n="field.location">Location</label>
-            <input class="input" type="text" placeholder="Ha Noi">
+            <label class="label" data-i18n="field.workarr">Work arrangement</label>
+            <select class="select">
+              <option value="fulltime" data-i18n="rc.fulltime.title">Full-time</option>
+              <option value="parttime" data-i18n="rc.parttime.title">Part-time</option>
+            </select>
           </div>
           <div class="field">
-            <label class="label"><span data-i18n="field.startdate">Start date</span> <span class="required">*</span></label>
+            <label class="label"><span data-i18n="ev.f.startdate">Start date</span> <span class="required">*</span></label>
             <input class="input" type="date" min="2000-01-01">
           </div>
-          <div class="field full">
-            <label class="label" data-i18n="field.emptype">Employment type</label>
-            <div class="radio-group">
-              <label class="radio-card">
-                <input type="radio" name="add-type" value="fulltime" checked onchange="onEmpTypeChange()">
-                <div class="rc-title" data-i18n="rc.fulltime.title">Full-time</div>
-                <div class="rc-desc" data-i18n="rc.fulltime.desc">40 hrs/week</div>
-              </label>
-              <label class="radio-card">
-                <input type="radio" name="add-type" value="parttime" onchange="onEmpTypeChange()">
-                <div class="rc-title" data-i18n="rc.parttime.title">Part-time</div>
-                <div class="rc-desc" data-i18n="rc.parttime.desc">20 hrs/week</div>
-              </label>
-              <label class="radio-card">
-                <input type="radio" name="add-type" value="contractor" onchange="onEmpTypeChange()">
-                <div class="rc-title" data-i18n="rc.contractor.title">Contractor</div>
-                <div class="rc-desc" data-i18n="rc.contractor.desc">Freelance / CTV</div>
-              </label>
-            </div>
+          <div class="field">
+            <label class="label" data-i18n="ev.f.officialdate">Official contract date</label>
+            <input class="input" type="date">
           </div>
           <div class="field full">
             <label class="label" style="justify-content:space-between"><span data-i18n="field.notes">Notes</span> <span class="label-hint" data-i18n="field.notes.hint">— optional</span><span id="notes-count" style="font-size:11px;color:var(--text-muted);font-weight:400">0 / 500</span></label>
@@ -3870,16 +4103,106 @@
         </div>
       </div>
 
-      <!-- Tab: Contract -->
-      <div class="emp-pane" data-emp-pane="contract">
+      <!-- Section: Projects -->
+      <div class="emp-section" id="addsec-projects" data-sec="projects">
+            <div class="emp-sec-head"><div class="esh-icon"><svg><use href="#i-package"/></svg></div><h3 data-i18n="ev.sec.projects">Projects</h3></div>
+        <label class="label" style="margin-bottom: var(--s2)" data-i18n="field.allocations">Project allocations &amp; work mode</label>
+        <div class="cs-sub" style="margin-bottom: var(--s3)" data-i18n="field.allocations.desc">Assign this person to one or more projects. Hours are validated per project, independently.</div>
+        <div class="alloc-list" id="alloc-list"><!-- rows injected --></div>
+        <button type="button" class="btn btn-secondary btn-add-alloc" onclick="addAllocRow()">
+          <svg><use href="#i-plus"/></svg> <span data-i18n="btn.addalloc">Add project allocation</span>
+        </button>
+      </div>
+
+      <!-- Section: Bank Account -->
+      <div class="emp-section" id="addsec-bank" data-sec="bank">
+            <div class="emp-sec-head"><div class="esh-icon"><svg><use href="#i-dollar"/></svg></div><h3 data-i18n="ev.sec.bank">Bank Account</h3></div>
         <div class="form-grid">
+          <div class="form-subhead" data-i18n="ev.sub.bank">Bank Account</div>
+          <div class="field">
+            <label class="label" data-i18n="ev.f.bankno">Account number</label>
+            <input class="input" type="text" placeholder="19081234568888">
+          </div>
+          <div class="field">
+            <label class="label" data-i18n="ev.f.bankholder">Account holder</label>
+            <input class="input" type="text" placeholder="NGUYEN VAN MINH">
+          </div>
+          <div class="field">
+            <label class="label" data-i18n="ev.f.bankname">Bank</label>
+            <input class="input" type="text" placeholder="Techcombank">
+          </div>
+          <div class="field">
+            <label class="label" data-i18n="ev.f.branch">Branch</label>
+            <input class="input" type="text" placeholder="Ha Noi HQ">
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Emergency Contact -->
+      <div class="emp-section" id="addsec-contacts" data-sec="contacts">
+            <div class="emp-sec-head"><div class="esh-icon"><svg><use href="#i-phone"/></svg></div><h3 data-i18n="ev.sec.contacts">Emergency Contact</h3></div>
+        <div class="form-grid">
+          <div class="form-subhead" data-i18n="ev.sub.emergency">Emergency contact</div>
+          <div class="field">
+            <label class="label" data-i18n="ev.f.fullname">Full name</label>
+            <input class="input" type="text" placeholder="Nguyen Thi Hoa">
+          </div>
+          <div class="field">
+            <label class="label" data-i18n="ev.f.phone">Phone</label>
+            <input class="input" type="tel" placeholder="0987 654 321">
+          </div>
+          <div class="field">
+            <label class="label" data-i18n="ev.f.relationship">Relationship</label>
+            <select class="select">
+              <option data-i18n="ev.val.mother">Mother</option>
+              <option data-i18n="ev.val.father">Father</option>
+              <option data-i18n="opt.spouse">Spouse</option>
+              <option data-i18n="opt.sibling">Sibling</option>
+              <option data-i18n="opt.other">Other</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Education & Experience -->
+      <div class="emp-section" id="addsec-background" data-sec="background">
+            <div class="emp-sec-head"><div class="esh-icon"><svg><use href="#i-check-sq"/></svg></div><h3 data-i18n="ev.sec.background">Education &amp; Experience</h3></div>
+        <div class="form-grid">
+          <div class="form-subhead" data-i18n="ev.sub.education">Education</div>
+          <div class="field full">
+            <label class="label" data-i18n="opt.school">School</label>
+            <input class="input" type="text" placeholder="Hanoi University of Science and Technology">
+          </div>
+          <div class="field">
+            <label class="label" data-i18n="ev.meta.major">Major</label>
+            <input class="input" type="text" placeholder="Information Technology">
+          </div>
+          <div class="field">
+            <label class="label" data-i18n="ev.meta.degree">Degree</label>
+            <input class="input" type="text" placeholder="Engineer">
+          </div>
+
+          <div class="form-subhead" data-i18n="ev.sub.techstacks">Tech stacks</div>
+          <div class="field full">
+            <label class="label" style="justify-content:space-between"><span data-i18n="ev.sub.techstacks">Tech stacks</span> <span class="label-hint" data-i18n="hint.comma">— comma separated</span></label>
+            <input class="input" type="text" placeholder="Java, Spring Boot, Node.js, PostgreSQL, Docker">
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Contract -->
+      <div class="emp-section" id="addsec-contract" data-sec="contract">
+            <div class="emp-sec-head"><div class="esh-icon"><svg><use href="#i-calendar"/></svg></div><h3 data-i18n="ev.sec.contract">Contract</h3></div>
+        <div class="form-grid">
+          <div class="form-subhead" data-i18n="ev.sub.contract">Contract</div>
           <div class="field">
             <label class="label" data-i18n="field.contracttype">Contract type</label>
-            <select class="select">
-              <option>Labor contract</option>
-              <option>Freelance / Service agreement</option>
-              <option>Probation</option>
-              <option>Internship</option>
+            <select class="select" id="add-contract-type">
+              <option data-i18n="ev.val.labor">Labor contract</option>
+              <option data-i18n="ev.ct.typeindef">Indefinite</option>
+              <option data-i18n="ev.ct.probation">Probation</option>
+              <option data-i18n="ev.val.freelance">Freelance / Service agreement</option>
+              <option data-i18n="opt.internship">Internship</option>
             </select>
           </div>
           <div class="field">
@@ -3913,15 +4236,13 @@
         </div>
       </div>
 
-      <!-- Tab: Insurance -->
-      <div class="emp-pane" data-emp-pane="insurance">
-        <div class="account-note" id="insurance-note" hidden>
-          <svg><use href="#i-info"/></svg>
-          <div data-i18n="insurance.ctvnote">Contractors are engaged under a service agreement — company social/health insurance usually does not apply.</div>
-        </div>
+      <!-- Section: Insurance (in-house only) -->
+      <div class="emp-section" id="addsec-insurance" data-sec="insurance" data-only="inhouse">
+            <div class="emp-sec-head"><div class="esh-icon"><svg><use href="#i-check"/></svg></div><h3 data-i18n="ev.sec.insurance">Insurance</h3></div>
         <div class="form-grid">
+          <div class="form-subhead" data-i18n="ev.sub.insinfo">Insurance Information</div>
           <div class="field">
-            <label class="label" data-i18n="field.socialins">Social insurance no.</label>
+            <label class="label" data-i18n="ev.f.insbookno">Social Insurance No.</label>
             <input class="input" type="text" placeholder="VN-0000000-SI">
           </div>
           <div class="field">
@@ -3929,8 +4250,12 @@
             <input class="input" type="text" placeholder="VN-0000000-HI">
           </div>
           <div class="field">
-            <label class="label" data-i18n="field.insprovider">Provider</label>
-            <input class="input" type="text" placeholder="Vietnam Social Security">
+            <label class="label" data-i18n="ev.f.payingentity">Paying Entity</label>
+            <input class="input" type="text" placeholder="Công ty TNHH phần mềm Twendee">
+          </div>
+          <div class="field">
+            <label class="label" data-i18n="ev.f.healthprovider">Healthcare Provider</label>
+            <input class="input" type="text" placeholder="Bệnh viện Bạch Mai">
           </div>
           <div class="field">
             <label class="label" data-i18n="field.coveragesince">Coverage since</label>
@@ -3939,8 +4264,9 @@
         </div>
       </div>
 
-      <!-- Tab: Attachments -->
-      <div class="emp-pane" data-emp-pane="attach">
+      <!-- Section: Attachments -->
+      <div class="emp-section" id="addsec-attach" data-sec="attach">
+            <div class="emp-sec-head"><div class="esh-icon"><svg><use href="#i-download"/></svg></div><h3 data-i18n="ev.sec.attach">Attachments</h3></div>
         <div class="upload-dropzone" onclick="showToast('info','Upload','File picker would open here.')">
           <svg><use href="#i-upload"/></svg>
           <div class="ud-title" data-i18n="attach.drop">Click to upload or drag &amp; drop</div>
@@ -3953,19 +4279,7 @@
           </div>
         </div>
       </div>
-
-      <!-- Tab: Projects (allocations & work mode) -->
-      <div class="emp-pane" data-emp-pane="projects">
-        <div class="account-note" id="contractor-account-note" hidden>
-          <svg><use href="#i-info"/></svg>
-          <div>On save, a role-scoped <b>Personal</b> (self-service) account is auto-generated and an invite is emailed. The contractor can only access logwork, leave, reports &amp; timesheet.</div>
         </div>
-        <label class="label" style="margin-bottom: var(--s2)" data-i18n="field.allocations">Project allocations &amp; work mode</label>
-        <div class="cs-sub" style="margin-bottom: var(--s3)" data-i18n="field.allocations.desc">Assign this person to one or more projects. Hours are validated per project, independently.</div>
-        <div class="alloc-list" id="alloc-list"><!-- rows injected --></div>
-        <button type="button" class="btn btn-secondary btn-add-alloc" onclick="addAllocRow()">
-          <svg><use href="#i-plus"/></svg> <span data-i18n="btn.addalloc">Add project allocation</span>
-        </button>
       </div>
     </div>
     <div class="panel-footer">
@@ -4082,17 +4396,24 @@
       'field.emptype': 'Employment type', 'field.notes': 'Notes', 'field.notes.hint': '— optional', 'field.notes.ph': 'Add any context, onboarding instructions, or context about this hire…',
       'rc.fulltime.title': 'Full-time', 'rc.fulltime.desc': '40 hrs/week', 'rc.parttime.title': 'Part-time', 'rc.parttime.desc': '20 hrs/week', 'rc.contract.title': 'Contract', 'rc.contract.desc': 'Project-based', 'rc.contractor.title': 'Contractor', 'rc.contractor.desc': 'Freelance / CTV',
       'toggle.onboarding.label': 'Send onboarding email', 'toggle.onboarding.desc': 'Includes welcome packet, day-one checklist, and IT account setup.',
+      // Add/Edit panel — new fields
+      'rc.inhouse.title': 'In-house', 'rc.inhouse.desc': 'Company employee · full HR profile', 'rc.contractor.desc2': 'Freelance / CTV · service agreement',
+      'field.workarr': 'Work arrangement', 'ph.autogen': 'Auto-generated', 'hint.comma': '— comma separated', 'btn.avatar': 'Upload photo', 'hint.avatar.formats': 'JPG, PNG, WEBP · max 2MB',
+      'doc.cccdphotos': 'CCCD photos', 'doc.upload': 'Click to upload',
+      'note.ctvaccount': 'On save, a role-scoped Personal (self-service) account is auto-generated and an invite is emailed. The contractor can only access logwork, leave, reports & timesheet.',
+      'opt.female': 'Female', 'opt.other': 'Other', 'opt.spouse': 'Spouse', 'opt.sibling': 'Sibling', 'opt.school': 'School', 'opt.internship': 'Internship',
       'btn.cancel': 'Cancel', 'btn.savedraft': 'Save as draft', 'btn.addemployee': 'Add Employee', 'btn.saveemployee': 'Save Employee', 'btn.addalloc': 'Add project allocation',
       // Employee-detail tabs + fields
       'etab.basic': 'Basic Information', 'etab.profile': 'Profile Information', 'etab.contract': 'Contract', 'etab.insurance': 'Insurance', 'etab.attach': 'Attachments', 'etab.projects': 'Projects',
       // Employee detail — single-page view (ev.*)
-      'ev.nav.personal': 'Personal', 'ev.nav.work': 'Employment', 'ev.nav.docs': 'Documents & Bank', 'ev.nav.contacts': 'Contacts & Family', 'ev.nav.background': 'Education & Experience', 'ev.nav.contract': 'Contract & Insurance', 'ev.nav.projects': 'Projects', 'ev.nav.attach': 'Attachments',
-      'ev.sec.personal': 'Personal Profile', 'ev.sec.work': 'Employment', 'ev.sec.docs': 'Documents & Bank', 'ev.sec.contacts': 'Contacts & Family', 'ev.sec.background': 'Education & Experience', 'ev.sec.contract': 'Contract & Insurance', 'ev.sec.projects': 'Projects', 'ev.sec.attach': 'Attachments',
-      'ev.sub.account': 'Account & Contact', 'ev.sub.personal': 'Personal Information', 'ev.sub.addresses': 'Addresses', 'ev.sub.position': 'Position', 'ev.sub.vehicle': 'Vehicle', 'ev.sub.cccd': 'National ID (CCCD)', 'ev.sub.passport': 'Passport', 'ev.sub.bank': 'Bank Account', 'ev.sub.emergency': 'Emergency contact', 'ev.sub.family': 'Family members', 'ev.sub.education': 'Education', 'ev.sub.experience': 'Work experience', 'ev.sub.techstacks': 'Tech stacks', 'ev.sub.certs': 'Certificates', 'ev.sub.contract': 'Contract', 'ev.sub.insurance': 'Insurance',
+      'ev.nav.overview': 'Overview', 'ev.nav.personal': 'Personal Info', 'ev.nav.work': 'Employment', 'ev.nav.workproj': 'Employment & Projects', 'ev.nav.docs': 'Documents & Bank', 'ev.nav.bank': 'Bank Account', 'ev.nav.contacts': 'Emergency Contact', 'ev.nav.background': 'Education & Experience', 'ev.nav.contract': 'Contract', 'ev.nav.insurance': 'Insurance', 'ev.nav.projects': 'Projects', 'ev.nav.attach': 'Attachments',
+      'ev.sec.overview': 'Overview', 'ev.sec.personal': 'Personal Information', 'ev.sec.work': 'Employment', 'ev.sec.workproj': 'Employment & Projects', 'ev.sec.docs': 'Documents & Bank', 'ev.sec.bank': 'Bank Account', 'ev.sec.contacts': 'Emergency Contact', 'ev.sec.background': 'Education & Experience', 'ev.sec.contract': 'Contract', 'ev.sec.insurance': 'Insurance', 'ev.sec.projects': 'Projects', 'ev.sec.attach': 'Attachments',
+      'ev.sub.account': 'Account & Contact', 'ev.sub.personal': 'Personal Information', 'ev.sub.addresses': 'Addresses', 'ev.sub.position': 'Position', 'ev.sub.vehicle': 'Vehicle', 'ev.sub.project': 'Project', 'ev.sub.cccd': 'National ID (CCCD)', 'ev.sub.passport': 'Passport', 'ev.sub.bank': 'Bank Account', 'ev.sub.emergency': 'Emergency contact', 'ev.sub.family': 'Family members', 'ev.sub.education': 'Education', 'ev.sub.experience': 'Work experience', 'ev.sub.techstacks': 'Tech stacks', 'ev.sub.certs': 'Certificates', 'ev.sub.contract': 'Contract', 'ev.sub.insurance': 'Insurance',
       'ev.f.username': 'Username', 'ev.f.email': 'Email', 'ev.f.phone': 'Phone', 'ev.f.emptype': 'Employee type', 'ev.f.empcode': 'Employee code', 'ev.f.tkcode': 'Timekeeping code',
       'ev.f.lastname': 'Last name', 'ev.f.firstname': 'First name', 'ev.f.shortname': 'Short name', 'ev.f.dob': 'Date of birth', 'ev.f.gender': 'Gender', 'ev.f.nationality': 'Nationality', 'ev.f.ethnicity': 'Ethnicity', 'ev.f.religion': 'Religion', 'ev.f.marital': 'Marital status',
-      'ev.f.birthaddr': 'Birth registration address', 'ev.f.hometown': 'Hometown', 'ev.f.permaddr': 'Permanent address', 'ev.f.curraddr': 'Current address',
-      'ev.f.position': 'Position', 'ev.f.jobtitle': 'Job title', 'ev.f.department': 'Department', 'ev.f.manager': 'Direct manager', 'ev.f.startdate': 'Start date', 'ev.f.onboarded': 'Onboarded', 'ev.f.officialdate': 'Official contract date', 'ev.f.taxcode': 'Tax code',
+      'ev.f.birthaddr': 'Birth registration address', 'ev.f.hometown': 'Hometown', 'ev.f.permaddr': 'Permanent address (household register)', 'ev.f.curraddr': 'Current address (temporary residence)',
+      'ev.f.position': 'Position', 'ev.f.jobtitle': 'Job title', 'ev.f.department': 'Department', 'ev.f.manager': 'Direct manager', 'ev.f.startdate': 'Start date', 'ev.f.onboarded': 'Onboarded', 'ev.f.officialdate': 'Official contract date', 'ev.f.taxcode': 'Personal tax code',
+      'ev.f.projname': 'Project name', 'ev.f.level': 'Level', 'ev.f.rate': 'Rate', 'ev.f.workstart': 'Work start date', 'ev.f.workend': 'Work end date',
       'ev.f.plate': 'License plate', 'ev.f.vehicle': 'Vehicle',
       'ev.f.cccdno': 'CCCD number', 'ev.f.issuedate': 'Issue date', 'ev.f.issueplace': 'Issue place', 'ev.f.passno': 'Passport number', 'ev.f.passtype': 'Passport type', 'ev.f.expirydate': 'Expiry date',
       'ev.f.bankno': 'Account number', 'ev.f.bankholder': 'Account holder', 'ev.f.bankname': 'Bank', 'ev.f.branch': 'Branch',
@@ -4104,7 +4425,7 @@
       'ev.mode.ft': 'Full-time · 8h/day', 'ev.mode.pt': 'Part-time · max 8h/day',
       'ev.ct.code': 'Contract code', 'ev.ct.status': 'Status', 'ev.ct.from': 'Effective from', 'ev.ct.to': 'Effective to', 'ev.ct.actions': 'Actions', 'ev.ct.active': 'Active', 'ev.ct.expired': 'Expired', 'ev.ct.typeindef': 'Indefinite', 'ev.ct.probation': 'Probation',
       'ev.sub.insinfo': 'Insurance Information', 'ev.sub.inshistory': 'Insurance History', 'ev.sub.benefithistory': 'Benefit History',
-      'ev.f.insbookno': 'Insurance Book Number', 'ev.f.bookstatus': 'Book Status', 'ev.f.payingentity': 'Paying Entity', 'ev.f.healthprovider': 'Healthcare Provider', 'ev.val.bookactive': 'Active',
+      'ev.f.insbookno': 'Social Insurance No.', 'ev.f.bookstatus': 'Status', 'ev.f.payingentity': 'Paying Entity', 'ev.f.healthprovider': 'Healthcare Provider', 'ev.val.bookactive': 'Participating',
       'ev.ih.from': 'From', 'ev.ih.entity': 'Paying Entity', 'ev.ih.level': 'Insurance Level', 'ev.ih.company': 'Company Paid', 'ev.ih.employee': 'Employee Paid', 'ev.ih.notes': 'Notes', 'ev.ih.empty': 'No insurance history data',
       'ev.bh.type': 'Benefit Type', 'ev.bh.appdate': 'Application Receive Date', 'ev.bh.procdate': 'Procedure Complete Date', 'ev.bh.inspay': 'Insurance Payment Receive Date', 'ev.bh.benpay': 'Benefit Payment Date', 'ev.bh.amount': 'Amount', 'ev.bh.notes': 'Notes', 'ev.bh.empty': 'No benefit history data',
       'ev.msg.renewal': '30 days before · repeat every 7 days', 'ev.msg.contractnote': 'Reminder emails go to HRM & PM until the contract status changes.', 'ev.msg.ctvins': 'Contractors are engaged under a service agreement — company social/health insurance does not apply.', 'ev.msg.projnote': 'One person can join multiple projects at once. Hours are validated per project and never across projects.', 'ev.msg.noproj': 'No project allocations yet.',
@@ -4177,21 +4498,28 @@
       'field.firstname': 'Họ', 'field.firstname.ph': 'Nguyễn', 'field.lastname': 'Tên', 'field.lastname.ph': 'Văn An',
       'field.workemail': 'Email công ty', 'field.phone': 'Điện thoại', 'field.startdate': 'Ngày bắt đầu', 'field.startdate.help': 'Không thể đặt trước năm 2000',
       'field.department': 'Phòng ban', 'field.jobtitle': 'Chức vụ', 'field.jobtitle.ph': 'Kỹ sư cao cấp',
-      'field.emptype': 'Loại hợp đồng', 'field.notes': 'Ghi chú', 'field.notes.hint': '— tùy chọn', 'field.notes.ph': 'Thêm ghi chú, hướng dẫn nhận việc hoặc thông tin về nhân viên mới…',
+      'field.emptype': 'Loại nhân viên', 'field.notes': 'Ghi chú', 'field.notes.hint': '— tùy chọn', 'field.notes.ph': 'Thêm ghi chú, hướng dẫn nhận việc hoặc thông tin về nhân viên mới…',
       'rc.fulltime.title': 'Toàn thời gian', 'rc.fulltime.desc': '40 giờ/tuần', 'rc.parttime.title': 'Bán thời gian', 'rc.parttime.desc': '20 giờ/tuần', 'rc.contract.title': 'Hợp đồng', 'rc.contract.desc': 'Theo dự án', 'rc.contractor.title': 'Cộng tác viên', 'rc.contractor.desc': 'Freelance / CTV',
       'toggle.onboarding.label': 'Gửi email hướng dẫn', 'toggle.onboarding.desc': 'Bao gồm bộ tài liệu chào mừng, danh sách ngày đầu tiên và thiết lập tài khoản IT.',
+      // Add/Edit panel — new fields
+      'rc.inhouse.title': 'Nhân viên chính thức', 'rc.inhouse.desc': 'Nhân viên công ty · hồ sơ HR đầy đủ', 'rc.contractor.desc2': 'Freelance / CTV · hợp đồng dịch vụ',
+      'field.workarr': 'Chế độ làm việc', 'ph.autogen': 'Tự động tạo', 'hint.comma': '— phân tách bằng dấu phẩy', 'btn.avatar': 'Tải ảnh lên', 'hint.avatar.formats': 'JPG, PNG, WEBP · tối đa 2MB',
+      'doc.cccdphotos': 'Ảnh CCCD', 'doc.upload': 'Nhấn để tải lên',
+      'note.ctvaccount': 'Khi lưu, hệ thống tự tạo tài khoản Cá nhân (tự phục vụ) theo phạm vi vai trò và gửi email mời. CTV chỉ truy cập được log giờ công, xin nghỉ, báo cáo & timesheet.',
+      'opt.female': 'Nữ', 'opt.other': 'Khác', 'opt.spouse': 'Vợ/Chồng', 'opt.sibling': 'Anh/Chị/Em', 'opt.school': 'Trường', 'opt.internship': 'Thực tập',
       'btn.cancel': 'Hủy', 'btn.savedraft': 'Lưu nháp', 'btn.addemployee': 'Thêm nhân viên', 'btn.saveemployee': 'Lưu nhân viên', 'btn.addalloc': 'Thêm phân bổ dự án',
       // Employee-detail tabs + fields
       'etab.basic': 'Thông tin cơ bản', 'etab.profile': 'Thông tin hồ sơ', 'etab.contract': 'Hợp đồng', 'etab.insurance': 'Bảo hiểm', 'etab.attach': 'Tệp đính kèm', 'etab.projects': 'Dự án',
       // Employee detail — single-page view (ev.*)
-      'ev.nav.personal': 'Cá nhân', 'ev.nav.work': 'Công việc', 'ev.nav.docs': 'Giấy tờ & Ngân hàng', 'ev.nav.contacts': 'Liên hệ & Gia đình', 'ev.nav.background': 'Học vấn & Kinh nghiệm', 'ev.nav.contract': 'Hợp đồng & Bảo hiểm', 'ev.nav.projects': 'Dự án', 'ev.nav.attach': 'Tài liệu',
-      'ev.sec.personal': 'Hồ sơ cá nhân', 'ev.sec.work': 'Công việc', 'ev.sec.docs': 'Giấy tờ & Ngân hàng', 'ev.sec.contacts': 'Liên hệ & Gia đình', 'ev.sec.background': 'Học vấn & Kinh nghiệm', 'ev.sec.contract': 'Hợp đồng & Bảo hiểm', 'ev.sec.projects': 'Dự án', 'ev.sec.attach': 'Tài liệu đính kèm',
-      'ev.sub.account': 'Tài khoản & liên hệ', 'ev.sub.personal': 'Thông tin cá nhân', 'ev.sub.addresses': 'Địa chỉ', 'ev.sub.position': 'Vị trí việc làm', 'ev.sub.vehicle': 'Phương tiện', 'ev.sub.cccd': 'Căn cước công dân (CCCD)', 'ev.sub.passport': 'Hộ chiếu', 'ev.sub.bank': 'Tài khoản ngân hàng', 'ev.sub.emergency': 'Liên hệ khẩn cấp', 'ev.sub.family': 'Thành viên gia đình', 'ev.sub.education': 'Lịch sử học tập', 'ev.sub.experience': 'Kinh nghiệm làm việc', 'ev.sub.techstacks': 'Công nghệ / Kỹ năng', 'ev.sub.certs': 'Chứng chỉ', 'ev.sub.contract': 'Hợp đồng', 'ev.sub.insurance': 'Bảo hiểm',
+      'ev.nav.overview': 'Tổng quan', 'ev.nav.personal': 'Thông tin cá nhân', 'ev.nav.work': 'Công việc', 'ev.nav.workproj': 'Công việc và dự án', 'ev.nav.docs': 'Giấy tờ & Ngân hàng', 'ev.nav.bank': 'Tài khoản ngân hàng', 'ev.nav.contacts': 'Liên hệ khẩn cấp', 'ev.nav.background': 'Học vấn & Kinh nghiệm', 'ev.nav.contract': 'Hợp đồng', 'ev.nav.insurance': 'Bảo hiểm', 'ev.nav.projects': 'Dự án', 'ev.nav.attach': 'Tài liệu',
+      'ev.sec.overview': 'Tổng quan', 'ev.sec.personal': 'Thông tin cá nhân', 'ev.sec.work': 'Công việc', 'ev.sec.workproj': 'Công việc và dự án', 'ev.sec.docs': 'Giấy tờ & Ngân hàng', 'ev.sec.bank': 'Tài khoản ngân hàng', 'ev.sec.contacts': 'Liên hệ khẩn cấp', 'ev.sec.background': 'Học vấn & Kinh nghiệm', 'ev.sec.contract': 'Hợp đồng', 'ev.sec.insurance': 'Bảo hiểm', 'ev.sec.projects': 'Dự án', 'ev.sec.attach': 'Tài liệu đính kèm',
+      'ev.sub.account': 'Tài khoản & liên hệ', 'ev.sub.personal': 'Thông tin cá nhân', 'ev.sub.addresses': 'Địa chỉ', 'ev.sub.position': 'Vị trí việc làm', 'ev.sub.vehicle': 'Phương tiện', 'ev.sub.project': 'Dự án', 'ev.sub.cccd': 'Căn cước công dân (CCCD)', 'ev.sub.passport': 'Hộ chiếu', 'ev.sub.bank': 'Tài khoản ngân hàng', 'ev.sub.emergency': 'Liên hệ khẩn cấp', 'ev.sub.family': 'Thành viên gia đình', 'ev.sub.education': 'Lịch sử học tập', 'ev.sub.experience': 'Kinh nghiệm làm việc', 'ev.sub.techstacks': 'Công nghệ / Kỹ năng', 'ev.sub.certs': 'Chứng chỉ', 'ev.sub.contract': 'Hợp đồng', 'ev.sub.insurance': 'Bảo hiểm',
       'ev.f.username': 'Tên đăng nhập', 'ev.f.email': 'Email', 'ev.f.phone': 'Số điện thoại', 'ev.f.emptype': 'Loại nhân viên', 'ev.f.empcode': 'Mã nhân viên', 'ev.f.tkcode': 'Mã chấm công',
       'ev.f.lastname': 'Họ', 'ev.f.firstname': 'Tên', 'ev.f.shortname': 'Tên gọi ngắn', 'ev.f.dob': 'Ngày sinh', 'ev.f.gender': 'Giới tính', 'ev.f.nationality': 'Quốc tịch', 'ev.f.ethnicity': 'Dân tộc', 'ev.f.religion': 'Tôn giáo', 'ev.f.marital': 'Tình trạng hôn nhân',
-      'ev.f.birthaddr': 'Địa chỉ khai sinh', 'ev.f.hometown': 'Quê quán', 'ev.f.permaddr': 'Địa chỉ thường trú', 'ev.f.curraddr': 'Địa chỉ hiện tại',
-      'ev.f.position': 'Vị trí', 'ev.f.jobtitle': 'Chức danh', 'ev.f.department': 'Phòng ban', 'ev.f.manager': 'Quản lý trực tiếp', 'ev.f.startdate': 'Ngày vào làm', 'ev.f.onboarded': 'Ngày onboard', 'ev.f.officialdate': 'Ngày ký HĐ chính thức', 'ev.f.taxcode': 'Mã số thuế',
+      'ev.f.birthaddr': 'Địa chỉ khai sinh', 'ev.f.hometown': 'Quê quán', 'ev.f.permaddr': 'Địa chỉ thường trú (hộ khẩu)', 'ev.f.curraddr': 'Địa chỉ hiện tại (tạm trú)',
+      'ev.f.position': 'Vị trí', 'ev.f.jobtitle': 'Chức danh', 'ev.f.department': 'Phòng ban', 'ev.f.manager': 'Quản lý trực tiếp', 'ev.f.startdate': 'Ngày vào làm', 'ev.f.onboarded': 'Ngày onboard', 'ev.f.officialdate': 'Ngày ký HĐ chính thức', 'ev.f.taxcode': 'Mã số thuế cá nhân',
       'ev.f.plate': 'Biển số xe', 'ev.f.vehicle': 'Thông tin xe',
+      'ev.f.projname': 'Tên dự án', 'ev.f.level': 'Level', 'ev.f.rate': 'Rate', 'ev.f.workstart': 'Ngày bắt đầu làm việc', 'ev.f.workend': 'Ngày kết thúc làm việc',
       'ev.f.cccdno': 'Số CCCD', 'ev.f.issuedate': 'Ngày cấp', 'ev.f.issueplace': 'Nơi cấp', 'ev.f.passno': 'Số hộ chiếu', 'ev.f.passtype': 'Loại hộ chiếu', 'ev.f.expirydate': 'Ngày hết hạn',
       'ev.f.bankno': 'Số tài khoản', 'ev.f.bankholder': 'Tên chủ tài khoản', 'ev.f.bankname': 'Tên ngân hàng', 'ev.f.branch': 'Chi nhánh',
       'ev.f.fullname': 'Họ và tên', 'ev.f.relationship': 'Mối quan hệ',
@@ -4202,7 +4530,7 @@
       'ev.mode.ft': 'Toàn thời gian · 8h/ngày', 'ev.mode.pt': 'Bán thời gian · tối đa 8h/ngày',
       'ev.ct.code': 'Mã hợp đồng', 'ev.ct.status': 'Trạng thái', 'ev.ct.from': 'Hiệu lực từ', 'ev.ct.to': 'Hiệu lực đến', 'ev.ct.actions': 'Thao tác', 'ev.ct.active': 'Đang hiệu lực', 'ev.ct.expired': 'Hết hiệu lực', 'ev.ct.typeindef': 'Không xác định thời hạn', 'ev.ct.probation': 'Thử việc',
       'ev.sub.insinfo': 'Thông tin bảo hiểm', 'ev.sub.inshistory': 'Lịch sử bảo hiểm', 'ev.sub.benefithistory': 'Lịch sử quyền lợi',
-      'ev.f.insbookno': 'Số sổ bảo hiểm', 'ev.f.bookstatus': 'Trạng thái sổ', 'ev.f.payingentity': 'Đơn vị đóng', 'ev.f.healthprovider': 'Nơi khám chữa bệnh', 'ev.val.bookactive': 'Đang hoạt động',
+      'ev.f.insbookno': 'Mã số BHXH', 'ev.f.bookstatus': 'Trạng thái', 'ev.f.payingentity': 'Đơn vị đóng', 'ev.f.healthprovider': 'Nơi khám chữa bệnh', 'ev.val.bookactive': 'Đang tham gia',
       'ev.ih.from': 'Từ ngày', 'ev.ih.entity': 'Đơn vị đóng', 'ev.ih.level': 'Mức đóng', 'ev.ih.company': 'Công ty đóng', 'ev.ih.employee': 'Nhân viên đóng', 'ev.ih.notes': 'Ghi chú', 'ev.ih.empty': 'Chưa có dữ liệu lịch sử bảo hiểm',
       'ev.bh.type': 'Loại quyền lợi', 'ev.bh.appdate': 'Ngày nhận hồ sơ', 'ev.bh.procdate': 'Ngày hoàn tất thủ tục', 'ev.bh.inspay': 'Ngày nhận tiền bảo hiểm', 'ev.bh.benpay': 'Ngày chi trả quyền lợi', 'ev.bh.amount': 'Số tiền', 'ev.bh.notes': 'Ghi chú', 'ev.bh.empty': 'Chưa có dữ liệu quyền lợi',
       'ev.msg.renewal': 'Trước 30 ngày · lặp lại mỗi 7 ngày', 'ev.msg.contractnote': 'Email nhắc gửi tới HRM & PM cho đến khi trạng thái hợp đồng thay đổi.', 'ev.msg.ctvins': 'Cộng tác viên làm việc theo hợp đồng dịch vụ — bảo hiểm xã hội/y tế của công ty không áp dụng.', 'ev.msg.projnote': 'Một người có thể tham gia nhiều dự án cùng lúc. Giờ công được kiểm tra theo từng dự án, không cộng gộp giữa các dự án.', 'ev.msg.noproj': 'Chưa có phân bổ dự án nào.',
@@ -4298,30 +4626,38 @@
 
   // ============ EMPLOYEE DATA ============
   const employees = [
-    { id: 'EMP-0142', name: 'Sarah Chen',     email: 'sarah.chen@acme.com',     dept: 'Engineering', role: 'Senior Engineer',  loc: 'San Francisco', status: 'active',  joined: 'Mar 14, 2022', color: '#8B5CF6', initials: 'SC', type: 'fulltime' },
-    { id: 'EMP-0138', name: 'Marcus Johnson', email: 'm.johnson@acme.com',      dept: 'Design',      role: 'Lead Designer',    loc: 'New York',     status: 'active',  joined: 'Jan 09, 2022', color: '#3B82F6', initials: 'MJ', type: 'fulltime' },
-    { id: 'EMP-0156', name: 'Priya Patel',    email: 'priya.p@acme.com',        dept: 'Marketing',   role: 'Marketing Manager',loc: 'London',       status: 'leave',   joined: 'Jul 22, 2022', color: '#16A34A', initials: 'PP', type: 'parttime' },
-    { id: 'EMP-0089', name: 'David Park',     email: 'd.park@acme.com',         dept: 'Engineering', role: 'Engineering Lead', loc: 'Seoul',        status: 'active',  joined: 'Feb 03, 2021', color: '#D97706', initials: 'DP', type: 'fulltime' },
+    { id: 'EMP-0142', name: 'Sarah Chen',     email: 'sarah.chen@acme.com',     dept: 'Engineering', role: 'Senior Engineer',  loc: 'San Francisco', status: 'active',  joined: 'Mar 14, 2022', color: '#8B5CF6', initials: 'SC', type: 'inhouse',
+      allocations: [ { project: 'Apollo Mobile App', role: 'Backend Engineer', level: 'Senior', rate: '$32/h', from: 'Jan 06, 2026', to: 'Dec 31, 2026', mode: 'FT', ptMin: null } ] },
+    { id: 'EMP-0138', name: 'Marcus Johnson', email: 'm.johnson@acme.com',      dept: 'Design',      role: 'Lead Designer',    loc: 'New York',     status: 'active',  joined: 'Jan 09, 2022', color: '#3B82F6', initials: 'MJ', type: 'inhouse',
+      allocations: [ { project: 'Nova Website', role: 'Lead Designer', level: 'Lead', rate: '$34/h', from: 'Feb 03, 2026', to: 'Nov 30, 2026', mode: 'FT', ptMin: null } ] },
+    { id: 'EMP-0156', name: 'Priya Patel',    email: 'priya.p@acme.com',        dept: 'Marketing',   role: 'Marketing Manager',loc: 'London',       status: 'leave',   joined: 'Jul 22, 2022', color: '#16A34A', initials: 'PP', type: 'inhouse',
+      allocations: [ { project: 'Helios CRM', role: 'Marketing Lead', level: 'Senior', rate: '$30/h', from: 'Mar 02, 2026', to: 'Dec 31, 2026', mode: 'PT', ptMin: 20 } ] },
+    { id: 'EMP-0089', name: 'David Park',     email: 'd.park@acme.com',         dept: 'Engineering', role: 'Engineering Lead', loc: 'Seoul',        status: 'active',  joined: 'Feb 03, 2021', color: '#D97706', initials: 'DP', type: 'inhouse',
+      allocations: [ { project: 'Orion Data Platform', role: 'Engineering Lead', level: 'Lead', rate: '$38/h', from: 'Jan 06, 2026', to: 'Dec 31, 2026', mode: 'FT', ptMin: null } ] },
     { id: 'CTV-0207', name: 'Nguyen Van Minh', email: 'minh.nv@freelance.dev',  dept: 'Engineering', role: 'Freelance Backend',loc: 'Ha Noi',       status: 'active',  joined: 'Jun 03, 2025', color: '#4F46E5', initials: 'NM', type: 'contractor',
       account: { username: 'minh.nv', scope: 'Personal (self-service)', invited: 'Jun 03, 2025', state: 'Active' },
       allocations: [
-        { project: 'Apollo Mobile App', role: 'Backend Developer', from: 'Jun 03, 2025', to: 'Dec 31, 2025', mode: 'FT', ptMin: null },
-        { project: 'Zeus Internal Tools', role: 'API Engineer',     from: 'Aug 01, 2025', to: 'Nov 30, 2025', mode: 'PT', ptMin: 15 }
+        { project: 'Apollo Mobile App', role: 'Backend Developer', level: 'Senior', rate: '$28/h', from: 'Jun 03, 2025', to: 'Dec 31, 2025', mode: 'FT', ptMin: null },
+        { project: 'Zeus Internal Tools', role: 'API Engineer',     level: 'Middle', rate: '$22/h', from: 'Aug 01, 2025', to: 'Nov 30, 2025', mode: 'PT', ptMin: 15 }
       ] },
-    { id: 'EMP-0201', name: 'Emma Williams',  email: 'emma.w@acme.com',         dept: 'Sales',       role: 'Account Executive',loc: 'Austin',       status: 'active',  joined: 'Sep 18, 2023', color: '#DC2626', initials: 'EW', type: 'fulltime' },
+    { id: 'EMP-0201', name: 'Emma Williams',  email: 'emma.w@acme.com',         dept: 'Sales',       role: 'Account Executive',loc: 'Austin',       status: 'active',  joined: 'Sep 18, 2023', color: '#DC2626', initials: 'EW', type: 'inhouse',
+      allocations: [ { project: 'Helios CRM', role: 'Account Executive', level: 'Middle', rate: '$26/h', from: 'Jan 13, 2026', to: 'Dec 31, 2026', mode: 'FT', ptMin: null } ] },
     { id: 'CTV-0212', name: 'Tran Thi Lan',   email: 'lan.tt@freelance.dev',    dept: 'Design',      role: 'Freelance UI/UX',  loc: 'Da Nang',      status: 'active',  joined: 'Jul 21, 2025', color: '#DB2777', initials: 'TL', type: 'contractor',
       account: { username: 'lan.tt', scope: 'Personal (self-service)', invited: 'Jul 21, 2025', state: 'Active' },
       allocations: [
-        { project: 'Apollo Mobile App', role: 'UI Designer', from: 'Jul 21, 2025', to: 'Oct 31, 2025', mode: 'PT', ptMin: 20 }
+        { project: 'Apollo Mobile App', role: 'UI Designer', level: 'Senior', rate: '$26/h', from: 'Jul 21, 2025', to: 'Oct 31, 2025', mode: 'PT', ptMin: 20 }
       ] },
-    { id: 'EMP-0177', name: 'Liam O\'Brien',  email: 'liam.o@acme.com',         dept: 'Operations',  role: 'Ops Coordinator',  loc: 'Dublin',       status: 'active',  joined: 'May 02, 2023', color: '#00AADD', initials: 'LO', type: 'fulltime' },
-    { id: 'EMP-0034', name: 'Yuki Tanaka',    email: 'y.tanaka@acme.com',       dept: 'Finance',     role: 'Senior Accountant',loc: 'Tokyo',        status: 'inactive',joined: 'Aug 11, 2020', color: '#7C3AED', initials: 'YT', type: 'fulltime' },
+    { id: 'EMP-0177', name: 'Liam O\'Brien',  email: 'liam.o@acme.com',         dept: 'Operations',  role: 'Ops Coordinator',  loc: 'Dublin',       status: 'active',  joined: 'May 02, 2023', color: '#00AADD', initials: 'LO', type: 'inhouse',
+      allocations: [ { project: 'Zeus Internal Tools', role: 'Ops Coordinator', level: 'Middle', rate: '$24/h', from: 'Feb 10, 2026', to: 'Dec 31, 2026', mode: 'FT', ptMin: null } ] },
+    { id: 'EMP-0034', name: 'Yuki Tanaka',    email: 'y.tanaka@acme.com',       dept: 'Finance',     role: 'Senior Accountant',loc: 'Tokyo',        status: 'inactive',joined: 'Aug 11, 2020', color: '#7C3AED', initials: 'YT', type: 'inhouse',
+      allocations: [ { project: 'Orion Data Platform', role: 'Senior Accountant', level: 'Senior', rate: '$30/h', from: 'Jan 06, 2025', to: 'Aug 11, 2025', mode: 'FT', ptMin: null } ] },
     { id: 'CTV-0219', name: 'Pham Duc Anh',   email: 'anh.pd@freelance.dev',    dept: 'Engineering', role: 'Freelance QA',     loc: 'HCMC',         status: 'active',  joined: 'Sep 01, 2025', color: '#0891B2', initials: 'PA', type: 'contractor',
       account: { username: 'anh.pd', scope: 'Personal (self-service)', invited: 'Sep 01, 2025', state: 'Invited' },
       allocations: [
-        { project: 'Zeus Internal Tools', role: 'QA Engineer', from: 'Sep 01, 2025', to: 'Dec 31, 2025', mode: 'FT', ptMin: null }
+        { project: 'Zeus Internal Tools', role: 'QA Engineer', level: 'Middle', rate: '$20/h', from: 'Sep 01, 2025', to: 'Dec 31, 2025', mode: 'FT', ptMin: null }
       ] },
-    { id: 'EMP-0162', name: 'Ana García',     email: 'ana.g@acme.com',          dept: 'Engineering', role: 'Backend Engineer', loc: 'Madrid',       status: 'active',  joined: 'Apr 27, 2022', color: '#007BA7', initials: 'AG', type: 'fulltime' }
+    { id: 'EMP-0162', name: 'Ana García',     email: 'ana.g@acme.com',          dept: 'Engineering', role: 'Backend Engineer', loc: 'Madrid',       status: 'active',  joined: 'Apr 27, 2022', color: '#007BA7', initials: 'AG', type: 'inhouse',
+      allocations: [ { project: 'Apollo Mobile App', role: 'Backend Engineer', level: 'Middle', rate: '$27/h', from: 'Jan 06, 2026', to: 'Dec 31, 2026', mode: 'FT', ptMin: null } ] }
   ];
 
   const statusMap = {
@@ -4331,8 +4667,7 @@
   };
 
   const typeMap = {
-    fulltime:   { label: 'Full-time',  cls: 'badge-neutral' },
-    parttime:   { label: 'Part-time',  cls: 'badge-neutral' },
+    inhouse:    { label: 'In-house',   cls: 'badge-neutral' },
     contractor: { label: 'Contractor', cls: 'badge-contractor' }
   };
 
@@ -4380,7 +4715,7 @@
     }
 
     tbody.innerHTML = filtered.map((e) => {
-      const tm = typeMap[e.type] || typeMap.fulltime;
+      const tm = typeMap[e.type] || typeMap.inhouse;
       return `
       <tr>
         <td>
@@ -4424,13 +4759,11 @@
     document.getElementById(id + '-overlay').classList.add('open');
     document.body.style.overflow = 'hidden';
     if (id === 'panel-add') {
-      // Reset to first tab
-      const panel = document.getElementById(id);
-      const tabs = panel.querySelectorAll('.emp-tab');
-      const panes = panel.querySelectorAll('.emp-pane');
-      tabs.forEach((tb, i) => tb.classList.toggle('active', i === 0));
-      panes.forEach((p, i) => p.classList.toggle('active', i === 0));
-      // Seed one allocation row + sync type-dependent notes
+      // Scroll the doc to the top and highlight the first nav item
+      const bodyEl = document.getElementById('add-panel-body');
+      if (bodyEl) { bodyEl.onscroll = addScrollSpy; bodyEl.scrollTop = 0; }
+      addSetActiveNav('personal');
+      // Seed one allocation row + sync type-dependent fields
       const list = document.getElementById('alloc-list');
       if (list && list.children.length === 0) addAllocRow();
       onEmpTypeChange();
@@ -4448,6 +4781,14 @@
       panel.querySelectorAll('input[type=checkbox]').forEach(el => el.checked = true);
       const counter = document.getElementById('notes-count');
       if (counter) counter.textContent = '0 / 500';
+      // Reset avatar preview
+      const av = document.getElementById('add-avatar');
+      if (av) { av.style.backgroundImage = ''; av.classList.remove('has-img'); av.innerHTML = '<svg><use href="#i-image"/></svg>'; }
+      // Reset CCCD photo previews
+      ['cccd-front', 'cccd-back'].forEach(pid => {
+        const ph = document.getElementById(pid);
+        if (ph) { ph.style.backgroundImage = ''; ph.classList.remove('has-img'); }
+      });
       // Reset VMP allocations
       const list = document.getElementById('alloc-list');
       if (list) list.innerHTML = '';
@@ -4521,16 +4862,20 @@
       </div>
     </div>`;
 
-    // 1) Personal profile
-    const secPersonal = empSection('personal', 'i-users', t('ev.sec.personal'),
+    // 1) Overview — account & contact
+    const secOverview = empSection('overview', 'i-users', t('ev.sec.overview'),
       subGrid(t('ev.sub.account'),
         fld(t('ev.f.username'), username, { mono: true }) +
         fld(t('ev.f.email'), e.email) +
         fld(t('ev.f.phone'), e.phone || '', { placeholder: t('ev.val.notprovided') }) +
         fld(t('ev.f.emptype'), `<span class="badge ${tm.cls}">${tm.label}</span>`, { raw: true }) +
         fld(t('ev.f.empcode'), e.id, { mono: true }) +
-        fld(t('ev.f.tkcode'), 'TK-' + digits, { mono: true })
-      ) +
+        (isCtv ? '' : fld(t('ev.f.tkcode'), 'TK-' + digits, { mono: true }))
+      )
+    );
+
+    // 2) Personal information — personal · CCCD (under tax code) · passport · addresses · vehicle
+    const secPersonal = empSection('personal', 'i-file', t('ev.sec.personal'),
       subGrid(t('ev.sub.personal'),
         fld(t('ev.f.lastname'), nm.last) +
         fld(t('ev.f.firstname'), nm.first) +
@@ -4538,50 +4883,67 @@
         fld(t('ev.f.dob'), 'Mar 12, 1994') +
         fld(t('ev.f.gender'), t('ev.val.male')) +
         fld(t('ev.f.nationality'), t('ev.val.vietnam')) +
-        fld(t('ev.f.ethnicity'), t('ev.val.kinh')) +
-        fld(t('ev.f.religion'), t('ev.val.none')) +
-        fld(t('ev.f.marital'), t('ev.val.single'))
+        (isCtv ? '' : fld(t('ev.f.taxcode'), '8' + digits + '01', { mono: true }))
       ) +
-      subGrid(t('ev.sub.addresses'),
-        fld(t('ev.f.birthaddr'), 'Ba Dinh, Ha Noi', { full: true }) +
-        fld(t('ev.f.hometown'), 'Nam Dinh', { full: true }) +
-        fld(t('ev.f.permaddr'), '25 Lang Ha, Dong Da, Ha Noi', { full: true }) +
-        fld(t('ev.f.curraddr'), e.loc, { full: true })
-      )
-    );
-
-    // 2) Employment
-    const secWork = empSection('work', 'i-briefcase', t('ev.sec.work'),
-      subGrid(t('ev.sub.position'),
-        fld(t('ev.f.position'), e.role) +
-        fld(t('ev.f.jobtitle'), e.role) +
-        fld(t('ev.f.department'), e.dept) +
-        fld(t('ev.f.manager'), isCtv ? 'David Park' : 'Sarah Chen') +
-        fld(isCtv ? t('ev.f.onboarded') : t('ev.f.startdate'), e.joined) +
-        fld(t('ev.f.officialdate'), isCtv ? NA : e.joined) +
-        fld(t('ev.f.taxcode'), '8' + digits + '01', { mono: true })
-      ) +
-      subGrid(t('ev.sub.vehicle'),
-        fld(t('ev.f.plate'), '30K-123.45', { mono: true }) +
-        fld(t('ev.f.vehicle'), 'Honda SH 150i — black')
-      )
-    );
-
-    // 3) Documents & Bank
-    const secDocs = empSection('docs', 'i-file', t('ev.sec.docs'),
       subGrid(t('ev.sub.cccd'),
         fld(t('ev.f.cccdno'), '0' + digits + '000123', { mono: true }) +
         fld(t('ev.f.issuedate'), 'Aug 20, 2021') +
         fld(t('ev.f.issueplace'), 'National ID Center, Ha Noi', { full: true })
       ) +
-      subBlock('', `<div class="emp-docs">${docThumb(t('ev.doc.cccdfront'))}${docThumb(t('ev.doc.cccdback'))}${docThumb(t('ev.doc.passport'))}</div>`) +
+      subBlock('', `<div class="emp-docs">${docThumb(t('ev.doc.cccdfront'))}${docThumb(t('ev.doc.cccdback'))}</div>`) +
       subGrid(t('ev.sub.passport'),
-        fld(t('ev.f.passno'), 'C' + digits + '99', { mono: true }) +
+        fld(t('ev.f.passno'), '', { placeholder: NA }) +
         fld(t('ev.f.passtype'), t('ev.val.ordinary')) +
-        fld(t('ev.f.issuedate'), 'Sep 05, 2022') +
-        fld(t('ev.f.issueplace'), 'Immigration Dept.') +
-        fld(t('ev.f.expirydate'), 'Sep 05, 2032')
+        fld(t('ev.f.expirydate'), '', { placeholder: NA })
       ) +
+      subGrid(t('ev.sub.addresses'),
+        fld(t('ev.f.birthaddr'), 'Ba Dinh, Ha Noi', { full: true }) +
+        fld(t('ev.f.permaddr'), '25 Lang Ha, Dong Da, Ha Noi', { full: true }) +
+        fld(t('ev.f.curraddr'), e.loc, { full: true })
+      ) +
+      (isCtv ? '' : subGrid(t('ev.sub.vehicle'),
+        fld(t('ev.f.plate'), '30K-123.45', { mono: true }) +
+        fld(t('ev.f.vehicle'), 'Honda SH 150i — black')
+      ))
+    );
+
+    // 2) Employment (+ Projects for contractors)
+    // Shared: project allocation cards (Tên dự án, Vị trí, Level, Rate, Ngày bắt đầu/kết thúc, Chế độ làm việc)
+    const allocCards = list => `<div class="alloc-view-list">
+      ${list.map(a => `
+        <div class="alloc-view-card">
+          <div class="avc-top">
+            <div class="avc-proj">${esc(a.project)}</div>
+            <span class="badge ${a.mode === 'FT' ? 'badge-ft' : 'badge-pt'}">${a.mode === 'FT' ? t('ev.mode.ft') : t('ev.mode.pt')}</span>
+          </div>
+          <div class="avc-meta">
+            <span>${t('ev.f.position')}: <b>${esc(a.role)}</b></span>
+            <span>${t('ev.f.level')}: <b>${esc(a.level || NA)}</b></span>
+            <span>${t('ev.f.rate')}: <b>${esc(a.rate || NA)}</b></span>
+            <span>${t('ev.f.workstart')}: <b>${esc(a.from)}</b> → ${t('ev.f.workend')}: <b>${esc(a.to)}</b></span>
+          </div>
+        </div>`).join('')}
+    </div>`;
+    const projEmpty = `<div class="emp-f"><div class="box empty">${t('ev.msg.noproj')}</div></div>`;
+
+    // 3) Employment — in-house only (no direct manager)
+    const secWork = isCtv ? '' : empSection('work', 'i-briefcase', t('ev.sec.work'),
+      subGrid(t('ev.sub.position'),
+        fld(t('ev.f.position'), e.role) +
+        fld(t('ev.f.jobtitle'), e.role) +
+        fld(t('ev.f.department'), e.dept) +
+        fld(t('ev.f.startdate'), e.joined) +
+        fld(t('ev.f.officialdate'), e.joined)
+      )
+    );
+
+    // 4) Projects — for everyone
+    const secProjects = empSection('projects', 'i-package', t('ev.sec.projects'),
+      allocs.length ? allocCards(allocs) : projEmpty
+    );
+
+    // 5) Bank account
+    const secBank = empSection('bank', 'i-dollar', t('ev.sec.bank'),
       subGrid(t('ev.sub.bank'),
         fld(t('ev.f.bankno'), '19' + digits + '8888', { mono: true }) +
         fld(t('ev.f.bankholder'), e.name) +
@@ -4590,17 +4952,13 @@
       )
     );
 
-    // 4) Contacts & Family
+    // 6) Contacts & Family
     const secContacts = empSection('contacts', 'i-phone', t('ev.sec.contacts'),
-      subGrid(t('ev.sub.emergency'),
+      subGrid('',
         fld(t('ev.f.fullname'), 'Nguyen Thi Hoa') +
         fld(t('ev.f.phone'), '0987 654 321') +
         fld(t('ev.f.relationship'), t('ev.val.mother'))
-      ) +
-      subBlock(t('ev.sub.family'), `<div class="emp-list">
-        ${listItem('Nguyen Thi Hoa', `<span>${t('ev.f.relationship')}: <b>${t('ev.val.mother')}</b></span><span>${t('ev.meta.year')}: <b>1968</b></span>`)}
-        ${listItem('Nguyen Van Hung', `<span>${t('ev.f.relationship')}: <b>${t('ev.val.father')}</b></span><span>${t('ev.meta.year')}: <b>1965</b></span>`)}
-      </div>`)
+      )
     );
 
     // 5) Education & Experience
@@ -4651,51 +5009,22 @@
       </tbody>
     </table></div>`;
 
-    // --- Insurance: book info + history tables ---
-    const insHistTable = `<div class="emp-tbl-wrap"><table class="emp-tbl">
-      <thead><tr><th>${t('ev.ih.from')}</th><th>${t('ev.ih.entity')}</th><th>${t('ev.ih.level')}</th><th>${t('ev.ih.company')}</th><th>${t('ev.ih.employee')}</th><th>${t('ev.ih.notes')}</th></tr></thead>
-      <tbody><tr><td colspan="6"><div class="emp-tbl-empty">${t('ev.ih.empty')}</div></td></tr></tbody>
-    </table></div>`;
-    const benefitTable = `<div class="emp-tbl-wrap"><table class="emp-tbl">
-      <thead><tr><th>${t('ev.bh.type')}</th><th>${t('ev.bh.appdate')}</th><th>${t('ev.bh.procdate')}</th><th>${t('ev.bh.inspay')}</th><th>${t('ev.bh.benpay')}</th><th>${t('ev.bh.amount')}</th><th>${t('ev.bh.notes')}</th></tr></thead>
-      <tbody><tr><td colspan="7"><div class="emp-tbl-empty">${t('ev.bh.empty')}</div></td></tr></tbody>
-    </table></div>`;
-
+    // 8) Contract
     const secContract = empSection('contract', 'i-calendar', t('ev.sec.contract'),
-      subBlock(t('ev.sub.contract'), contractTable) +
+      subBlock(t('ev.sub.contract'), contractTable)
+    );
+
+    // 9) Insurance — in-house only
+    const secInsurance = isCtv ? '' : empSection('insurance', 'i-check', t('ev.sec.insurance'),
       subGrid(t('ev.sub.insinfo'),
         fld(t('ev.f.insbookno'), digits + '2643', { mono: true }) +
         fld(t('ev.f.bookstatus'), `<span class="badge badge-success">${t('ev.val.bookactive')}</span>`, { raw: true }) +
         fld(t('ev.f.payingentity'), 'Công ty TNHH phần mềm Twendee') +
         fld(t('ev.f.healthprovider'), '', { placeholder: NA })
-      ) +
-      subBlock(t('ev.sub.inshistory'), insHistTable) +
-      subBlock(t('ev.sub.benefithistory'), benefitTable)
+      )
     );
 
-    // 7) Projects
-    const secProjects = empSection('projects', 'i-package', t('ev.sec.projects'),
-      `<div class="account-note" style="background:#F0FDF4; border-color:#BBF7D0; color:#166534;">
-        <svg><use href="#i-info"/></svg>
-        <div>${t('ev.msg.projnote')}</div>
-      </div>
-      ${allocs.length ? `<div class="alloc-view-list">
-        ${allocs.map(a => `
-          <div class="alloc-view-card">
-            <div class="avc-top">
-              <div class="avc-proj">${esc(a.project)}</div>
-              <span class="badge ${a.mode === 'FT' ? 'badge-ft' : 'badge-pt'}">${a.mode === 'FT' ? t('ev.mode.ft') : t('ev.mode.pt')}</span>
-            </div>
-            <div class="avc-meta">
-              <span>${t('ev.meta.role')}: <b>${esc(a.role)}</b></span>
-              <span>${t('ev.meta.period')}: <b>${esc(a.from)} → ${esc(a.to)}</b></span>
-              ${a.mode === 'PT' && a.ptMin ? `<span>${t('ev.meta.min')}: <b>${a.ptMin}h/week</b> (${t('ev.meta.kpi')})</span>` : ''}
-            </div>
-          </div>`).join('')}
-      </div>` : `<div class="emp-f"><div class="box empty">${t('ev.msg.noproj')}</div></div>`}`
-    );
-
-    // 8) Attachments
+    // 10) Attachments
     const files = isCtv
       ? [{ n: 'Service_Agreement_signed.pdf', s: '412 KB' }, { n: 'NDA.pdf', s: '188 KB' }, { n: 'ID_card.jpg', s: '1.1 MB' }]
       : [{ n: 'Labor_Contract.pdf', s: '520 KB' }, { n: 'ID_card.jpg', s: '1.0 MB' }];
@@ -4711,24 +5040,26 @@
     </div>`);
 
     const navItems = [
-      { key: 'personal',   icon: 'i-users' },
-      { key: 'work',       icon: 'i-briefcase' },
-      { key: 'docs',       icon: 'i-file' },
-      { key: 'contacts',   icon: 'i-phone' },
-      { key: 'background', icon: 'i-check-sq' },
-      { key: 'contract',   icon: 'i-calendar' },
-      { key: 'projects',   icon: 'i-package' },
-      { key: 'attach',     icon: 'i-download' }
+      { key: 'overview',   icon: 'i-users',    label: t('ev.nav.overview') },
+      { key: 'personal',   icon: 'i-file',     label: t('ev.nav.personal') },
+      ...(isCtv ? [] : [{ key: 'work', icon: 'i-briefcase', label: t('ev.nav.work') }]),
+      { key: 'projects',   icon: 'i-package',  label: t('ev.nav.projects') },
+      { key: 'bank',       icon: 'i-dollar',   label: t('ev.nav.bank') },
+      { key: 'contacts',   icon: 'i-phone',    label: t('ev.nav.contacts') },
+      { key: 'background', icon: 'i-check-sq', label: t('ev.nav.background') },
+      { key: 'contract',   icon: 'i-calendar', label: t('ev.nav.contract') },
+      ...(isCtv ? [] : [{ key: 'insurance', icon: 'i-check', label: t('ev.nav.insurance') }]),
+      { key: 'attach',     icon: 'i-download', label: t('ev.nav.attach') }
     ];
 
     const html = `
       <div class="emp-layout">
         <nav class="emp-nav" role="tablist">
-          ${navItems.map((n, i) => `<button class="emp-nav-btn${i === 0 ? ' active' : ''}" role="tab" data-sec-btn="${n.key}" onclick="empScrollTo('${n.key}')"><svg><use href="#${n.icon}"/></svg><span>${esc(t('ev.nav.' + n.key))}</span></button>`).join('')}
+          ${navItems.map((n, i) => `<button class="emp-nav-btn${i === 0 ? ' active' : ''}" role="tab" data-sec-btn="${n.key}" onclick="empScrollTo('${n.key}')"><svg><use href="#${n.icon}"/></svg><span>${esc(n.label)}</span></button>`).join('')}
         </nav>
         <div class="emp-doc">
           ${hero}
-          ${secPersonal}${secWork}${secDocs}${secContacts}${secBackground}${secContract}${secProjects}${secAttach}
+          ${secOverview}${secPersonal}${secWork}${secProjects}${secBank}${secContacts}${secBackground}${secContract}${secInsurance}${secAttach}
         </div>
       </div>`;
 
@@ -4772,13 +5103,50 @@
     if (current) empSetActiveNav(current);
   }
 
-  // Back-compat: the Add panel still uses show/hide tabs
-  function switchEmpTab(btn, key) {
-    const body = btn.closest('.panel-body');
-    if (!body) return;
-    body.querySelectorAll('.emp-tab').forEach(t => t.classList.remove('active'));
-    btn.classList.add('active');
-    body.querySelectorAll('.emp-pane').forEach(p => p.classList.toggle('active', p.getAttribute('data-emp-pane') === key));
+  // ===== Add/Edit panel: scroll-spy nav (mirrors the detail panel) =====
+  function addNavOffset(bodyEl) {
+    const nav = bodyEl.querySelector('.emp-nav');
+    const isTop = window.matchMedia('(max-width: 768px)').matches;
+    return isTop && nav ? nav.offsetHeight : 0;
+  }
+  function addSecScrollTo(key) {
+    const bodyEl = document.getElementById('add-panel-body');
+    const sec = document.getElementById('addsec-' + key);
+    if (!bodyEl || !sec) return;
+    bodyEl.scrollTo({ top: sec.offsetTop - addNavOffset(bodyEl) - 12, behavior: 'smooth' });
+    addSetActiveNav(key);
+  }
+  function addSetActiveNav(key) {
+    document.querySelectorAll('#add-panel-body .emp-nav-btn')
+      .forEach(b => b.classList.toggle('active', b.getAttribute('data-sec-btn') === key));
+  }
+  function addScrollSpy() {
+    const bodyEl = document.getElementById('add-panel-body');
+    if (!bodyEl) return;
+    const marker = bodyEl.scrollTop + addNavOffset(bodyEl) + 40;
+    const secs = bodyEl.querySelectorAll('.emp-section');
+    let current = secs.length ? secs[0].getAttribute('data-sec') : null;
+    secs.forEach(s => { if (s.offsetTop <= marker) current = s.getAttribute('data-sec'); });
+    if (current) addSetActiveNav(current);
+  }
+
+  // Avatar upload preview (hero)
+  function onAvatarPick(input) {
+    const f = input.files && input.files[0];
+    const av = document.getElementById('add-avatar');
+    if (!f || !av) return;
+    av.style.backgroundImage = `url('${URL.createObjectURL(f)}')`;
+    av.classList.add('has-img');
+    av.innerHTML = '';
+  }
+
+  // CCCD photo upload preview (Documents section)
+  function onDocPick(input, id) {
+    const f = input.files && input.files[0];
+    const ph = document.getElementById(id);
+    if (!f || !ph) return;
+    ph.style.backgroundImage = `url('${URL.createObjectURL(f)}')`;
+    ph.classList.add('has-img');
   }
 
   // ============ VMP: ADD-PANEL CONTRACTOR SETUP + ALLOCATION REPEATER ============
@@ -4788,10 +5156,20 @@
   function onEmpTypeChange() {
     const type = (document.querySelector('input[name="add-type"]:checked') || {}).value;
     const isCtv = type === 'contractor';
-    const accNote = document.getElementById('contractor-account-note');
-    if (accNote) accNote.hidden = !isCtv;
-    const insNote = document.getElementById('insurance-note');
-    if (insNote) insNote.hidden = !isCtv;
+    const panel = document.getElementById('panel-add');
+    if (panel) {
+      // Show fields that belong to the current type, hide the rest
+      panel.querySelectorAll('[data-only]').forEach(el => {
+        const show = el.getAttribute('data-only') === (isCtv ? 'contractor' : 'inhouse');
+        el.classList.toggle('is-hidden', !show);
+      });
+      // Default the contract type to match the employee type
+      const ct = document.getElementById('add-contract-type');
+      if (ct) ct.selectedIndex = isCtv ? 3 : 0; // 3 = Freelance/Service agreement, 0 = Labor contract
+      // Update the hero type description (keep its i18n key in sync for language switches)
+      const desc = document.getElementById('add-type-desc');
+      if (desc) { const k = isCtv ? 'rc.contractor.desc2' : 'rc.inhouse.desc'; desc.dataset.i18n = k; desc.textContent = t(k); }
+    }
     // Ensure at least one allocation row exists
     const list = document.getElementById('alloc-list');
     if (list && list.children.length === 0) addAllocRow();
