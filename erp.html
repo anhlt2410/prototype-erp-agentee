@@ -2108,6 +2108,29 @@
     border-style: dashed;
   }
 
+  /* Family member cards in Add/Edit Employee */
+  .family-member-card {
+    border: 1px solid var(--divider); border-radius: 10px;
+    padding: var(--s4); background: var(--surface, #fff); margin-bottom: var(--s3);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  }
+  .family-member-card:last-child { margin-bottom: 0; }
+  .family-member-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: var(--s3); padding-bottom: 8px; border-bottom: 1px dashed var(--divider);
+  }
+  .family-member-title {
+    font-size: 14.5px; font-weight: 700; color: var(--text); font-family: var(--font-display);
+  }
+  .family-remove-btn {
+    border: 1px solid var(--border); border-radius: var(--r-sm);
+    padding: 3px 9px; font-size: 11.5px; font-weight: 500;
+    color: var(--danger); background: var(--surface);
+    display: inline-flex; align-items: center; gap: 4px; cursor: pointer;
+    transition: all var(--t-fast) var(--ease);
+  }
+  .family-remove-btn:hover { background: var(--danger-50); border-color: var(--danger); }
+
   /* Attachments upload dropzone */
   .upload-dropzone {
     border: 2px dashed var(--border-strong); border-radius: 12px;
@@ -2810,7 +2833,7 @@
         <button class="btn btn-secondary">
           <svg><use href="#i-upload"/></svg><span data-i18n="btn.import"> Import</span>
         </button>
-        <button class="btn btn-primary" onclick="openPanel('panel-add')">
+        <button class="btn btn-primary" onclick="openAddEmployee()">
           <svg><use href="#i-plus"/></svg><span data-i18n="btn.addEmployee"> Add Employee</span>
         </button>
       </div>
@@ -3080,7 +3103,7 @@
         <div class="gallery-card">
           <div class="gallery-card-title">Panels & Dialogs</div>
           <div class="gallery-row">
-            <button class="btn btn-secondary btn-sm" onclick="openPanel('panel-add')">Add employee form</button>
+            <button class="btn btn-secondary btn-sm" onclick="openAddEmployee()">Add employee form</button>
             <button class="btn btn-secondary btn-sm" onclick="openEmployeeView('CTV-0207')">View employee</button>
             <button class="btn btn-secondary btn-sm" onclick="openModal('modal-delete')">Confirm delete</button>
           </div>
@@ -3881,7 +3904,7 @@
           <button class="emp-nav-btn" role="tab" data-sec-btn="work" data-only="inhouse" onclick="addSecScrollTo('work')"><svg><use href="#i-briefcase"/></svg><span data-i18n="ev.nav.work">Employment</span></button>
           <button class="emp-nav-btn" role="tab" data-sec-btn="projects" onclick="addSecScrollTo('projects')"><svg><use href="#i-package"/></svg><span data-i18n="ev.nav.projects">Projects</span></button>
           <button class="emp-nav-btn" role="tab" data-sec-btn="bank" onclick="addSecScrollTo('bank')"><svg><use href="#i-dollar"/></svg><span data-i18n="ev.nav.bank">Bank Account</span></button>
-          <button class="emp-nav-btn" role="tab" data-sec-btn="contacts" onclick="addSecScrollTo('contacts')"><svg><use href="#i-phone"/></svg><span data-i18n="ev.nav.contacts">Emergency Contact</span></button>
+          <button class="emp-nav-btn" role="tab" data-sec-btn="contacts" onclick="addSecScrollTo('contacts')"><svg><use href="#i-phone"/></svg><span data-i18n="ev.nav.contacts">Contacts &amp; Family</span></button>
           <button class="emp-nav-btn" role="tab" data-sec-btn="background" onclick="addSecScrollTo('background')"><svg><use href="#i-check-sq"/></svg><span data-i18n="ev.nav.background">Education &amp; Experience</span></button>
           <button class="emp-nav-btn" role="tab" data-sec-btn="contract" onclick="addSecScrollTo('contract')"><svg><use href="#i-calendar"/></svg><span data-i18n="ev.nav.contract">Contract</span></button>
           <button class="emp-nav-btn" role="tab" data-sec-btn="insurance" data-only="inhouse" onclick="addSecScrollTo('insurance')"><svg><use href="#i-check"/></svg><span data-i18n="ev.nav.insurance">Insurance</span></button>
@@ -4138,10 +4161,11 @@
         </div>
       </div>
 
-      <!-- Section: Emergency Contact -->
+      <!-- Section: Contacts & Family -->
       <div class="emp-section" id="addsec-contacts" data-sec="contacts">
-            <div class="emp-sec-head"><div class="esh-icon"><svg><use href="#i-phone"/></svg></div><h3 data-i18n="ev.sec.contacts">Emergency Contact</h3></div>
+        <div class="emp-sec-head"><div class="esh-icon"><svg><use href="#i-phone"/></svg></div><h3 data-i18n="ev.sec.contacts">Contacts &amp; Family</h3></div>
         <div class="form-grid">
+          <!-- 1. Liên hệ khẩn cấp -->
           <div class="form-subhead" data-i18n="ev.sub.emergency">Emergency contact</div>
           <div class="field">
             <label class="label" data-i18n="ev.f.fullname">Full name</label>
@@ -4160,6 +4184,20 @@
               <option data-i18n="opt.sibling">Sibling</option>
               <option data-i18n="opt.other">Other</option>
             </select>
+          </div>
+
+          <!-- 2. Thông tin gia đình (chỉ cho In-house) -->
+          <div class="full" data-only="inhouse" style="margin-top: var(--s4);">
+            <div class="form-subhead" style="display:flex; align-items:center; justify-content:space-between; margin-bottom: var(--s3); margin-top: 0;">
+              <span data-i18n="ev.sub.family">Family information</span>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="addFamilyRow()" style="font-size: 11.5px; height: 26px; padding: 0 10px;">
+                <svg style="width: 12px; height: 12px; margin-right: 4px;"><use href="#i-plus"/></svg>
+                <span data-i18n="btn.add_family">Add family member</span>
+              </button>
+            </div>
+            <div id="family-list">
+              <!-- Rendered via JS -->
+            </div>
           </div>
         </div>
       </div>
@@ -4301,6 +4339,7 @@
     </div>
     <div class="panel-footer">
       <button class="btn btn-ghost" onclick="closePanel('panel-view')" data-i18n="btn.close">Close</button>
+      <button class="btn btn-secondary" onclick="closePanel('panel-view'); openEditEmployee(currentEmpViewId)"><svg style="width:14px;height:14px;margin-right:4px;"><use href="#i-edit"/></svg> <span data-i18n="btn.edit">Edit</span></button>
       <button class="btn btn-primary" onclick="closePanel('panel-view'); showView('profile')" data-i18n="btn.viewfull">View full profile</button>
     </div>
   </div>
@@ -4406,9 +4445,11 @@
       // Employee-detail tabs + fields
       'etab.basic': 'Basic Information', 'etab.profile': 'Profile Information', 'etab.contract': 'Contract', 'etab.insurance': 'Insurance', 'etab.attach': 'Attachments', 'etab.projects': 'Projects',
       // Employee detail — single-page view (ev.*)
-      'ev.nav.overview': 'Overview', 'ev.nav.personal': 'Personal Info', 'ev.nav.work': 'Employment', 'ev.nav.workproj': 'Employment & Projects', 'ev.nav.docs': 'Documents & Bank', 'ev.nav.bank': 'Bank Account', 'ev.nav.contacts': 'Emergency Contact', 'ev.nav.background': 'Education & Experience', 'ev.nav.contract': 'Contract', 'ev.nav.insurance': 'Insurance', 'ev.nav.projects': 'Projects', 'ev.nav.attach': 'Attachments',
-      'ev.sec.overview': 'Overview', 'ev.sec.personal': 'Personal Information', 'ev.sec.work': 'Employment', 'ev.sec.workproj': 'Employment & Projects', 'ev.sec.docs': 'Documents & Bank', 'ev.sec.bank': 'Bank Account', 'ev.sec.contacts': 'Emergency Contact', 'ev.sec.background': 'Education & Experience', 'ev.sec.contract': 'Contract', 'ev.sec.insurance': 'Insurance', 'ev.sec.projects': 'Projects', 'ev.sec.attach': 'Attachments',
-      'ev.sub.account': 'Account & Contact', 'ev.sub.personal': 'Personal Information', 'ev.sub.addresses': 'Addresses', 'ev.sub.position': 'Position', 'ev.sub.vehicle': 'Vehicle', 'ev.sub.project': 'Project', 'ev.sub.cccd': 'National ID (CCCD)', 'ev.sub.passport': 'Passport', 'ev.sub.bank': 'Bank Account', 'ev.sub.emergency': 'Emergency contact', 'ev.sub.family': 'Family members', 'ev.sub.education': 'Education', 'ev.sub.experience': 'Work experience', 'ev.sub.techstacks': 'Tech stacks', 'ev.sub.certs': 'Certificates', 'ev.sub.contract': 'Contract', 'ev.sub.insurance': 'Insurance',
+      'panel.edit.title': 'Edit Employee',
+      'ev.nav.overview': 'Overview', 'ev.nav.personal': 'Personal Info', 'ev.nav.work': 'Employment', 'ev.nav.workproj': 'Employment & Projects', 'ev.nav.docs': 'Documents & Bank', 'ev.nav.bank': 'Bank Account', 'ev.nav.contacts': 'Contacts & Family', 'ev.sec.emergency_only': 'Emergency Contact', 'ev.nav.background': 'Education & Experience', 'ev.nav.contract': 'Contract', 'ev.nav.insurance': 'Insurance', 'ev.nav.projects': 'Projects', 'ev.nav.attach': 'Attachments',
+      'ev.sec.overview': 'Overview', 'ev.sec.personal': 'Personal Information', 'ev.sec.work': 'Employment', 'ev.sec.workproj': 'Employment & Projects', 'ev.sec.docs': 'Documents & Bank', 'ev.sec.bank': 'Bank Account', 'ev.sec.contacts': 'Contacts & Family', 'ev.sec.background': 'Education & Experience', 'ev.sec.contract': 'Contract', 'ev.sec.insurance': 'Insurance', 'ev.sec.projects': 'Projects', 'ev.sec.attach': 'Attachments',
+      'ev.sub.account': 'Account & Contact', 'ev.sub.personal': 'Personal Information', 'ev.sub.addresses': 'Addresses', 'ev.sub.position': 'Position', 'ev.sub.vehicle': 'Vehicle', 'ev.sub.project': 'Project', 'ev.sub.cccd': 'National ID (CCCD)', 'ev.sub.passport': 'Passport', 'ev.sub.bank': 'Bank Account', 'ev.sub.emergency': 'Emergency contact', 'ev.sub.family': 'Family Information', 'ev.sub.family_member': 'Family member', 'ev.sub.education': 'Education', 'ev.sub.experience': 'Work experience', 'ev.sub.techstacks': 'Tech stacks', 'ev.sub.certs': 'Certificates', 'ev.sub.contract': 'Contract', 'ev.sub.insurance': 'Insurance',
+      'ev.f.fam_relation': 'Relationship', 'ev.f.fam_name': 'Full name', 'ev.f.fam_dob': 'Date of birth', 'ev.f.fam_phone': 'Phone number', 'ev.f.fam_cccd': 'CCCD/CMND', 'ev.f.fam_cccd_date': 'CCCD/CMND issue date', 'ev.f.fam_cccd_place': 'CCCD/CMND issue place', 'ev.f.fam_tax': 'Tax code', 'ev.f.fam_nationality': 'Nationality', 'ev.f.fam_ethnicity': 'Ethnicity', 'ev.f.fam_birth_addr': 'Birth registration address', 'ev.f.fam_reg_addr': 'Permanent household address', 'ev.f.fam_doc_type': 'Document type', 'ev.f.fam_is_dependent': 'Is dependent', 'btn.add_family': 'Add family member',
       'ev.f.username': 'Username', 'ev.f.email': 'Email', 'ev.f.phone': 'Phone', 'ev.f.emptype': 'Employee type', 'ev.f.empcode': 'Employee code', 'ev.f.tkcode': 'Timekeeping code',
       'ev.f.lastname': 'Last name', 'ev.f.firstname': 'First name', 'ev.f.shortname': 'Short name', 'ev.f.dob': 'Date of birth', 'ev.f.gender': 'Gender', 'ev.f.nationality': 'Nationality', 'ev.f.ethnicity': 'Ethnicity', 'ev.f.religion': 'Religion', 'ev.f.marital': 'Marital status',
       'ev.f.birthaddr': 'Birth registration address', 'ev.f.hometown': 'Hometown', 'ev.f.permaddr': 'Permanent address (household register)', 'ev.f.curraddr': 'Current address (temporary residence)',
@@ -4511,9 +4552,11 @@
       // Employee-detail tabs + fields
       'etab.basic': 'Thông tin cơ bản', 'etab.profile': 'Thông tin hồ sơ', 'etab.contract': 'Hợp đồng', 'etab.insurance': 'Bảo hiểm', 'etab.attach': 'Tệp đính kèm', 'etab.projects': 'Dự án',
       // Employee detail — single-page view (ev.*)
-      'ev.nav.overview': 'Tổng quan', 'ev.nav.personal': 'Thông tin cá nhân', 'ev.nav.work': 'Công việc', 'ev.nav.workproj': 'Công việc và dự án', 'ev.nav.docs': 'Giấy tờ & Ngân hàng', 'ev.nav.bank': 'Tài khoản ngân hàng', 'ev.nav.contacts': 'Liên hệ khẩn cấp', 'ev.nav.background': 'Học vấn & Kinh nghiệm', 'ev.nav.contract': 'Hợp đồng', 'ev.nav.insurance': 'Bảo hiểm', 'ev.nav.projects': 'Dự án', 'ev.nav.attach': 'Tài liệu',
-      'ev.sec.overview': 'Tổng quan', 'ev.sec.personal': 'Thông tin cá nhân', 'ev.sec.work': 'Công việc', 'ev.sec.workproj': 'Công việc và dự án', 'ev.sec.docs': 'Giấy tờ & Ngân hàng', 'ev.sec.bank': 'Tài khoản ngân hàng', 'ev.sec.contacts': 'Liên hệ khẩn cấp', 'ev.sec.background': 'Học vấn & Kinh nghiệm', 'ev.sec.contract': 'Hợp đồng', 'ev.sec.insurance': 'Bảo hiểm', 'ev.sec.projects': 'Dự án', 'ev.sec.attach': 'Tài liệu đính kèm',
-      'ev.sub.account': 'Tài khoản & liên hệ', 'ev.sub.personal': 'Thông tin cá nhân', 'ev.sub.addresses': 'Địa chỉ', 'ev.sub.position': 'Vị trí việc làm', 'ev.sub.vehicle': 'Phương tiện', 'ev.sub.project': 'Dự án', 'ev.sub.cccd': 'Căn cước công dân (CCCD)', 'ev.sub.passport': 'Hộ chiếu', 'ev.sub.bank': 'Tài khoản ngân hàng', 'ev.sub.emergency': 'Liên hệ khẩn cấp', 'ev.sub.family': 'Thành viên gia đình', 'ev.sub.education': 'Lịch sử học tập', 'ev.sub.experience': 'Kinh nghiệm làm việc', 'ev.sub.techstacks': 'Công nghệ / Kỹ năng', 'ev.sub.certs': 'Chứng chỉ', 'ev.sub.contract': 'Hợp đồng', 'ev.sub.insurance': 'Bảo hiểm',
+      'panel.edit.title': 'Chỉnh sửa nhân viên',
+      'ev.nav.overview': 'Tổng quan', 'ev.nav.personal': 'Thông tin cá nhân', 'ev.nav.work': 'Công việc', 'ev.nav.workproj': 'Công việc và dự án', 'ev.nav.docs': 'Giấy tờ & Ngân hàng', 'ev.nav.bank': 'Tài khoản ngân hàng', 'ev.nav.contacts': 'Liên hệ & Gia đình', 'ev.sec.emergency_only': 'Liên hệ khẩn cấp', 'ev.nav.background': 'Học vấn & Kinh nghiệm', 'ev.nav.contract': 'Hợp đồng', 'ev.nav.insurance': 'Bảo hiểm', 'ev.nav.projects': 'Dự án', 'ev.nav.attach': 'Tài liệu',
+      'ev.sec.overview': 'Tổng quan', 'ev.sec.personal': 'Thông tin cá nhân', 'ev.sec.work': 'Công việc', 'ev.sec.workproj': 'Công việc và dự án', 'ev.sec.docs': 'Giấy tờ & Ngân hàng', 'ev.sec.bank': 'Tài khoản ngân hàng', 'ev.sec.contacts': 'Liên hệ & Gia đình', 'ev.sec.background': 'Học vấn & Kinh nghiệm', 'ev.sec.contract': 'Hợp đồng', 'ev.sec.insurance': 'Bảo hiểm', 'ev.sec.projects': 'Dự án', 'ev.sec.attach': 'Tài liệu đính kèm',
+      'ev.sub.account': 'Tài khoản & liên hệ', 'ev.sub.personal': 'Thông tin cá nhân', 'ev.sub.addresses': 'Địa chỉ', 'ev.sub.position': 'Vị trí việc làm', 'ev.sub.vehicle': 'Phương tiện', 'ev.sub.project': 'Dự án', 'ev.sub.cccd': 'Căn cước công dân (CCCD)', 'ev.sub.passport': 'Hộ chiếu', 'ev.sub.bank': 'Tài khoản ngân hàng', 'ev.sub.emergency': 'Liên hệ khẩn cấp', 'ev.sub.family': 'Thông tin gia đình', 'ev.sub.family_member': 'Thành viên gia đình', 'ev.sub.education': 'Lịch sử học tập', 'ev.sub.experience': 'Kinh nghiệm làm việc', 'ev.sub.techstacks': 'Công nghệ / Kỹ năng', 'ev.sub.certs': 'Chứng chỉ', 'ev.sub.contract': 'Hợp đồng', 'ev.sub.insurance': 'Bảo hiểm',
+      'ev.f.fam_relation': 'Mối quan hệ', 'ev.f.fam_name': 'Họ và tên', 'ev.f.fam_dob': 'Ngày sinh', 'ev.f.fam_phone': 'Số điện thoại', 'ev.f.fam_cccd': 'CCCD/CMND', 'ev.f.fam_cccd_date': 'Ngày cấp CMND/CCCD', 'ev.f.fam_cccd_place': 'Nơi cấp CMND/CCCD', 'ev.f.fam_tax': 'Mã số thuế', 'ev.f.fam_nationality': 'Quốc tịch', 'ev.f.fam_ethnicity': 'Dân tộc', 'ev.f.fam_birth_addr': 'Địa chỉ khai sinh', 'ev.f.fam_reg_addr': 'Địa chỉ hộ khẩu', 'ev.f.fam_doc_type': 'Loại giấy tờ', 'ev.f.fam_is_dependent': 'Là người phụ thuộc', 'btn.add_family': 'Thêm thành viên',
       'ev.f.username': 'Tên đăng nhập', 'ev.f.email': 'Email', 'ev.f.phone': 'Số điện thoại', 'ev.f.emptype': 'Loại nhân viên', 'ev.f.empcode': 'Mã nhân viên', 'ev.f.tkcode': 'Mã chấm công',
       'ev.f.lastname': 'Họ', 'ev.f.firstname': 'Tên', 'ev.f.shortname': 'Tên gọi ngắn', 'ev.f.dob': 'Ngày sinh', 'ev.f.gender': 'Giới tính', 'ev.f.nationality': 'Quốc tịch', 'ev.f.ethnicity': 'Dân tộc', 'ev.f.religion': 'Tôn giáo', 'ev.f.marital': 'Tình trạng hôn nhân',
       'ev.f.birthaddr': 'Địa chỉ khai sinh', 'ev.f.hometown': 'Quê quán', 'ev.f.permaddr': 'Địa chỉ thường trú (hộ khẩu)', 'ev.f.curraddr': 'Địa chỉ hiện tại (tạm trú)',
@@ -4737,7 +4780,7 @@
         <td>
           <div class="row-actions">
             <button class="icon-btn" title="View" onclick="openEmployeeView('${e.id}')"><svg><use href="#i-eye"/></svg></button>
-            <button class="icon-btn" title="Edit" onclick="openPanel('panel-add')"><svg><use href="#i-edit"/></svg></button>
+            <button class="icon-btn" title="Edit" onclick="openEditEmployee('${e.id}')"><svg><use href="#i-edit"/></svg></button>
             <button class="icon-btn" title="Delete" onclick="openModal('modal-delete')"><svg><use href="#i-trash"/></svg></button>
           </div>
         </td>
@@ -4766,6 +4809,9 @@
       // Seed one allocation row + sync type-dependent fields
       const list = document.getElementById('alloc-list');
       if (list && list.children.length === 0) addAllocRow();
+      // Seed family member list if empty
+      const famList = document.getElementById('family-list');
+      if (famList && famList.children.length === 0) initFamilyList();
       onEmpTypeChange();
     }
   }
@@ -4792,6 +4838,9 @@
       // Reset VMP allocations
       const list = document.getElementById('alloc-list');
       if (list) list.innerHTML = '';
+      // Reset family list
+      const famList = document.getElementById('family-list');
+      if (famList) famList.innerHTML = '';
     }
   }
 
@@ -4808,7 +4857,8 @@
     const empty = value == null || value === '';
     const cls = 'box' + (empty ? ' empty' : '') + (opts.mono ? ' mono' : '');
     const v = empty ? (opts.placeholder || '—') : value;
-    return `<div class="emp-f${opts.full ? ' full' : ''}"><label>${esc(label)}</label><div class="${cls}">${opts.raw ? v : esc(v)}</div></div>`;
+    const styleAttr = opts.col1 ? ' style="grid-column: 1;"' : '';
+    return `<div class="emp-f${opts.full ? ' full' : ''}"${styleAttr}><label>${esc(label)}</label><div class="${cls}">${opts.raw ? v : esc(v)}</div></div>`;
   }
 
   // Sub-card: a titled group of fields inside a section (fields already rendered via fld())
@@ -4952,13 +5002,49 @@
       )
     );
 
-    // 6) Contacts & Family
-    const secContacts = empSection('contacts', 'i-phone', t('ev.sec.contacts'),
-      subGrid('',
+    // 6) Contacts & Family (In-house: Contacts & Family; Contractor: Emergency Contact)
+    const famList = (e.family && e.family.length) ? e.family : [
+      {
+        relation: 'Con',
+        name: 'Trần Thị Thương',
+        dob: '15/12/1984',
+        phone: '0978340418',
+        idNo: '040184013340',
+        idDate: '12/11/2024',
+        idPlace: 'Bộ Công An',
+        taxCode: '--',
+        nationality: 'Việt Nam',
+        ethnicity: 'Kinh',
+        birthAddress: 'Thanh Nho - Thanh Chương - Nghệ An',
+        regAddress: 'Tổ dân phố 18, xã Phù Ninh, tỉnh Phú Thọ',
+        docType: 'Sổ hộ khẩu',
+        isDependent: 'Không'
+      }
+    ];
+
+    const famHtml = isCtv ? '' : famList.map((m, idx) => subGrid((t('ev.sub.family_member') || 'Thành viên gia đình') + ' ' + (idx + 1),
+      fld(t('ev.f.fam_relation'), m.relation) +
+      fld(t('ev.f.fam_name'), m.name) +
+      fld(t('ev.f.fam_dob'), m.dob) +
+      fld(t('ev.f.fam_phone'), m.phone) +
+      fld(t('ev.f.fam_cccd'), m.idNo, { mono: true }) +
+      fld(t('ev.f.fam_cccd_date'), m.idDate) +
+      fld(t('ev.f.fam_cccd_place'), m.idPlace) +
+      fld(t('ev.f.fam_tax'), m.taxCode) +
+      fld(t('ev.f.fam_nationality'), m.nationality) +
+      fld(t('ev.f.fam_ethnicity'), m.ethnicity) +
+      fld(t('ev.f.fam_birth_addr'), m.birthAddress) +
+      fld(t('ev.f.fam_reg_addr'), m.regAddress) +
+      fld(t('ev.f.fam_doc_type'), m.docType, { col1: true }) +
+      fld(t('ev.f.fam_is_dependent'), m.isDependent, { col1: true })
+    )).join('');
+
+    const secContacts = empSection('contacts', 'i-phone', isCtv ? t('ev.sec.emergency_only') : t('ev.sec.contacts'),
+      subGrid(t('ev.sub.emergency'),
         fld(t('ev.f.fullname'), 'Nguyen Thi Hoa') +
         fld(t('ev.f.phone'), '0987 654 321') +
         fld(t('ev.f.relationship'), t('ev.val.mother'))
-      )
+      ) + famHtml
     );
 
     // 5) Education & Experience
@@ -5045,7 +5131,7 @@
       ...(isCtv ? [] : [{ key: 'work', icon: 'i-briefcase', label: t('ev.nav.work') }]),
       { key: 'projects',   icon: 'i-package',  label: t('ev.nav.projects') },
       { key: 'bank',       icon: 'i-dollar',   label: t('ev.nav.bank') },
-      { key: 'contacts',   icon: 'i-phone',    label: t('ev.nav.contacts') },
+      { key: 'contacts',   icon: 'i-phone',    label: isCtv ? t('ev.sec.emergency_only') : t('ev.nav.contacts') },
       { key: 'background', icon: 'i-check-sq', label: t('ev.nav.background') },
       { key: 'contract',   icon: 'i-calendar', label: t('ev.nav.contract') },
       ...(isCtv ? [] : [{ key: 'insurance', icon: 'i-check', label: t('ev.nav.insurance') }]),
@@ -5169,10 +5255,20 @@
       // Update the hero type description (keep its i18n key in sync for language switches)
       const desc = document.getElementById('add-type-desc');
       if (desc) { const k = isCtv ? 'rc.contractor.desc2' : 'rc.inhouse.desc'; desc.dataset.i18n = k; desc.textContent = t(k); }
+
+      // Update contacts nav tab and section header based on employee type
+      const contactsNav = panel.querySelector('.emp-nav-btn[data-sec-btn="contacts"] span');
+      const contactsSec = panel.querySelector('#addsec-contacts .emp-sec-head h3');
+      const contactKey = isCtv ? 'ev.sec.emergency_only' : 'ev.sec.contacts';
+      if (contactsNav) { contactsNav.dataset.i18n = contactKey; contactsNav.textContent = t(contactKey); }
+      if (contactsSec) { contactsSec.dataset.i18n = contactKey; contactsSec.textContent = t(contactKey); }
     }
     // Ensure at least one allocation row exists
     const list = document.getElementById('alloc-list');
     if (list && list.children.length === 0) addAllocRow();
+    // Ensure family member list is seeded if in-house
+    const famList = document.getElementById('family-list');
+    if (famList && famList.children.length === 0) initFamilyList();
   }
 
   function addAllocRow() {
@@ -5236,6 +5332,189 @@
     if (hint) hint.textContent = isPT
       ? 'Part-time · hard cap 8h/day. Min hours/week is an optional KPI (not blocking).'
       : 'Full-time · requires 8h/day. Hours validated on this project only.';
+  }
+
+  // ============ IN-HOUSE: FAMILY INFORMATION REPEATER ============
+  let famSeq = 0;
+  const DEFAULT_FAMILY_DATA = {
+    relation: 'Con',
+    name: 'Trần Thị Thương',
+    dob: '15/12/1984',
+    phone: '0978340418',
+    idNo: '040184013340',
+    idDate: '12/11/2024',
+    idPlace: 'Bộ Công An',
+    taxCode: '--',
+    nationality: 'Việt Nam',
+    ethnicity: 'Kinh',
+    birthAddress: 'Thanh Nho - Thanh Chương - Nghệ An',
+    regAddress: 'Tổ dân phố 18, xã Phù Ninh, tỉnh Phú Thọ',
+    docType: 'Sổ hộ khẩu',
+    isDependent: 'Không'
+  };
+
+  function initFamilyList(customData) {
+    const list = document.getElementById('family-list');
+    if (!list) return;
+    list.innerHTML = '';
+    famSeq = 0;
+    if (Array.isArray(customData) && customData.length) {
+      customData.forEach(d => addFamilyRow(d));
+    } else {
+      addFamilyRow(DEFAULT_FAMILY_DATA);
+    }
+  }
+
+  function addFamilyRow(data) {
+    const list = document.getElementById('family-list');
+    if (!list) return;
+    data = data || {};
+    const fid = 'fam-' + (++famSeq);
+    const count = list.children.length + 1;
+    const row = document.createElement('div');
+    row.className = 'family-member-card';
+    row.id = fid;
+    const titleText = (t('ev.sub.family_member') || 'Thành viên gia đình') + ' ' + count;
+    row.innerHTML = `
+      <div class="family-member-head">
+        <div class="family-member-title">${titleText}</div>
+        <button type="button" class="family-remove-btn" title="Xóa" onclick="removeFamilyRow('${fid}')" ${list.children.length === 0 ? 'style="display:none"' : ''}>
+          <svg style="width:12px;height:12px"><use href="#i-trash"/></svg> <span>${currentLang === 'vi' ? 'Xóa' : 'Remove'}</span>
+        </button>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label class="label">${t('ev.f.fam_relation') || 'Mối quan hệ'}</label>
+          <select class="select">
+            <option ${(data.relation || 'Con') === 'Con' ? 'selected' : ''}>Con</option>
+            <option ${data.relation === 'Bố' ? 'selected' : ''}>Bố</option>
+            <option ${data.relation === 'Mẹ' ? 'selected' : ''}>Mẹ</option>
+            <option ${data.relation === 'Vợ' ? 'selected' : ''}>Vợ</option>
+            <option ${data.relation === 'Chồng' ? 'selected' : ''}>Chồng</option>
+            <option ${data.relation === 'Anh/Chị/Em' ? 'selected' : ''}>Anh/Chị/Em</option>
+            <option ${data.relation === 'Khác' ? 'selected' : ''}>Khác</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="label">${t('ev.f.fam_name') || 'Họ và tên'}</label>
+          <input class="input" type="text" placeholder="Trần Thị Thương" value="${esc(data.name || '')}">
+        </div>
+        <div class="field">
+          <label class="label">${t('ev.f.fam_dob') || 'Ngày sinh'}</label>
+          <input class="input" type="text" placeholder="15/12/1984" value="${esc(data.dob || '')}">
+        </div>
+        <div class="field">
+          <label class="label">${t('ev.f.fam_phone') || 'Số điện thoại'}</label>
+          <input class="input" type="tel" placeholder="0978340418" value="${esc(data.phone || '')}">
+        </div>
+        <div class="field">
+          <label class="label">${t('ev.f.fam_cccd') || 'CCCD/CMND'}</label>
+          <input class="input" type="text" placeholder="040184013340" value="${esc(data.idNo || '')}">
+        </div>
+        <div class="field">
+          <label class="label">${t('ev.f.fam_cccd_date') || 'Ngày cấp CMND/CCCD'}</label>
+          <input class="input" type="text" placeholder="12/11/2024" value="${esc(data.idDate || '')}">
+        </div>
+        <div class="field">
+          <label class="label">${t('ev.f.fam_cccd_place') || 'Nơi cấp CMND/CCCD'}</label>
+          <input class="input" type="text" placeholder="Bộ Công An" value="${esc(data.idPlace || '')}">
+        </div>
+        <div class="field">
+          <label class="label">${t('ev.f.fam_tax') || 'Mã số thuế'}</label>
+          <input class="input" type="text" placeholder="--" value="${esc(data.taxCode || '')}">
+        </div>
+        <div class="field">
+          <label class="label">${t('ev.f.fam_nationality') || 'Quốc tịch'}</label>
+          <input class="input" type="text" placeholder="Việt Nam" value="${esc(data.nationality || (data.name ? 'Việt Nam' : ''))}">
+        </div>
+        <div class="field">
+          <label class="label">${t('ev.f.fam_ethnicity') || 'Dân tộc'}</label>
+          <input class="input" type="text" placeholder="Kinh" value="${esc(data.ethnicity || (data.name ? 'Kinh' : ''))}">
+        </div>
+        <div class="field">
+          <label class="label">${t('ev.f.fam_birth_addr') || 'Địa chỉ khai sinh'}</label>
+          <input class="input" type="text" placeholder="Thanh Nho - Thanh Chương - Nghệ An" value="${esc(data.birthAddress || '')}">
+        </div>
+        <div class="field">
+          <label class="label">${t('ev.f.fam_reg_addr') || 'Địa chỉ hộ khẩu'}</label>
+          <input class="input" type="text" placeholder="Tổ dân phố 18, xã Phù Ninh, tỉnh Phú Thọ" value="${esc(data.regAddress || '')}">
+        </div>
+        <div class="field" style="grid-column: 1;">
+          <label class="label">${t('ev.f.fam_doc_type') || 'Loại giấy tờ'}</label>
+          <select class="select">
+            <option ${(data.docType || 'Sổ hộ khẩu') === 'Sổ hộ khẩu' ? 'selected' : ''}>Sổ hộ khẩu</option>
+            <option ${data.docType === 'Giấy khai sinh' ? 'selected' : ''}>Giấy khai sinh</option>
+            <option ${data.docType === 'CCCD/CMND' ? 'selected' : ''}>CCCD/CMND</option>
+            <option ${data.docType === 'Khác' ? 'selected' : ''}>Khác</option>
+          </select>
+        </div>
+        <div class="field" style="grid-column: 1;">
+          <label class="label">${t('ev.f.fam_is_dependent') || 'Là người phụ thuộc'}</label>
+          <select class="select">
+            <option ${(data.isDependent || 'Không') === 'Không' ? 'selected' : ''}>Không</option>
+            <option ${data.isDependent === 'Có' ? 'selected' : ''}>Có</option>
+          </select>
+        </div>
+      </div>`;
+    list.appendChild(row);
+    updateFamilyRowTitles();
+  }
+
+  function removeFamilyRow(fid) {
+    const row = document.getElementById(fid);
+    if (row) row.remove();
+    updateFamilyRowTitles();
+    const list = document.getElementById('family-list');
+    if (list && list.children.length === 0) addFamilyRow();
+  }
+
+  function updateFamilyRowTitles() {
+    const list = document.getElementById('family-list');
+    if (!list) return;
+    const cards = list.querySelectorAll('.family-member-card');
+    cards.forEach((card, i) => {
+      const titleEl = card.querySelector('.family-member-title');
+      if (titleEl) titleEl.textContent = (t('ev.sub.family_member') || 'Thành viên gia đình') + ' ' + (i + 1);
+      const delBtn = card.querySelector('.family-remove-btn');
+      if (delBtn) delBtn.style.display = cards.length > 1 ? 'inline-flex' : 'none';
+    });
+  }
+
+  function openAddEmployee() {
+    const titleEl = document.getElementById('add-panel-title');
+    if (titleEl) {
+      titleEl.dataset.i18n = 'panel.add.title';
+      titleEl.textContent = t('panel.add.title') || 'Add Employee';
+    }
+    openPanel('panel-add');
+  }
+
+  function openEditEmployee(id) {
+    const e = employees.find(x => x.id === id);
+    openPanel('panel-add');
+    const titleEl = document.getElementById('add-panel-title');
+    if (titleEl) {
+      titleEl.dataset.i18n = 'panel.edit.title';
+      titleEl.textContent = t('panel.edit.title') || 'Edit Employee';
+    }
+    if (!e) return;
+    const radio = document.querySelector(`input[name="add-type"][value="${e.type || 'inhouse'}"]`);
+    if (radio) {
+      radio.checked = true;
+      onEmpTypeChange();
+    }
+    const nm = splitName(e.name);
+    const panel = document.getElementById('panel-add');
+    if (panel) {
+      const fnInput = panel.querySelector('#addsec-personal input');
+      if (fnInput) fnInput.value = nm.first;
+      const lnInput = panel.querySelectorAll('#addsec-personal input')[1];
+      if (lnInput) lnInput.value = nm.last;
+      const emailInput = panel.querySelector('#addsec-overview input[type="email"]');
+      if (emailInput) emailInput.value = e.email;
+      const phoneInput = panel.querySelector('#addsec-overview input[type="tel"]');
+      if (phoneInput && e.phone) phoneInput.value = e.phone;
+    }
   }
 
   // ============ VIEW SWITCHING (Employees ↔ My Profile) ============
