@@ -1432,6 +1432,9 @@
     z-index: 60;
   }
   .right-panel.open { transform: translateX(0); }
+  /* Asset panel stacks above add/edit employee panel */
+  #panel-asset-overlay.open, #panel-asset-history-overlay.open { z-index: 70; }
+  #panel-asset, #panel-asset-history { z-index: 80; }
 
   .panel-header {
     display: flex;
@@ -2549,6 +2552,9 @@
     <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></symbol>
     <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></symbol>
     <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></symbol>
+    <symbol id="i-monitor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+    <symbol id="i-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></symbol>
   </defs>
 </svg>
 
@@ -2636,6 +2642,9 @@
         </div>
         <div class="rail-subitem" onclick="selectSubItem(this,'workforce','Payroll')">
           <svg><use href="#i-dollar"/></svg><span data-i18n="nav.payroll"> Payroll</span>
+        </div>
+        <div class="rail-subitem" onclick="selectSubItem(this,'workforce','Asset Management'); showView('assets')">
+          <svg><use href="#i-monitor"/></svg><span data-i18n="nav.assets"> Asset Management</span>
         </div>
       </div>
 
@@ -3609,7 +3618,163 @@
       </div>
     </div><!-- /view-timesheet-confirm -->
 
+    <!-- ===================== ASSET MANAGEMENT ===================== -->
+    <div id="view-assets" class="view" hidden>
+      <div class="page-header">
+        <div>
+          <h1 class="page-title" data-i18n="asset.title">Asset Management</h1>
+          <p class="page-subtitle" data-i18n="asset.subtitle">Manage assets assigned to employees: devices, accounts, emails, documents.</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-secondary" onclick="showToast('info','Export', t('toast.export.msg'))">
+            <svg><use href="#i-download"/></svg><span data-i18n="asset.btn.export"> Export</span>
+          </button>
+          <button class="btn btn-primary" onclick="openAssetPanel('add')">
+            <svg><use href="#i-plus"/></svg><span data-i18n="asset.btn.add"> Add Asset</span>
+          </button>
+        </div>
+      </div>
+
+      <section class="kpi-grid" id="asset-kpis"></section>
+
+      <div class="toolbar">
+        <div class="tabs" role="tablist">
+          <button class="tab active" role="tab" onclick="setAssetTab('all', this)"><span data-i18n="asset.tab.all">All</span> <span class="tab-count" id="asset-tab-all">0</span></button>
+          <button class="tab" role="tab" onclick="setAssetTab('equipment', this)"><span data-i18n="asset.tab.equipment">Equipment</span> <span class="tab-count" id="asset-tab-equipment">0</span></button>
+          <button class="tab" role="tab" onclick="setAssetTab('account', this)"><span data-i18n="asset.tab.account">Account</span> <span class="tab-count" id="asset-tab-account">0</span></button>
+          <button class="tab" role="tab" onclick="setAssetTab('document', this)"><span data-i18n="asset.tab.document">Document</span> <span class="tab-count" id="asset-tab-document">0</span></button>
+        </div>
+        <div class="toolbar-spacer"></div>
+        <div class="search-input">
+          <svg><use href="#i-search"/></svg>
+          <input id="asset-search" type="text" data-i18n-placeholder="asset.search" placeholder="Search assets…" oninput="filterAssets(this.value)">
+        </div>
+        <button class="filter-chip">
+          <span data-i18n="asset.filter.status">Status:</span> <span class="chip-value" data-i18n="filter.all">All</span>
+          <svg><use href="#i-chevron-down"/></svg>
+        </button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th data-i18n="asset.th.asset">Asset</th>
+              <th data-i18n="asset.th.category">Category</th>
+              <th data-i18n="asset.th.serial">Serial / ID</th>
+              <th data-i18n="asset.th.assignee">Assigned To</th>
+              <th data-i18n="asset.th.project">Project</th>
+              <th data-i18n="asset.th.status">Status</th>
+              <th data-i18n="asset.th.date">Assigned Date</th>
+              <th style="text-align:right" data-i18n="asset.th.actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="asset-tbody"></tbody>
+        </table>
+      </div>
+    </div><!-- /view-assets -->
+
   </main>
+</div>
+
+<!-- Asset Add/Edit Panel -->
+<div class="panel-overlay" id="panel-asset-overlay" onclick="closePanel('panel-asset')"></div>
+<div class="right-panel" id="panel-asset" style="width:560px">
+  <div class="panel-header">
+    <div>
+      <div class="panel-title" id="asset-panel-title">Add Asset</div>
+      <div class="panel-subtitle">Nhập thông tin tài sản mới</div>
+    </div>
+    <button class="panel-close" onclick="closePanel('panel-asset')"><svg><use href="#i-x"/></svg></button>
+  </div>
+  <div class="panel-body" id="asset-panel-body">
+    <div class="form-grid">
+      <div class="field full">
+        <label class="label" data-i18n="asset.f.name">Asset Name <span class="required">*</span></label>
+        <input class="input" id="asset-name" placeholder="e.g. MacBook Pro 14\"">
+      </div>
+      <div class="field">
+        <label class="label" data-i18n="asset.f.category">Category <span class="required">*</span></label>
+        <select class="select" id="asset-category">
+          <option value="Equipment" data-i18n="asset.cat.equipment">Equipment</option>
+          <option value="Account" data-i18n="asset.cat.account">Account</option>
+          <option value="Document" data-i18n="asset.cat.document">Document</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="label" data-i18n="asset.f.serial">Serial / ID</label>
+        <input class="input" id="asset-serial" placeholder="e.g. SN-2024-001">
+      </div>
+      <div class="field full">
+        <label class="label" data-i18n="asset.f.value">Value</label>
+        <input class="input" id="asset-value" placeholder="e.g. an.nguyen@company.com, https://app.example.com">
+      </div>
+      <div class="field">
+        <label class="label" data-i18n="asset.f.assignee">Assign To</label>
+        <select class="select" id="asset-assignee">
+          <option value="" data-i18n="asset.f.unassigned">— Unassigned —</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="label" data-i18n="asset.f.project">Project</label>
+        <select class="select" id="asset-project">
+          <option value="" data-i18n="asset.f.noproject">— No Project —</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="label" data-i18n="asset.f.status">Status</label>
+        <select class="select" id="asset-status">
+          <option value="Available" data-i18n="asset.status.available">Available</option>
+          <option value="In Use" data-i18n="asset.status.inuse">In Use</option>
+          <option value="Maintenance" data-i18n="asset.status.maintenance">Maintenance</option>
+          <option value="Retired" data-i18n="asset.status.retired">Retired</option>
+        </select>
+      </div>
+      <div class="field full">
+        <label class="label" data-i18n="asset.f.notes">Notes</label>
+        <textarea class="textarea" id="asset-notes" rows="3" placeholder=""></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="panel-footer">
+    <button class="btn btn-ghost" onclick="closePanel('panel-asset')" data-i18n="asset.btn.cancel">Cancel</button>
+    <button class="btn btn-primary" id="asset-save-btn" onclick="saveAsset()" data-i18n="asset.btn.save">Save Asset</button>
+  </div>
+</div>
+
+<!-- Asset Handover History Panel -->
+<div class="panel-overlay" id="panel-asset-history-overlay" onclick="closePanel('panel-asset-history')"></div>
+<div class="right-panel" id="panel-asset-history" style="width:560px">
+  <div class="panel-header">
+    <div>
+      <div class="panel-title" id="asset-history-title">Handover History</div>
+      <div class="panel-subtitle" id="asset-history-subtitle">Lịch sử bàn giao tài sản</div>
+    </div>
+    <button class="panel-close" onclick="closePanel('panel-asset-history')"><svg><use href="#i-x"/></svg></button>
+  </div>
+  <div class="panel-body" id="asset-history-body">
+    <!-- Rendered by JS -->
+  </div>
+</div>
+
+<!-- Delete Asset Confirm Modal -->
+<div class="modal-backdrop" id="modal-delete-asset">
+  <div class="modal modal-confirm">
+    <div class="modal-header">
+      <div><div class="modal-title">Delete Asset</div></div>
+      <button class="modal-close" onclick="document.getElementById('modal-delete-asset').classList.remove('show')"><svg><use href="#i-x"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-icon danger"><svg><use href="#i-alert"/></svg></div>
+      <div>
+        <p><strong id="delete-asset-name">This asset</strong> will be permanently deleted. This action cannot be undone.</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="document.getElementById('modal-delete-asset').classList.remove('show')">Cancel</button>
+      <button class="btn btn-danger" id="confirm-delete-asset-btn">Delete</button>
+    </div>
+  </div>
 </div>
 
 <!-- Mobile sidebar overlay -->
@@ -3697,6 +3862,11 @@
     <div class="flyout-item" onclick="selectFlyoutItem(this,'workforce')">
       <div class="flyout-item-inner">
         <svg><use href="#i-dollar"/></svg><span data-i18n="nav.payroll"> Payroll</span>
+      </div>
+    </div>
+    <div class="flyout-item" onclick="selectFlyoutItem(this,'workforce'); showView('assets')">
+      <div class="flyout-item-inner">
+        <svg><use href="#i-monitor"/></svg><span data-i18n="nav.assets"> Asset Management</span>
       </div>
     </div>
   </div>
@@ -3908,6 +4078,7 @@
           <button class="emp-nav-btn" role="tab" data-sec-btn="background" onclick="addSecScrollTo('background')"><svg><use href="#i-check-sq"/></svg><span data-i18n="ev.nav.background">Education &amp; Experience</span></button>
           <button class="emp-nav-btn" role="tab" data-sec-btn="contract" onclick="addSecScrollTo('contract')"><svg><use href="#i-calendar"/></svg><span data-i18n="ev.nav.contract">Contract</span></button>
           <button class="emp-nav-btn" role="tab" data-sec-btn="insurance" data-only="inhouse" onclick="addSecScrollTo('insurance')"><svg><use href="#i-check"/></svg><span data-i18n="ev.nav.insurance">Insurance</span></button>
+          <button class="emp-nav-btn" role="tab" data-sec-btn="assets" onclick="addSecScrollTo('assets')"><svg><use href="#i-monitor"/></svg><span data-i18n="ev.nav.assets">Assets</span></button>
           <button class="emp-nav-btn" role="tab" data-sec-btn="attach" onclick="addSecScrollTo('attach')"><svg><use href="#i-download"/></svg><span data-i18n="ev.nav.attach">Attachments</span></button>
         </nav>
         <div class="emp-doc">
@@ -4302,6 +4473,15 @@
         </div>
       </div>
 
+      <!-- Section: Assets -->
+      <div class="emp-section" id="addsec-assets" data-sec="assets">
+            <div class="emp-sec-head"><div class="esh-icon"><svg><use href="#i-monitor"/></svg></div><h3 data-i18n="ev.sec.assets">Assets</h3></div>
+        <div id="add-panel-assets-list" class="alloc-view-list" style="margin-bottom:var(--s3)"><!-- Rendered by JS --></div>
+        <button class="btn btn-secondary btn-add-alloc" id="add-panel-asset-btn" onclick="openAssetPanelFromEmployee()" style="border-style:dashed;width:100%;justify-content:center">
+          <svg><use href="#i-plus"/></svg><span data-i18n="asset.btn.addfrom"> Add Asset</span>
+        </button>
+      </div>
+
       <!-- Section: Attachments -->
       <div class="emp-section" id="addsec-attach" data-sec="attach">
             <div class="emp-sec-head"><div class="esh-icon"><svg><use href="#i-download"/></svg></div><h3 data-i18n="ev.sec.attach">Attachments</h3></div>
@@ -4399,7 +4579,7 @@
     en: {
       // Nav
       'nav.dashboard': 'Dashboard', 'nav.dash.sales': 'Sales', 'nav.dash.bizdev': 'Business Development',
-      'nav.workforce': 'Workforce', 'nav.employees': 'Employees', 'nav.departments': 'Departments', 'nav.timeoff': 'Time Off', 'nav.payroll': 'Payroll',
+      'nav.workforce': 'Workforce', 'nav.employees': 'Employees', 'nav.departments': 'Departments', 'nav.timeoff': 'Time Off', 'nav.payroll': 'Payroll', 'nav.assets': 'Asset Management',
       'nav.personal': 'Personal', 'nav.personal.self': 'Self-service (Contractor)', 'nav.personal.dashboard': ' Dashboard', 'nav.personal.logwork': ' Log Work', 'nav.personal.leave': ' Leave', 'nav.personal.reports': ' Progress Reports', 'nav.personal.timesheet': ' Monthly Timesheet',
       'nav.approvals': 'Approvals', 'nav.approvals.vmp': 'Contractor (VMP)', 'nav.approvals.logwork': ' Approve Logwork', 'nav.approvals.timesheet': ' Timesheet Confirmation',
       'nav.operations': 'Operations', 'nav.inventory': 'Inventory', 'nav.invoices': 'Invoices', 'nav.suppliers': 'Suppliers', 'nav.purchaseorders': 'Purchase Orders',
@@ -4502,11 +4682,30 @@
       'toast.jump.of': 'of',
       // Empty state
       'empty.nofound': 'No employees found', 'empty.noresults': 'No results for', 'empty.clear': 'clear search',
+      // Asset Management
+      'asset.title': 'Asset Management', 'asset.subtitle': 'Manage assets assigned to employees: devices, accounts, emails, documents.',
+      'asset.btn.export': ' Export', 'asset.btn.add': ' Add Asset',
+      'asset.kpi.total': ' Total Assets', 'asset.kpi.inuse': ' In Use', 'asset.kpi.available': ' Available', 'asset.kpi.maintenance': ' Maintenance',
+      'asset.tab.all': 'All', 'asset.tab.equipment': 'Equipment', 'asset.tab.account': 'Account', 'asset.tab.document': 'Document',
+      'asset.search': 'Search assets…', 'asset.filter.status': 'Status:',
+      'asset.th.asset': 'Asset', 'asset.th.category': 'Category', 'asset.th.serial': 'Serial / ID', 'asset.th.assignee': 'Assigned To', 'asset.th.status': 'Status', 'asset.th.date': 'Assigned Date', 'asset.th.project': 'Project', 'asset.th.actions': 'Actions',
+      'asset.panel.add': 'Add Asset', 'asset.panel.edit': 'Edit Asset', 'asset.panel.subtitle': 'Enter asset information',
+      'asset.f.name': 'Asset Name', 'asset.f.category': 'Category', 'asset.f.serial': 'Serial / ID', 'asset.f.assignee': 'Assign To', 'asset.f.status': 'Status', 'asset.f.notes': 'Notes', 'asset.f.value': 'Value', 'asset.f.project': 'Project',
+      'asset.f.unassigned': '— Unassigned —', 'asset.f.noproject': '— No Project —',
+      'asset.cat.equipment': 'Equipment', 'asset.cat.account': 'Account', 'asset.cat.document': 'Document',
+      'asset.status.available': 'Available', 'asset.status.inuse': 'In Use', 'asset.status.maintenance': 'Maintenance', 'asset.status.retired': 'Retired',
+      'asset.btn.cancel': 'Cancel', 'asset.btn.save': 'Save Asset', 'asset.btn.savechanges': 'Save Changes',
+      'asset.history.title': 'Handover History', 'asset.history.subtitle': 'Asset handover history',
+      'asset.history.nohistory': 'No history', 'asset.history.empty': 'No handover history for this asset.',
+      'asset.delete.title': 'Delete Asset', 'asset.delete.body': 'will be permanently deleted. This action cannot be undone.',
+      'asset.empty': 'No assets found.',
+      'ev.sec.assets': 'Assets', 'ev.nav.assets': 'Assets',
+      'asset.btn.addfrom': ' Add Asset',
     },
     vi: {
       // Nav
       'nav.dashboard': 'Bảng điều khiển', 'nav.dash.sales': 'Kinh doanh', 'nav.dash.bizdev': 'Phát triển kinh doanh',
-      'nav.workforce': 'Nhân sự', 'nav.employees': 'Nhân viên', 'nav.departments': 'Phòng ban', 'nav.timeoff': 'Nghỉ phép', 'nav.payroll': 'Bảng lương',
+      'nav.workforce': 'Nhân sự', 'nav.employees': 'Nhân viên', 'nav.departments': 'Phòng ban', 'nav.timeoff': 'Nghỉ phép', 'nav.payroll': 'Bảng lương', 'nav.assets': 'Quản lý tài sản',
       'nav.personal': 'Cá nhân', 'nav.personal.self': 'Tự phục vụ (CTV)', 'nav.personal.dashboard': ' Dashboard', 'nav.personal.logwork': ' Log giờ công', 'nav.personal.leave': ' Xin nghỉ', 'nav.personal.reports': ' Báo cáo tiến độ', 'nav.personal.timesheet': ' Timesheet tháng',
       'nav.approvals': 'Phê duyệt', 'nav.approvals.vmp': 'Cộng tác viên (VMP)', 'nav.approvals.logwork': ' Duyệt giờ công', 'nav.approvals.timesheet': ' Xác nhận Timesheet',
       'nav.operations': 'Vận hành', 'nav.inventory': 'Kho hàng', 'nav.invoices': 'Hóa đơn', 'nav.suppliers': 'Nhà cung cấp', 'nav.purchaseorders': 'Đơn đặt hàng',
@@ -4609,6 +4808,25 @@
       'toast.jump.of': 'trong',
       // Empty state
       'empty.nofound': 'Không tìm thấy nhân viên', 'empty.noresults': 'Không có kết quả cho', 'empty.clear': 'xóa tìm kiếm',
+      // Asset Management
+      'asset.title': 'Quản lý tài sản', 'asset.subtitle': 'Quản lý tài sản cấp cho nhân viên: thiết bị, tài khoản, email, tài liệu.',
+      'asset.btn.export': ' Xuất', 'asset.btn.add': ' Thêm tài sản',
+      'asset.kpi.total': ' Tổng tài sản', 'asset.kpi.inuse': ' Đang sử dụng', 'asset.kpi.available': ' Sẵn sàng', 'asset.kpi.maintenance': ' Bảo trì',
+      'asset.tab.all': 'Tất cả', 'asset.tab.equipment': 'Thiết bị', 'asset.tab.account': 'Tài khoản', 'asset.tab.document': 'Tài liệu',
+      'asset.search': 'Tìm tài sản…', 'asset.filter.status': 'Trạng thái:',
+      'asset.th.asset': 'Tài sản', 'asset.th.category': 'Loại', 'asset.th.serial': 'Số Serial / Mã', 'asset.th.assignee': 'Gán cho', 'asset.th.status': 'Trạng thái', 'asset.th.date': 'Ngày gán', 'asset.th.project': 'Dự án', 'asset.th.actions': 'Thao tác',
+      'asset.panel.add': 'Thêm tài sản', 'asset.panel.edit': 'Sửa tài sản', 'asset.panel.subtitle': 'Nhập thông tin tài sản',
+      'asset.f.name': 'Tên tài sản', 'asset.f.category': 'Loại', 'asset.f.serial': 'Số Serial / Mã', 'asset.f.assignee': 'Gán cho', 'asset.f.status': 'Trạng thái', 'asset.f.notes': 'Ghi chú', 'asset.f.value': 'Giá trị', 'asset.f.project': 'Dự án',
+      'asset.f.unassigned': '— Chưa gán —', 'asset.f.noproject': '— Không có dự án —',
+      'asset.cat.equipment': 'Thiết bị', 'asset.cat.account': 'Tài khoản', 'asset.cat.document': 'Tài liệu',
+      'asset.status.available': 'Sẵn sàng', 'asset.status.inuse': 'Đang dùng', 'asset.status.maintenance': 'Bảo trì', 'asset.status.retired': 'Thanh lý',
+      'asset.btn.cancel': 'Huỷ', 'asset.btn.save': 'Lưu tài sản', 'asset.btn.savechanges': 'Lưu thay đổi',
+      'asset.history.title': 'Lịch sử bàn giao', 'asset.history.subtitle': 'Lịch sử bàn giao tài sản',
+      'asset.history.nohistory': 'Chưa có lịch sử', 'asset.history.empty': 'Chưa có lịch sử bàn giao cho tài sản này.',
+      'asset.delete.title': 'Xoá tài sản', 'asset.delete.body': 'sẽ bị xoá vĩnh viễn. Hành động này không thể hoàn tác.',
+      'asset.empty': 'Không tìm thấy tài sản.',
+      'ev.sec.assets': 'Tài sản', 'ev.nav.assets': 'Tài sản',
+      'asset.btn.addfrom': ' Thêm tài sản',
     }
   };
 
@@ -5125,6 +5343,28 @@
       </div>`).join('')}
     </div>`);
 
+    // 11) Assets — show assets assigned to this employee
+    const empAssets = getEmployeeAssets(e);
+    const assetsBody = empAssets.length
+      ? `<div class="emp-tbl-wrap"><table class="emp-tbl">
+          <thead><tr><th>${t('asset.th.asset')}</th><th>${t('asset.th.category')}</th><th>${t('asset.f.value')}</th><th>${t('asset.th.project')}</th><th>${t('asset.th.status')}</th></tr></thead>
+          <tbody>${empAssets.map(a => {
+            const sc = {'In Use':'badge-success','Available':'badge-primary','Maintenance':'badge-warning','Retired':'badge-neutral'}[a.status]||'badge-neutral';
+            const ci = {'Equipment':'#i-monitor','Account':'#i-link','Document':'#i-file'}[a.category]||'#i-package';
+            return `<tr>
+              <td><div style="display:flex;align-items:center;gap:8px"><div style="width:28px;height:28px;border-radius:7px;background:var(--primary-50);color:var(--primary);display:grid;place-items:center"><svg style="width:14px;height:14px"><use href="${ci}"/></svg></div><div><div style="font-weight:600;font-size:13px">${esc(a.name)}</div>${a.notes?'<div style="font-size:11.5px;color:var(--text-muted)">'+esc(a.notes)+'</div>':''}</div></div></td>
+              <td><span class="tag">${esc(a.category)}</span></td>
+              <td style="font-size:13px">${a.value ? esc(a.value) : '<span style="color:var(--text-muted)">—</span>'}</td>
+              <td style="font-size:13px">${a.project ? esc(a.project) : '<span style="color:var(--text-muted)">—</span>'}</td>
+              <td><span class="badge ${sc}">${esc(a.status)}</span></td>
+            </tr>`;
+          }).join('')}</tbody>
+        </table></div>`
+      : `<div class="emp-f"><div class="box empty">${t('asset.empty')}</div></div>`;
+    const secAssets = empSection('assets', 'i-monitor', t('ev.sec.assets'),
+      subBlock('', assetsBody)
+    );
+
     const navItems = [
       { key: 'overview',   icon: 'i-users',    label: t('ev.nav.overview') },
       { key: 'personal',   icon: 'i-file',     label: t('ev.nav.personal') },
@@ -5135,6 +5375,7 @@
       { key: 'background', icon: 'i-check-sq', label: t('ev.nav.background') },
       { key: 'contract',   icon: 'i-calendar', label: t('ev.nav.contract') },
       ...(isCtv ? [] : [{ key: 'insurance', icon: 'i-check', label: t('ev.nav.insurance') }]),
+      { key: 'assets',     icon: 'i-monitor',  label: t('ev.nav.assets') },
       { key: 'attach',     icon: 'i-download', label: t('ev.nav.attach') }
     ];
 
@@ -5145,7 +5386,7 @@
         </nav>
         <div class="emp-doc">
           ${hero}
-          ${secOverview}${secPersonal}${secWork}${secProjects}${secBank}${secContacts}${secBackground}${secContract}${secInsurance}${secAttach}
+          ${secOverview}${secPersonal}${secWork}${secProjects}${secBank}${secContacts}${secBackground}${secContract}${secInsurance}${secAssets}${secAttach}
         </div>
       </div>`;
 
@@ -5551,6 +5792,10 @@
       document.title = leaf + ' — Twendee Work';
       if (name === 'approve-logwork') renderApproveLogwork();
       if (name === 'timesheet-confirm') renderTimesheetConfirm();
+    } else if (name === 'assets') {
+      if (bc) bc.innerHTML = `<span>Workforce</span><svg width="14" height="14"><use href="#i-chevron-right"/></svg><span class="current">Asset Management</span>`;
+      document.title = 'Asset Management — Twendee Work';
+      renderAssets();
     } else {
       const crumb = document.querySelector('.breadcrumb .current');
       if (crumb) crumb.textContent = name === 'profile' ? 'My Profile' : t('nav.employees');
@@ -6118,7 +6363,7 @@
   // #employees · #dashsales · #dashbd · #crmdash · #account · #events · #profile · #personal-*
   const ROUTE_VIEWS = ['employees', 'dashsales', 'dashbd', 'crmdash', 'account', 'events', 'activitylog', 'profile',
     'personal-dash', 'personal-logwork', 'personal-leave', 'personal-reports', 'personal-timesheet',
-    'approve-logwork', 'timesheet-confirm'];
+    'approve-logwork', 'timesheet-confirm', 'assets'];
   function applyRoute() {
     let name = location.hash.slice(1);
     if (!ROUTE_VIEWS.includes(name)) name = 'employees';
@@ -6162,6 +6407,9 @@
     } else if (name === 'timesheet-confirm') {
       const el = document.querySelector('.rail-subitem[onclick*="\'approvals\',\'Timesheet Confirmation\'"]');
       if (el) selectSubItem(el, 'approvals', 'Timesheet Confirmation');
+    } else if (name === 'assets') {
+      const el = document.querySelector('.rail-subitem[onclick*="\'workforce\',\'Asset Management\'"]');
+      if (el) selectSubItem(el, 'workforce', 'Asset Management');
     }
     showView(name);
   }
@@ -6210,6 +6458,427 @@
     };
     toast.querySelector('.toast-close').addEventListener('click', remove);
     setTimeout(remove, 4500);
+  }
+
+  // ============ ASSET MANAGEMENT ============
+  let assetSeq = 100;
+  let assetEditId = null;
+  let assetCurrentTab = 'all';
+  let assetSearchQuery = '';
+
+  const ASSET_DATA = [
+    { id: 1,  name: 'MacBook Pro 14"',        category: 'Equipment', serial: 'MBP-2024-001',  assignee: 'Nguyen Van An',    status: 'In Use',      assignedDate: '2024-03-15', notes: 'RAM 16GB, SSD 512GB', value: '', project: 'Apollo Mobile App' },
+    { id: 2,  name: 'Dell Monitor 27" 4K',     category: 'Equipment', serial: 'DL-MON-042',    assignee: 'Tran Thi Bich',    status: 'In Use',      assignedDate: '2024-05-20', notes: 'Model U2723QE', value: '', project: '' },
+    { id: 3,  name: 'Google Workspace Account', category: 'Account',   serial: 'GWS-003',       assignee: 'Nguyen Van An', status: 'In Use',      assignedDate: '2024-03-15', notes: 'Email doanh nghiệp', value: 'an.nguyen@twendee.com', project: '' },
+    { id: 4,  name: 'Figma License',            category: 'Account',   serial: 'FIG-LIC-018',   assignee: 'Le Hoang Minh',    status: 'In Use',      assignedDate: '2024-06-01', notes: 'Professional plan', value: 'minh.le@figma.com', project: 'Apollo Mobile App' },
+    { id: 5,  name: 'Logitech MX Keys',         category: 'Equipment', serial: 'LG-KEY-099',    assignee: '',                 status: 'Available',   assignedDate: '',           notes: 'Wireless keyboard', value: '', project: '' },
+    { id: 6,  name: 'Jira Cloud License',        category: 'Account',   serial: 'JIRA-LIC-033',  assignee: 'Pham Duc Huy',     status: 'In Use',      assignedDate: '2024-04-10', notes: 'Standard plan', value: 'huy.pham@atlassian.net', project: 'Zeus Internal Tools' },
+    { id: 7,  name: 'Onboarding Documents',      category: 'Document',  serial: 'DOC-ONB-001',   assignee: 'Nguyen Van An',    status: 'In Use',      assignedDate: '2024-03-15', notes: 'Bộ tài liệu onboarding', value: 'https://drive.google.com/onboarding', project: '' },
+    { id: 8,  name: 'iPhone 15 Pro',             category: 'Equipment', serial: 'IPH-2024-007',  assignee: 'Vo Thi Lan',       status: 'In Use',      assignedDate: '2024-07-22', notes: 'Điện thoại công tác', value: '', project: '' },
+    { id: 9,  name: 'ThinkPad X1 Carbon',        category: 'Equipment', serial: 'TP-X1-015',     assignee: '',                 status: 'Maintenance', assignedDate: '',           notes: 'Đang sửa chữa, thay pin', value: '', project: '' },
+    { id: 10, name: 'NDA Agreement Template',    category: 'Document',  serial: 'DOC-NDA-003',   assignee: '',                 status: 'Available',   assignedDate: '',           notes: 'Mẫu NDA chuẩn công ty', value: '', project: '' },
+    { id: 11, name: 'AWS IAM Account',           category: 'Account',   serial: 'AWS-IAM-021',   assignee: 'Pham Duc Huy',     status: 'In Use',      assignedDate: '2024-08-05', notes: 'Developer access', value: 'huy.pham (IAM user)', project: 'Zeus Internal Tools' },
+    { id: 12, name: 'Ergonomic Chair',           category: 'Equipment', serial: 'CHR-ERG-044',   assignee: '',                 status: 'Retired',     assignedDate: '',           notes: 'Đã thanh lý', value: '', project: '' },
+  ];
+
+  const ASSET_HISTORY = {
+    1: [
+      { date: '2024-03-15', action: 'Assigned',    from: '—',              to: 'Nguyen Van An', note: 'Cấp mới khi onboarding' },
+    ],
+    2: [
+      { date: '2024-05-20', action: 'Assigned',    from: '—',              to: 'Tran Thi Bich', note: 'Cấp cho team Design' },
+    ],
+    3: [
+      { date: '2024-03-15', action: 'Created',     from: '—',              to: 'Nguyen Van An', note: 'Tạo email khi onboarding' },
+    ],
+    8: [
+      { date: '2024-07-22', action: 'Assigned',    from: '—',              to: 'Vo Thi Lan',    note: 'Cấp điện thoại công tác' },
+      { date: '2024-04-10', action: 'Returned',     from: 'Le Van Khanh',   to: '—',             note: 'Thu hồi khi nghỉ việc' },
+      { date: '2023-11-01', action: 'Assigned',     from: '—',              to: 'Le Van Khanh',  note: 'Cấp ban đầu' },
+    ],
+    9: [
+      { date: '2024-09-10', action: 'Maintenance',  from: 'Nguyen Duc Tam', to: '—',             note: 'Pin chai, gửi bảo hành' },
+      { date: '2024-01-05', action: 'Assigned',      from: '—',              to: 'Nguyen Duc Tam', note: 'Cấp laptop mới' },
+    ],
+    12: [
+      { date: '2024-08-30', action: 'Retired',      from: 'Tran Van Long',  to: '—',             note: 'Thanh lý, hết khấu hao' },
+      { date: '2022-03-01', action: 'Assigned',      from: '—',              to: 'Tran Van Long',  note: 'Cấp ghế ergonomic' },
+    ],
+  };
+
+  const MOCK_EMPLOYEES_FOR_ASSET = [
+    'Nguyen Van An', 'Tran Thi Bich', 'Le Hoang Minh', 'Pham Duc Huy',
+    'Vo Thi Lan', 'Nguyen Duc Tam', 'Tran Van Long', 'Le Van Khanh',
+    'Hoang Thi Mai', 'Do Quoc Bao'
+  ];
+
+  function aEsc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+  // Generate mock assets for employees who don't have real ASSET_DATA entries
+  function getEmployeeAssets(e) {
+    // First check real ASSET_DATA
+    const real = ASSET_DATA.filter(a => a.assignee === e.name);
+    if (real.length > 0) return real;
+    // Generate mock assets based on department/role
+    const proj = (e.allocations && e.allocations.length) ? e.allocations[0].project : '';
+    const uname = e.email.split('@')[0];
+    const mockAssets = [
+      { name: 'Company Laptop', category: 'Equipment', notes: 'Standard issue laptop', value: '', project: proj, status: 'In Use' },
+      { name: 'Google Workspace', category: 'Account', notes: 'Email & productivity suite', value: e.email, project: '', status: 'In Use' },
+    ];
+    if (e.dept === 'Engineering') {
+      mockAssets.push({ name: 'GitHub Account', category: 'Account', notes: 'Source control', value: uname, project: proj, status: 'In Use' });
+    } else if (e.dept === 'Design') {
+      mockAssets.push({ name: 'Figma License', category: 'Account', notes: 'Design tool', value: uname + '@figma', project: proj, status: 'In Use' });
+    } else if (e.dept === 'Sales' || e.dept === 'Marketing') {
+      mockAssets.push({ name: 'HubSpot License', category: 'Account', notes: 'CRM access', value: uname, project: proj, status: 'In Use' });
+    }
+    if (e.type !== 'contractor') {
+      mockAssets.push({ name: 'Employee Handbook', category: 'Document', notes: 'Company policies', value: '', project: '', status: 'In Use' });
+    }
+    return mockAssets;
+  }
+
+  function getFilteredAssets() {
+    return ASSET_DATA.filter(a => {
+      if (assetCurrentTab !== 'all' && a.category.toLowerCase() !== assetCurrentTab) return false;
+      if (assetSearchQuery) {
+        const q = assetSearchQuery.toLowerCase();
+        return a.name.toLowerCase().includes(q) || a.serial.toLowerCase().includes(q) ||
+               a.assignee.toLowerCase().includes(q) || a.category.toLowerCase().includes(q);
+      }
+      return true;
+    });
+  }
+
+  function renderAssets() {
+    // KPIs
+    const total = ASSET_DATA.length;
+    const inUse = ASSET_DATA.filter(a => a.status === 'In Use').length;
+    const available = ASSET_DATA.filter(a => a.status === 'Available').length;
+    const maintenance = ASSET_DATA.filter(a => a.status === 'Maintenance').length;
+
+    document.getElementById('asset-kpis').innerHTML = `
+      <div class="kpi-card">
+        <div class="kpi-card-text">
+          <div class="kpi-label"><svg><use href="#i-monitor"/></svg>${t('asset.kpi.total')}</div>
+          <div class="kpi-value">${total}</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-text">
+          <div class="kpi-label"><svg><use href="#i-check"/></svg>${t('asset.kpi.inuse')}</div>
+          <div class="kpi-value">${inUse}</div>
+        </div>
+        <span class="kpi-delta up"><svg><use href="#i-arrow-up"/></svg> ${Math.round(inUse/total*100)}%</span>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-text">
+          <div class="kpi-label"><svg><use href="#i-package"/></svg>${t('asset.kpi.available')}</div>
+          <div class="kpi-value">${available}</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-card-text">
+          <div class="kpi-label"><svg><use href="#i-settings"/></svg>${t('asset.kpi.maintenance')}</div>
+          <div class="kpi-value">${maintenance}</div>
+        </div>
+      </div>
+    `;
+
+    // Tab counts
+    document.getElementById('asset-tab-all').textContent = ASSET_DATA.length;
+    document.getElementById('asset-tab-equipment').textContent = ASSET_DATA.filter(a => a.category === 'Equipment').length;
+    document.getElementById('asset-tab-account').textContent = ASSET_DATA.filter(a => a.category === 'Account').length;
+    document.getElementById('asset-tab-document').textContent = ASSET_DATA.filter(a => a.category === 'Document').length;
+
+    renderAssetTable();
+  }
+
+  function renderAssetTable() {
+    const rows = getFilteredAssets();
+    const tbody = document.getElementById('asset-tbody');
+    if (rows.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-muted)">${t('asset.empty')}</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = rows.map(a => {
+      const statusClass = { 'In Use': 'badge-success', 'Available': 'badge-primary', 'Maintenance': 'badge-warning', 'Retired': 'badge-neutral' }[a.status] || 'badge-neutral';
+      const catIcon = { 'Equipment': '#i-monitor', 'Account': '#i-link', 'Document': '#i-file' }[a.category] || '#i-package';
+      const assigneeHtml = a.assignee
+        ? `<div class="cell-user"><div class="avatar" style="width:26px;height:26px;font-size:10px">${a.assignee.split(' ').map(w=>w[0]).join('').slice(0,2)}</div><span style="font-size:13px">${aEsc(a.assignee)}</span></div>`
+        : `<span class="cell-muted">${t('asset.f.unassigned')}</span>`;
+      const dateStr = a.assignedDate ? new Date(a.assignedDate + 'T00:00').toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '—';
+      const valueHtml = a.value ? `<span style="font-size:13px">${aEsc(a.value)}</span>` : '<span class="cell-muted">—</span>';
+      const projectHtml = a.project ? `<span style="font-size:13px">${aEsc(a.project)}</span>` : '<span class="cell-muted">—</span>';
+      return `<tr>
+        <td>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:32px;height:32px;border-radius:8px;background:var(--primary-50);color:var(--primary);display:grid;place-items:center;flex-shrink:0"><svg style="width:16px;height:16px"><use href="${catIcon}"/></svg></div>
+            <div><div style="font-weight:600;font-size:13.5px">${aEsc(a.name)}</div>${a.notes ? '<div class="cell-muted" style="font-size:12px;margin-top:1px">' + aEsc(a.notes) + '</div>' : ''}</div>
+          </div>
+        </td>
+        <td><span class="tag">${aEsc(a.category)}</span></td>
+        <td class="cell-mono">${aEsc(a.serial)}</td>
+        <td>${assigneeHtml}</td>
+        <td>${projectHtml}</td>
+        <td><span class="badge ${statusClass}">${aEsc(a.status)}</span></td>
+        <td class="cell-muted">${dateStr}</td>
+        <td>
+          <div class="row-actions">
+            <button class="icon-btn" title="Edit" onclick="openAssetPanel('edit',${a.id})"><svg><use href="#i-edit"/></svg></button>
+            <button class="icon-btn" title="History" onclick="openAssetHistory(${a.id})"><svg><use href="#i-clipboard"/></svg></button>
+            <button class="icon-btn" title="Delete" onclick="confirmDeleteAsset(${a.id})"><svg><use href="#i-trash"/></svg></button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  function setAssetTab(tab, el) {
+    el.closest('.tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    assetCurrentTab = tab;
+    renderAssetTable();
+  }
+
+  function filterAssets(q) {
+    assetSearchQuery = q;
+    renderAssetTable();
+  }
+
+  function populateAssetDropdowns() {
+    const sel = document.getElementById('asset-assignee');
+    sel.innerHTML = `<option value="">${t('asset.f.unassigned')}</option>` +
+      MOCK_EMPLOYEES_FOR_ASSET.map(n => `<option value="${aEsc(n)}">${aEsc(n)}</option>`).join('');
+    const projSel = document.getElementById('asset-project');
+    projSel.innerHTML = `<option value="">${t('asset.f.noproject')}</option>` +
+      PROJECT_OPTIONS.map(p => `<option value="${aEsc(p)}">${aEsc(p)}</option>`).join('');
+  }
+
+  function openAssetPanel(mode, id) {
+    assetEditId = null;
+    const title = document.getElementById('asset-panel-title');
+    const saveBtn = document.getElementById('asset-save-btn');
+    populateAssetDropdowns();
+
+    if (mode === 'edit' && id) {
+      const a = ASSET_DATA.find(x => x.id === id);
+      if (!a) return;
+      assetEditId = id;
+      title.textContent = t('asset.panel.edit');
+      saveBtn.textContent = t('asset.btn.savechanges');
+      document.getElementById('asset-name').value = a.name;
+      document.getElementById('asset-category').value = a.category;
+      document.getElementById('asset-serial').value = a.serial;
+      document.getElementById('asset-value').value = a.value || '';
+      document.getElementById('asset-assignee').value = a.assignee;
+      document.getElementById('asset-project').value = a.project || '';
+      document.getElementById('asset-status').value = a.status;
+      document.getElementById('asset-notes').value = a.notes;
+    } else {
+      title.textContent = t('asset.panel.add');
+      saveBtn.textContent = t('asset.btn.save');
+      document.getElementById('asset-name').value = '';
+      document.getElementById('asset-category').value = 'Equipment';
+      document.getElementById('asset-serial').value = '';
+      document.getElementById('asset-value').value = '';
+      document.getElementById('asset-assignee').value = '';
+      document.getElementById('asset-project').value = '';
+      document.getElementById('asset-status').value = 'Available';
+      document.getElementById('asset-notes').value = '';
+    }
+    openPanel('panel-asset');
+  }
+
+  // Open asset panel pre-filled with employee name (from detail view)
+  function openAssetPanelForEmployee(empName) {
+    openAssetPanel('add');
+    document.getElementById('asset-assignee').value = empName;
+    document.getElementById('asset-status').value = 'In Use';
+  }
+
+  // Open asset panel from add/edit employee form
+  function openAssetPanelFromEmployee() {
+    // Try to get employee name from the add/edit form
+    const panel = document.getElementById('panel-add');
+    let empName = '';
+    if (panel) {
+      const fnInput = panel.querySelector('#addsec-personal input');
+      const lnInput = panel.querySelectorAll('#addsec-personal input')[1];
+      const first = fnInput ? fnInput.value.trim() : '';
+      const last = lnInput ? lnInput.value.trim() : '';
+      empName = (first && last) ? first + ' ' + last : (first || last);
+    }
+    openAssetPanel('add');
+    if (empName) {
+      // Add the name to dropdown if not present
+      const sel = document.getElementById('asset-assignee');
+      if (!Array.from(sel.options).some(o => o.value === empName)) {
+        sel.add(new Option(empName, empName));
+      }
+      sel.value = empName;
+      document.getElementById('asset-status').value = 'In Use';
+    }
+  }
+
+  function saveAsset() {
+    const name = document.getElementById('asset-name').value.trim();
+    const category = document.getElementById('asset-category').value;
+    const serial = document.getElementById('asset-serial').value.trim();
+    const value = document.getElementById('asset-value').value.trim();
+    const assignee = document.getElementById('asset-assignee').value;
+    const project = document.getElementById('asset-project').value;
+    const status = document.getElementById('asset-status').value;
+    const notes = document.getElementById('asset-notes').value.trim();
+
+    if (!name) {
+      showToast('warning', 'Validation', t('asset.f.name') + ' is required.');
+      return;
+    }
+
+    if (assetEditId) {
+      const a = ASSET_DATA.find(x => x.id === assetEditId);
+      if (a) {
+        const prevAssignee = a.assignee;
+        a.name = name;
+        a.category = category;
+        a.serial = serial;
+        a.value = value;
+        a.assignee = assignee;
+        a.project = project;
+        a.status = status;
+        a.notes = notes;
+
+        if (prevAssignee !== assignee) {
+          if (!ASSET_HISTORY[a.id]) ASSET_HISTORY[a.id] = [];
+          const today = new Date().toISOString().slice(0, 10);
+          a.assignedDate = assignee ? today : '';
+          if (assignee && !prevAssignee) {
+            ASSET_HISTORY[a.id].unshift({ date: today, action: 'Assigned', from: '—', to: assignee, note: 'Gán tài sản' });
+          } else if (!assignee && prevAssignee) {
+            ASSET_HISTORY[a.id].unshift({ date: today, action: 'Returned', from: prevAssignee, to: '—', note: 'Thu hồi tài sản' });
+          } else {
+            ASSET_HISTORY[a.id].unshift({ date: today, action: 'Reassigned', from: prevAssignee, to: assignee, note: 'Chuyển giao tài sản' });
+          }
+        }
+
+        showToast('success', t('asset.panel.edit'), `"${name}" updated.`);
+      }
+    } else {
+      const newId = ++assetSeq;
+      const today = new Date().toISOString().slice(0, 10);
+      ASSET_DATA.push({
+        id: newId, name, category, serial, value,
+        assignee, project, status, notes,
+        assignedDate: assignee ? today : ''
+      });
+      if (assignee) {
+        ASSET_HISTORY[newId] = [{ date: today, action: 'Assigned', from: '—', to: assignee, note: 'Cấp mới' }];
+      }
+      showToast('success', t('asset.panel.add'), `"${name}" added.`);
+    }
+
+    closePanel('panel-asset');
+    renderAssets();
+    // Also update add-panel asset list if open
+    renderAddPanelAssets();
+  }
+
+  // Render asset list inside employee add/edit panel
+  function renderAddPanelAssets() {
+    const list = document.getElementById('add-panel-assets-list');
+    if (!list) return;
+    const panel = document.getElementById('panel-add');
+    if (!panel) return;
+    const fnInput = panel.querySelector('#addsec-personal input');
+    const lnInput = panel.querySelectorAll('#addsec-personal input')[1];
+    const first = fnInput ? fnInput.value.trim() : '';
+    const last = lnInput ? lnInput.value.trim() : '';
+    const empName = (first && last) ? first + ' ' + last : (first || last);
+    if (!empName) { list.innerHTML = ''; return; }
+    const assets = ASSET_DATA.filter(a => a.assignee === empName);
+    if (assets.length === 0) { list.innerHTML = ''; return; }
+    list.innerHTML = assets.map(a => {
+      const ci = {'Equipment':'#i-monitor','Account':'#i-link','Document':'#i-file'}[a.category]||'#i-package';
+      const sc = {'In Use':'badge-success','Available':'badge-primary','Maintenance':'badge-warning','Retired':'badge-neutral'}[a.status]||'badge-neutral';
+      return `<div class="alloc-view-card" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+        <div style="display:flex;align-items:center;gap:10px;min-width:0">
+          <svg style="width:18px;height:18px;color:var(--primary);flex:0 0 auto"><use href="${ci}"/></svg>
+          <div style="min-width:0"><div class="avc-proj" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${aEsc(a.name)}</div><div class="avc-meta">${aEsc(a.category)} · ${a.serial||'—'}</div></div>
+        </div>
+        <span class="badge ${sc}">${aEsc(a.status)}</span>
+      </div>`;
+    }).join('');
+  }
+
+  function confirmDeleteAsset(id) {
+    const a = ASSET_DATA.find(x => x.id === id);
+    if (!a) return;
+    document.getElementById('delete-asset-name').textContent = a.name;
+    const modal = document.getElementById('modal-delete-asset');
+    modal.classList.add('show');
+    document.getElementById('confirm-delete-asset-btn').onclick = () => {
+      const idx = ASSET_DATA.findIndex(x => x.id === id);
+      if (idx >= 0) ASSET_DATA.splice(idx, 1);
+      delete ASSET_HISTORY[id];
+      modal.classList.remove('show');
+      showToast('success', 'Deleted', `Asset "${a.name}" has been deleted.`);
+      renderAssets();
+    };
+  }
+
+  function openAssetHistory(id) {
+    const a = ASSET_DATA.find(x => x.id === id);
+    if (!a) return;
+    document.getElementById('asset-history-title').textContent = a.name;
+    document.getElementById('asset-history-subtitle').textContent = `${a.category} · ${a.serial || '—'}`;
+
+    const history = ASSET_HISTORY[id] || [];
+    const body = document.getElementById('asset-history-body');
+
+    if (history.length === 0) {
+      body.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted)">
+        <svg style="width:40px;height:40px;margin:0 auto 12px;color:var(--border-strong)"><use href="#i-clipboard"/></svg>
+        <div style="font-weight:600;margin-bottom:4px">No history</div>
+        <div style="font-size:13px">Chưa có lịch sử bàn giao cho tài sản này.</div>
+      </div>`;
+    } else {
+      // Current status card
+      const statusClass = { 'In Use': 'badge-success', 'Available': 'badge-primary', 'Maintenance': 'badge-warning', 'Retired': 'badge-neutral' }[a.status] || 'badge-neutral';
+      let html = `<div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:1px solid var(--divider);border-radius:10px;margin-bottom:20px;background:var(--primary-50)">
+        <div style="width:36px;height:36px;border-radius:9px;background:var(--surface);display:grid;place-items:center;color:var(--primary);border:1px solid var(--border)"><svg style="width:18px;height:18px"><use href="#i-monitor"/></svg></div>
+        <div style="flex:1">
+          <div style="font-weight:600;font-size:14px">${aEsc(a.name)}</div>
+          <div style="font-size:12px;color:var(--text-muted)">Current: ${a.assignee ? aEsc(a.assignee) : 'Unassigned'}</div>
+        </div>
+        <span class="badge ${statusClass}">${aEsc(a.status)}</span>
+      </div>`;
+
+      // Timeline
+      html += '<div style="position:relative;padding-left:24px">';
+      html += '<div style="position:absolute;left:8px;top:6px;bottom:6px;width:2px;background:var(--border);border-radius:1px"></div>';
+      history.forEach((h, i) => {
+        const actionColor = { 'Assigned': 'var(--success)', 'Returned': 'var(--warning)', 'Reassigned': 'var(--primary)', 'Maintenance': 'var(--warning)', 'Retired': 'var(--text-muted)', 'Created': 'var(--primary)' }[h.action] || 'var(--text-muted)';
+        const dateStr = new Date(h.date + 'T00:00').toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        html += `<div style="position:relative;padding-bottom:${i < history.length - 1 ? '20px' : '0'}">
+          <div style="position:absolute;left:-20px;top:4px;width:12px;height:12px;border-radius:50%;background:${actionColor};border:2px solid var(--surface)"></div>
+          <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px">
+            <span style="font-weight:600;font-size:13px">${aEsc(h.action)}</span>
+            <span style="font-size:12px;color:var(--text-muted)">${dateStr}</span>
+          </div>
+          <div style="font-size:13px;color:var(--text-secondary)">
+            ${h.from !== '—' ? '<span style="color:var(--text-muted)">From:</span> ' + aEsc(h.from) + ' → ' : ''}
+            ${h.to !== '—' ? '<span style="color:var(--text-muted)">To:</span> ' + aEsc(h.to) : '<span style="color:var(--text-muted)">Unassigned</span>'}
+          </div>
+          ${h.note ? '<div style="font-size:12px;color:var(--text-muted);margin-top:2px;font-style:italic">' + aEsc(h.note) + '</div>' : ''}
+        </div>`;
+      });
+      html += '</div>';
+      body.innerHTML = html;
+    }
+
+    openPanel('panel-asset-history');
   }
 
   // ============ SIDEBAR EXPAND / COLLAPSE ============
